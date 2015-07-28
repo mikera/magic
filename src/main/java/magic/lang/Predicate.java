@@ -7,7 +7,7 @@ package magic.lang;
  *
  * @param <T>
  */
-public abstract class Predicate<T> extends Fn1<T,Boolean> implements java.util.function.Predicate<T> {
+public abstract class Predicate<T> extends AFn1<T,Boolean> implements java.util.function.Predicate<T> {
 
 	public Boolean apply(T a) {
 		return Boolean.valueOf(test(a));
