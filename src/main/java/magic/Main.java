@@ -1,5 +1,10 @@
 package magic;
 
+/**
+ * Main class for Magic execution
+ * 
+ * @author Mike
+ */
 public class Main {
 
 	public static void main(String... args) {

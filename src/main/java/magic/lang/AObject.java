@@ -3,7 +3,7 @@ package magic.lang;
 import java.io.Serializable;
 
 /**
- * Abstract base class for Magic Objects
+ * Abstract base class for Magic language objects
  * @author Mike
  *
  */
