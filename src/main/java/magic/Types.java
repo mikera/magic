@@ -18,5 +18,11 @@ public class Types {
 	public static final Something SOMETHING = Something.INSTANCE;
 	public static final Nothing NOTHING = Nothing.INSTANCE;
 	public static final Null NULL = Null.INSTANCE;
-	public static final Type TYPE = JavaType.KISS_TYPE;
+	public static final Type TYPE = JavaType.MAGIC_TYPE;
+	
+	public static Type intersect(Type a, Type b) {
+		if (a==null) return b;
+		if (b==null) return a;
+		return a.intersection(b);
+	}
 }

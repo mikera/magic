@@ -1,6 +1,7 @@
 package magic.type;
 
 import magic.Type;
+import magic.Types;
 
 /**
  * Intersection type. 
@@ -58,9 +59,9 @@ public class Intersection extends ACompoundType {
 	
 	@Override
 	public Type getReturnType() {
-		Type t=types[0].getReturnType();
+		Type t=null;
 		for (int i=1; i<types.length; i++) {
-			t=t.intersection(types[i].getReturnType());
+			t=Types.intersect(t, types[i].getReturnType());
 		}
 		return t;
 	}
