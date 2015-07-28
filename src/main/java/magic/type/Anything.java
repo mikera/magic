@@ -3,7 +3,7 @@ package magic.type;
 import magic.Type;
 
 /**
- * A type that represents any value, including null 
+ * A type that represents any value, including null. Every type is a subclass of Anything.
  * 
  * @author Mike
  */

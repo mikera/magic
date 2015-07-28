@@ -3,7 +3,7 @@ package magic.type;
 import magic.Type;
 
 /**
- * A type that has no possible instances.
+ * A "bottom" type that has no possible instances, and is a subclass of any type
  * 
  * @author Mike
  *

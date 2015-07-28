@@ -7,6 +7,8 @@ import magic.Type;
 /**
  * JavaType represents the type of non-null values that are of a specific Java reference type.
  * 
+ * Can represent either class or interface types.
+ * 
  * @author Mike
  *
  */
