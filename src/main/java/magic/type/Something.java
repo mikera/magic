@@ -32,19 +32,18 @@ public class Something extends Type {
 
 	@Override
 	public boolean contains(Type t) {
-		// we just need to eliminate null possibilities
-		if (t instanceof Maybe)	return false;
-		if (t instanceof Null) return false;
+		// just need to eliminate null possibility
+		if (t.checkInstance(null)) return false;
 		return true;
 	}
 
 	@Override
 	public Type intersection(Type t) {
-		if ((t==this)||(t instanceof Anything)||(t instanceof Reference)) return this;
-
-		if ((t instanceof Null)||(t instanceof Nothing)) return Nothing.INSTANCE;
-		if (t instanceof Maybe) return ((Maybe)t).type;
-		return t;
+		if (t.cannotBeNull()) {
+			return t;
+		} else {
+			return t.intersection(this);
+		}
 	}
 
 	@Override
@@ -71,6 +70,11 @@ public class Something extends Type {
 	public Type inverse() {
 		// TODO what about primitives?
 		return Null.INSTANCE;
+	}
+	
+	@Override
+	public String toString() {
+		return "Something";
 	}
 
 	@Override

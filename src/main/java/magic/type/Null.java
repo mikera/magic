@@ -29,22 +29,24 @@ public class Null extends Type {
 
 	@Override
 	public Class<?> getJavaClass() {
-		return Void.TYPE;
+		return Object.class;
 	}
 	
 	@Override
 	public Type getReturnType() {
-		return Nothing.INSTANCE;
+		return null;
 	}
 
 	@Override
 	public boolean contains(Type t) {
-		return t==INSTANCE;
+		if ((t==INSTANCE)||(t==Nothing.INSTANCE)) return true;
+		if (t.canBeTruthy()) return false;
+		return false;
 	}
 
 	@Override
 	public Type intersection(Type t) {
-		if (t.canBeNull()) return this;
+		if (t.checkInstance(null)) return this;
 		return Nothing.INSTANCE;
 	}
 

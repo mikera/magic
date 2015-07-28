@@ -101,7 +101,8 @@ public class Intersection extends ACompoundType {
 	@Override
 	public Type intersection(Type t) {
 		if (t instanceof Anything) return this;
-		if (t instanceof Nothing) return t;
+		if (t instanceof Intersection) return intersection((Intersection)t);
+		if (t==Nothing.INSTANCE) return t;
 
 		int n=types.length;
 		int cc=0;
@@ -114,21 +115,25 @@ public class Intersection extends ACompoundType {
 				cc++;
 				rep=i;
 			}
+			if (t.intersection(ti)==Nothing.INSTANCE) return Nothing.INSTANCE;
 		}
 		if (cc==n) return t; // fully contained by all types
 		if (rep>=0) return replaceWith(rep,t);
 		return extendWith(t);
 	}
+	
+	public Type intersection(Intersection t) {
+		Type temp=t;
+		int n=types.length;
+		for (int i=0; i<n; i++) {
+			temp=temp.intersection(types[i]);
+		}
+		return temp;
+	}
 
 	@Override
 	public Type inverse() {
 		return Not.createNew(this);
-	}
-	
-	@Override
-	public boolean isWellBehaved() {
-		// not a well behaved type
-		return false;
 	}
 
 	@Override

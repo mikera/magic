@@ -57,19 +57,15 @@ public class Maybe extends Type {
 
 	@Override
 	public Type intersection(Type t) {
-		if ((t==this)||(t instanceof Anything)||(t instanceof Reference)) return this;
-		
-		// handle possible null cases
-		if (t instanceof Null) return t;
-		if (t instanceof Maybe) {
-			Type mt=((Maybe)t).type;
-			Type it = type.intersection(mt);
-			if (it==type) return this;
-			if (it==mt) return t;
-			return Maybe.create(it);
+		if (t.checkInstance(null)) {
+			// return type includes null
+			Type nt=type.intersection(t);
+			if (nt==type) return this;
+			return Maybe.create(nt);
+		} else {
+			// return type excludes null
+			return t.intersection(type);
 		}
-		
-		return type.intersection(t);
 	}
 
 	@Override
@@ -94,18 +90,12 @@ public class Maybe extends Type {
 
 	@Override
 	public Type union(Type t) {
-		// handle optimisable Null cases
-		if (t instanceof Null) return this;
-		if (t instanceof Maybe) {
-			Type ot=((Maybe)t).type;
-			if (ot==type) return this;
-			if (ot.contains(type)) return t;
-			if (type.contains(ot)) return this;
-			t=ot; // fall through, just consider the non-null case
-		}
-		if (type.contains(t)) return this;
-		
-		return Union.create(Null.INSTANCE,type,t);
+		return Maybe.create(type.union(t));
+	}
+	
+	@Override
+	public String toString() {
+		return "(Maybe "+type.toString()+")";
 	}
 	
 	@Override

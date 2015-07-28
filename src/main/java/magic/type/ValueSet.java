@@ -73,12 +73,6 @@ public class ValueSet<T> extends Type {
 	}
 	
 	@Override
-	public boolean isWellBehaved() {
-		// not a well behaved type
-		return false;
-	}
-	
-	@Override
 	public boolean canBeFalsey() {
 		return (values.contains(Boolean.FALSE))||(values.contains(null));
 	}
@@ -146,7 +140,7 @@ public class ValueSet<T> extends Type {
 	@Override
 	public boolean equals(Object t) {
 		if (t instanceof ValueSet) {
-			return values.equals(t);
+			return values.equals(((ValueSet<?>)t).values);
 		}
 		return super.equals(t);
 	}

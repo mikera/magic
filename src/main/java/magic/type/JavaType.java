@@ -54,16 +54,14 @@ public class JavaType<T> extends Type {
 
 	@Override
 	public boolean contains(Type t) {
-		if (t==this) return true;
+		if ((t==this)||(t==Nothing.INSTANCE)) return true;
 
 		if (t instanceof JavaType) {
 			JavaType<?> jt=(JavaType<?>)t;
 			if (klass==jt.klass) return true;
 			return klass.isAssignableFrom(jt.klass);
 		} else {
-			// TODO: check logic
-			// not a Java type, so can't contain?
-			return false;
+			return t.intersection(this)==t;
 		}
 	}
 
@@ -71,7 +69,7 @@ public class JavaType<T> extends Type {
 	public Type intersection(Type t) {
 		if ((t==this)||(t instanceof Anything)) return this;
 
-		if (t instanceof Null) return Nothing.INSTANCE;
+		if ((t instanceof Null)||t==Nothing.INSTANCE) return Nothing.INSTANCE;
 		if (t instanceof Maybe) {
 			return ((Maybe)t).intersection(this);
 		}
@@ -80,7 +78,7 @@ public class JavaType<T> extends Type {
 			if (this.klass==jt.klass) return this;
 			if (this.contains(t)) return t;
 			if (t.contains(this)) return this;
-			return Nothing.INSTANCE;
+			return Nothing.INSTANCE; // TODO: what about interfaces?
 		}
 		return t.intersection(this);
 	}
@@ -122,7 +120,7 @@ public class JavaType<T> extends Type {
 
 	@Override
 	public String toString() {
-		return "(JavaType "+klass.toString()+")";
+		return "(JavaType "+klass.getCanonicalName()+")";
 	}
 	
 	@SuppressWarnings("unchecked")

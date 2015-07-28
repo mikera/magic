@@ -57,34 +57,49 @@ public class Not extends Type {
 
 	@Override
 	public boolean contains(Type t) {
+		Type it=t.intersection(type);
+		if (it==Nothing.INSTANCE) return true;
 		return false;
 	}
 
 	@Override
 	public Type intersection(Type t) {
 		if (t instanceof Not) {
-			return Union.create(((Not)t).type,type).inverse();
-		}
-		if (t instanceof Anything) return this;
-		// TODO: better specialisation via Intersection?
-		return t;
+			Not nt=(Not)t;
+			if (type.equals(nt.type)) return this;
+			return (nt).type.union(type).inverse();
+		}		
+		
+		if (t==Anything.INSTANCE) return this;
+		if ((t==Null.INSTANCE)||(t instanceof Maybe)||(t instanceof ValueSet)) return t.intersection(this);
+		if (type.contains(t)) return Nothing.INSTANCE;
+		if (type.intersection(t)==Nothing.INSTANCE) return t;
+		return super.intersection(t);
 	}
 
 	@Override
 	public Type inverse() {
 		return type;
 	}
-	
-	@Override
-	public boolean isWellBehaved() {
-		// not a well behaved type
-		return false;
-	}
 
 	@Override
 	public Type union(Type t) {
-		// TODO any applicable optimisations here?
+		Type it=t.intersection(type);
+		if (it==Nothing.INSTANCE) return this;
 		return super.union(t);
+	}
+	
+	@Override
+	public boolean equals(Type t) {
+		if (t instanceof Not) {
+			return type.equals(((Not)t).type);
+		}
+		return super.equals(t);
+	}
+	
+	@Override
+	public String toString() {
+		return "(Not "+type.toString()+")";
 	}
 	
 	@Override

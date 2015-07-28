@@ -38,7 +38,9 @@ public abstract class Type {
 	 * Return true if this type provably contains the null value
 	 * @return
 	 */
-	public abstract boolean canBeNull();
+	public boolean canBeNull() {
+		return checkInstance(null);
+	}
 	
 	/**
 	 * Returns true if this type provably contains at least one truthy value
@@ -58,6 +60,8 @@ public abstract class Type {
 	 * Equivalently this means:
 	 * - t is a subtype of this type
 	 * - every instance of t is an instance of this type
+	 * 
+	 * If contains returns false, t may still be a subtype - it just can't be proven
 	 *  
 	 * @param t
 	 * @return
@@ -90,7 +94,10 @@ public abstract class Type {
 	public boolean equals(Object o) {
 		if (o==this) return true;
 		if (!(o instanceof Type)) return false;
-		Type t=(Type)o;
+		return equals((Type)o);
+	}
+	
+	public boolean equals(Type t) {
 		return t.contains(this)&&this.contains(t);
 	}
 
@@ -108,18 +115,18 @@ public abstract class Type {
 
 	public abstract Type inverse();
 
-	public boolean isWellBehaved() {
-		return true;
-	}
-
 	public boolean cannotBeNull() {
-		return false;
+		return !checkInstance(null);
 	}
 
 	public boolean cannotBeFalsey() {
-		return false;
+		return !(checkInstance(null)||checkInstance(Boolean.FALSE));
 	}
 
+	/**
+	 * Returns true if the type provably cannot be a true value (i.e. must be null or Boolean.FALSE)
+	 * @return
+	 */
 	public boolean cannotBeTruthy() {
 		return false;
 	}

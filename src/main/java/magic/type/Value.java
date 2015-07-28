@@ -91,6 +91,7 @@ public class Value<T> extends Type {
 	public Type union(Type t) {
 		if (t==this) return t;
 		if (t.checkInstance(value)) return t;
+		
 		if (t instanceof Value) {
 			Object tv=((Value<?>)t).value;
 			if (tv.equals(this.value)) return this;
@@ -104,7 +105,7 @@ public class Value<T> extends Type {
 	}
 	
 	@Override
-	public boolean equals(Object t) {
+	public boolean equals(Type t) {
 		if (t instanceof Value) {
 			Value<?> v=(Value<?>) t;
 			if (Tools.equals(v.value,this.value)) return true;
