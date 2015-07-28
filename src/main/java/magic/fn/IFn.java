@@ -1,6 +1,8 @@
 package magic.fn;
 
 import java.util.List;
+import magic.Type;
+import magic.Types;
 
 /**
  * General magic function interface
@@ -135,5 +137,13 @@ public interface IFn<R> {
 	
 	public default int arity() {
 		throw new ArityException("No arity defined");
+	}
+	
+	public default Type getReturnType() {
+		return Types.ANYTHING;
+	}
+	
+	public default Type getParamType(int i) {
+		return Types.ANYTHING;
 	}
 }
