@@ -3,6 +3,8 @@ package magic;
 import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import magic.Type;
 import magic.type.*;
@@ -91,6 +93,10 @@ public class TypeTests {
 		assertEquals(Number.class,Union.create(JavaType.create(BigDecimal.class),JavaType.create(Number.class)).getJavaClass());
 	}
 	
+	@Test public void testJavaInterface() {
+		assertTrue(JavaType.create(List.class).checkInstance(new ArrayList<Object>()));
+	}
+	
 	@Test public void testParse() {
 //		assertEquals(Integer.class,Type.parse("java.lang.Integer").getJavaClass());
 //		assertEquals(Number.class,Type.parse("(U Integer java.lang.Long)").getJavaClass());
@@ -137,7 +143,6 @@ public class TypeTests {
 		assertEquals(JavaType.create(String.class),Union.create(Nothing.INSTANCE,JavaType.create(String.class)));
 	}
 	
-	@SuppressWarnings("unused")
 	@Test public void testCast() {
 //		try {
 //			Cast cast=Cast.create(String.class, Constant.create(10));
