@@ -1,5 +1,7 @@
 package magic.lang;
 
+import magic.fn.AFn1;
+
 /**
  * Class for a magic predicate. Supports either Boolean of boolean primitive results.
  * 
