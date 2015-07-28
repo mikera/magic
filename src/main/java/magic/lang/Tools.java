@@ -47,7 +47,7 @@ public final class Tools {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static int compareWithNulls(Object a, Object b) {
+	public static int compare(Object a, Object b) {
 		if (a == b) {
 			return 0;
 		}
@@ -58,7 +58,7 @@ public final class Tools {
 		return ((Comparable) a).compareTo(b);
 	}
 
-	public static final boolean equalsWithNulls(Object a, Object b) {
+	public static final boolean equals(Object a, Object b) {
 		if (a == b)
 			return true;
 		if ((a == null) || (b == null))
@@ -75,16 +75,22 @@ public final class Tools {
 	 * @param data
 	 * @return
 	 */
-	public static int hashCode(int[] data) {
+	public static int hashArray(int[] data) {
 		int result = 0;
 		for (int i = 0; i < data.length; i++) {
-			result ^= hashCode(data[i]);
+			result ^= hashPrim(data[i]);
 			result = Integer.rotateRight(result, 1);
 		}
 		return result;
 	}
 
-	public static <T> int hashCode(T[] data) {
+	/**
+	 * HashCode for an array of values
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static <T> int hashArray(T[] data) {
 		int result = 0;
 		for (int i = 0; i < data.length; i++) {
 			result ^= data[i].hashCode();
@@ -93,11 +99,17 @@ public final class Tools {
 		return result;
 	}
 
-	public static <T> int hashCode(Iterator<T> data) {
+	/**
+	 * Hashcode for an arbitrary iterator
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static <T> int hashIterator(Iterator<T> data) {
 		int result = 0;
 
 		while (data.hasNext()) {
-			result ^= hashCode(data.next());
+			result ^= hash(data.next());
 			result = Integer.rotateRight(result, 1);
 		}
 		return result;
@@ -110,7 +122,7 @@ public final class Tools {
 	 * @param value
 	 * @return
 	 */
-	public static int hashCode(int value) {
+	public static int hashPrim(int value) {
 		return value;
 	}
 	
@@ -120,7 +132,7 @@ public final class Tools {
 	 * @param value
 	 * @return
 	 */
-	public static int hashCode(Object value) {
+	public static int hash(Object value) {
 		if (value == null)
 			return 0;
 		return value.hashCode();
@@ -132,8 +144,8 @@ public final class Tools {
 	 * @param d
 	 * @return
 	 */
-	public static int hashCode(double d) {
-		return hashCode(Double.doubleToLongBits(d));
+	public static int hashPrim(double d) {
+		return hashPrim(Double.doubleToLongBits(d));
 	}
 
 	/**
@@ -142,7 +154,7 @@ public final class Tools {
 	 * @param l
 	 * @return
 	 */
-	public static int hashCode(long l) {
+	public static int hashPrim(long l) {
 		return (int) (l ^ (l >>> 32));
 	}
 
