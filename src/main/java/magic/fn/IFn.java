@@ -1,11 +1,12 @@
 package magic.fn;
 
+import java.util.List;
+
 /**
  * General magic function interface
  * @author Mike
  *
  */
-@FunctionalInterface
 public interface IFn<R> {
 	public default R apply() {
 		return throwArity(0);
@@ -91,7 +92,42 @@ public interface IFn<R> {
 		return throwArity(20);
 	}
 
-	public R applyTo(Object o);
+	public default R applyTo(Object o) {
+		if (o instanceof Object[]) {
+			return applyToArray((Object[])o);
+		} else if (o instanceof List<?>) {
+			return applyToArray(((List<?>)o).toArray());
+		}
+		throw new RuntimeException("IFn.applyTo() not supported for class: "+o.getClass());
+	}
+	
+	public default R applyToArray(Object... a) {
+		int n=a.length;
+		switch (a.length) {
+		case 0:  return apply();
+		case 1:  return apply(a[0]);
+		case 2:  return apply(a[0],a[1]);
+		case 3:  return apply(a[0],a[1],a[2]);
+		case 4:  return apply(a[0],a[1],a[2],a[3]);
+		case 5:  return apply(a[0],a[1],a[2],a[3],a[4]);
+		case 6:  return apply(a[0],a[1],a[2],a[3],a[4],a[5]);
+		case 7:  return apply(a[0],a[1],a[2],a[3],a[4],a[5],a[6]);
+		case 8:  return apply(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7]);
+		case 9:  return apply(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8]);
+		case 10: return apply(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],a[9]);
+		case 11: return apply(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],a[9],a[10]);
+		case 12: return apply(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],a[9],a[10],a[11]);
+		case 13: return apply(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],a[9],a[10],a[11],a[12]);
+		case 14: return apply(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],a[9],a[10],a[11],a[12],a[13]);
+		case 15: return apply(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],a[9],a[10],a[11],a[12],a[13],a[14]);
+		case 16: return apply(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],a[9],a[10],a[11],a[12],a[13],a[14],a[15]);
+		case 17: return apply(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],a[9],a[10],a[11],a[12],a[13],a[14],a[15],a[16]);
+		case 18: return apply(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],a[9],a[10],a[11],a[12],a[13],a[14],a[15],a[16],a[17]);
+		case 19: return apply(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],a[9],a[10],a[11],a[12],a[13],a[14],a[15],a[16],a[17],a[18]);
+		case 20: return apply(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8],a[9],a[10],a[11],a[12],a[13],a[14],a[15],a[16],a[17],a[18],a[19]);
+		default: return throwArity(n);
+		}
+	}
 	
 	public default R throwArity(int arity) {
 		throw new ArityException(arity(), arity);
