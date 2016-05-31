@@ -1,26 +1,8 @@
 package magic.lang;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.io.Serializable;
-import java.io.Writer;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.IdentityHashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 
 public final class Tools {
@@ -28,6 +10,7 @@ public final class Tools {
 	public static class HashComparator<T> implements Comparator<T>, Serializable {
 		private static final long serialVersionUID = -568440287836864164L;
 
+		@Override
 		public int compare(T o1, T o2) {
 			return o2.hashCode() - o1.hashCode();
 		}
@@ -36,6 +19,7 @@ public final class Tools {
 	public static class DefaultComparator<T> implements Comparator<T>, Serializable {
 		private static final long serialVersionUID = 1695713461396657889L;
 
+		@Override
 		@SuppressWarnings("unchecked")
 		public int compare(T o1, T o2) {
 			return ((Comparable<T>) o1).compareTo(o2);

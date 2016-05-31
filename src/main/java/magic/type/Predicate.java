@@ -1,9 +1,8 @@
 package magic.type;
 
-import magic.Type;
-import magic.fn.IFn;
-import magic.fn.IFn1;
 import clojure.lang.RT;
+import magic.Type;
+import magic.fn.IFn1;
 
 /**
  * Type defined by a predicate function.
