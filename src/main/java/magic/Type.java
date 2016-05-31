@@ -1,7 +1,8 @@
 package magic;
 
-import clojure.lang.Symbol;
-import magic.type.*;
+import magic.type.Intersection;
+import magic.type.JavaType;
+import magic.type.Union;
 
 /**
  * Abstract base class for Kiss types
