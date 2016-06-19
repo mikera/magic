@@ -1,7 +1,7 @@
 package magic;
 
 /**
- * Static class to support the Clojure runtime
+ * Static class to support the Magic runtime
  * 
  * @author Mike
  */
