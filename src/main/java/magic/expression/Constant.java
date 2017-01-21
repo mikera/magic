@@ -16,4 +16,9 @@ public class Constant extends Expression {
 		return value;
 	}
 
+	public static Expression create(Object v) {
+		// TODO Auto-generated method stub
+		return new Constant(v);
+	}
+
 }
