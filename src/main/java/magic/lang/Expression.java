@@ -5,7 +5,7 @@ package magic.lang;
  * @author Mike
  *
  */
-public abstract class Expression {
+public abstract class Expression<T> {
 
-	public abstract Object compute(Context c);
+	public abstract T compute(Context c);
 }

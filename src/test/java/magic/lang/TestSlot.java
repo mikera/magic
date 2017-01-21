@@ -9,7 +9,7 @@ import magic.expression.Constant;
 public class TestSlot {
 
 	@Test public void testConstantSlot() {
-		Slot s=new Slot(new Constant(1));
+		Slot<Integer> s=new Slot<Integer>(Constant.create(1));
 		
 		Context c=new Context();
 		

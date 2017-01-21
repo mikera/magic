@@ -15,7 +15,7 @@ public class TestExpression {
 	static final Context ec=new Context();
 	
 	@Test public void testConstant() {
-		Constant c=new Constant("Foo");
+		Constant<String> c=Constant.create("Foo");
 		assertEquals("Foo",ec.evaluate(c));
 	}
 	
@@ -27,7 +27,7 @@ public class TestExpression {
 			}	
 		};
 		
-		Apply app=new Apply(Constant.create(f),Constant.create(1),Constant.create(2));
-		assertEquals(3,ec.evaluate(app));
+		Apply<Integer> app=Apply.create(Constant.create(f),Constant.create(1),Constant.create(2));
+		assertEquals((Integer)3,ec.evaluate(app));
 	}
 }

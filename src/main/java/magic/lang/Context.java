@@ -13,7 +13,7 @@ public class Context {
 		
 	}
 	
-	public Object evaluate(Expression e) {
+	public <T> T evaluate(Expression<T> e) {
 		return e.compute(this);
 	}
 

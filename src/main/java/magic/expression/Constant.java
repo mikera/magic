@@ -3,22 +3,27 @@ package magic.expression;
 import magic.lang.Context;
 import magic.lang.Expression;
 
-public class Constant extends Expression {
+/**
+ * Expression representing a constant.
+ * 
+ * @author Mike
+ *
+ */
+public class Constant<T> extends Expression<T> {
 
-	private final Object value;
+	private final T value;
 	
-	public Constant(Object  value) {
+	public Constant(T value) {
 		this.value=value;
 	}
 	
 	@Override
-	public Object compute(Context c) {
+	public T compute(Context c) {
 		return value;
 	}
 
-	public static Expression create(Object v) {
-		// TODO Auto-generated method stub
-		return new Constant(v);
+	public static <T> Constant<T> create(T v) {
+		return new Constant<T>(v);
 	}
 
 }

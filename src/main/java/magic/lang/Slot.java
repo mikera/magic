@@ -10,13 +10,13 @@ package magic.lang;
  * @author Mike
  *
  */
-public class Slot {
-	public final Expression expression;
+public class Slot<T> {
+	public final Expression<T> expression;
 	
 	private Object value=null;
 	private volatile boolean computed=false;
 	
-	public Slot(Expression e) {
+	public Slot(Expression<T> e) {
 		this.expression=e;
 	}
 	
