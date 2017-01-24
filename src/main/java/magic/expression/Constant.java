@@ -9,7 +9,7 @@ import magic.lang.Expression;
  * @author Mike
  *
  */
-public class Constant<T> extends Expression<T> {
+public class Constant<T> extends BaseConstant<T> {
 
 	private final T value;
 	
