@@ -9,6 +9,16 @@ import com.oracle.truffle.api.source.SourceSection;
 
 public class MagicLanguage extends TruffleLanguage<MagicContext> {
 
+	public static final String MIME_TYPE = "application/x-magic";
+	
+	public static final MagicLanguage INSTANCE = new MagicLanguage();
+
+    /**
+     * No instances allowed apart from the {@link #INSTANCE singleton instance}.
+     */
+	private MagicLanguage() {
+    }
+
 	@Override
 	protected Object evalInContext(Source arg0, Node arg1, MaterializedFrame arg2) throws Exception {
 		// TODO Auto-generated method stub

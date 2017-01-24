@@ -1,6 +1,7 @@
 package magic.fn;
 
 import java.util.List;
+
 import magic.Type;
 import magic.Types;
 

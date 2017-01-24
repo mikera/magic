@@ -1,7 +1,6 @@
 package magic.expression;
 
 import magic.lang.Context;
-import magic.lang.Expression;
 
 /**
  * Expression representing a constant.

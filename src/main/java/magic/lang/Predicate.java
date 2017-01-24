@@ -11,9 +11,10 @@ import magic.fn.AFn1;
  */
 public abstract class Predicate<T> extends AFn1<T,Boolean> implements java.util.function.Predicate<T> {
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Boolean apply(T a) {
-		return Boolean.valueOf(test(a));
+	public Boolean apply(Object a) {
+		return Boolean.valueOf(test((T)a));
 	}
 	
 	@Override
