@@ -1,7 +1,7 @@
 package magic.fn;
 
 @FunctionalInterface
-public interface IFn0<R> extends IFn<R> {
+public interface IFn0<R> extends IFixedFn<R> {
 
 	@Override
 	public R apply();

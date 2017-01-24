@@ -136,6 +136,10 @@ public interface IFn<R> {
 		throw new ArityException(arity(), arity);
 	}
 	
+	public default boolean isFixedArity() {
+		return false;
+	}
+	
 	public default int arity() {
 		throw new ArityException("No arity defined");
 	}
