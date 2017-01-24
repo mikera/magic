@@ -20,7 +20,7 @@ public class MagicLanguage extends TruffleLanguage<MagicContext> {
     }
 
 	@Override
-	protected Object evalInContext(Source arg0, Node arg1, MaterializedFrame arg2) throws Exception {
+	protected Object evalInContext(Source arg0, Node arg1, MaterializedFrame arg2) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -32,11 +32,12 @@ public class MagicLanguage extends TruffleLanguage<MagicContext> {
 	}
 
 	@Override
-	protected CallTarget parse(Source arg0, Node arg1, String... arg2) throws Exception {
+	protected CallTarget parse(ParsingRequest request) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
+	@Override
     protected SourceSection findSourceLocation(MagicContext context, Object value) {
 //        if (value instanceof SLFunction) {
 //            SLFunction f = (SLFunction) value;
