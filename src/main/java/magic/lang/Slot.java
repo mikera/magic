@@ -1,5 +1,7 @@
 package magic.lang;
 
+import magic.expression.Expression;
+
 /**
  * Represents a "slot" in a magic Context.
  * 

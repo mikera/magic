@@ -1,10 +1,13 @@
-package magic.lang;
+package magic.expression;
 import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.source.SourceSection;
+
+import magic.lang.Context;
+import magic.lang.MagicLanguage;
  
 /**
  * Base class for Expressions

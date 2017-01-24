@@ -2,7 +2,6 @@ package magic.expression;
 
 import magic.fn.IFn;
 import magic.lang.Context;
-import magic.lang.Expression;
 
 /**
  * Expression representing a function application

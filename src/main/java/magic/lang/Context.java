@@ -1,5 +1,7 @@
 package magic.lang;
 
+import magic.expression.Expression;
+
 /**
  * Class representing an Execution context.
  * 
