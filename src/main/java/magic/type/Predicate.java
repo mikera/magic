@@ -1,6 +1,6 @@
 package magic.type;
 
-import clojure.lang.RT;
+import magic.RT;
 import magic.Type;
 import magic.fn.IFn1;
 
@@ -30,7 +30,7 @@ public class Predicate extends Type {
 	
 	@Override
 	public boolean checkInstance(Object o) {
-		return RT.booleanCast(pred.apply(o));
+		return RT.bool(pred.apply(o));
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class Predicate extends Type {
 
 	@Override
 	public boolean canBeNull() {
-		return checkInstance(null);
+		return false;
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class Predicate extends Type {
 
 	@Override
 	public boolean canBeFalsey() {
-		return checkInstance(null)||checkInstance(Boolean.FALSE);
+		return false;
 	}
 
 	@Override

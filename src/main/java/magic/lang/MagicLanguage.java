@@ -1,11 +1,15 @@
 package magic.lang;
 
 import com.oracle.truffle.api.CallTarget;
+import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.api.source.SourceSection;
+
+import magic.expression.Expression;
+import magic.parser.Parser;
 
 public class MagicLanguage extends TruffleLanguage<MagicContext> {
 
@@ -33,8 +37,9 @@ public class MagicLanguage extends TruffleLanguage<MagicContext> {
 
 	@Override
 	protected CallTarget parse(ParsingRequest request) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		Source source=request.getSource();
+		Expression<?> ex= Parser.parse(source.getReader());
+		return Truffle.getRuntime().createCallTarget(ex);
 	}
 	
 	@Override

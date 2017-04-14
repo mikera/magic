@@ -1,7 +1,7 @@
 package magic.type;
 
-import clojure.lang.Keyword;
-import clojure.lang.Symbol;
+import magic.Keyword;
+import magic.Symbol; 
 import magic.Type;
 
 /**
