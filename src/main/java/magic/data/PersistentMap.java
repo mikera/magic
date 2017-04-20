@@ -86,13 +86,13 @@ public abstract class PersistentMap<K,V> extends PersistentObject implements IPe
 	}
 	
 	@Override
-	public abstract PersistentMap<K, V> delete(K key);
+	public abstract PersistentMap<K, V> dissoc(K key);
 
 	@Override
 	public PersistentMap<K, V> delete(Collection<K> keys) {
 		PersistentMap<K, V> pm=this;
 		for (K k: keys) {
-			pm=pm.delete(k);
+			pm=pm.dissoc(k);
 		}
 		return pm;
 	}
@@ -103,13 +103,13 @@ public abstract class PersistentMap<K,V> extends PersistentObject implements IPe
 	}
 
 	@Override
-	public abstract PersistentMap<K, V> include(K key, V value);
+	public abstract PersistentMap<K, V> assoc(K key, V value);
 
 	@Override
 	public PersistentMap<K, V> include(Map<K, V> values) {
 		PersistentMap<K, V> pm=this;
 		for (Map.Entry<K, V> entry:values.entrySet()) {
-			pm=pm.include(entry.getKey(),entry.getValue());
+			pm=pm.assoc(entry.getKey(),entry.getValue());
 		}
 		return pm;
 	}

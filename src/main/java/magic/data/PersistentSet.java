@@ -94,6 +94,6 @@ public abstract class PersistentSet<T> extends PersistentCollection<T> implement
 	
 	@Override
 	public int hashCode() {
-		return RT.hashCode(iterator());
+		return RT.iteratorHashCode(iterator());
 	}
 }

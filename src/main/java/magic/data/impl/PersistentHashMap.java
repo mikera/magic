@@ -68,7 +68,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	public static<K,V> PersistentHashMap<K,V> create(Map<K,V> values) {
 		PersistentHashMap<K,V> pm=(PersistentHashMap<K, V>) PersistentHashMap.EMPTY;
 		for (Map.Entry<K,V> ent: values.entrySet()) {
-			pm=pm.include(ent.getKey(),ent.getValue());
+			pm=pm.assoc(ent.getKey(),ent.getValue());
 		}
 		return pm;
 	}
@@ -881,7 +881,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	}
 
 	@Override
-	public PersistentHashMap<K, V> include(K key, V value) {
+	public PersistentHashMap<K, V> assoc(K key, V value) {
 		PHMNode<K,V> newRoot=root.include(key, value,key.hashCode(),0);
 		if (root==newRoot) return this;
 		return new PersistentHashMap<K, V>(newRoot);
@@ -895,7 +895,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		
 		PersistentMap<K, V> pm=this;
 		for (Map.Entry<K, V> entry:values.entrySet()) {
-			pm=pm.include(entry.getKey(),entry.getValue());
+			pm=pm.assoc(entry.getKey(),entry.getValue());
 		}
 		return pm;
 	}
@@ -904,13 +904,13 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		// TODO: Consider fast node-level merging implementation
 		PersistentHashMap<K, V> pm=this;
 		for (Map.Entry<K, V> entry:values.entrySet()) {
-			pm=pm.include(entry.getKey(),entry.getValue());
+			pm=pm.assoc(entry.getKey(),entry.getValue());
 		}
 		return pm;
 	}
 
 	@Override
-	public PersistentMap<K, V> delete(K key) {
+	public PersistentMap<K, V> dissoc(K key) {
 		PHMNode<K,V> newRoot=root.delete(key,key.hashCode());
 		if (root==newRoot) return this;
 		return new PersistentHashMap<K, V>(newRoot);

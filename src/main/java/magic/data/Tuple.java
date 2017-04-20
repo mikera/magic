@@ -3,16 +3,17 @@ package magic.data;
 import java.util.Collection;
 import java.util.List;
 
+import magic.RT;
 import magic.data.impl.BasePersistentList;
 import magic.data.impl.BlockList;
 import magic.data.impl.EmptyArrays;
-import magic.data.impl.SingletonList;
-import magic.data.impl.SubTuple;
 
 public final class Tuple<T> extends BasePersistentList<T> {
 	private static final long serialVersionUID = -3717695950215145009L;
 
 	public final T[] data;
+	private final int offset;
+	private final int size;
 	
 	// Empty Tuple for some special cases
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -25,6 +26,17 @@ public final class Tuple<T> extends BasePersistentList<T> {
 		T[] ndata=(T[]) new Object[n];
 		System.arraycopy(values,0,ndata,0,n);
 		return new Tuple<T>(ndata);
+	}
+	
+	public static <T> Tuple<T> wrap(T[] values) {
+		return new Tuple<T>(values);
+	}
+	
+	public static <T> Tuple<T> wrap(T[] values,int offset, int size) {
+		if ((offset<0)||(offset+size>values.length)||(size<0)) {
+			throw new IndexOutOfBoundsException("Invalid index range start="+offset+" size="+size);
+		}
+		return new Tuple<T>(values,offset,size);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -84,15 +96,19 @@ public final class Tuple<T> extends BasePersistentList<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> Tuple<T> concat(List<T> a, List<T> b) {
-		int as=a.size();
-		int bs=b.size();
-		T[] ndata=(T[]) new Object[as+bs];
-		for (int i=0; i<as; i++) {
+	public static <T> PersistentList<T> concat(List<T> a, List<T> b) {
+		int aSize=a.size();
+		int bSize=b.size();
+		int newSize=aSize+bSize;
+		if (newSize>2*BlockList.BASE_BLOCKSIZE) {
+			return BlockList.create(a).concat(b);
+		}
+		T[] ndata=(T[]) new Object[newSize];
+		for (int i=0; i<aSize; i++) {
 			ndata[i]=a.get(i);
 		}
-		for (int i=0; i<bs; i++) {
-			ndata[as+i]=b.get(i);
+		for (int i=0; i<bSize; i++) {
+			ndata[aSize+i]=b.get(i);
 		}
 
 		return new Tuple<T>(ndata);
@@ -100,16 +116,23 @@ public final class Tuple<T> extends BasePersistentList<T> {
 	
 	@Override
 	public int size() {
-		return data.length;
+		return size;
 	}
 	
 	private Tuple(T[] values) {
+		this(values,0,values.length);
+	}
+	
+	private Tuple(T[] values, int offset, int size) {
 		data=values;
+		this.offset=offset;
+		this.size=size;
 	}
 	
 	@Override
 	public T get(int i) {
-		return data[i];
+		if ((i<0)||(i>=size)) throw new IndexOutOfBoundsException("Index: "+i);
+		return data[i+offset];
 	}
 	
 	@Override
@@ -117,35 +140,30 @@ public final class Tuple<T> extends BasePersistentList<T> {
 		return this;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public PersistentList<T> subList(int fromIndex, int toIndex) {
-		if ((fromIndex<0)||(toIndex>size())) throw new IndexOutOfBoundsException();
-		if ((fromIndex==0)&&(toIndex==size())) return this;
-		if (fromIndex>=toIndex) {
-			if (fromIndex==toIndex) return ListFactory.emptyList();
-			throw new IllegalArgumentException();
-		}
-		if (fromIndex+1==toIndex) {
-			return SingletonList.of(data[fromIndex]);
-		}
-		return SubTuple.create(data, fromIndex, toIndex-fromIndex);
+	public Tuple<T> subList(int fromIndex, int toIndex) {
+		int newSize=toIndex-fromIndex;
+		if ((fromIndex<0)||(toIndex>size)) throw new IndexOutOfBoundsException();
+		if ((fromIndex==0)&&(toIndex==size)) return this;
+		if (newSize==0) return (Tuple<T>) Tuple.EMPTY_TUPLE;
+		if (newSize<0)throw new IllegalArgumentException("Negative range specified");
+
+		return Tuple.wrap(data, offset+fromIndex, newSize);
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
 	public PersistentList<T> deleteRange(int start, int end) {
-		if ((start<0)||(end>size())) throw new IndexOutOfBoundsException();
-		if (start>=end) {
-			if (start>end) throw new IllegalArgumentException();
-			return this;
-		}
-		if ((start==0)&&(end==size())) return ListFactory.emptyList();
+		if ((start<0)||(end>size)) throw new IndexOutOfBoundsException();
+		if (start>end) throw new IllegalArgumentException("Negative range specified");
+		if ((start==0)&&(end==size)) return (PersistentList<T>) EMPTY_TUPLE;
 		if (start==end) return this;
-		int ns=size()-(end-start);
-		T[] ndata=(T[]) new Object[ns];
-		System.arraycopy(data, 0, ndata, 0, start);
-		System.arraycopy(data, end, ndata, start, size()-end);
-		return new Tuple<T>(ndata);
+		int newSize=size-(end-start);
+		T[] ndata=(T[]) new Object[newSize];
+		if (start>0) System.arraycopy(data, offset, ndata, 0, start);
+		if (end<size) System.arraycopy(data, offset+end, ndata, start, size-end);
+		return new Tuple<T>(ndata,0,newSize);
 	}
 
 	@Override
@@ -153,9 +171,23 @@ public final class Tuple<T> extends BasePersistentList<T> {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public PersistentList<T> conj(T value) {
-		return BlockList.coerce(this).conj(value);
+		if (size<BlockList.BASE_BLOCKSIZE) {
+			int newSize=size+1;
+			T[] ndata=(T[]) new Object[newSize];
+			System.arraycopy(data, offset, ndata, 0, size);
+			ndata[size]=value;
+			return Tuple.wrap(ndata,0,newSize);
+		} else {
+			return BlockList.coerce(this).conj(value);
+		}
+	}
+	
+	@Override
+	public int hashCode() {
+		return RT.arrayHashCode(data, offset, size);
 	}
 
 }

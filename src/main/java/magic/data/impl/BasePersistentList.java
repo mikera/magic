@@ -52,12 +52,18 @@ public abstract class BasePersistentList<T> extends PersistentList<T> {
 	}
 
 
+	/**
+	 * Deletes the first instance of a specified value in the collection"
+	 */
 	public PersistentList<T> deleteFirst(T value) {
 		int i=indexOf(value);
 		if (i<0) return this;
 		return deleteRange(i,i+1);
 	}
 	
+	/**
+	 * Deletes all instances of a specified value in the collection"
+	 */
 	@Override
 	public PersistentList<T> delete(T value) {
 		PersistentList<T> pl=this;
@@ -92,7 +98,7 @@ public abstract class BasePersistentList<T> extends PersistentList<T> {
 
 	@Override
 	public PersistentList<T> concat(IPersistentList<T> values) {
-		return BlockList.coerce(values).concat(values);
+		return BlockList.coerce(this).concat(values);
 	}
 	
 	@Override

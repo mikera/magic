@@ -93,7 +93,7 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 	
 	@Override
 	public int hashCode() {
-		return RT.hashCode(this.iterator());
+		return RT.iteratorHashCode(this.iterator());
 	}
 	
 	@Override

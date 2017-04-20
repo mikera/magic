@@ -48,6 +48,13 @@ public class ListFactory<T> {
 		return createFromArray(data,0,data.length);
 	}
 	
+	/**
+	 * Creates a persistent list from the specified values
+	 * @param data
+	 * @param fromIndex
+	 * @param toIndex
+	 * @return
+	 */
 	public static <T> PersistentList<T> createFromArray(T[] data,  int fromIndex, int toIndex) {
 		int n=toIndex-fromIndex;
 		if (n<=MAX_TUPLE_BUILD_SIZE) {

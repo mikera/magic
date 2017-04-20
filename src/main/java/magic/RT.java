@@ -78,6 +78,31 @@ public class RT {
 		return value.hashCode();
 	}
 	
+	public static <T> int iteratorHashCode(Iterator<T> data) {
+		int result=0;
+		
+		while(data.hasNext()) {
+			result^=hashCode(data.next());
+			result=Integer.rotateRight(result, 1);
+		}
+		return result;
+	}
+	
+	public static <T> int arrayHashCode(T[] data, int offset, int size) {
+		int result=0;
+		
+		for (int i=0; i<size; i++) {
+			result^=hashCode(data[offset+i]);
+			result=Integer.rotateRight(result, 1);
+		}
+		return result;
+	}
+	
+
+	public static <T> int arrayHashCode(T[] data) {
+		return arrayHashCode(data,0,data.length);
+	}
+	
 	/** 
 	 * Hashcode for a double primitive
 	 * 
@@ -111,4 +136,5 @@ public class RT {
 	private static <T extends Throwable> void sneakyRethrow(Throwable t) throws T {
 		throw (T) t;
 	}
+
 }

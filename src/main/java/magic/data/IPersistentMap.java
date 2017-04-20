@@ -6,7 +6,7 @@ import java.util.Map;
 public interface IPersistentMap<K,V> extends Map<K,V>, IPersistentObject, Sequable<Map.Entry<K,V>> {
 	// include methods
 	
-	public IPersistentMap<K,V> include(K key, V value);
+	public IPersistentMap<K,V> assoc(K key, V value);
 	
 	public IPersistentMap<K,V> include(Map<K,V> values);
 
@@ -14,7 +14,7 @@ public interface IPersistentMap<K,V> extends Map<K,V>, IPersistentObject, Sequab
 
 	// delete methods
 
-	public IPersistentMap<K,V> delete(K key);
+	public IPersistentMap<K,V> dissoc(K key);
 	
 	public IPersistentMap<K,V> delete(Collection<K> key);
 

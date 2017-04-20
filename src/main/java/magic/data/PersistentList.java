@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import magic.Errors;
 import magic.RT;
 import magic.data.impl.SubList;
 
@@ -146,10 +147,8 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 	public PersistentList<T> deleteRange(int start, int end) {
 		int size=size();
 		if ((start<0)||(end>size)) throw new IndexOutOfBoundsException();
-		if (start>=end) {
-			if (start>end) throw new IllegalArgumentException();
-			return this;
-		}
+		if (start>end) throw new IllegalArgumentException();
+		if (start==end) return this;
 		if (start==0) return subList(end,size);
 		if (end==size) return subList(0,start);
 		return subList(0,start).concat(subList(end,size));
@@ -257,11 +256,12 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 	}
 	
 	@Override
-	public PersistentList<T> copyFrom(int index, IPersistentList<T> values,
-			int srcIndex, int length) {
-		if ((index<0)||((index+length)>size())) throw new IndexOutOfBoundsException();
+	public PersistentList<T> copyFrom(int dstIndex, IPersistentList<T> values, int srcIndex, int length) {
+		int size=size();
+		if ((dstIndex<0)||((dstIndex+length)>size)) throw new IndexOutOfBoundsException();
+		if (length<0) throw new IllegalArgumentException(Errors.negativeRange());
 		if (length==0) return this;
-		return subList(0,index).concat(values.subList(srcIndex, srcIndex+length)).concat(subList(index+length,size()));
+		return subList(0,dstIndex).concat(values.subList(srcIndex, srcIndex+length)).concat(subList(dstIndex+length,size));
 	}
 
 	public static <T> PersistentList<T> coerce(List<T> a) {
