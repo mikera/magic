@@ -1,41 +1,35 @@
 package magic.parser;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
 import magic.data.IPersistentList;
-import magic.expression.Constant;
-import magic.expression.Expression;
-import magic.expression.LongConstant;
-import magic.expression.Vector;
 
 public class TestParser {
 
-	@SuppressWarnings("unchecked")
 	@Test public void testString() {
-		Constant<String> c=(Constant<String>) MagicParser.parseExpression("\"foo\"");
-		assertEquals("foo",c.getValue());
+		Object c=MagicParser.parse("\"foo\"");
+		assertEquals("foo",c);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test public void testDouble() {
-		Constant<Double> c=(Constant<Double>) MagicParser.parseExpression("-3.0");
-		assertEquals(Double.valueOf(-3.0),c.getValue());
+		Object c=MagicParser.parse("-3.0");
+		assertEquals(Double.valueOf(-3.0),c);
 	}
 	
 	@Test public void testLong() {
-		LongConstant c=(LongConstant) MagicParser.parseExpression("-3");
-		assertEquals(Long.valueOf(-3),c.getValue());
+		Object c=MagicParser.parse("-3");
+		assertEquals(Long.valueOf(-3),c);
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Test public void testVector() {
-		Vector<Object> c=(Vector<Object>) MagicParser.parseExpression("[-3 -1.0 \"foo\"]");
-		IPersistentList<Expression<Object>> exps=c.getExpressions();
+		Object c=MagicParser.parse("[-3 -1.0 \"foo\"]");
+		IPersistentList<Object> exps=(IPersistentList<Object>) c;
 		assertEquals(3,exps.size());
-		assertEquals(Long.valueOf(-3),exps.get(0).getValue());
-		assertEquals(Double.valueOf(-1.0),exps.get(1).getValue());
-		assertEquals("foo",exps.get(2).getValue());
+		assertEquals(Long.valueOf(-3),exps.get(0));
+		assertEquals(Double.valueOf(-1.0),exps.get(1));
+		assertEquals("foo",exps.get(2));
 	}
 }

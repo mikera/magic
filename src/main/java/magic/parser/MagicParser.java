@@ -16,17 +16,11 @@ import org.parboiled.support.StringVar;
 import org.parboiled.support.Var;
 
 import magic.data.ListFactory;
-import magic.expression.Constant;
-import magic.expression.Expression;
-import magic.expression.LongConstant;
 
 @BuildParseTree
-public class MagicParser extends BaseParser<Expression<?>> {
-	public static Expression<?> parse(String source) {
-		return Constant.create("Parsed test constant");
-	}
-	
-	public static Expression<?> parse(Reader source) throws IOException {
+public class MagicParser extends BaseParser<Object> {
+
+	public static Object parse(Reader source) throws IOException {
 	    char[] arr = new char[8 * 1024];
 	    StringBuilder buffer = new StringBuilder();
 	    int numCharsRead;
@@ -50,11 +44,11 @@ public class MagicParser extends BaseParser<Expression<?>> {
 				']');
 	}
 	
-	Action<?> AddAction(Var<ArrayList<Expression<?>>> expVar) {
+	Action<Object> AddAction(Var<ArrayList<Object>> expVar) {
 		return new Action<Object>() {
 			@Override
 			public boolean run(Context<Object> context) {
-				Expression<?> o=pop();
+				Object o=pop();
 				// System.out.println(o);
 				expVar.get().add(o);
 				return true;
@@ -63,7 +57,7 @@ public class MagicParser extends BaseParser<Expression<?>> {
 	}
 	
 	public Rule ExpressionList() {
-		Var<ArrayList<Expression<?>>> expVar=new Var<>(new ArrayList<>());
+		Var<ArrayList<Object>> expVar=new Var<>(new ArrayList<>());
 		return Sequence(
 				Optional(WhiteSpace()),
 				FirstOf(Sequence(
@@ -75,7 +69,7 @@ public class MagicParser extends BaseParser<Expression<?>> {
 						 Optional(WhiteSpace())),
 						 EMPTY
 						),
-				push(magic.expression.Vector.create(ListFactory.createFromList(expVar.get())))
+				push(ListFactory.createFromList(expVar.get()))
 				);
 	}
 	
@@ -93,7 +87,7 @@ public class MagicParser extends BaseParser<Expression<?>> {
 		return Sequence(
 				'"',
 				ZeroOrMore(Sequence(StringCharacter(),sb.append(matchOrDefault("0")))),
-				push(Constant.create(sb.get().toString())),
+				push(sb.get().toString()),
 				'"');
 	}
 	
@@ -120,7 +114,7 @@ public class MagicParser extends BaseParser<Expression<?>> {
         return Sequence(
         		Sequence(Optional('-'),
         				 OneOrMore(Digit())),
-        		push(LongConstant.create(Long.parseLong(match()))));
+        		push(Long.parseLong(match())));
     }
 	
 	public Rule Double() {
@@ -129,7 +123,7 @@ public class MagicParser extends BaseParser<Expression<?>> {
         				 OneOrMore(Digit()),
         				 '.',
         				 OneOrMore(Digit())),
-        		push(Constant.create(Double.parseDouble(match()))));
+        		push(Double.parseDouble(match())));
     }
     
 
@@ -138,15 +132,23 @@ public class MagicParser extends BaseParser<Expression<?>> {
     }
 	
 	private static MagicParser parser = Parboiled.createParser(MagicParser.class);
-	private static final RecoveringParseRunner<Expression<?>> expressionParseRunner=new RecoveringParseRunner<>(parser.Expression());
+	private static final RecoveringParseRunner<Object> expressionParseRunner=new RecoveringParseRunner<>(parser.Expression());
 
-	public static Expression<?> parseExpression(String string) {
-		ParsingResult<Expression<?>> result = expressionParseRunner.run(string);
+	
+	/**
+	 * Parses an expression and results a form
+	 * @param string
+	 * @return
+	 */
+	public static Object parse(String source) {
+		ParsingResult<Object> result = expressionParseRunner.run(source);
 		return result.resultValue;
 	}
+	
+
 
 	public static void main(String[] args) {
-		Expression<?> result = parseExpression("[1 2 3]");
+		Object result = parse("[1 2 3]");
 		
 		System.out.println(result);
 	}
