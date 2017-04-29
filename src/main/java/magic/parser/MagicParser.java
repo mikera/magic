@@ -2,8 +2,11 @@ package magic.parser;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
 
+import org.parboiled.Action;
 import org.parboiled.BaseParser;
+import org.parboiled.Context;
 import org.parboiled.Parboiled;
 import org.parboiled.Rule;
 import org.parboiled.annotations.BuildParseTree;
@@ -12,8 +15,10 @@ import org.parboiled.support.ParsingResult;
 import org.parboiled.support.StringVar;
 import org.parboiled.support.Var;
 
+import magic.data.ListFactory;
 import magic.expression.Constant;
 import magic.expression.Expression;
+import magic.expression.LongConstant;
 
 @BuildParseTree
 public class MagicParser extends BaseParser<Expression<?>> {
@@ -33,10 +38,45 @@ public class MagicParser extends BaseParser<Expression<?>> {
 	
 	public Rule Expression() {
 		return FirstOf(
-				Constant(),
-				Sequence('(',
-						ZeroOrMore(Expression()),
-						')'));
+				Vector(),
+				Constant()
+				);
+	}
+	
+	public Rule Vector() {
+		return Sequence(
+				'[',
+				ExpressionList(),
+				']');
+	}
+	
+	Action<?> AddAction(Var<ArrayList<Expression<?>>> expVar) {
+		return new Action<Object>() {
+			@Override
+			public boolean run(Context<Object> context) {
+				Expression<?> o=pop();
+				System.out.println(o);
+				expVar.get().add(o);
+				return true;
+			}
+		};
+	}
+	
+	public Rule ExpressionList() {
+		Var<ArrayList<Expression<?>>> expVar=new Var<>(new ArrayList<>());
+		return Sequence(
+				Optional(WhiteSpace()),
+				FirstOf(Sequence(
+						 Expression(),
+						 AddAction(expVar),
+						 ZeroOrMore(Sequence(WhiteSpace(),
+								 			 Expression(),
+								 		  	 AddAction(expVar))),
+						 Optional(WhiteSpace())),
+						 EMPTY
+						),
+				push(magic.expression.Vector.create(ListFactory.createFromList(expVar.get())))
+				);
 	}
 	
 	public Rule Constant() {
@@ -69,14 +109,18 @@ public class MagicParser extends BaseParser<Expression<?>> {
     }
 	
     public Rule WhiteSpace() {
-        return OneOrMore(AnyOf(" \t\f,\r\n"));
+        return OneOrMore(WhiteSpaceCharacter());
+    }
+    
+    public Rule WhiteSpaceCharacter() {
+        return AnyOf(" \t\f,\r\n");
     }
 
 	public Rule Long() {
         return Sequence(
         		Sequence(Optional('-'),
-        				OneOrMore(Digit())),
-        		push(Constant.create(Long.parseLong(matchOrDefault("0")))));
+        				 OneOrMore(Digit())),
+        		push(LongConstant.create(Long.parseLong(match()))));
     }
 	
 	public Rule Double() {
@@ -85,7 +129,7 @@ public class MagicParser extends BaseParser<Expression<?>> {
         				 OneOrMore(Digit()),
         				 '.',
         				 OneOrMore(Digit())),
-        		push(Constant.create(Double.parseDouble(matchOrDefault("0")))));
+        		push(Constant.create(Double.parseDouble(match()))));
     }
     
 
@@ -96,18 +140,17 @@ public class MagicParser extends BaseParser<Expression<?>> {
 	private static MagicParser parser = Parboiled.createParser(MagicParser.class);
 	private static final RecoveringParseRunner<Expression<?>> expressionParseRunner=new RecoveringParseRunner<>(parser.Expression());
 
-	public static void main(String[] args) {
-		MagicParser parser = Parboiled.createParser(MagicParser.class);
-		
-		ParsingResult<Expression<?>> result = expressionParseRunner.run("\"-3.0\"");
-		
-		System.out.println(result.resultValue);
-	}
-
 	public static Expression<?> parseExpression(String string) {
-		ParsingResult<magic.expression.Expression<?>> result = expressionParseRunner.run(string);
+		ParsingResult<Expression<?>> result = expressionParseRunner.run(string);
 		return result.resultValue;
 	}
+
+	public static void main(String[] args) {
+		Expression<?> result = parseExpression("[1 2 3]");
+		
+		System.out.println(result);
+	}
+
 
 
 }

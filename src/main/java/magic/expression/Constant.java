@@ -26,6 +26,7 @@ public class Constant<T> extends BaseConstant<T> {
 		return new Constant<T>(v);
 	}
 	
+	@Override
 	public T getValue() {
 		return value;
 	}

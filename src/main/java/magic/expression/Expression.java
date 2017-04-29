@@ -32,4 +32,8 @@ public abstract class Expression<T> extends RootNode {
 	public Object execute(VirtualFrame virtualFrame) {
 		return compute(null);
 	}
+	
+	public T getValue() {
+		throw new UnsupportedOperationException("Cannont use getValue() on a non-constant expression");
+	}
 }

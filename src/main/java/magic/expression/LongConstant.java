@@ -1,0 +1,34 @@
+package magic.expression;
+
+import magic.RT;
+import magic.lang.Context;
+
+public class LongConstant extends BaseConstant<Long> {
+
+	private final long value;
+
+	public LongConstant(long value) {	
+		this.value=value;
+	}
+	
+	public static LongConstant create(long value) {	
+		return new LongConstant(value);
+	}
+	
+	@Override
+	public Long compute(Context c) {
+		return value;
+	}
+
+	@Override
+	public Long getValue() {
+		return value;
+	}
+	
+	@Override
+	public String toString() {
+		return "(LongConstant "+RT.print(value)+")";
+	}
+
+
+}
