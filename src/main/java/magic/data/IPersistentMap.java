@@ -3,7 +3,7 @@ package magic.data;
 import java.util.Collection;
 import java.util.Map;
 
-public interface IPersistentMap<K,V> extends Map<K,V>, IPersistentObject, Seqable<Map.Entry<K,V>> {
+public interface IPersistentMap<K,V> extends Map<K,V>, IPersistentObject, ISeqable<Map.Entry<K,V>> {
 	// include methods
 	
 	public IPersistentMap<K,V> assoc(K key, V value);

@@ -1,6 +1,6 @@
 package magic.data;
 
-public interface Seqable<T> {
+public interface ISeqable<T> {
 
 	public ISeq<T> seq();
 }
