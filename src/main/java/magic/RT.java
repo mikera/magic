@@ -137,4 +137,11 @@ public class RT {
 		throw (T) t;
 	}
 
+	public static String print(Object value) {
+		if (value instanceof String) {
+			return "\""+value.toString()+"\"";
+		} 
+		return value.toString();
+	}
+
 }
