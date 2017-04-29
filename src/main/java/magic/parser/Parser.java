@@ -18,7 +18,7 @@ import org.parboiled.support.Var;
 import magic.data.ListFactory;
 
 @BuildParseTree
-public class MagicParser extends BaseParser<Object> {
+public class Parser extends BaseParser<Object> {
 
 	public static Object parse(Reader source) throws IOException {
 	    char[] arr = new char[8 * 1024];
@@ -131,7 +131,7 @@ public class MagicParser extends BaseParser<Object> {
         return CharRange('0', '9');
     }
 	
-	private static MagicParser parser = Parboiled.createParser(MagicParser.class);
+	private static Parser parser = Parboiled.createParser(Parser.class);
 	private static final RecoveringParseRunner<Object> expressionParseRunner=new RecoveringParseRunner<>(parser.Expression());
 
 	

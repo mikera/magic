@@ -10,7 +10,7 @@ import com.oracle.truffle.api.source.SourceSection;
 
 import magic.analyser.Analyser;
 import magic.expression.Expression;
-import magic.parser.MagicParser;
+import magic.parser.Parser;
 
 public class MagicLanguage extends TruffleLanguage<MagicContext> {
 
@@ -39,7 +39,7 @@ public class MagicLanguage extends TruffleLanguage<MagicContext> {
 	@Override
 	protected CallTarget parse(ParsingRequest request) throws Exception {
 		Source source=request.getSource();
-		Object form=MagicParser.parse(source.getReader());
+		Object form=Parser.parse(source.getReader());
 		Expression<?> ex= Analyser.analyse(form);
 		return Truffle.getRuntime().createCallTarget(ex);
 	}
