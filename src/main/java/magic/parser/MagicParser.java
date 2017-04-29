@@ -55,7 +55,7 @@ public class MagicParser extends BaseParser<Expression<?>> {
 			@Override
 			public boolean run(Context<Object> context) {
 				Expression<?> o=pop();
-				System.out.println(o);
+				// System.out.println(o);
 				expVar.get().add(o);
 				return true;
 			}
