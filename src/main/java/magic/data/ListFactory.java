@@ -48,6 +48,10 @@ public class ListFactory<T> {
 		return createFromArray(data,0,data.length);
 	}
 	
+	public static <T> Tuple<T> wrap(T[] data) {
+		return Tuple.wrap(data,0,data.length);
+	}
+	
 	/**
 	 * Creates a persistent list from the specified values
 	 * @param data

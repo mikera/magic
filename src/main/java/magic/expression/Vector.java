@@ -4,6 +4,13 @@ import magic.data.IPersistentList;
 import magic.data.ListFactory;
 import magic.lang.Context;
 
+/**
+ * Expression class representing a vector construction literal.
+ * 
+ * @author Mike
+ *
+ * @param <T>
+ */
 public class Vector<T> extends Expression<IPersistentList<T>> {
 
 	IPersistentList<Expression<T>> exps;
@@ -21,7 +28,7 @@ public class Vector<T> extends Expression<IPersistentList<T>> {
 		for (int i=0; i<n; i++) {
 			results[i]=exps.get(i).compute(c);
 		}
-		return ListFactory.createFromArray(results);
+		return ListFactory.wrap(results);
 	}
 
 	public static Expression<?> create(IPersistentList<Expression<?>> exps) {

@@ -32,10 +32,12 @@ public final class Tuple<T> extends BasePersistentList<T> {
 		return new Tuple<T>(values);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static <T> Tuple<T> wrap(T[] values,int offset, int size) {
 		if ((offset<0)||(offset+size>values.length)||(size<0)) {
 			throw new IndexOutOfBoundsException("Invalid index range start="+offset+" size="+size);
 		}
+		if (size==0) return (Tuple<T>) EMPTY_TUPLE;
 		return new Tuple<T>(values,offset,size);
 	}
 	
