@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import magic.data.ISeq;
-import magic.data.ListFactory;
+import magic.data.Lists;
 import magic.data.PersistentCollection;
 import magic.data.PersistentList;
 import magic.data.PersistentSet;
@@ -56,11 +56,11 @@ public final class ValueCollectionWrapper<K,V> extends PersistentCollection<V> {
 
 	@Override
 	public PersistentList<V> conj(V value) {
-		return ListFactory.createFromCollection(this).conj(value);
+		return Lists.createFromCollection(this).conj(value);
 	}
 
 	@Override
 	public ISeq<V> seq() {
-		return ListFactory.createFromCollection(this).seq();
+		return Lists.createFromCollection(this).seq();
 	}
 }

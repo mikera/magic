@@ -46,20 +46,20 @@ public abstract class PersistentSet<T> extends PersistentCollection<T> implement
 				return (!RT.equals(value, testvalue));
 			}		
 		};
-		return SetFactory.createFrom(it);
+		return Sets.createFrom(it);
 	}
 
 	@Override
 	public PersistentSet<T> deleteAll(final Collection<T> values) {
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
-			PersistentCollection<T> col=ListFactory.createFromCollection(values);
+			PersistentCollection<T> col=Lists.createFromCollection(values);
 			
 			@Override
 			public boolean filter(Object value) {
 				return (!col.contains(value));
 			}		
 		};
-		return SetFactory.createFrom(it);
+		return Sets.createFrom(it);
 	}
 	
 	@Override
@@ -72,7 +72,7 @@ public abstract class PersistentSet<T> extends PersistentCollection<T> implement
 				return (!values.contains(value));
 			}		
 		};
-		return SetFactory.createFrom(it);
+		return Sets.createFrom(it);
 	}
 	
 	@Override

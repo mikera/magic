@@ -15,20 +15,11 @@ import org.parboiled.support.ParsingResult;
 import org.parboiled.support.StringVar;
 import org.parboiled.support.Var;
 
-import magic.data.ListFactory;
+import magic.data.Lists;
 
 @BuildParseTree
 public class Parser extends BaseParser<Object> {
 
-	public static Object parse(Reader source) throws IOException {
-	    char[] arr = new char[8 * 1024];
-	    StringBuilder buffer = new StringBuilder();
-	    int numCharsRead;
-	    while ((numCharsRead = source.read(arr, 0, arr.length)) != -1) {
-	        buffer.append(arr, 0, numCharsRead);
-	    }
-	    return parse(buffer.toString());
-	}
 	
 	public Rule Expression() {
 		return FirstOf(
@@ -69,7 +60,7 @@ public class Parser extends BaseParser<Object> {
 						 Optional(WhiteSpace())),
 						 EMPTY
 						),
-				push(ListFactory.createFromList(expVar.get()))
+				push(Lists.createFromList(expVar.get()))
 				);
 	}
 	
@@ -126,14 +117,12 @@ public class Parser extends BaseParser<Object> {
         		push(Double.parseDouble(match())));
     }
     
-
 	public Rule Digit() {
         return CharRange('0', '9');
     }
 	
 	private static Parser parser = Parboiled.createParser(Parser.class);
 	private static final RecoveringParseRunner<Object> expressionParseRunner=new RecoveringParseRunner<>(parser.Expression());
-
 	
 	/**
 	 * Parses an expression and results a form
@@ -145,14 +134,19 @@ public class Parser extends BaseParser<Object> {
 		return result.resultValue;
 	}
 	
-
+	public static Object parse(Reader source) throws IOException {
+	    char[] arr = new char[8 * 1024];
+	    StringBuilder buffer = new StringBuilder();
+	    int numCharsRead;
+	    while ((numCharsRead = source.read(arr, 0, arr.length)) != -1) {
+	        buffer.append(arr, 0, numCharsRead);
+	    }
+	    return parse(buffer.toString());
+	}
 
 	public static void main(String[] args) {
 		Object result = parse("[1 2 3]");
 		
 		System.out.println(result);
 	}
-
-
-
 }

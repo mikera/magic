@@ -3,7 +3,7 @@ package magic.data.impl;
 import magic.Errors;
 import magic.RT;
 import magic.data.IPersistentList;
-import magic.data.ListFactory;
+import magic.data.Lists;
 import magic.data.PersistentList;
 
 /**
@@ -42,7 +42,7 @@ public class RepeatList<T> extends BasePersistentList<T> {
 	@Override
 	public PersistentList<T> subList(int start, int end) {
 		if ((start<0)||(end>size)) throw new IndexOutOfBoundsException(Errors.rangeOutOfBounds(start,end));
-		if (start==end) return ListFactory.emptyList();
+		if (start==end) return Lists.emptyList();
 		int num=end-start;
 		if (num<0) {
 			throw new IllegalArgumentException(Errors.negativeRange());
@@ -59,7 +59,7 @@ public class RepeatList<T> extends BasePersistentList<T> {
 		if (numDeleted<0) {
 			throw new IllegalArgumentException(Errors.negativeRange());
 		}
-		if (numDeleted==size) return ListFactory.emptyList();
+		if (numDeleted==size) return Lists.emptyList();
 		if (numDeleted==0) return this;
 		return create(value,size-numDeleted);
 	}
@@ -78,7 +78,7 @@ public class RepeatList<T> extends BasePersistentList<T> {
 	@Override
 	public PersistentList<T> delete(final T v) {
 		if (RT.equals(v,value)) {
-			return ListFactory.emptyList();
+			return Lists.emptyList();
 		}
 		return this;
 	}

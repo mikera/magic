@@ -10,13 +10,13 @@ import magic.data.impl.NullList;
 import magic.data.impl.SingletonList;
 
 /**
- * Factory class for persistent list types
+ * Static function class for persistent list types
  * 
  * @author Mike Anderson
  *
  * @param <T>
  */
-public class ListFactory<T> {
+public class Lists<T> {
 	public static final int TUPLE_BUILD_BITS=5;
 	public static final int MAX_TUPLE_BUILD_SIZE=1<<TUPLE_BUILD_BITS;
 	

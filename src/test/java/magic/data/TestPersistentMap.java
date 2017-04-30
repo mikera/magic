@@ -57,23 +57,23 @@ public class TestPersistentMap {
 		}
 		testMap(phm);
 		
-		PersistentMap<Integer,String> pm=MapFactory.create(hm);
+		PersistentMap<Integer,String> pm=Maps.create(hm);
 		testMap(pm);
 		
 		HashMap<Integer,String> hm2=pm.toHashMap();
 		assertEquals(hm,hm2);
 		
-		PersistentSet<Integer> ks=SetFactory.createFrom(hm.keySet());
+		PersistentSet<Integer> ks=Sets.createFrom(hm.keySet());
 		PersistentSet<Integer> ks2=pm.keySet();
 		PersistentSet<Integer> ks3=phm.keySet();
 		assertEquals(ks,ks2);
 		assertEquals(ks,ks3);
 		
-		PersistentList<String> vs=ListFactory.createFromCollection(hm.values());
-		PersistentList<String> vs2=ListFactory.createFromCollection(pm.values());
-		PersistentList<String> vs3=ListFactory.createFromCollection(phm.values());
-		assertEquals(SetFactory.createFrom(vs),SetFactory.createFrom(vs2));
-		assertEquals(SetFactory.createFrom(vs),SetFactory.createFrom(vs3));
+		PersistentList<String> vs=Lists.createFromCollection(hm.values());
+		PersistentList<String> vs2=Lists.createFromCollection(pm.values());
+		PersistentList<String> vs3=Lists.createFromCollection(phm.values());
+		assertEquals(Sets.createFrom(vs),Sets.createFrom(vs2));
+		assertEquals(Sets.createFrom(vs),Sets.createFrom(vs3));
 	}
 	
 	@Test public void testMerge() {

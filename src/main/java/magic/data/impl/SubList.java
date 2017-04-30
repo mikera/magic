@@ -3,7 +3,7 @@ package magic.data.impl;
 import java.util.List;
 
 import magic.data.IPersistentList;
-import magic.data.ListFactory;
+import magic.data.Lists;
 import magic.data.PersistentList;
 
 /**
@@ -19,7 +19,7 @@ public final class SubList<T> extends BasePersistentList<T>   {
 	private static final long serialVersionUID = 3559316900529560364L;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static final SubList<?> EMPTY_SUBLIST = new SubList(ListFactory.emptyList(),0,0);
+	public static final SubList<?> EMPTY_SUBLIST = new SubList(Lists.emptyList(),0,0);
 
 	private final PersistentList<T> data;
 	private final int offset;
@@ -33,7 +33,7 @@ public final class SubList<T> extends BasePersistentList<T>   {
 			if (newSize==0) return (SubList<T>) SubList.EMPTY_SUBLIST;
 			throw new IllegalArgumentException();
 		}
-		return createLocal(ListFactory.createFromList(source),fromIndex,toIndex);
+		return createLocal(Lists.createFromList(source),fromIndex,toIndex);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -104,7 +104,7 @@ public final class SubList<T> extends BasePersistentList<T>   {
 	public PersistentList<T> subList(int fromIndex, int toIndex) {
 		if ((fromIndex<0)||(toIndex>size())) throw new IndexOutOfBoundsException();
 		if (fromIndex>=toIndex) {
-			if (fromIndex==toIndex) return ListFactory.emptyList();
+			if (fromIndex==toIndex) return Lists.emptyList();
 			throw new IllegalArgumentException();
 		}
 		if ((fromIndex==0)&&(toIndex==size())) return this;

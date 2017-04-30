@@ -11,7 +11,7 @@ import magic.data.impl.PersistentHashMap;
  * @author Mike Anderson
  *
  */
-public class MapFactory {
+public class Maps {
 	@SuppressWarnings("unchecked")
 	public static <K,V> PersistentMap<K,V> create() {
 		return (PersistentMap<K,V>)NullMap.INSTANCE;

@@ -114,12 +114,12 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 
 	@Override
 	public PersistentList<T> concat(IPersistentList<T> values) {
-		return ListFactory.concat(this,values);
+		return Lists.concat(this,values);
 	}
 	
 	@Override
 	public PersistentList<T> concat(Collection<T> values) {
-		return ListFactory.concat(this,ListFactory.createFromCollection(values));
+		return Lists.concat(this,Lists.createFromCollection(values));
 	}
 
 	@Override
@@ -180,7 +180,7 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 	public PersistentList<T> subList(int fromIndex, int toIndex) {
 		// checks that return known lists
 		if ((fromIndex==0)&&(toIndex==size())) return this;
-		if (fromIndex==toIndex) return ListFactory.emptyList();
+		if (fromIndex==toIndex) return Lists.emptyList();
 		
 		// otherwise generate a SubList
 		// this also handles exception cases
@@ -206,7 +206,7 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 		if (values instanceof PersistentList<?>) {
 			return insertAll(index,(PersistentList<T>)values);
 		}
-		PersistentList<T> pl=ListFactory.createFromCollection(values);
+		PersistentList<T> pl=Lists.createFromCollection(values);
 		return subList(0,index).concat(pl).concat(subList(index,size()));
 	}
 	
@@ -266,6 +266,6 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 
 	public static <T> PersistentList<T> coerce(List<T> a) {
 		if (a instanceof PersistentList<?>) return (PersistentList<T>) a;
-		return ListFactory.createFromList(a);
+		return Lists.createFromList(a);
 	}
 }

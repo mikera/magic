@@ -25,7 +25,7 @@ import mikera.util.Rand;
 public class TestPersistent {
 	
 	@Test public void testListTypes() {	
-		PersistentList<Integer> pl=ListFactory.createFromArray(new Integer[] {1,2,3,4,5});
+		PersistentList<Integer> pl=Lists.createFromArray(new Integer[] {1,2,3,4,5});
 		assertEquals(5,pl.size());
 		
 		testPersistentList(pl);
@@ -71,14 +71,14 @@ public class TestPersistent {
 	}
 	
 	@Test public void testSetTypes() {
-		testPersistentSet(SetFactory.createFrom(new String[] {"a","b","c"}));
+		testPersistentSet(Sets.createFrom(new String[] {"a","b","c"}));
 		testPersistentSet(NullSet.INSTANCE);
 		testPersistentSet(SingletonSet.create("Bob"));
 		testPersistentSet(PersistentHashMap.create().assoc(2, "Benhamma").keySet());
 		testPersistentSet(PersistentHashSet.createSingleValueSet(Integer.valueOf(5)));
 		testPersistentSet(PersistentHashSet.createFromSet(null));
-		testPersistentSet(SetFactory.createFrom(new Integer[] {1}));
-		testPersistentSet(SetFactory.createFrom(new Integer[] {1,null,3}));
+		testPersistentSet(Sets.createFrom(new Integer[] {1}));
+		testPersistentSet(Sets.createFrom(new Integer[] {1,null,3}));
 	}
 	
 	public <T> void testPersistentSet(PersistentSet<T> a) {
@@ -289,7 +289,7 @@ public class TestPersistent {
 	@SuppressWarnings("unchecked")
 	public <T> void testEquals(PersistentList<T> a) {
 		assertEquals(a,a.clone());
-		assertEquals(a,a.concat((PersistentList<T>)ListFactory.emptyList()));
+		assertEquals(a,a.concat((PersistentList<T>)Lists.emptyList()));
 		assertEquals(a,a.deleteRange(0,0));
 	}
 	
@@ -332,13 +332,13 @@ public class TestPersistent {
 		PersistentList<T> pl=a;
 		
 		//System.out.println(pl.getClass()+"="+pl);
-		pl=ListFactory.concat(pl, pl);
+		pl=Lists.concat(pl, pl);
 		//System.out.println(pl.getClass()+"="+pl);
-		pl=ListFactory.concat(pl, pl);
+		pl=Lists.concat(pl, pl);
 		//System.out.println(pl.getClass()+"="+pl);
-		pl=ListFactory.concat(pl, pl);
+		pl=Lists.concat(pl, pl);
 		//System.out.println(pl.getClass()+"="+pl);
-		pl=ListFactory.concat(pl, pl);
+		pl=Lists.concat(pl, pl);
 		//System.out.println(pl.getClass()+"="+pl);
 
 		int plsize=pl.size();

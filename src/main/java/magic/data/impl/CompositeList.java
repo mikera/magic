@@ -3,7 +3,7 @@ package magic.data.impl;
 import java.util.List;
 
 import magic.data.IPersistentList;
-import magic.data.ListFactory;
+import magic.data.Lists;
 import magic.data.PersistentList;
 import magic.data.Tuple;
 
@@ -17,7 +17,7 @@ public class CompositeList<T> extends BasePersistentList<T> {
 	public static <T> PersistentList<T> concat(PersistentList<T> a, PersistentList<T> b) {
 		int as=a.size(); if (as==0) return b;
 		int bs=b.size(); if (bs==0) return a;
-		if ((as+bs)<=ListFactory.MAX_TUPLE_BUILD_SIZE) {
+		if ((as+bs)<=Lists.MAX_TUPLE_BUILD_SIZE) {
 			return Tuple.concat(a, b);
 		}
 		
@@ -34,16 +34,16 @@ public class CompositeList<T> extends BasePersistentList<T> {
 	
 	public static <T> CompositeList<T> create(T[] data,  int fromIndex, int toIndex) {
 		int midIndex=calcMidIndex(fromIndex, toIndex);
-		return new CompositeList<T>(ListFactory.createFromArray(data,fromIndex,midIndex),ListFactory.createFromArray(data,midIndex,toIndex));
+		return new CompositeList<T>(Lists.createFromArray(data,fromIndex,midIndex),Lists.createFromArray(data,midIndex,toIndex));
 	}
 	
 	public static final int calcMidIndex(int fromIndex, int toIndex) {
 		int n=toIndex-fromIndex;
 		if (n<0) throw new IllegalArgumentException();
 		int splitIndex=n>>1;
-		if (splitIndex>ListFactory.MAX_TUPLE_BUILD_SIZE) {
+		if (splitIndex>Lists.MAX_TUPLE_BUILD_SIZE) {
 			// round to a whole number of tuple blocks
-			splitIndex=(splitIndex/ListFactory.MAX_TUPLE_BUILD_SIZE)*ListFactory.MAX_TUPLE_BUILD_SIZE;
+			splitIndex=(splitIndex/Lists.MAX_TUPLE_BUILD_SIZE)*Lists.MAX_TUPLE_BUILD_SIZE;
 		}
 		return fromIndex+splitIndex;
 	}
@@ -55,7 +55,7 @@ public class CompositeList<T> extends BasePersistentList<T> {
 
 	public static <T> CompositeList<T> create(List<T> source, int fromIndex, int toIndex) {
 		int midIndex=calcMidIndex(fromIndex, toIndex);
-		return new CompositeList<T>(ListFactory.createFromList(source,fromIndex,midIndex),ListFactory.createFromList(source,midIndex,toIndex));
+		return new CompositeList<T>(Lists.createFromList(source,fromIndex,midIndex),Lists.createFromList(source,midIndex,toIndex));
 	}
 	
 	private CompositeList(PersistentList<T> a, PersistentList<T> b ) {

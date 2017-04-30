@@ -8,7 +8,7 @@ import java.util.ListIterator;
 
 import magic.data.IPersistentList;
 import magic.data.ISeq;
-import magic.data.ListFactory;
+import magic.data.Lists;
 import magic.data.PersistentList;
 
 public final class NullList<T> extends BasePersistentList<T> {
@@ -156,7 +156,7 @@ public final class NullList<T> extends BasePersistentList<T> {
 	@Override
 	public PersistentList<T> insertAll(int index, Collection<T> values) {
 		if (index!=0) throw new IndexOutOfBoundsException();
-		return ListFactory.createFromCollection(values);
+		return Lists.createFromCollection(values);
 	}
 
 	@Override

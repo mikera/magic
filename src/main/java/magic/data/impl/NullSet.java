@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import magic.data.ISeq;
 import magic.data.PersistentSet;
-import magic.data.SetFactory;
+import magic.data.Sets;
 import magic.data.Tools;
 
 public final class NullSet<T> extends BasePersistentSet<T> {
@@ -26,7 +26,7 @@ public final class NullSet<T> extends BasePersistentSet<T> {
 
 	@Override
 	public PersistentSet<T> conj(T value) {
-		return SetFactory.create(value);
+		return Sets.create(value);
 	}
 
 	@Override
@@ -52,11 +52,11 @@ public final class NullSet<T> extends BasePersistentSet<T> {
 	
 	@Override
 	public PersistentSet<T> includeAll(final Collection<T> values) {
-		return SetFactory.createFrom(values);
+		return Sets.createFrom(values);
 	}
 	
 	public PersistentSet<T> include(final PersistentSet<T> values) {
-		return SetFactory.create(values);
+		return Sets.create(values);
 	}
 	
 	private Object readResolve() throws ObjectStreamException {

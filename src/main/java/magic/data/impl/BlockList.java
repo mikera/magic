@@ -3,7 +3,7 @@ package magic.data.impl;
 import java.util.List;
 
 import magic.data.IPersistentList;
-import magic.data.ListFactory;
+import magic.data.Lists;
 import magic.data.PersistentList;
 import magic.data.Tuple;
 
@@ -16,7 +16,7 @@ import magic.data.Tuple;
 public final class BlockList<T> extends BasePersistentList<T> {
 	private static final long serialVersionUID = 7210896608719053578L;
 
-	protected static final int DEFAULT_SHIFT=ListFactory.TUPLE_BUILD_BITS;
+	protected static final int DEFAULT_SHIFT=Lists.TUPLE_BUILD_BITS;
 	protected static final int SHIFT_STEP=4;
 	protected static final int SHIFT_MASK=(1<<SHIFT_STEP)-1;
 	
@@ -44,7 +44,7 @@ public final class BlockList<T> extends BasePersistentList<T> {
 	private final PersistentList<T>[] blocks;
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static final BlockList<?> EMPTY_BLOCKLIST=new BlockList(ListFactory.NULL_PERSISTENT_LIST_ARRAY,DEFAULT_SHIFT,0,0);
+	public static final BlockList<?> EMPTY_BLOCKLIST=new BlockList(Lists.NULL_PERSISTENT_LIST_ARRAY,DEFAULT_SHIFT,0,0);
 
 
 	
@@ -160,12 +160,12 @@ public final class BlockList<T> extends BasePersistentList<T> {
 	
 		PersistentList<T>[] bs=(PersistentList<T>[]) new PersistentList<?>[numBlocks];
 		for (int i=0; i<(numBlocks-1); i++) {
-			bs[i]=ListFactory.subList(
+			bs[i]=Lists.subList(
 					list,
 					fromIndex+(i<<shift), 
 					fromIndex+((i+1)<<shift));
 		}
-		bs[numBlocks-1]=ListFactory.subList(
+		bs[numBlocks-1]=Lists.subList(
 				list,
 				fromIndex+((numBlocks-1)<<shift), 
 				fromIndex+size);
@@ -180,12 +180,12 @@ public final class BlockList<T> extends BasePersistentList<T> {
 	
 		PersistentList<T>[] bs=(PersistentList<T>[]) new PersistentList<?>[numBlocks];
 		for (int i=0; i<(numBlocks-1); i++) {
-			bs[i]=ListFactory.createFromArray(
+			bs[i]=Lists.createFromArray(
 					list,
 					fromIndex+(i<<shift), 
 					fromIndex+((i+1)<<shift));
 		}
-		bs[numBlocks-1]=ListFactory.createFromArray(
+		bs[numBlocks-1]=Lists.createFromArray(
 				list,
 				fromIndex+((numBlocks-1)<<shift), 
 				fromIndex+size);
@@ -250,9 +250,9 @@ public final class BlockList<T> extends BasePersistentList<T> {
 		if ((fromIndex<0)||(toIndex>size)) {
 			throw new IndexOutOfBoundsException("from: "+fromIndex+" to: " +toIndex+ " with size: "+size+" offset: "+offset+" shift: "+shift);
 		}
-		if (toIndex==fromIndex) return ListFactory.emptyList();
+		if (toIndex==fromIndex) return Lists.emptyList();
 	
-		if (toIndex==fromIndex) return ListFactory.emptyList();
+		if (toIndex==fromIndex) return Lists.emptyList();
 		if ((fromIndex>toIndex)) {
 			throw new IllegalArgumentException("Negative sized subList from: "+fromIndex+" to: " +toIndex);
 		}

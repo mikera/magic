@@ -1,6 +1,6 @@
 package magic.data.impl;
 
-import magic.data.ListFactory;
+import magic.data.Lists;
 import magic.data.PersistentList;
 import magic.data.Tuple;
 
@@ -53,12 +53,12 @@ public final class SingletonList<T> extends BasePersistentList<T> {
 
 	@Override
 	public PersistentList<T> back() {
-		return ListFactory.emptyList();
+		return Lists.emptyList();
 	}
 	
 	@Override
 	public PersistentList<T> tail() {
-		return ListFactory.emptyList();
+		return Lists.emptyList();
 	}
 
 	@Override

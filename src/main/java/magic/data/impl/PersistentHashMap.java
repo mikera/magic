@@ -11,7 +11,7 @@ import magic.data.PersistentCollection;
 import magic.data.PersistentMap;
 import magic.data.PersistentObject;
 import magic.data.PersistentSet;
-import magic.data.SetFactory;
+import magic.data.Sets;
 
 /**
  * Persistent HashMap implementation, inspired by Clojure's
@@ -787,7 +787,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		@Override
 		public PersistentSet<Map.Entry<K, V>> conj(
 				Map.Entry<K, V> value) {
-			return SetFactory.create(this).conj(value);
+			return Sets.create(this).conj(value);
 		}
 	}
 	

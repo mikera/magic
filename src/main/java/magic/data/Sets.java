@@ -15,7 +15,7 @@ import magic.data.impl.SingletonSet;
  * @author Mike Anderson
  *
  */
-public class SetFactory {
+public class Sets {
 	public static <T> PersistentSet<T> create(T value) {
 		return SingletonSet.create(value);
 	}
