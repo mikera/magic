@@ -144,4 +144,8 @@ public class RT {
 		return value.toString();
 	}
 
+	public static int hashCombine(int hash1, int hash2) {
+		return (hash1)+(Integer.rotateLeft(hash2, 13));
+	}
+
 }
