@@ -12,11 +12,11 @@ public class TestExpression {
 	/**
 	 * An empty Context for testing purposes
 	 */
-	static final Context ec=new Context();
+	static final Context ec=Context.EMPTY;
 	
 	@Test public void testConstant() {
 		Constant<String> c=Constant.create("Foo");
-		assertEquals("Foo",ec.evaluate(c));
+		assertEquals("Foo",c.compute(ec));
 	}
 	
 	@Test public void testApply() {
@@ -28,6 +28,6 @@ public class TestExpression {
 		};
 		
 		Apply<Integer> app=Apply.create(Constant.create(f),Constant.create(1),Constant.create(2));
-		assertEquals((Integer)3,ec.evaluate(app));
+		assertEquals((Integer)3,app.compute(ec));
 	}
 }

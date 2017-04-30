@@ -4,15 +4,20 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import magic.data.Symbol;
 import magic.expression.Constant;
 
 public class TestSlot {
 
 	@Test public void testConstantSlot() {
-		Slot<Integer> s=new Slot<Integer>(Constant.create(1));
+		Symbol sym=Symbol.create("foo");
 		
-		Context c=new Context();
+		Context c=Context.EMPTY;
+		c=c.define(sym, Constant.create(1L));
 		
-		assertEquals(1,s.getValue(c));
+		assertEquals(Long.valueOf(1),c.getValue(sym));
+		
+		Slot<?> s=c.getSlot(sym);
+		assertEquals(Long.valueOf(1),s.getValue(c));
 	}
 }

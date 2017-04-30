@@ -15,14 +15,14 @@ import magic.expression.Expression;
 public class Slot<T> {
 	public final Expression<T> expression;
 	
-	private Object value=null;
+	private T value=null;
 	private volatile boolean computed=false;
 	
 	public Slot(Expression<T> e) {
 		this.expression=e;
 	}
 	
-	public Object getValue(Context c) {
+	public T getValue(Context c) {
 		if (computed==false) {
 			synchronized (this) {
 				if (computed==false) {
@@ -33,5 +33,9 @@ public class Slot<T> {
 			}
 		}
 		return value;
+	}
+
+	public static <T> Slot<T> create(Expression<T> exp) {
+		return new Slot<T>(exp);
 	}
 }
