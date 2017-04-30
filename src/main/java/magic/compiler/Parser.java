@@ -1,4 +1,4 @@
-package magic.parser;
+package magic.compiler;
 
 import java.io.IOException;
 import java.io.Reader;

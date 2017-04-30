@@ -9,8 +9,8 @@ import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.api.source.SourceSection;
 
 import magic.compiler.Analyser;
+import magic.compiler.Parser;
 import magic.expression.Expression;
-import magic.parser.Parser;
 
 public class MagicLanguage extends TruffleLanguage<MagicContext> {
 

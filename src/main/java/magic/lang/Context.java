@@ -1,9 +1,9 @@
 package magic.lang;
 
+import magic.compiler.Parser;
 import magic.data.PersistentHashMap;
 import magic.data.Symbol;
 import magic.expression.Expression;
-import magic.parser.Parser;
 
 /**
  * Class representing an Execution context.

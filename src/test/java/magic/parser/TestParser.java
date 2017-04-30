@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
+import magic.compiler.Parser;
 import magic.data.IPersistentList;
 import magic.data.IPersistentVector;
 import magic.data.Maps;

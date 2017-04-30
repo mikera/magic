@@ -1,8 +1,8 @@
 package magic.expression;
 
+import magic.compiler.Parser;
 import magic.data.Symbol;
 import magic.lang.Context;
-import magic.parser.Parser;
 
 /**
  * Expression node for looking up a symbol in a context

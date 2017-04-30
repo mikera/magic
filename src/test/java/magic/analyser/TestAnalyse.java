@@ -6,13 +6,13 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import magic.compiler.Analyser;
+import magic.compiler.Parser;
 import magic.data.PersistentList;
 import magic.data.Tuple;
 import magic.expression.Constant;
 import magic.expression.Expression;
 import magic.expression.Lookup;
 import magic.lang.Context;
-import magic.parser.Parser;
 
 public class TestAnalyse {
 
