@@ -11,6 +11,7 @@ import magic.data.PersistentList;
 import magic.data.Tuple;
 import magic.expression.Constant;
 import magic.expression.Expression;
+import magic.expression.Lambda;
 import magic.expression.Lookup;
 import magic.lang.Context;
 
@@ -52,7 +53,6 @@ public class TestAnalyse {
 	public void testConstant() {
 		Expression<?> e=analyse("1");
 		assertEquals(Long.valueOf(1),e.compute(Context.EMPTY));
-
 	}
 	
 	@Test 
@@ -72,6 +72,16 @@ public class TestAnalyse {
 	public void testEmptyList() {
 		Expression<?> e=analyse("()");
 		assertEquals(PersistentList.EMPTY,e.compute(Context.EMPTY));
+	}
+	
+	@Test 
+	public void testLambda() {
+		Expression<?> e=analyse("(fn [a] a)");
+		assertEquals(Lambda.class,e.getClass());
+		Context c=Context.createWith("identity",e);
+		Expression<?> app=analyse("(identity 2)");
+		assertEquals(Long.valueOf(2),app.compute(c));
+
 	}
 
 }

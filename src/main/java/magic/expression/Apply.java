@@ -1,5 +1,6 @@
 package magic.expression;
 
+import magic.data.APersistentList;
 import magic.fn.IFn;
 import magic.lang.Context;
 
@@ -30,8 +31,12 @@ public class Apply<T> extends Expression<T> {
 		return f.applyToArray(values);
 	}
 
-	public static <T> Apply<T> create(Expression<IFn<T>> create, Expression<?>... args) {
-		return new Apply<T>(create,args);
+	public static <T> Apply<T> create(Expression<IFn<T>> function, Expression<?>... args) {
+		return new Apply<T>(function,args);
+	}
+
+	public static <T> Apply<T> create(Expression<IFn<T>> function, APersistentList<Expression<?>> tail) {
+		return create(function,tail.toArray(new Expression[tail.size()]));
 	}
 
 }

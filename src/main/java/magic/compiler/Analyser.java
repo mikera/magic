@@ -7,6 +7,7 @@ import magic.data.IPersistentVector;
 import magic.data.Lists;
 import magic.data.Symbol;
 import magic.data.Vectors;
+import magic.expression.Apply;
 import magic.expression.Constant;
 import magic.expression.Define;
 import magic.expression.Do;
@@ -28,6 +29,16 @@ public class Analyser {
 
 	public static <T> Expression<T> analyse(Object form) {
 		return analyse(Context.EMPTY,form);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private static <T> Expression<T>[] analyseAll(Context c, APersistentList<Object> forms) {
+		int n=forms.size();
+		Expression<?>[] exps=new Expression<?>[n];
+		for (int i=0; i<n; i++) {
+			exps[i]=analyse(c,forms.get(i));
+		}
+		return (Expression<T>[]) exps;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -54,14 +65,16 @@ public class Analyser {
 	private static <T> Expression<T> analyseSymbolApplication(Context c, Symbol first, APersistentList<Object> tail) {
 		if (first==Symbols.DEF) return analyseDefine(c,(Symbol)tail.head(),tail.tail());
 		if (first==Symbols.FN) return analyseFn(c,tail.head(),tail.tail());
-		throw new Error("can't analyse symbol application: "+first);
+		return Apply.create(Lookup.create(first),analyseAll(c,tail));
 	}
+
+
 
 	@SuppressWarnings("unchecked")
 	private static <T> Expression<T> analyseFn(Context c, Object arglist, APersistentList<Object> tail) {
 		int n=tail.size();
 		if (n==0) throw new Error("No function body definition");
-		if (!(arglist instanceof IPersistentVector)) throw new Error("fn requires a vector argument list");
+		if (!(arglist instanceof IPersistentVector)) throw new Error("fn requires a vector argument list, got: "+arglist);
 		IPersistentVector<?> args=(IPersistentVector<?>)arglist;
 		
 		Expression<T>[] exs=new Expression[n];

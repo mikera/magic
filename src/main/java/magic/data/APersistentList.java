@@ -1,5 +1,10 @@
 package magic.data;
 
+import java.util.Collection;
+import java.util.ListIterator;
+
+import magic.Errors;
+
 /**
  * Abstract base class for persistent lists
  * @author Mike
@@ -31,5 +36,36 @@ public abstract class APersistentList<T> extends APersistentCollection<T> implem
 	public boolean equals(APersistentList<?> a) {
 		// TODO: optimise
 		return (Vectors.coerce(this)).equals(Vectors.coerce(a));
+	}
+	
+	@Override
+	public void add(int index, T element) {
+		throw new UnsupportedOperationException(Errors.immutable(this));
+	}
+
+	@Override
+	public boolean addAll(int index, Collection<? extends T> c) {
+		throw new UnsupportedOperationException(Errors.immutable(this));
+	}
+	
+	@Override
+	public ListIterator<T> listIterator() {
+		throw new UnsupportedOperationException("No listIterator for you!");
+	}
+
+	@Override
+	public ListIterator<T> listIterator(int index) {
+		throw new UnsupportedOperationException("No listIterator for you!");
+	}
+	
+
+	@Override
+	public T set(int index, T element) {
+		throw new UnsupportedOperationException(Errors.immutable(this));
+	}
+
+	@Override
+	public T remove(int index) {
+		throw new UnsupportedOperationException(Errors.immutable(this));
 	}
 }
