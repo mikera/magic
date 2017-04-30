@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
+import magic.data.IPersistentList;
 import magic.data.IPersistentVector;
 import magic.data.Maps;
 import magic.data.Sets;
@@ -44,6 +45,16 @@ public class TestParser {
 	@Test public void testVector() {
 		Object c=Parser.parse("[-3 -1.0 \"foo\"]");
 		IPersistentVector<Object> exps=(IPersistentVector<Object>) c;
+		assertEquals(3,exps.size());
+		assertEquals(Long.valueOf(-3),exps.get(0));
+		assertEquals(Double.valueOf(-1.0),exps.get(1));
+		assertEquals("foo",exps.get(2));
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test public void testList() {
+		Object c=Parser.parse("(-3 -1.0 \"foo\")");
+		IPersistentList<Object> exps=(IPersistentList<Object>) c;
 		assertEquals(3,exps.size());
 		assertEquals(Long.valueOf(-3),exps.get(0));
 		assertEquals(Double.valueOf(-1.0),exps.get(1));

@@ -13,4 +13,10 @@ public abstract class APersistentList<T> extends APersistentCollection<T> implem
 	public APersistentList<T> empty() {
 		return Lists.emptyList();
 	}
+
+	@Override
+	public int compareTo(APersistentList<T> o) {
+		// TODO: optimise
+		return Vectors.coerce(this).compareTo(Vectors.coerce(o));
+	}
 }

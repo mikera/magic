@@ -19,6 +19,8 @@ import org.parboiled.support.StringVar;
 import org.parboiled.support.Var;
 
 import magic.data.Vectors;
+import magic.data.IPersistentCollection;
+import magic.data.Lists;
 import magic.data.Maps;
 import magic.data.Sets;
 import magic.data.Symbol;
@@ -89,6 +91,7 @@ public class Parser extends BaseParser<Object> {
 	public Rule DataStructure() {
 		return FirstOf(
 				Vector(),
+				List(),
 				Set(),
 				Map());
 	}
@@ -98,6 +101,14 @@ public class Parser extends BaseParser<Object> {
 				'[',
 				ExpressionList(),
 				']');
+	}
+	
+	public Rule List() {
+		return Sequence(
+				'(',
+				ExpressionList(),
+				')',
+				push(Lists.create((IPersistentCollection<?>) pop())));
 	}
 	
 	public Rule Set() {

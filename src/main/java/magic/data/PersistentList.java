@@ -189,16 +189,14 @@ public class PersistentList<T> extends APersistentList<T> {
 	}
 
 	@Override
-	public int compareTo(APersistentVector<T> o) {
+	public int compareTo(APersistentList<T> o) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
+		return size;
 	}
-	
 
 }

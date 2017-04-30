@@ -9,4 +9,8 @@ public class Lists {
 		return (APersistentList<T>) EMPTY;
 	}
 
+	public static <T> APersistentList<T> create(IPersistentCollection<T> a) {
+		return PersistentList.create(Vectors.coerce(a));
+	}
+
 }
