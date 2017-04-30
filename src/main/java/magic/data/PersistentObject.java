@@ -6,7 +6,6 @@ package magic.data;
  * @author Mike Anderson
  *
  */
-@Immutable
 public abstract class PersistentObject implements IPersistentObject {
 	private static final long serialVersionUID = -4077880416849448410L;
 

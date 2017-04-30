@@ -7,17 +7,17 @@ public interface IPersistentCollection<T> extends Collection<T>, Cloneable, Seri
 
 	// include methods
 	
-	public PersistentCollection<T> includeAll(final Collection<T> values);
+	public APersistentCollection<T> includeAll(final Collection<T> values);
 
-	public PersistentCollection<T> includeAll(final IPersistentCollection<T> values);
+	public APersistentCollection<T> includeAll(final IPersistentCollection<T> values);
 
 	// delete methods
 	
-	public PersistentCollection<T> delete(final T value);
+	public APersistentCollection<T> delete(final T value);
 	
-	public PersistentCollection<T> deleteAll(final Collection<T> values);
+	public APersistentCollection<T> deleteAll(final Collection<T> values);
 
-	public PersistentCollection<T> deleteAll(final IPersistentCollection<T> values);
+	public APersistentCollection<T> deleteAll(final IPersistentCollection<T> values);
 
 	// query methods
 	
@@ -45,6 +45,6 @@ public interface IPersistentCollection<T> extends Collection<T>, Cloneable, Seri
 	 * Adds a value to this collection.
 	 * Behaviour depends on the specific collection semantics
 	 */
-	public PersistentCollection<T> conj(T value);
+	public APersistentCollection<T> conj(T value);
 	
 }

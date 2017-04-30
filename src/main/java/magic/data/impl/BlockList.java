@@ -4,7 +4,7 @@ import java.util.List;
 
 import magic.data.IPersistentList;
 import magic.data.Lists;
-import magic.data.PersistentList;
+import magic.data.APersistentList;
 import magic.data.Tuple;
 
 /**
@@ -41,7 +41,7 @@ public final class BlockList<T> extends BasePersistentList<T> {
 	 * The blocks that comprise the storage for the list
 	 * All except the last must be of the correct block size as determined by shift
 	 */
-	private final PersistentList<T>[] blocks;
+	private final APersistentList<T>[] blocks;
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static final BlockList<?> EMPTY_BLOCKLIST=new BlockList(Lists.NULL_PERSISTENT_LIST_ARRAY,DEFAULT_SHIFT,0,0);
@@ -109,7 +109,7 @@ public final class BlockList<T> extends BasePersistentList<T> {
 			int size=toIndex-fromIndex;
 			int numBlocks=numBlocks(size,shift);
 		
-			PersistentList<T>[] bs=(PersistentList<T>[]) new PersistentList<?>[numBlocks];
+			APersistentList<T>[] bs=(APersistentList<T>[]) new APersistentList<?>[numBlocks];
 			for (int i=0; i<(numBlocks-1); i++) {
 				bs[i]=createLocal(
 						list,
@@ -134,7 +134,7 @@ public final class BlockList<T> extends BasePersistentList<T> {
 			int size=toIndex-fromIndex;
 			int numBlocks=numBlocks(size,shift);
 		
-			PersistentList<T>[] bs=(PersistentList<T>[]) new PersistentList<?>[numBlocks];
+			APersistentList<T>[] bs=(APersistentList<T>[]) new APersistentList<?>[numBlocks];
 			for (int i=0; i<(numBlocks-1); i++) {
 				bs[i]=createLocal(
 						list,
@@ -158,7 +158,7 @@ public final class BlockList<T> extends BasePersistentList<T> {
 		int size=toIndex-fromIndex;
 		int numBlocks=numBlocks(size,shift);
 	
-		PersistentList<T>[] bs=(PersistentList<T>[]) new PersistentList<?>[numBlocks];
+		APersistentList<T>[] bs=(APersistentList<T>[]) new APersistentList<?>[numBlocks];
 		for (int i=0; i<(numBlocks-1); i++) {
 			bs[i]=Lists.subList(
 					list,
@@ -178,7 +178,7 @@ public final class BlockList<T> extends BasePersistentList<T> {
 		int size=toIndex-fromIndex;
 		int numBlocks=numBlocks(size,shift);
 	
-		PersistentList<T>[] bs=(PersistentList<T>[]) new PersistentList<?>[numBlocks];
+		APersistentList<T>[] bs=(APersistentList<T>[]) new APersistentList<?>[numBlocks];
 		for (int i=0; i<(numBlocks-1); i++) {
 			bs[i]=Lists.createFromArray(
 					list,
@@ -198,8 +198,8 @@ public final class BlockList<T> extends BasePersistentList<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private BlockList(PersistentList<?>[] blocks, int sh, int sz, int off) {
-		this.blocks=(PersistentList<T>[]) blocks;
+	private BlockList(APersistentList<?>[] blocks, int sh, int sz, int off) {
+		this.blocks=(APersistentList<T>[]) blocks;
 		shift=sh;
 		size=sz;
 		offset=off;
@@ -246,7 +246,7 @@ public final class BlockList<T> extends BasePersistentList<T> {
 	}
 	
 	@Override
-	public PersistentList<T> subList(int fromIndex, int toIndex) {
+	public APersistentList<T> subList(int fromIndex, int toIndex) {
 		if ((fromIndex<0)||(toIndex>size)) {
 			throw new IndexOutOfBoundsException("from: "+fromIndex+" to: " +toIndex+ " with size: "+size+" offset: "+offset+" shift: "+shift);
 		}
@@ -299,18 +299,18 @@ public final class BlockList<T> extends BasePersistentList<T> {
 		int blockLength=blocks.length;
 		if (newBlock<blockLength) {
 			// conj to last block
-			PersistentList<T>[] newBlocks=blocks.clone();
+			APersistentList<T>[] newBlocks=blocks.clone();
 			newBlocks[newBlock]=blocks[newBlock].conj(value);
 			return new BlockList<T>(newBlocks,shift,size+1,offset);
 		} else if ((newIx>>(shift+SHIFT_STEP))==0) {
 			// add a final block
-			PersistentList<T>[] newBlocks=new PersistentList[newBlock+1];
+			APersistentList<T>[] newBlocks=new APersistentList[newBlock+1];
 			System.arraycopy(blocks, 0, newBlocks, 0, newBlock);
 			newBlocks[newBlock]=Tuple.of(value);
 			return new BlockList<T>(newBlocks,shift,size+1,offset);
 		} else {
 			// need to rise one level
-			return new BlockList<T>(new PersistentList[]{this,Tuple.of(value)},shift+SHIFT_STEP,size+1,offset);
+			return new BlockList<T>(new APersistentList[]{this,Tuple.of(value)},shift+SHIFT_STEP,size+1,offset);
 		}
 	}
 	
@@ -326,8 +326,8 @@ public final class BlockList<T> extends BasePersistentList<T> {
 		int totalBlocks=blockFor(offset+size-1)+1; // num of blocks used (including excess at head due to offset)
 		if (newEndBlock<totalBlocks) {
 			// concat to last block
-			PersistentList<T>[] newBlocks=blocks.clone();
-			PersistentList<T> tail=blocks[newEndBlock].subList(0,offset+size-blockStart(newEndBlock));
+			APersistentList<T>[] newBlocks=blocks.clone();
+			APersistentList<T> tail=blocks[newEndBlock].subList(0,offset+size-blockStart(newEndBlock));
 			if (shift<=DEFAULT_SHIFT) {
 				// build a Tuple
 				newBlocks[newEndBlock]=Tuple.concat(tail, a);
@@ -344,7 +344,7 @@ public final class BlockList<T> extends BasePersistentList<T> {
 				int numBlocks=totalBlocks-offsetBlock; // number of currently used blocks
 				int newOffset=offset-blockStart(offsetBlock);
 				int newNumBlocks=newEndBlock-offsetBlock+1; // new total number of blocks
-				PersistentList<T>[] newBlocks=new PersistentList[newNumBlocks];
+				APersistentList<T>[] newBlocks=new APersistentList[newNumBlocks];
 				System.arraycopy(blocks, offsetBlock, newBlocks, 0, numBlocks);
 				int blockSize=blockSize();
 				
@@ -352,7 +352,7 @@ public final class BlockList<T> extends BasePersistentList<T> {
 				int split=end-endBlockOffset; // split point in last original block where concat occurs
 				
 				// update last block in currently used blocks, filling up to blockSize
-				PersistentList<T> oldTail=newBlocks[numBlocks-1].subList(0,split-Math.max(0,offset-endBlockOffset));
+				APersistentList<T> oldTail=newBlocks[numBlocks-1].subList(0,split-Math.max(0,offset-endBlockOffset));
 				newBlocks[numBlocks-1]=oldTail.concat(a.subList(0, blockSize-split));
 				// update inner blocks (if more than 2)
 				int innerBlocks=newNumBlocks-numBlocks-1;
@@ -368,7 +368,7 @@ public final class BlockList<T> extends BasePersistentList<T> {
 				// need to rise one level
 				int aSplit=maxEnd-end; // elements to cut from front of a to complete block
 				BlockList<T> fullHead=this.concat(a.subList(0, aSplit));
-				BlockList<T> headList=new BlockList<T>(new PersistentList[]{fullHead},shift+SHIFT_STEP,size+aSplit,offset);
+				BlockList<T> headList=new BlockList<T>(new APersistentList[]{fullHead},shift+SHIFT_STEP,size+aSplit,offset);
 				return headList.concat(a.subList(aSplit, asize));
 			}
 		}
@@ -383,7 +383,7 @@ public final class BlockList<T> extends BasePersistentList<T> {
 			int bsize=blocks[i].size();
 			if (bsize!=blockSize)  throw new Error("Wrong blcok size: "+bsize+" at position "+i);
 		}
-		PersistentList<T> lastBlock=blocks[numBlocks-1];
+		APersistentList<T> lastBlock=blocks[numBlocks-1];
 		if (lastBlock.size()<(offset+size-blockStart(numBlocks-1))) {
 			throw new Error("Insufficient element is last block");
 		}

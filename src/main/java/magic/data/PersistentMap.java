@@ -77,7 +77,7 @@ public abstract class PersistentMap<K,V> extends PersistentObject implements IPe
 	public abstract int size();
 
 	@Override
-	public abstract PersistentCollection<V> values();
+	public abstract APersistentCollection<V> values();
 
 	@Override
 	@SuppressWarnings("unchecked")

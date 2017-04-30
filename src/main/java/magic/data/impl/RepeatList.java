@@ -4,7 +4,7 @@ import magic.Errors;
 import magic.RT;
 import magic.data.IPersistentList;
 import magic.data.Lists;
-import magic.data.PersistentList;
+import magic.data.APersistentList;
 
 /**
  * Persistent list that implements a repeating single value
@@ -40,7 +40,7 @@ public class RepeatList<T> extends BasePersistentList<T> {
 	}
 	
 	@Override
-	public PersistentList<T> subList(int start, int end) {
+	public APersistentList<T> subList(int start, int end) {
 		if ((start<0)||(end>size)) throw new IndexOutOfBoundsException(Errors.rangeOutOfBounds(start,end));
 		if (start==end) return Lists.emptyList();
 		int num=end-start;
@@ -52,7 +52,7 @@ public class RepeatList<T> extends BasePersistentList<T> {
 	}
 	
 	@Override
-	public PersistentList<T> deleteRange(int start, int end) {
+	public APersistentList<T> deleteRange(int start, int end) {
 		if ((start<0)||(end>size)) throw new IndexOutOfBoundsException(Errors.rangeOutOfBounds(start,end));
 		if (start==end) return this;
 		int numDeleted=end-start;
@@ -65,7 +65,7 @@ public class RepeatList<T> extends BasePersistentList<T> {
 	}
 	
 	@Override
-	public PersistentList<T> concat(IPersistentList<T> values) {
+	public APersistentList<T> concat(IPersistentList<T> values) {
 		if (values instanceof RepeatList<?>) {
 			RepeatList<T> ra=(RepeatList<T>)values;
 			if (RT.equals(ra.value, value)) {
@@ -76,7 +76,7 @@ public class RepeatList<T> extends BasePersistentList<T> {
 	}
 	
 	@Override
-	public PersistentList<T> delete(final T v) {
+	public APersistentList<T> delete(final T v) {
 		if (RT.equals(v,value)) {
 			return Lists.emptyList();
 		}

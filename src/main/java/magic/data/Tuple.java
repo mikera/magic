@@ -98,7 +98,7 @@ public final class Tuple<T> extends BasePersistentList<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> PersistentList<T> concat(List<T> a, List<T> b) {
+	public static <T> APersistentList<T> concat(List<T> a, List<T> b) {
 		int aSize=a.size();
 		int bSize=b.size();
 		int newSize=aSize+bSize;
@@ -156,10 +156,10 @@ public final class Tuple<T> extends BasePersistentList<T> {
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public PersistentList<T> deleteRange(int start, int end) {
+	public APersistentList<T> deleteRange(int start, int end) {
 		if ((start<0)||(end>size)) throw new IndexOutOfBoundsException();
 		if (start>end) throw new IllegalArgumentException("Negative range specified");
-		if ((start==0)&&(end==size)) return (PersistentList<T>) EMPTY_TUPLE;
+		if ((start==0)&&(end==size)) return (APersistentList<T>) EMPTY_TUPLE;
 		if (start==end) return this;
 		int newSize=size-(end-start);
 		T[] ndata=(T[]) new Object[newSize];
@@ -175,7 +175,7 @@ public final class Tuple<T> extends BasePersistentList<T> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public PersistentList<T> conj(T value) {
+	public APersistentList<T> conj(T value) {
 		if (size<BlockList.BASE_BLOCKSIZE) {
 			int newSize=size+1;
 			T[] ndata=(T[]) new Object[newSize];

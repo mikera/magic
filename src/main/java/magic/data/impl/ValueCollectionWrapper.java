@@ -5,11 +5,11 @@ import java.util.Map;
 
 import magic.data.ISeq;
 import magic.data.Lists;
-import magic.data.PersistentCollection;
-import magic.data.PersistentList;
+import magic.data.APersistentCollection;
+import magic.data.APersistentList;
 import magic.data.PersistentSet;
 
-public final class ValueCollectionWrapper<K,V> extends PersistentCollection<V> {
+public final class ValueCollectionWrapper<K,V> extends APersistentCollection<V> {
 	private static final long serialVersionUID = 5958713253782492446L;
 
 	
@@ -55,7 +55,7 @@ public final class ValueCollectionWrapper<K,V> extends PersistentCollection<V> {
 	}
 
 	@Override
-	public PersistentList<V> conj(V value) {
+	public APersistentList<V> conj(V value) {
 		return Lists.createFromCollection(this).conj(value);
 	}
 

@@ -5,12 +5,12 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import magic.data.ISeq;
-import magic.data.PersistentCollection;
+import magic.data.APersistentCollection;
 
 /**
  * Immutable empty collection type and singleton
  */
-public final class NullCollection<T> extends PersistentCollection<T> {
+public final class NullCollection<T> extends APersistentCollection<T> {
 	private static final long serialVersionUID = 2925953822669265599L;
 
 	@SuppressWarnings("rawtypes")
@@ -89,17 +89,17 @@ public final class NullCollection<T> extends PersistentCollection<T> {
 	}
 
 	@Override
-	public PersistentCollection<T> delete(T value) {
+	public APersistentCollection<T> delete(T value) {
 		return this;
 	}
 
 	@Override
-	public PersistentCollection<T> deleteAll(Collection<T> values) {
+	public APersistentCollection<T> deleteAll(Collection<T> values) {
 		return this;
 	}
 	
 	@Override
-	public PersistentCollection<T> clone() {
+	public APersistentCollection<T> clone() {
 		return this;
 	}
 
@@ -111,7 +111,7 @@ public final class NullCollection<T> extends PersistentCollection<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean equals(Object a) {
-		return ((a instanceof PersistentCollection<?>)&&((PersistentCollection<T>)a).isEmpty());
+		return ((a instanceof APersistentCollection<?>)&&((APersistentCollection<T>)a).isEmpty());
 	}
 
 	private Object readResolve() throws ObjectStreamException {
@@ -120,7 +120,7 @@ public final class NullCollection<T> extends PersistentCollection<T> {
 	}
 
 	@Override
-	public PersistentCollection<T> conj(T value) {
+	public APersistentCollection<T> conj(T value) {
 		return SingletonList.of(value);
 	}
 

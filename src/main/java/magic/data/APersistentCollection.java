@@ -8,16 +8,15 @@ import magic.RT;
 import magic.data.impl.FilteredIterator;
 
 @SuppressWarnings("unchecked")
-@Immutable
-public abstract class PersistentCollection<T> extends PersistentObject implements IPersistentCollection<T> {
+public abstract class APersistentCollection<T> extends PersistentObject implements IPersistentCollection<T> {
 	private static final long serialVersionUID = -962303316004942025L;
 
 	@Override
 	public abstract int size();
 	
 	@Override
-	public PersistentCollection<T> clone() {
-		return (PersistentCollection<T>)super.clone();
+	public APersistentCollection<T> clone() {
+		return (APersistentCollection<T>)super.clone();
 	}
 	
 	@Override
@@ -81,13 +80,13 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 	
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof PersistentCollection<?>) {
-			return equals((PersistentCollection<T>)o);
+		if (o instanceof APersistentCollection<?>) {
+			return equals((APersistentCollection<T>)o);
 		}
 		return false;
 	}
 	
-	public boolean equals(PersistentCollection<T> pm) {
+	public boolean equals(APersistentCollection<T> pm) {
 		return this.containsAll(pm)&&pm.containsAll(this);
 	}
 	
@@ -129,7 +128,7 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 	}
 
 	@Override
-	public PersistentCollection<T> delete(final T value) {
+	public APersistentCollection<T> delete(final T value) {
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
 			@Override
 			public boolean filter(Object testvalue) {
@@ -140,7 +139,7 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 	}
 	
 	@Override
-	public PersistentCollection<T> deleteAll(final IPersistentCollection<T> values) {
+	public APersistentCollection<T> deleteAll(final IPersistentCollection<T> values) {
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
 			@Override
 			public boolean filter(Object value) {
@@ -151,9 +150,9 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 	}
 
 	@Override
-	public PersistentCollection<T> deleteAll(final Collection<T> values) {
+	public APersistentCollection<T> deleteAll(final Collection<T> values) {
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
-			PersistentCollection<T> col=Lists.createFromCollection(values);
+			APersistentCollection<T> col=Lists.createFromCollection(values);
 			
 			@Override
 			public boolean filter(Object value) {
@@ -181,11 +180,11 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 	}
 	
 	@Override
-	public abstract PersistentCollection<T> conj(final T value);
+	public abstract APersistentCollection<T> conj(final T value);
 	
 	@Override
-	public PersistentCollection<T> includeAll(final Collection<T> values) {
-		PersistentCollection<T> ps=this;
+	public APersistentCollection<T> includeAll(final Collection<T> values) {
+		APersistentCollection<T> ps=this;
 		for (T t: values) {
 			ps=ps.conj(t);
 		}
@@ -193,7 +192,7 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 	}
 	
 	@Override
-	public PersistentCollection<T> includeAll(final IPersistentCollection<T> values) {
+	public APersistentCollection<T> includeAll(final IPersistentCollection<T> values) {
 		return includeAll((Collection<T>)values);
 	}
 	

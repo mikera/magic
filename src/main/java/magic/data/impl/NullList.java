@@ -9,7 +9,7 @@ import java.util.ListIterator;
 import magic.data.IPersistentList;
 import magic.data.ISeq;
 import magic.data.Lists;
-import magic.data.PersistentList;
+import magic.data.APersistentList;
 
 public final class NullList<T> extends BasePersistentList<T> {
 	
@@ -23,23 +23,23 @@ public final class NullList<T> extends BasePersistentList<T> {
 	}
 
 	@Override
-	public PersistentList<T> deleteAt(int index) {
+	public APersistentList<T> deleteAt(int index) {
 		throw new IndexOutOfBoundsException();
 	}
 
 	@Override
-	public PersistentList<T> deleteRange(int start, int end) {
+	public APersistentList<T> deleteRange(int start, int end) {
 		if ((start==0)&&(end==0)) return this;
 		throw new IndexOutOfBoundsException();
 	}
 
 	@Override
-	public PersistentList<T> deleteFirst(T value) {
+	public APersistentList<T> deleteFirst(T value) {
 		return this;
 	}
 	
 	@Override
-	public PersistentList<T> deleteAll(Collection<T> values) {
+	public APersistentList<T> deleteAll(Collection<T> values) {
 		return this;
 	}
 
@@ -91,13 +91,13 @@ public final class NullList<T> extends BasePersistentList<T> {
 	}
 
 	@Override
-	public PersistentList<T> subList(int fromIndex, int toIndex) {
+	public APersistentList<T> subList(int fromIndex, int toIndex) {
 		if ((fromIndex!=0)||(toIndex!=0)) throw new IllegalArgumentException();
 		return this;
 	}
 
 	@Override
-	public int compareTo(PersistentList<T> o) {
+	public int compareTo(APersistentList<T> o) {
 		if (o.size()>0) return -1;
 		return 0;
 	}
@@ -128,12 +128,12 @@ public final class NullList<T> extends BasePersistentList<T> {
 	}
 
 	@Override
-	public PersistentList<T> back() {
+	public APersistentList<T> back() {
 		return this;
 	}
 
 	@Override
-	public PersistentList<T> front() {
+	public APersistentList<T> front() {
 		return this;
 	}
 
@@ -143,18 +143,18 @@ public final class NullList<T> extends BasePersistentList<T> {
 	}
 
 	@Override
-	public PersistentList<T> update(int index, T value) {
+	public APersistentList<T> update(int index, T value) {
 		throw new IndexOutOfBoundsException();
 	}
 
 	@Override
-	public PersistentList<T> insert(int index, T value) {
+	public APersistentList<T> insert(int index, T value) {
 		if (index!=0) throw new IndexOutOfBoundsException();
 		return SingletonList.of(value);
 	}
 
 	@Override
-	public PersistentList<T> insertAll(int index, Collection<T> values) {
+	public APersistentList<T> insertAll(int index, Collection<T> values) {
 		if (index!=0) throw new IndexOutOfBoundsException();
 		return Lists.createFromCollection(values);
 	}
@@ -176,7 +176,7 @@ public final class NullList<T> extends BasePersistentList<T> {
 	}
 
 	@Override
-	public PersistentList<T> copyFrom(int index, IPersistentList<T> values,
+	public APersistentList<T> copyFrom(int index, IPersistentList<T> values,
 			int srcIndex, int length) {
 		if (length>0) throw new IndexOutOfBoundsException();
 		return this;
@@ -188,8 +188,8 @@ public final class NullList<T> extends BasePersistentList<T> {
 	}
 
 	@Override
-	public PersistentList<T> concat(IPersistentList<T> a) {
-		return PersistentList.coerce(a);
+	public APersistentList<T> concat(IPersistentList<T> a) {
+		return APersistentList.coerce(a);
 	}
 
 	@Override

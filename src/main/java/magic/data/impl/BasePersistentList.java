@@ -5,10 +5,10 @@ import java.util.Collection;
 import magic.RT;
 import magic.data.IPersistentList;
 import magic.data.ISeq;
-import magic.data.PersistentList;
+import magic.data.APersistentList;
 
 @SuppressWarnings("serial")
-public abstract class BasePersistentList<T> extends PersistentList<T> {
+public abstract class BasePersistentList<T> extends APersistentList<T> {
 
 	public int end() {
 		throw new UnsupportedOperationException();
@@ -55,7 +55,7 @@ public abstract class BasePersistentList<T> extends PersistentList<T> {
 	/**
 	 * Deletes the first instance of a specified value in the collection"
 	 */
-	public PersistentList<T> deleteFirst(T value) {
+	public APersistentList<T> deleteFirst(T value) {
 		int i=indexOf(value);
 		if (i<0) return this;
 		return deleteRange(i,i+1);
@@ -65,8 +65,8 @@ public abstract class BasePersistentList<T> extends PersistentList<T> {
 	 * Deletes all instances of a specified value in the collection"
 	 */
 	@Override
-	public PersistentList<T> delete(T value) {
-		PersistentList<T> pl=this;
+	public APersistentList<T> delete(T value) {
+		APersistentList<T> pl=this;
 		int i=pl.indexOf(value);
 		while (i>=0) {
 			pl=pl.deleteAt(i);
@@ -76,8 +76,8 @@ public abstract class BasePersistentList<T> extends PersistentList<T> {
 	}
 
 	@Override
-	public PersistentList<T> deleteAll(Collection<T> values) {
-		PersistentList<T> pl=this;
+	public APersistentList<T> deleteAll(Collection<T> values) {
+		APersistentList<T> pl=this;
 		for (T t : values) { 
 			pl=pl.delete(t);
 		}
@@ -85,7 +85,7 @@ public abstract class BasePersistentList<T> extends PersistentList<T> {
 	}
 
 	@Override
-	public int compareTo(PersistentList<T> o) {
+	public int compareTo(APersistentList<T> o) {
 		int n=magic.Maths.min(o.size(), size());
 		for (int i=0; i<n; i++) {
 			int r=RT.compare(this, o);
@@ -97,12 +97,12 @@ public abstract class BasePersistentList<T> extends PersistentList<T> {
 	}
 
 	@Override
-	public PersistentList<T> concat(IPersistentList<T> values) {
+	public APersistentList<T> concat(IPersistentList<T> values) {
 		return BlockList.coerce(this).concat(values);
 	}
 	
 	@Override
-	public PersistentList<T> conj(T value) {
+	public APersistentList<T> conj(T value) {
 		return BlockList.coerce(this).conj(value);
 	}
 	

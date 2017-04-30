@@ -3,7 +3,7 @@ package magic.data.impl;
 import java.io.ObjectStreamException;
 import java.util.Map;
 
-import magic.data.PersistentCollection;
+import magic.data.APersistentCollection;
 import magic.data.PersistentMap;
 import magic.data.PersistentSet;
 
@@ -64,8 +64,8 @@ public final class NullMap<K,V> extends PersistentMap<K, V> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public PersistentCollection<V> values() {
-		return (PersistentCollection<V>) NullSet.INSTANCE;
+	public APersistentCollection<V> values() {
+		return (APersistentCollection<V>) NullSet.INSTANCE;
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import java.util.Iterator;
 import magic.RT;
 import magic.data.impl.FilteredIterator;
 
-public abstract class PersistentSet<T> extends PersistentCollection<T> implements IPersistentSet<T> {
+public abstract class PersistentSet<T> extends APersistentCollection<T> implements IPersistentSet<T> {
 	private static final long serialVersionUID = -6984657587635163165L;
 
 	@Override
@@ -52,7 +52,7 @@ public abstract class PersistentSet<T> extends PersistentCollection<T> implement
 	@Override
 	public PersistentSet<T> deleteAll(final Collection<T> values) {
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
-			PersistentCollection<T> col=Lists.createFromCollection(values);
+			APersistentCollection<T> col=Lists.createFromCollection(values);
 			
 			@Override
 			public boolean filter(Object value) {
@@ -63,7 +63,7 @@ public abstract class PersistentSet<T> extends PersistentCollection<T> implement
 	}
 	
 	@Override
-	public PersistentSet<T> deleteAll(final PersistentCollection<T> values) {
+	public PersistentSet<T> deleteAll(final APersistentCollection<T> values) {
 		if ( values==null) throw new Error();
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
 

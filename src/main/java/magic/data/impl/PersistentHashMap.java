@@ -6,8 +6,7 @@ import java.util.Map;
 
 import magic.RT;
 import magic.data.Bits;
-import magic.data.Immutable;
-import magic.data.PersistentCollection;
+import magic.data.APersistentCollection;
 import magic.data.PersistentMap;
 import magic.data.PersistentObject;
 import magic.data.PersistentSet;
@@ -22,7 +21,6 @@ import magic.data.Sets;
  * @param <K> Key type
  * @param <V> Value type
  */
-@Immutable
 public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	private static final long serialVersionUID = -6862000512238861885L;
 
@@ -876,7 +874,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	}
 
 	@Override
-	public PersistentCollection<V> values() {
+	public APersistentCollection<V> values() {
 		return new ValueCollectionWrapper<K, V>(entrySet());
 	}
 

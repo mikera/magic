@@ -4,7 +4,7 @@ import java.util.List;
 
 import magic.data.IPersistentList;
 import magic.data.Lists;
-import magic.data.PersistentList;
+import magic.data.APersistentList;
 
 /**
  * Implements a persistent list that is a subset of an existing tuple
@@ -21,7 +21,7 @@ public final class SubList<T> extends BasePersistentList<T>   {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static final SubList<?> EMPTY_SUBLIST = new SubList(Lists.emptyList(),0,0);
 
-	private final PersistentList<T> data;
+	private final APersistentList<T> data;
 	private final int offset;
 	private final int length;
 	
@@ -37,7 +37,7 @@ public final class SubList<T> extends BasePersistentList<T>   {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> SubList<T> create(PersistentList<T> source, int fromIndex, int toIndex) {
+	public static <T> SubList<T> create(APersistentList<T> source, int fromIndex, int toIndex) {
 		if ((fromIndex<0)||(toIndex>source.size())) throw new IndexOutOfBoundsException();
 		int newSize=toIndex-fromIndex;
 		if (newSize<=0) {
@@ -51,7 +51,7 @@ public final class SubList<T> extends BasePersistentList<T>   {
 		return createLocal(source,fromIndex,toIndex);
 	}
 	
-	private static <T> SubList<T> createLocal(PersistentList<T> source, int fromIndex, int toIndex) {
+	private static <T> SubList<T> createLocal(APersistentList<T> source, int fromIndex, int toIndex) {
 		return new SubList<T>(source,fromIndex,toIndex-fromIndex);
 	}
 	
@@ -60,7 +60,7 @@ public final class SubList<T> extends BasePersistentList<T>   {
 		return length;
 	}
 	
-	private SubList(PersistentList<T> source, int off, int len) {
+	private SubList(APersistentList<T> source, int off, int len) {
 		data=source;
 		offset=off;
 		length=len;	
@@ -82,7 +82,7 @@ public final class SubList<T> extends BasePersistentList<T>   {
 	 * Attempts to merge adjacent sublists
 	 */
 	@Override
-	public PersistentList<T> concat(IPersistentList<T> values) {
+	public APersistentList<T> concat(IPersistentList<T> values) {
 		if (values instanceof SubList<?>) {
 			SubList<T> sl=(SubList<T>)values;
 			return concat(sl);
@@ -91,7 +91,7 @@ public final class SubList<T> extends BasePersistentList<T>   {
 	}
 	
 	
-	public PersistentList<T> concat(SubList<T> sl) {
+	public APersistentList<T> concat(SubList<T> sl) {
 		if ((data==sl.data)&&((offset+length)==sl.offset)) {
 			int newLength=length+sl.length;
 			if (newLength==data.size()) return data;
@@ -101,7 +101,7 @@ public final class SubList<T> extends BasePersistentList<T>   {
 	}
 	
 	@Override
-	public PersistentList<T> subList(int fromIndex, int toIndex) {
+	public APersistentList<T> subList(int fromIndex, int toIndex) {
 		if ((fromIndex<0)||(toIndex>size())) throw new IndexOutOfBoundsException();
 		if (fromIndex>=toIndex) {
 			if (fromIndex==toIndex) return Lists.emptyList();

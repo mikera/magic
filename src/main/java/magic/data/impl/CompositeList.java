@@ -4,17 +4,17 @@ import java.util.List;
 
 import magic.data.IPersistentList;
 import magic.data.Lists;
-import magic.data.PersistentList;
+import magic.data.APersistentList;
 import magic.data.Tuple;
 
 public class CompositeList<T> extends BasePersistentList<T> {
 	private static final long serialVersionUID = 1L;
 	
-	public final PersistentList<T> front;
-	public final PersistentList<T> back;
+	public final APersistentList<T> front;
+	public final APersistentList<T> back;
 	private final int size;
 	
-	public static <T> PersistentList<T> concat(PersistentList<T> a, PersistentList<T> b) {
+	public static <T> APersistentList<T> concat(APersistentList<T> a, APersistentList<T> b) {
 		int as=a.size(); if (as==0) return b;
 		int bs=b.size(); if (bs==0) return a;
 		if ((as+bs)<=Lists.MAX_TUPLE_BUILD_SIZE) {
@@ -58,14 +58,14 @@ public class CompositeList<T> extends BasePersistentList<T> {
 		return new CompositeList<T>(Lists.createFromList(source,fromIndex,midIndex),Lists.createFromList(source,midIndex,toIndex));
 	}
 	
-	private CompositeList(PersistentList<T> a, PersistentList<T> b ) {
+	private CompositeList(APersistentList<T> a, APersistentList<T> b ) {
 		front=a;
 		back=b;
 		size=a.size()+b.size();
 	}
 	
 	@Override
-	public PersistentList<T> subList(int fromIndex, int toIndex) {
+	public APersistentList<T> subList(int fromIndex, int toIndex) {
 		if ((fromIndex<0)||(toIndex>size)) throw new IndexOutOfBoundsException();
 		if ((fromIndex==0)&&(toIndex==size)) return this;
 		int fs=front.size();
@@ -75,12 +75,12 @@ public class CompositeList<T> extends BasePersistentList<T> {
 	}
 	
 	@Override
-	public PersistentList<T> front() {
+	public APersistentList<T> front() {
 		return front;
 	}
 
 	@Override
-	public PersistentList<T> back() {
+	public APersistentList<T> back() {
 		return back;
 	}
 
@@ -100,13 +100,13 @@ public class CompositeList<T> extends BasePersistentList<T> {
 	}
 
 	@Override
-	public PersistentList<T> conj(T value) {
+	public APersistentList<T> conj(T value) {
 		return concat(this,Tuple.of(value));
 	}
 
 	@Override
-	public PersistentList<T> concat(IPersistentList<T> values) {
-		return concat(this,PersistentList.coerce(values));
+	public APersistentList<T> concat(IPersistentList<T> values) {
+		return concat(this,APersistentList.coerce(values));
 	}
 
 	@Override

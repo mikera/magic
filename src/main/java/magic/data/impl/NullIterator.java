@@ -4,7 +4,6 @@ import java.io.ObjectStreamException;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
-@magic.data.Immutable
 public final class NullIterator<T> implements ListIterator<T> {
 	
 	@SuppressWarnings({ "rawtypes" })

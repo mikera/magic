@@ -15,7 +15,7 @@ import magic.data.impl.SubList;
  *
  * @param <T>
  */
-public abstract class PersistentList<T> extends PersistentCollection<T> implements IPersistentList<T> {
+public abstract class APersistentList<T> extends APersistentCollection<T> implements IPersistentList<T> {
 	private static final long serialVersionUID = -7221238938265002290L;
 
 	@Override
@@ -110,15 +110,15 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 	}
 	
 	@Override
-	public abstract PersistentList<T> conj(T value);
+	public abstract APersistentList<T> conj(T value);
 
 	@Override
-	public PersistentList<T> concat(IPersistentList<T> values) {
+	public APersistentList<T> concat(IPersistentList<T> values) {
 		return Lists.concat(this,values);
 	}
 	
 	@Override
-	public PersistentList<T> concat(Collection<T> values) {
+	public APersistentList<T> concat(Collection<T> values) {
 		return Lists.concat(this,Lists.createFromCollection(values));
 	}
 
@@ -144,7 +144,7 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 	}
 	
 	@Override
-	public PersistentList<T> deleteRange(int start, int end) {
+	public APersistentList<T> deleteRange(int start, int end) {
 		int size=size();
 		if ((start<0)||(end>size)) throw new IndexOutOfBoundsException();
 		if (start>end) throw new IllegalArgumentException();
@@ -160,24 +160,24 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 	}
 	
 	@Override
-	public PersistentList<T> tail() {
+	public APersistentList<T> tail() {
 		return subList(1,size());
 	}
 	
 	@Override
-	public PersistentList<T> front() {
+	public APersistentList<T> front() {
 		int size=size();
 		return subList(0,size/2);
 	}
 
 	@Override
-	public PersistentList<T> back() {
+	public APersistentList<T> back() {
 		int size=size();
 		return subList(size/2,size);
 	}
 
 	@Override
-	public PersistentList<T> subList(int fromIndex, int toIndex) {
+	public APersistentList<T> subList(int fromIndex, int toIndex) {
 		// checks that return known lists
 		if ((fromIndex==0)&&(toIndex==size())) return this;
 		if (fromIndex==toIndex) return Lists.emptyList();
@@ -188,38 +188,38 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 	}
 
 	@Override
-	public PersistentList<T> update(int index, T value) {
-		PersistentList<T> firstPart=subList(0,index);
-		PersistentList<T> lastPart=subList(index+1,size());
+	public APersistentList<T> update(int index, T value) {
+		APersistentList<T> firstPart=subList(0,index);
+		APersistentList<T> lastPart=subList(index+1,size());
 		return firstPart.conj(value).concat(lastPart);
 	}
 
 	@Override
-	public PersistentList<T> insert(int index, T value) {
-		PersistentList<T> firstPart=subList(0,index);
-		PersistentList<T> lastPart=subList(index,size());
+	public APersistentList<T> insert(int index, T value) {
+		APersistentList<T> firstPart=subList(0,index);
+		APersistentList<T> lastPart=subList(index,size());
 		return firstPart.conj(value).concat(lastPart);
 	}
 
 	@Override
-	public PersistentList<T> insertAll(int index, Collection<T> values) {
-		if (values instanceof PersistentList<?>) {
-			return insertAll(index,(PersistentList<T>)values);
+	public APersistentList<T> insertAll(int index, Collection<T> values) {
+		if (values instanceof APersistentList<?>) {
+			return insertAll(index,(APersistentList<T>)values);
 		}
-		PersistentList<T> pl=Lists.createFromCollection(values);
+		APersistentList<T> pl=Lists.createFromCollection(values);
 		return subList(0,index).concat(pl).concat(subList(index,size()));
 	}
 	
 	@Override
-	public PersistentList<T> insertAll(int index, IPersistentList<T> values) {
-		PersistentList<T> firstPart=subList(0,index);
-		PersistentList<T> lastPart=subList(index,size());
+	public APersistentList<T> insertAll(int index, IPersistentList<T> values) {
+		APersistentList<T> firstPart=subList(0,index);
+		APersistentList<T> lastPart=subList(index,size());
 		return firstPart.concat(values).concat(lastPart);
 	}
 	
 	@Override
-	public PersistentList<T> delete(T value) {
-		PersistentList<T> pl=this;
+	public APersistentList<T> delete(T value) {
+		APersistentList<T> pl=this;
 		for (int i = pl.indexOf(value); i>=0; i=pl.indexOf(value)) {
 			pl=pl.subList(0, i).concat(pl.subList(i+1, pl.size()));
 		}
@@ -227,13 +227,13 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 	}
 	
 	@Override
-	public PersistentList<T> deleteAt(int index) {
+	public APersistentList<T> deleteAt(int index) {
 		return deleteRange(index,index+1);
 	}
 
 	@Override
-	public PersistentList<T> clone() {
-		return (PersistentList<T>)super.clone();
+	public APersistentList<T> clone() {
+		return (APersistentList<T>)super.clone();
 	}
 	
 	@Override
@@ -256,7 +256,7 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 	}
 	
 	@Override
-	public PersistentList<T> copyFrom(int dstIndex, IPersistentList<T> values, int srcIndex, int length) {
+	public APersistentList<T> copyFrom(int dstIndex, IPersistentList<T> values, int srcIndex, int length) {
 		int size=size();
 		if ((dstIndex<0)||((dstIndex+length)>size)) throw new IndexOutOfBoundsException();
 		if (length<0) throw new IllegalArgumentException(Errors.negativeRange());
@@ -264,8 +264,8 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 		return subList(0,dstIndex).concat(values.subList(srcIndex, srcIndex+length)).concat(subList(dstIndex+length,size));
 	}
 
-	public static <T> PersistentList<T> coerce(List<T> a) {
-		if (a instanceof PersistentList<?>) return (PersistentList<T>) a;
+	public static <T> APersistentList<T> coerce(List<T> a) {
+		if (a instanceof APersistentList<?>) return (APersistentList<T>) a;
 		return Lists.createFromList(a);
 	}
 }

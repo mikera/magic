@@ -20,31 +20,31 @@ public class Lists<T> {
 	public static final int TUPLE_BUILD_BITS=5;
 	public static final int MAX_TUPLE_BUILD_SIZE=1<<TUPLE_BUILD_BITS;
 	
-	public static PersistentList<?>[] NULL_PERSISTENT_LIST_ARRAY=new PersistentList[0];
+	public static APersistentList<?>[] NULL_PERSISTENT_LIST_ARRAY=new APersistentList[0];
 	
 	public static <T> IPersistentList<T> create() {
 		return emptyList();
 	}	
 	
 	@SuppressWarnings("unchecked")
-	public static <T> PersistentList<T> emptyList() {
-		return (PersistentList<T>) NullList.INSTANCE;
+	public static <T> APersistentList<T> emptyList() {
+		return (APersistentList<T>) NullList.INSTANCE;
 	}	
 	
-	public static <T> PersistentList<T> of(T value) {
+	public static <T> APersistentList<T> of(T value) {
 		return SingletonList.of(value);
 	}
 	
-	public static <T> PersistentList<T> of(T a, T b) {
+	public static <T> APersistentList<T> of(T a, T b) {
 		return Tuple.of(a,b);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> PersistentList<T> of(T... values) {
+	public static <T> APersistentList<T> of(T... values) {
 		return createFromArray(values,0,values.length);
 	}
 	
-	public static <T> PersistentList<T> createFromArray(T[] data) {
+	public static <T> APersistentList<T> createFromArray(T[] data) {
 		return createFromArray(data,0,data.length);
 	}
 	
@@ -59,7 +59,7 @@ public class Lists<T> {
 	 * @param toIndex
 	 * @return
 	 */
-	public static <T> PersistentList<T> createFromArray(T[] data,  int fromIndex, int toIndex) {
+	public static <T> APersistentList<T> createFromArray(T[] data,  int fromIndex, int toIndex) {
 		int n=toIndex-fromIndex;
 		if (n<=MAX_TUPLE_BUILD_SIZE) {
 			// very small cases
@@ -78,9 +78,9 @@ public class Lists<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> PersistentList<T> createFromCollection(Collection<T> source) {
-		if (source instanceof PersistentList<?>) {
-			return (PersistentList<T>)source;
+	public static <T> APersistentList<T> createFromCollection(Collection<T> source) {
+		if (source instanceof APersistentList<?>) {
+			return (APersistentList<T>)source;
 		} else if (source instanceof List<?>) {
 			return createFromList((List<T>)source,0,source.size());
 		} 
@@ -89,7 +89,7 @@ public class Lists<T> {
 		return createFromArray((T[])data);
 	}
 	
-	public static<T> PersistentList<T> createFromIterator(Iterator<T> source) {
+	public static<T> APersistentList<T> createFromIterator(Iterator<T> source) {
 		ArrayList<T> al=new ArrayList<T>();
 		while(source.hasNext()) {
 			al.add(source.next());
@@ -97,15 +97,15 @@ public class Lists<T> {
 		return createFromCollection(al);
 	}
 	
-	public static<T> PersistentList<T> subList(List<T> list, int fromIndex, int toIndex) {
+	public static<T> APersistentList<T> subList(List<T> list, int fromIndex, int toIndex) {
 		return createFromList(list,fromIndex,toIndex);
 	}
 
-	public static <T> PersistentList<T> createFromList(List<T> source) {
+	public static <T> APersistentList<T> createFromList(List<T> source) {
 		return createFromList(source,0,source.size());
 	}
 	
-	public static <T> PersistentList<T> createFromList(List<T> source, int fromIndex, int toIndex) {
+	public static <T> APersistentList<T> createFromList(List<T> source, int fromIndex, int toIndex) {
 		int maxSize=source.size();
 		if ((fromIndex<0)||(toIndex>maxSize)) throw new IndexOutOfBoundsException();
 		int newSize=toIndex-fromIndex;
@@ -115,8 +115,8 @@ public class Lists<T> {
 		}
 			
 		// use sublist if possible
-		if (source instanceof PersistentList) {
-			if (newSize==maxSize) return (PersistentList<T>)source;
+		if (source instanceof APersistentList) {
+			if (newSize==maxSize) return (APersistentList<T>)source;
 			return createFromList((IPersistentList<T>)source,fromIndex, toIndex);
 		}
 		
@@ -130,15 +130,15 @@ public class Lists<T> {
 		return BlockList.create(source, fromIndex, toIndex);
 	}
 	
-	public static <T> PersistentList<T> createFromList(IPersistentList<T> source, int fromIndex, int toIndex) {
+	public static <T> APersistentList<T> createFromList(IPersistentList<T> source, int fromIndex, int toIndex) {
 		return createFromList(source).subList(fromIndex, toIndex);
 	}
 	
-	public static <T> PersistentList<T> concat(List<T> a, List<T> b) {
+	public static <T> APersistentList<T> concat(List<T> a, List<T> b) {
 		return concat(createFromList(a), createFromList(b));
 	}
 	
-	public static <T> PersistentList<T> concat(PersistentList<T> a, PersistentList<T> b) {
+	public static <T> APersistentList<T> concat(APersistentList<T> a, APersistentList<T> b) {
 		return a.concat(b);
 	}
 }

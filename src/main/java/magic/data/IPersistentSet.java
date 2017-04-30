@@ -10,7 +10,7 @@ public interface IPersistentSet<T> extends Set<T>, Iterable<T> {
 	
 	public IPersistentSet<T> deleteAll(final Collection<T> values);
 
-	public IPersistentSet<T> deleteAll(final PersistentCollection<T> values);
+	public IPersistentSet<T> deleteAll(final APersistentCollection<T> values);
 
 	// include methods
 	

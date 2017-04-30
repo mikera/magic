@@ -1,7 +1,7 @@
 package magic.data.impl;
 
 import magic.data.Lists;
-import magic.data.PersistentList;
+import magic.data.APersistentList;
 import magic.data.Tuple;
 
 /**
@@ -42,7 +42,7 @@ public final class SingletonList<T> extends BasePersistentList<T> {
 	}
 	
 	@Override
-	public PersistentList<T> front() {
+	public APersistentList<T> front() {
 		return this;
 	}
 	
@@ -52,17 +52,17 @@ public final class SingletonList<T> extends BasePersistentList<T> {
 	}
 
 	@Override
-	public PersistentList<T> back() {
+	public APersistentList<T> back() {
 		return Lists.emptyList();
 	}
 	
 	@Override
-	public PersistentList<T> tail() {
+	public APersistentList<T> tail() {
 		return Lists.emptyList();
 	}
 
 	@Override
-	public PersistentList<T> conj(T value) {
+	public APersistentList<T> conj(T value) {
 		return Tuple.of(this.value,value);
 	}
 }
