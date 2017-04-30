@@ -1,6 +1,7 @@
 package magic.expression;
 
 import magic.compiler.Parser;
+import magic.data.PersistentHashMap;
 import magic.data.Symbol;
 import magic.lang.Context;
 
@@ -24,7 +25,8 @@ public class Lookup<T> extends Expression<T> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public T compute(Context c) {
+	public T compute(Context c,PersistentHashMap<Symbol,?> bindings) {
+		if (bindings.containsKey(sym)) return (T) bindings.get(sym);
 		return (T)(c.getValue(sym));
 	}
 

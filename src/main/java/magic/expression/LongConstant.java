@@ -1,6 +1,8 @@
 package magic.expression;
 
 import magic.RT;
+import magic.data.PersistentHashMap;
+import magic.data.Symbol;
 import magic.lang.Context;
 
 public class LongConstant extends BaseConstant<Long> {
@@ -16,7 +18,7 @@ public class LongConstant extends BaseConstant<Long> {
 	}
 	
 	@Override
-	public Long compute(Context c) {
+	public Long compute(Context c,PersistentHashMap<Symbol,?> bindings) {
 		return value;
 	}
 

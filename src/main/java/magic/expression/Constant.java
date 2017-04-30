@@ -1,6 +1,8 @@
 package magic.expression;
 
 import magic.RT;
+import magic.data.PersistentHashMap;
+import magic.data.Symbol;
 import magic.lang.Context;
 
 /**
@@ -18,7 +20,7 @@ public class Constant<T> extends BaseConstant<T> {
 	}
 	
 	@Override
-	public T compute(Context c) {
+	public T compute(Context c,PersistentHashMap<Symbol,?> bindings) {
 		return value;
 	}
 

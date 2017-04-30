@@ -6,6 +6,8 @@ import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.source.SourceSection;
 
+import magic.data.PersistentHashMap;
+import magic.data.Symbol;
 import magic.lang.Context;
 import magic.lang.MagicLanguage;
  
@@ -26,7 +28,12 @@ public abstract class Expression<T> extends RootNode {
 		super(language, sourceSection, frameDescriptor);
 	}
 
-	public abstract T compute(Context c);
+	@SuppressWarnings("unchecked")
+	public final T compute(Context c) {
+		return compute(c,(PersistentHashMap<Symbol, ?>) PersistentHashMap.EMPTY);
+	}
+
+	public abstract T compute(Context c, PersistentHashMap<Symbol,?> bindings);
 	
 	@Override
 	public Object execute(VirtualFrame virtualFrame) {

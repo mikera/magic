@@ -1,5 +1,6 @@
 package magic.expression;
 
+import magic.data.PersistentHashMap;
 import magic.data.Symbol;
 import magic.lang.Context;
 
@@ -14,7 +15,7 @@ public class Define<T> extends Expression<T> {
 	}
 
 	@Override
-	public T compute(Context c) {
+	public T compute(Context c,PersistentHashMap<Symbol,?> bindings) {
 		throw new UnsupportedOperationException("Define only works in compile mode?");
 	}
 

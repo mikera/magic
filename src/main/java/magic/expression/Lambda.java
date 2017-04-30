@@ -1,6 +1,7 @@
 package magic.expression;
 
 import magic.data.IPersistentVector;
+import magic.data.PersistentHashMap;
 import magic.data.Symbol;
 import magic.fn.AFn;
 import magic.fn.ArityException;
@@ -20,7 +21,7 @@ public class Lambda<T> extends Expression<IFn<T>> {
 	}
 
 	@Override
-	public IFn<T> compute(Context context) {
+	public IFn<T> compute(Context context,PersistentHashMap<Symbol,?> bindings) {
 		return new AFn<T>() {
 			@Override
 			public T applyToArray(Object... a) {
@@ -29,7 +30,7 @@ public class Lambda<T> extends Expression<IFn<T>> {
 				for (int i=0; i<arity; i++) {
 					c=c.define(args.get(i), Constant.create(a[i]));
 				}
-				return body.compute(c);
+				return body.compute(c,bindings);
 			}	
 		};
 	}
