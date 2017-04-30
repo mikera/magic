@@ -253,14 +253,9 @@ public class Parser extends BaseParser<Object> {
 	
 	private static Parser parser = Parboiled.createParser(Parser.class);
 	private static final ReportingParseRunner<Object> expressionParseRunner=new ReportingParseRunner<>(parser.ExpressionInput());
+	private static final ReportingParseRunner<Symbol> symbolParseRunner=new ReportingParseRunner<>(parser.Symbol());
 	
-	/**
-	 * Parses an expression and returns a form
-	 * @param string
-	 * @return
-	 */
-	public static Object parse(String source) {
-		ParsingResult<Object> result = expressionParseRunner.run(source);
+	private static <T> void checkErrors(ParsingResult<T> result) {
 		if (result.hasErrors()) {
 			List<ParseError> errors=result.parseErrors;
 			StringBuilder sb=new StringBuilder();
@@ -271,6 +266,28 @@ public class Parser extends BaseParser<Object> {
 			}
 			throw new Error(sb.toString());
 		}
+		
+	}
+	
+	/**
+	 * Parses an expression and returns a form
+	 * @param string
+	 * @return
+	 */
+	public static Object parse(String source) {
+		ParsingResult<Object> result = expressionParseRunner.run(source);
+		checkErrors(result);
+		return result.resultValue;
+	}
+	
+	/**
+	 * Parses a symbol
+	 * @param string
+	 * @return
+	 */
+	public static Symbol parseSymbol(String source) {
+		ParsingResult<Symbol> result = symbolParseRunner.run(source);
+		checkErrors(result);
 		return result.resultValue;
 	}
 	

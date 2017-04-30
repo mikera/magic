@@ -3,6 +3,7 @@ package magic.lang;
 import magic.data.PersistentHashMap;
 import magic.data.Symbol;
 import magic.expression.Expression;
+import magic.parser.Parser;
 
 /**
  * Class representing an Execution context.
@@ -34,10 +35,19 @@ public class Context {
 	private static Context create(PersistentHashMap<Symbol, Slot<?>> mappings) {
 		return new Context(mappings);
 	}
+	
+	public static <T> Context createWith(Symbol sym,Expression<T> e) {
+		return EMPTY.define(sym, e);
+	}
+	
+	public static <T> Context createWith(String sym,Expression<T> e) {
+		return createWith(Parser.parseSymbol(sym),e);
+	}
 
 	@SuppressWarnings("unchecked")
 	public <T> Slot<T> getSlot(Symbol sym) {
 		return (Slot<T>) mappings.get(sym);
 	}
+
 
 }
