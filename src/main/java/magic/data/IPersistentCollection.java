@@ -3,7 +3,7 @@ package magic.data;
 import java.io.Serializable;
 import java.util.Collection;
 
-public interface IPersistentCollection<T> extends Collection<T>, Cloneable, Serializable {
+public interface IPersistentCollection<T> extends Collection<T>, ISeqable<T>, Cloneable, Serializable {
 
 	// include methods
 	
@@ -36,9 +36,7 @@ public interface IPersistentCollection<T> extends Collection<T>, Cloneable, Seri
 	
 	public void validate();
 	
-	/**
-	 * Returns the values in this collection as a sequence
-	 */
+	@Override
 	public ISeq<T> seq();
 	
 	/**

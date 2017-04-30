@@ -3,6 +3,12 @@ package magic.data;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Interface for all persistent list types, including vectors and lists
+ * @author Mike
+ *
+ * @param <T>
+ */
 public interface IPersistentList<T> extends IPersistentCollection<T>, List<T>, Comparable<APersistentList<T>> {
 	
 	// modifier methods
