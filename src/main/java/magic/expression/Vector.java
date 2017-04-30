@@ -15,9 +15,8 @@ public class Vector<T> extends Expression<IPersistentVector<T>> {
 
 	IPersistentVector<Expression<T>> exps;
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private Vector(IPersistentVector<Expression<?>> exps) {
-		this.exps=(IPersistentVector)exps;
+	private Vector(IPersistentVector<Expression<T>> exps) {
+		this.exps=exps;
 	}
 	
 	@Override
@@ -31,8 +30,8 @@ public class Vector<T> extends Expression<IPersistentVector<T>> {
 		return Vectors.wrap(results);
 	}
 
-	public static Expression<?> create(IPersistentVector<Expression<?>> exps) {
-		return new Vector<Object>(exps);
+	public static <T> Vector<T> create(IPersistentVector<Expression<T>> exps) {
+		return new Vector<T>(exps);
 	}
 
 	public IPersistentVector<Expression<T>> getExpressions() {

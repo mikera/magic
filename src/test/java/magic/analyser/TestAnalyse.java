@@ -55,8 +55,9 @@ public class TestAnalyse {
 	
 	@Test 
 	public void testVector() {
-		Expression<?> e=analyse("[1 2]");
-		assertEquals(Tuple.of(1L,2L),e.compute(Context.EMPTY));
+		Context c=Context.createWith("foo",Constant.create(2L));
+		Expression<?> e=analyse("[1 foo]");
+		assertEquals(Tuple.of(1L,2L),e.compute(c));
 
 	}
 }
