@@ -1,4 +1,4 @@
-package magic.parser;
+package magic.compiler;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
