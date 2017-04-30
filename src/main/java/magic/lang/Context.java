@@ -10,6 +10,7 @@ import magic.expression.Expression;
  *
  */
 public class Context {
+	public static final Context EMPTY=new Context();
 
 	public Context() {
 		

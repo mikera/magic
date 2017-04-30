@@ -18,6 +18,8 @@ public class MagicLanguage extends TruffleLanguage<MagicContext> {
 	
 	public static final MagicLanguage INSTANCE = new MagicLanguage();
 
+	private static final Context INITIAL_CONTEXT = Context.EMPTY;
+
     /**
      * No instances allowed apart from the {@link #INSTANCE singleton instance}.
      */
@@ -40,7 +42,7 @@ public class MagicLanguage extends TruffleLanguage<MagicContext> {
 	protected CallTarget parse(ParsingRequest request) throws Exception {
 		Source source=request.getSource();
 		Object form=Parser.parse(source.getReader());
-		Expression<?> ex= Analyser.analyse(form);
+		Expression<?> ex= Analyser.analyse(INITIAL_CONTEXT,form);
 		return Truffle.getRuntime().createCallTarget(ex);
 	}
 	
