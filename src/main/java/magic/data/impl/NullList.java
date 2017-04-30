@@ -39,7 +39,7 @@ public final class NullList<T> extends BasePersistentList<T> {
 	}
 	
 	@Override
-	public APersistentList<T> deleteAll(Collection<T> values) {
+	public APersistentList<T> excludeAll(Collection<T> values) {
 		return this;
 	}
 
@@ -193,7 +193,7 @@ public final class NullList<T> extends BasePersistentList<T> {
 	}
 
 	@Override
-	public SingletonList<T> conj(T value) {
+	public SingletonList<T> include(T value) {
 		return SingletonList.of(value);
 	}
 

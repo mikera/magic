@@ -11,15 +11,10 @@ import magic.data.APersistentList;
 @SuppressWarnings("serial")
 public abstract class BasePersistentList<T> extends APersistentList<T> {
 
-	public int end() {
-		throw new UnsupportedOperationException();
-	}
-	
 	@Override
 	public boolean contains(Object o) {
 		return indexOf(o)>=0;
 	}
-
 
 	@Override
 	public int lastIndexOf(Object o) {
@@ -66,7 +61,7 @@ public abstract class BasePersistentList<T> extends APersistentList<T> {
 	 * Deletes all instances of a specified value in the collection"
 	 */
 	@Override
-	public APersistentList<T> delete(T value) {
+	public APersistentList<T> exclude(T value) {
 		APersistentList<T> pl=this;
 		int i=pl.indexOf(value);
 		while (i>=0) {
@@ -77,10 +72,10 @@ public abstract class BasePersistentList<T> extends APersistentList<T> {
 	}
 
 	@Override
-	public APersistentList<T> deleteAll(Collection<T> values) {
+	public APersistentList<T> excludeAll(Collection<T> values) {
 		APersistentList<T> pl=this;
 		for (T t : values) { 
-			pl=pl.delete(t);
+			pl=pl.exclude(t);
 		}
 		return pl;
 	}
@@ -103,8 +98,8 @@ public abstract class BasePersistentList<T> extends APersistentList<T> {
 	}
 	
 	@Override
-	public APersistentList<T> conj(T value) {
-		return PersistentVector.coerce(this).conj(value);
+	public APersistentList<T> include(T value) {
+		return PersistentVector.coerce(this).include(value);
 	}
 	
 	@Override

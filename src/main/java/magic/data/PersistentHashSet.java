@@ -50,7 +50,7 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 		PersistentHashSet<T> pm=new PersistentHashSet<T>();
 		if (values==null) return pm;
 		for (T ent: values) {
-			pm=pm.conj(ent);
+			pm=pm.include(ent);
 		}
 		return pm;
 	}
@@ -58,7 +58,7 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 	public static<T> PersistentHashSet<T> createFromIterator(Iterator<T> iterator) {
 		PersistentHashSet<T> pm=new PersistentHashSet<T>();
 		while(iterator.hasNext()) {
-			pm=pm.conj(iterator.next());
+			pm=pm.include(iterator.next());
 		}
 		return pm;
 	}
@@ -66,7 +66,7 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 	public static <T> PersistentHashSet<T> create(T[] values) {
 		PersistentHashSet<T> pm=new PersistentHashSet<T>();
 		for (int i=0; i<values.length; i++) {
-			pm=pm.conj(values[i]);
+			pm=pm.include(values[i]);
 		}
 		return pm;
 	}
@@ -860,7 +860,7 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 	}
 
 	@Override
-	public PersistentHashSet<T> conj(T key) {
+	public PersistentHashSet<T> include(T key) {
 		PHSNode<T> newRoot=root.include(key, calcHash(key),0);
 		if (root==newRoot) return this;
 		return new PersistentHashSet<T>(newRoot);
@@ -879,7 +879,7 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 		
 		PersistentHashSet<T> pm=this;
 		for (T entry:values) {
-			pm=pm.conj(entry);
+			pm=pm.include(entry);
 		}
 		return pm;
 	}
@@ -889,14 +889,14 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 		PersistentHashSet<T> pm=this;
 		PHSIterator<T> it=values.iterator();
 		while (it.hasNext()) {
-			pm=pm.conj(it.next());
+			pm=pm.include(it.next());
 		}
 		return pm;
 	}
 
 
 	@Override
-	public PersistentHashSet<T> delete(T key) {
+	public PersistentHashSet<T> exclude(T key) {
 		PHSNode<T> newRoot=root.delete(key,calcHash(key));
 		if (root==newRoot) return this;
 		return new PersistentHashSet<T>(newRoot);

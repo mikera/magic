@@ -89,12 +89,12 @@ public final class NullCollection<T> extends APersistentCollection<T> {
 	}
 
 	@Override
-	public APersistentCollection<T> delete(T value) {
+	public APersistentCollection<T> exclude(T value) {
 		return this;
 	}
 
 	@Override
-	public APersistentCollection<T> deleteAll(Collection<T> values) {
+	public APersistentCollection<T> excludeAll(Collection<T> values) {
 		return this;
 	}
 	
@@ -120,7 +120,7 @@ public final class NullCollection<T> extends APersistentCollection<T> {
 	}
 
 	@Override
-	public APersistentCollection<T> conj(T value) {
+	public APersistentCollection<T> include(T value) {
 		return SingletonList.of(value);
 	}
 

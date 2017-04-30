@@ -62,7 +62,7 @@ public final class SingletonList<T> extends BasePersistentList<T> {
 	}
 
 	@Override
-	public APersistentList<T> conj(T value) {
+	public APersistentList<T> include(T value) {
 		return Tuple.of(this.value,value);
 	}
 }

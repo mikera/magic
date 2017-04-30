@@ -6,11 +6,11 @@ import java.util.Set;
 public interface IPersistentSet<T> extends Set<T>, Iterable<T> {
 	// delete methods
 	
-	public IPersistentSet<T> delete(final T value);
+	public IPersistentSet<T> exclude(final T value);
 	
-	public IPersistentSet<T> deleteAll(final Collection<T> values);
+	public IPersistentSet<T> excludeAll(final Collection<T> values);
 
-	public IPersistentSet<T> deleteAll(final APersistentCollection<T> values);
+	public IPersistentSet<T> excludeAll(final APersistentCollection<T> values);
 
 	// include methods
 	

@@ -290,14 +290,14 @@ public final class PersistentVector<T> extends BasePersistentList<T> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public PersistentVector<T> conj(T value) {
+	public PersistentVector<T> include(T value) {
 		int newIx=offset+size; // raw index of new added value
 		int newBlock=newIx>>shift;
 		int blockLength=blocks.length;
 		if (newBlock<blockLength) {
 			// conj to last block
 			APersistentList<T>[] newBlocks=blocks.clone();
-			newBlocks[newBlock]=blocks[newBlock].conj(value);
+			newBlocks[newBlock]=blocks[newBlock].include(value);
 			return new PersistentVector<T>(newBlocks,shift,size+1,offset);
 		} else if ((newIx>>(shift+SHIFT_STEP))==0) {
 			// add a final block

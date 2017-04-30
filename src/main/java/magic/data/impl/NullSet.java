@@ -25,7 +25,7 @@ public final class NullSet<T> extends BasePersistentSet<T> {
 	}
 
 	@Override
-	public APersistentSet<T> conj(T value) {
+	public APersistentSet<T> include(T value) {
 		return Sets.create(value);
 	}
 
@@ -41,12 +41,12 @@ public final class NullSet<T> extends BasePersistentSet<T> {
 	}
 	
 	@Override
-	public APersistentSet<T> delete(final T value) {
+	public APersistentSet<T> exclude(final T value) {
 		return this;
 	}
 
 	@Override
-	public APersistentSet<T> deleteAll(final Collection<T> values) {
+	public APersistentSet<T> excludeAll(final Collection<T> values) {
 		return this;
 	}
 	

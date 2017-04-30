@@ -100,7 +100,7 @@ public class CompositeList<T> extends BasePersistentList<T> {
 	}
 
 	@Override
-	public APersistentList<T> conj(T value) {
+	public APersistentList<T> include(T value) {
 		return concat(this,Tuple.of(value));
 	}
 

@@ -32,7 +32,7 @@ public interface IPersistentList<T> extends IPersistentCollection<T>, List<T>, C
 	public APersistentList<T> copyFrom(int index, IPersistentList<T> values, int srcIndex, int length);
 	
 	@Override
-	public APersistentList<T> delete(T value);
+	public APersistentList<T> include(T value);
 
 	public APersistentList<T> deleteAt(int index);
 

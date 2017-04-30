@@ -117,7 +117,7 @@ public class ValueSet<T> extends Type {
 			if (values.contains(value)) {
 				return this;
 			} else {
-				return update(values.conj((T) value));
+				return update(values.include((T) value));
 			}
 		}
 		return super.union(t);
@@ -130,7 +130,7 @@ public class ValueSet<T> extends Type {
 		Iterator<T> it=values.iterator();
 		while(it.hasNext()) {
 			T v=it.next();
-			if (!t.checkInstance(v)) vals=vals.delete(v);
+			if (!t.checkInstance(v)) vals=vals.exclude(v);
 		}
 		return update(vals);
 	}

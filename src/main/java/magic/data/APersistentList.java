@@ -110,7 +110,7 @@ public abstract class APersistentList<T> extends APersistentCollection<T> implem
 	}
 	
 	@Override
-	public abstract APersistentList<T> conj(T value);
+	public abstract APersistentList<T> include(T value);
 
 	@Override
 	public APersistentList<T> concat(IPersistentList<T> values) {
@@ -191,14 +191,14 @@ public abstract class APersistentList<T> extends APersistentCollection<T> implem
 	public APersistentList<T> update(int index, T value) {
 		APersistentList<T> firstPart=subList(0,index);
 		APersistentList<T> lastPart=subList(index+1,size());
-		return firstPart.conj(value).concat(lastPart);
+		return firstPart.include(value).concat(lastPart);
 	}
 
 	@Override
 	public APersistentList<T> insert(int index, T value) {
 		APersistentList<T> firstPart=subList(0,index);
 		APersistentList<T> lastPart=subList(index,size());
-		return firstPart.conj(value).concat(lastPart);
+		return firstPart.include(value).concat(lastPart);
 	}
 
 	@Override
@@ -218,7 +218,7 @@ public abstract class APersistentList<T> extends APersistentCollection<T> implem
 	}
 	
 	@Override
-	public APersistentList<T> delete(T value) {
+	public APersistentList<T> exclude(T value) {
 		APersistentList<T> pl=this;
 		for (int i = pl.indexOf(value); i>=0; i=pl.indexOf(value)) {
 			pl=pl.subList(0, i).concat(pl.subList(i+1, pl.size()));

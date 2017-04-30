@@ -128,7 +128,7 @@ public abstract class APersistentCollection<T> extends PersistentObject implemen
 	}
 
 	@Override
-	public APersistentCollection<T> delete(final T value) {
+	public APersistentCollection<T> exclude(final T value) {
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
 			@Override
 			public boolean filter(Object testvalue) {
@@ -139,7 +139,7 @@ public abstract class APersistentCollection<T> extends PersistentObject implemen
 	}
 	
 	@Override
-	public APersistentCollection<T> deleteAll(final IPersistentCollection<T> values) {
+	public APersistentCollection<T> excludeAll(final IPersistentCollection<T> values) {
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
 			@Override
 			public boolean filter(Object value) {
@@ -150,7 +150,7 @@ public abstract class APersistentCollection<T> extends PersistentObject implemen
 	}
 
 	@Override
-	public APersistentCollection<T> deleteAll(final Collection<T> values) {
+	public APersistentCollection<T> excludeAll(final Collection<T> values) {
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
 			APersistentCollection<T> col=Lists.createFromCollection(values);
 			
@@ -180,13 +180,13 @@ public abstract class APersistentCollection<T> extends PersistentObject implemen
 	}
 	
 	@Override
-	public abstract APersistentCollection<T> conj(final T value);
+	public abstract APersistentCollection<T> include(final T value);
 	
 	@Override
 	public APersistentCollection<T> includeAll(final Collection<T> values) {
 		APersistentCollection<T> ps=this;
 		for (T t: values) {
-			ps=ps.conj(t);
+			ps=ps.include(t);
 		}
 		return ps;
 	}

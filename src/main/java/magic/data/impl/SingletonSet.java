@@ -38,8 +38,8 @@ public final class SingletonSet<T> extends BasePersistentSet<T> {
 	}
 
 	@Override
-	public APersistentSet<T> conj(T value) {
-		return PersistentHashSet.coerce(this).conj(value);
+	public APersistentSet<T> include(T value) {
+		return PersistentHashSet.coerce(this).include(value);
 	}
 	
 	@Override

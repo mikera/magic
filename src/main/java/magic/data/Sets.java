@@ -60,7 +60,7 @@ public class Sets {
 	public static <T> APersistentSet<T> concat(APersistentSet<T> a, T value) {
 		if (a.contains(value)) return a;
 		if (a.size()==0) return SingletonSet.create(value);
-		return PersistentHashSet.createFromSet(a).conj(value);
+		return PersistentHashSet.createFromSet(a).include(value);
 	}
 	
 }

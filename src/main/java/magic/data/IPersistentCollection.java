@@ -7,17 +7,23 @@ public interface IPersistentCollection<T> extends Collection<T>, ISeqable<T>, Cl
 
 	// include methods
 	
+	/**
+	 * Adds a value to this collection.
+	 * Behaviour depends on the specific collection semantics
+	 */
+	public APersistentCollection<T> include(T value);
+	
 	public APersistentCollection<T> includeAll(final Collection<T> values);
 
 	public APersistentCollection<T> includeAll(final IPersistentCollection<T> values);
 
 	// delete methods
 	
-	public APersistentCollection<T> delete(final T value);
+	public APersistentCollection<T> exclude(final T value);
 	
-	public APersistentCollection<T> deleteAll(final Collection<T> values);
+	public APersistentCollection<T> excludeAll(final Collection<T> values);
 
-	public APersistentCollection<T> deleteAll(final IPersistentCollection<T> values);
+	public APersistentCollection<T> excludeAll(final IPersistentCollection<T> values);
 
 	// query methods
 	
@@ -39,10 +45,5 @@ public interface IPersistentCollection<T> extends Collection<T>, ISeqable<T>, Cl
 	@Override
 	public ISeq<T> seq();
 	
-	/**
-	 * Adds a value to this collection.
-	 * Behaviour depends on the specific collection semantics
-	 */
-	public APersistentCollection<T> conj(T value);
 	
 }

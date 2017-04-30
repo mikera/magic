@@ -25,8 +25,8 @@ public final class KeySetWrapper<K,V> extends BasePersistentSet<K> {
 	}
 	
 	@Override
-	public APersistentSet<K> conj(K value) {
-		return PersistentHashSet.coerce(this).conj(value);
+	public APersistentSet<K> include(K value) {
+		return PersistentHashSet.coerce(this).include(value);
 	}
 
 	@Override

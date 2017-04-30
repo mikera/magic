@@ -10,13 +10,13 @@ public abstract class APersistentSet<T> extends APersistentCollection<T> impleme
 	private static final long serialVersionUID = -6984657587635163165L;
 
 	@Override
-	public abstract APersistentSet<T> conj(final T value);
+	public abstract APersistentSet<T> include(final T value);
 	
 	@Override
 	public APersistentSet<T> includeAll(final Collection<T> values) {
 		APersistentSet<T> ps=this;
 		for (T t: values) {
-			ps=ps.conj(t);
+			ps=ps.include(t);
 		}
 		return ps;
 	}
@@ -38,7 +38,7 @@ public abstract class APersistentSet<T> extends APersistentCollection<T> impleme
 	}
 	
 	@Override
-	public APersistentSet<T> delete(final T value) {
+	public APersistentSet<T> exclude(final T value) {
 		if (!contains(value)) return this;
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
 			@Override
@@ -50,7 +50,7 @@ public abstract class APersistentSet<T> extends APersistentCollection<T> impleme
 	}
 
 	@Override
-	public APersistentSet<T> deleteAll(final Collection<T> values) {
+	public APersistentSet<T> excludeAll(final Collection<T> values) {
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
 			APersistentCollection<T> col=Lists.createFromCollection(values);
 			
@@ -63,7 +63,7 @@ public abstract class APersistentSet<T> extends APersistentCollection<T> impleme
 	}
 	
 	@Override
-	public APersistentSet<T> deleteAll(final APersistentCollection<T> values) {
+	public APersistentSet<T> excludeAll(final APersistentCollection<T> values) {
 		if ( values==null) throw new Error();
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
 

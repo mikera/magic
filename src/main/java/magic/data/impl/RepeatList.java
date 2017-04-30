@@ -76,7 +76,7 @@ public class RepeatList<T> extends BasePersistentList<T> {
 	}
 	
 	@Override
-	public APersistentList<T> delete(final T v) {
+	public APersistentList<T> exclude(final T v) {
 		if (RT.equals(v,value)) {
 			return Lists.emptyList();
 		}

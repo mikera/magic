@@ -120,7 +120,7 @@ public class TestPersistent {
 	
 	public <T> void testDelete(APersistentCollection<T> a) {
 		if (a==null) throw new Error("!!!");
-		APersistentCollection<T> da=a.deleteAll(a);
+		APersistentCollection<T> da=a.excludeAll(a);
 		assertEquals(0,da.size());
 		assertTrue(da.isEmpty());
 		assertEquals(0,da.hashCode());
@@ -128,7 +128,7 @@ public class TestPersistent {
 		int size=a.size();
 		if (size>0) {
 			T t=a.iterator().next();
-			APersistentCollection<T> dd=a.delete(t);
+			APersistentCollection<T> dd=a.exclude(t);
 			assertTrue(dd.size()<size);
 			assertTrue(!dd.contains(t));
 			assertTrue(a.contains(t));
@@ -151,10 +151,10 @@ public class TestPersistent {
 			T v=(T)ar[Rand.r(ar.length)];
 			assertTrue(a.contains(v));
 			
-			APersistentCollection<T> ad=a.delete(v);
+			APersistentCollection<T> ad=a.exclude(v);
 			assertFalse(ad.contains(v));
 			
-			APersistentCollection<T> adi=ad.conj(v);		
+			APersistentCollection<T> adi=ad.include(v);		
 			assertTrue(adi.contains(v));
 			assertTrue(adi.containsAll(a));
 		}
@@ -162,18 +162,18 @@ public class TestPersistent {
 	
 	public <T> void testSetInclude(APersistentSet<T> a) {
 		if (a.size()>0) {
-			APersistentSet<T> b=a.conj(a.iterator().next());
+			APersistentSet<T> b=a.include(a.iterator().next());
 			assertTrue(b.size()==a.size());
 			assertTrue(b.equals(a));
 		}
 		
 		if (a.allowsNulls()) {
-			APersistentSet<T> an=a.conj(null);
+			APersistentSet<T> an=a.include(null);
 			assertEquals(a.size()+(a.contains(null)?0:1),an.size());
 		
-			APersistentSet<T> n=a.deleteAll(a);
+			APersistentSet<T> n=a.excludeAll(a);
 			assertTrue(!n.contains(null));
-			n=n.conj(null);
+			n=n.include(null);
 			assertEquals(1,n.size());
 			assertTrue(n.contains(null));
 		}
@@ -440,8 +440,8 @@ public class TestPersistent {
 		APersistentList<Integer> tl=(Tuple.of(1,2,3,4,5));
 		APersistentList<Integer> ol=(Tuple.of(1,3,5));
 		APersistentList<Integer> pl=tl;
-		pl=pl.delete(2);
-		pl=pl.delete(4);
+		pl=pl.exclude(2);
+		pl=pl.exclude(4);
 		assertEquals(ol,pl);
 		assertEquals(ol,tl.deleteAt(1).deleteAt(2));
 	}

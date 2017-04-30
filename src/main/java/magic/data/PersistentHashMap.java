@@ -780,9 +780,9 @@ public final class PersistentHashMap<K,V> extends APersistentMap<K,V> {
 		}
 
 		@Override
-		public APersistentSet<Map.Entry<K, V>> conj(
+		public APersistentSet<Map.Entry<K, V>> include(
 				Map.Entry<K, V> value) {
-			return Sets.create(this).conj(value);
+			return Sets.create(this).include(value);
 		}
 	}
 	

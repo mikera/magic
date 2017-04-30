@@ -181,7 +181,7 @@ public final class Tuple<T> extends BasePersistentList<T> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public APersistentList<T> conj(T value) {
+	public APersistentList<T> include(T value) {
 		if (size<PersistentVector.BASE_BLOCKSIZE) {
 			int newSize=size+1;
 			T[] ndata=(T[]) new Object[newSize];
@@ -189,7 +189,7 @@ public final class Tuple<T> extends BasePersistentList<T> {
 			ndata[size]=value;
 			return Tuple.wrap(ndata,0,newSize);
 		} else {
-			return PersistentVector.coerce(this).conj(value);
+			return PersistentVector.coerce(this).include(value);
 		}
 	}
 	

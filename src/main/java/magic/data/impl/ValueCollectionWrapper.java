@@ -55,8 +55,8 @@ public final class ValueCollectionWrapper<K,V> extends APersistentCollection<V> 
 	}
 
 	@Override
-	public APersistentList<V> conj(V value) {
-		return Lists.createFromCollection(this).conj(value);
+	public APersistentList<V> include(V value) {
+		return Lists.createFromCollection(this).include(value);
 	}
 
 	@Override

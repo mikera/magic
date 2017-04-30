@@ -6,8 +6,8 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 import magic.RT;
-import magic.data.ISeq;
 import magic.data.APersistentSet;
+import magic.data.ISeq;
 
 /**
  * Array based immutable set implementation
@@ -100,7 +100,7 @@ public final class ArraySet<T> extends APersistentSet<T> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public APersistentSet<T> conj(T value) {
+	public APersistentSet<T> include(T value) {
 		if (contains(value)) return this;
 		
 		T[] ndata=(T[])new Object[data.length+1];
@@ -111,7 +111,7 @@ public final class ArraySet<T> extends APersistentSet<T> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public APersistentSet<T> delete(T value) {
+	public APersistentSet<T> exclude(T value) {
 		int pos=indexOf(value);
 		if (pos<0) return this;
 		int size=data.length;
@@ -130,5 +130,6 @@ public final class ArraySet<T> extends APersistentSet<T> {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 }
