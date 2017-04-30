@@ -8,6 +8,10 @@ import magic.lang.Context;
 
 public class Analyser {
 
+	public static Expression<?> analyse(Object form) {
+		return analyse(Context.EMPTY,form);
+	}
+	
 	public static Expression<?> analyse(Context c, Object form) {
 		if (form instanceof Symbol) return analyseSymbol(c,(Symbol)form);
 		return Constant.create(form);
