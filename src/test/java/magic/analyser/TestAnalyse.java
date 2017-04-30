@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
+import magic.data.Tuple;
 import magic.expression.Constant;
 import magic.expression.Expression;
 import magic.lang.Context;
@@ -29,5 +30,12 @@ public class TestAnalyse {
 		} catch (Throwable t) {
 			// OK
 		}
+	}
+	
+	@Test 
+	public void testConstant() {
+		Expression<Integer> e=analyse("[1]");
+		assertEquals(Tuple.of(1L),e.compute(Context.EMPTY));
+
 	}
 }
