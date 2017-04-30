@@ -38,4 +38,11 @@ public class TestAnalyse {
 		assertEquals(Long.valueOf(1),e.compute(Context.EMPTY));
 
 	}
+	
+	@Test 
+	public void testVector() {
+		Expression<Integer> e=analyse("[1 2]");
+		assertEquals(Tuple.of(1L,2L),e.compute(Context.EMPTY));
+
+	}
 }
