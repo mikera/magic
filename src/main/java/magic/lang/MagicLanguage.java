@@ -8,7 +8,7 @@ import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.api.source.SourceSection;
 
-import magic.analyser.Analyser;
+import magic.compiler.Analyser;
 import magic.expression.Expression;
 import magic.parser.Parser;
 
