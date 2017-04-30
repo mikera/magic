@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import magic.RT;
-import magic.data.impl.BlockList;
 import magic.data.impl.CompositeList;
 import magic.data.impl.NullCollection;
 import magic.data.impl.NullList;
@@ -35,8 +34,8 @@ public class TestPersistent {
 		testPersistentList(SingletonList.of("Hello persistent lists!"));
 		testPersistentList(RepeatList.create("Hello", 40));
 		testPersistentList(CompositeList.create(pl));
-		testPersistentList(BlockList.create(pl));
-		testPersistentList(BlockList.create(RepeatList.create("MM", 40)));
+		testPersistentList(PersistentVector.create(pl));
+		testPersistentList(PersistentVector.create(RepeatList.create("MM", 40)));
 		testPersistentList(SubList.create(pl,2,3));
 	}
 	
@@ -51,18 +50,18 @@ public class TestPersistent {
 		Tuple<Integer> ts=Tuple.of(0,1,2,3,4,5,6,7,8,9);
 		assertEquals(ts,Tuple.concat(ts, ts).subList(10, 20));
 		
-		BlockList <Integer> bs=BlockList.create(ts);
+		PersistentVector <Integer> bs=PersistentVector.create(ts);
 		assertEquals(ts,bs);
-		BlockList <Integer> bs2=bs.concat(bs);
+		PersistentVector <Integer> bs2=bs.concat(bs);
 		assertEquals(ts,bs2.subList(10, 20));
 		bs2.validate();
 		
-		BlockList <Integer> bs3=bs2.concat(ts);
+		PersistentVector <Integer> bs3=bs2.concat(ts);
 		bs3.validate();
 		assertEquals(ts,bs3.subList(10, 20));
 		assertEquals(ts,bs3.subList(20, 30));
 
-		BlockList <Integer> bs4=bs2.concat(bs2);
+		PersistentVector <Integer> bs4=bs2.concat(bs2);
 		assertEquals(40,bs4.size());
 		bs4.validate();
 		assertEquals(ts,bs4.subList(10, 20));

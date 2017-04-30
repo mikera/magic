@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import magic.data.impl.BlockList;
 import magic.data.impl.NullList;
 import magic.data.impl.SingletonList;
 
@@ -74,7 +73,7 @@ public class Lists<T> {
 		}	
 		
 		// otherwise create a block list
-		return BlockList.create(data,fromIndex,toIndex);
+		return PersistentVector.create(data,fromIndex,toIndex);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -127,7 +126,7 @@ public class Lists<T> {
 		}
 		
 		// create blocklist for larger lists
-		return BlockList.create(source, fromIndex, toIndex);
+		return PersistentVector.create(source, fromIndex, toIndex);
 	}
 	
 	public static <T> APersistentList<T> createFromList(IPersistentList<T> source, int fromIndex, int toIndex) {

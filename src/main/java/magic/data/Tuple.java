@@ -5,7 +5,6 @@ import java.util.List;
 
 import magic.RT;
 import magic.data.impl.BasePersistentList;
-import magic.data.impl.BlockList;
 import magic.data.impl.EmptyArrays;
 
 public final class Tuple<T> extends BasePersistentList<T> {
@@ -102,8 +101,8 @@ public final class Tuple<T> extends BasePersistentList<T> {
 		int aSize=a.size();
 		int bSize=b.size();
 		int newSize=aSize+bSize;
-		if (newSize>2*BlockList.BASE_BLOCKSIZE) {
-			return BlockList.create(a).concat(b);
+		if (newSize>2*PersistentVector.BASE_BLOCKSIZE) {
+			return PersistentVector.create(a).concat(b);
 		}
 		T[] ndata=(T[]) new Object[newSize];
 		for (int i=0; i<aSize; i++) {
@@ -176,14 +175,14 @@ public final class Tuple<T> extends BasePersistentList<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public APersistentList<T> conj(T value) {
-		if (size<BlockList.BASE_BLOCKSIZE) {
+		if (size<PersistentVector.BASE_BLOCKSIZE) {
 			int newSize=size+1;
 			T[] ndata=(T[]) new Object[newSize];
 			System.arraycopy(data, offset, ndata, 0, size);
 			ndata[size]=value;
 			return Tuple.wrap(ndata,0,newSize);
 		} else {
-			return BlockList.coerce(this).conj(value);
+			return PersistentVector.coerce(this).conj(value);
 		}
 	}
 	

@@ -1,19 +1,16 @@
-package magic.data.impl;
+package magic.data;
 
 import java.util.List;
 
-import magic.data.IPersistentList;
-import magic.data.Lists;
-import magic.data.APersistentList;
-import magic.data.Tuple;
+import magic.data.impl.BasePersistentList;
 
 /**
- * Persistent List constructed using fixed size blocks represented by other persistent lists
+ * Persistent Vector constructed using fixed size blocks represented by other persistent lists
  * @author Mike
  *
  * @param <T>
  */
-public final class BlockList<T> extends BasePersistentList<T> {
+public final class PersistentVector<T> extends BasePersistentList<T> {
 	private static final long serialVersionUID = 7210896608719053578L;
 
 	protected static final int DEFAULT_SHIFT=Lists.TUPLE_BUILD_BITS;
@@ -44,11 +41,11 @@ public final class BlockList<T> extends BasePersistentList<T> {
 	private final APersistentList<T>[] blocks;
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static final BlockList<?> EMPTY_BLOCKLIST=new BlockList(Lists.NULL_PERSISTENT_LIST_ARRAY,DEFAULT_SHIFT,0,0);
+	public static final PersistentVector<?> EMPTY_BLOCKLIST=new PersistentVector(Lists.NULL_PERSISTENT_LIST_ARRAY,DEFAULT_SHIFT,0,0);
 
 
 	
-	public static <T> BlockList<T> create(List<T> list) {
+	public static <T> PersistentVector<T> create(List<T> list) {
 		return create(list,0,list.size());
 	}
 	
@@ -58,10 +55,10 @@ public final class BlockList<T> extends BasePersistentList<T> {
 	 * @return a BlockList containing the values from the list provided
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> BlockList<T> coerce(List<T> values) {
-		if (values instanceof BlockList<?>) return (BlockList<T>) values;
+	public static <T> PersistentVector<T> coerce(List<T> values) {
+		if (values instanceof PersistentVector<?>) return (PersistentVector<T>) values;
 		int size=values.size();
-		if (size==0) return (BlockList<T>) EMPTY_BLOCKLIST;
+		if (size==0) return (PersistentVector<T>) EMPTY_BLOCKLIST;
 		return create(values,0,size);
 	}
 	
@@ -72,7 +69,7 @@ public final class BlockList<T> extends BasePersistentList<T> {
 	 * @param toIndex
 	 * @return
 	 */
-	public static <T> BlockList<T> create(List<T> list, int fromIndex, int toIndex) {
+	public static <T> PersistentVector<T> create(List<T> list, int fromIndex, int toIndex) {
 		int size=toIndex-fromIndex;
 		if (size<0) throw new IllegalArgumentException();
 		
@@ -91,10 +88,10 @@ public final class BlockList<T> extends BasePersistentList<T> {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> BlockList<T> create(T[] list, int fromIndex, int toIndex) {
+	public static <T> PersistentVector<T> create(T[] list, int fromIndex, int toIndex) {
 		int size=toIndex-fromIndex;
 		if (size<0) throw new IllegalArgumentException();
-		if (size==0) return (BlockList<T>) EMPTY_BLOCKLIST;
+		if (size==0) return (PersistentVector<T>) EMPTY_BLOCKLIST;
 		
 		int shift=DEFAULT_SHIFT;
 		while ((1<<(shift+SHIFT_STEP))<size) {
@@ -104,7 +101,7 @@ public final class BlockList<T> extends BasePersistentList<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static <T> BlockList<T> createLocal(T[] list, int fromIndex, int toIndex, int shift) {
+	private static <T> PersistentVector<T> createLocal(T[] list, int fromIndex, int toIndex, int shift) {
 		if (shift>DEFAULT_SHIFT) {
 			int size=toIndex-fromIndex;
 			int numBlocks=numBlocks(size,shift);
@@ -123,13 +120,13 @@ public final class BlockList<T> extends BasePersistentList<T> {
 					fromIndex+size,
 					shift-SHIFT_STEP);
 			
-			return new BlockList<T>(bs,shift,size,0);			
+			return new PersistentVector<T>(bs,shift,size,0);			
 		}
 		return createLowestLevel(list,fromIndex, toIndex,DEFAULT_SHIFT);
 	}
 		
 	@SuppressWarnings("unchecked")
-	private static <T> BlockList<T> createLocal(List<T> list, int fromIndex, int toIndex, int shift) {
+	private static <T> PersistentVector<T> createLocal(List<T> list, int fromIndex, int toIndex, int shift) {
 		if (shift>DEFAULT_SHIFT) {
 			int size=toIndex-fromIndex;
 			int numBlocks=numBlocks(size,shift);
@@ -148,13 +145,13 @@ public final class BlockList<T> extends BasePersistentList<T> {
 					fromIndex+size,
 					shift-SHIFT_STEP);
 			
-			return new BlockList<T>(bs,shift,size,0);			
+			return new PersistentVector<T>(bs,shift,size,0);			
 		}
 		return createLowestLevel(list,fromIndex, toIndex,DEFAULT_SHIFT);
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static <T> BlockList<T> createLowestLevel(List<T> list, int fromIndex, int toIndex,int shift) {
+	private static <T> PersistentVector<T> createLowestLevel(List<T> list, int fromIndex, int toIndex,int shift) {
 		int size=toIndex-fromIndex;
 		int numBlocks=numBlocks(size,shift);
 	
@@ -170,11 +167,11 @@ public final class BlockList<T> extends BasePersistentList<T> {
 				fromIndex+((numBlocks-1)<<shift), 
 				fromIndex+size);
 	
-		return new BlockList<T>(bs,shift,size,0);
+		return new PersistentVector<T>(bs,shift,size,0);
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static <T> BlockList<T> createLowestLevel(T[] list, int fromIndex, int toIndex,int shift) {
+	private static <T> PersistentVector<T> createLowestLevel(T[] list, int fromIndex, int toIndex,int shift) {
 		int size=toIndex-fromIndex;
 		int numBlocks=numBlocks(size,shift);
 	
@@ -190,7 +187,7 @@ public final class BlockList<T> extends BasePersistentList<T> {
 				fromIndex+((numBlocks-1)<<shift), 
 				fromIndex+size);
 	
-		return new BlockList<T>(bs,shift,size,0);
+		return new PersistentVector<T>(bs,shift,size,0);
 	}
 	
 	private static final int numBlocks(int size, int shift) {
@@ -198,7 +195,7 @@ public final class BlockList<T> extends BasePersistentList<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private BlockList(APersistentList<?>[] blocks, int sh, int sz, int off) {
+	private PersistentVector(APersistentList<?>[] blocks, int sh, int sz, int off) {
 		this.blocks=(APersistentList<T>[]) blocks;
 		shift=sh;
 		size=sz;
@@ -287,13 +284,13 @@ public final class BlockList<T> extends BasePersistentList<T> {
 	 * @param toIndex
 	 * @return
 	 */
-	private BlockList<T> subBlockList(int fromIndex, int toIndex) {
-		return new BlockList<T>(blocks,shift,(toIndex-fromIndex),fromIndex+offset);	
+	private PersistentVector<T> subBlockList(int fromIndex, int toIndex) {
+		return new PersistentVector<T>(blocks,shift,(toIndex-fromIndex),fromIndex+offset);	
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public BlockList<T> conj(T value) {
+	public PersistentVector<T> conj(T value) {
 		int newIx=offset+size; // raw index of new added value
 		int newBlock=newIx>>shift;
 		int blockLength=blocks.length;
@@ -301,25 +298,25 @@ public final class BlockList<T> extends BasePersistentList<T> {
 			// conj to last block
 			APersistentList<T>[] newBlocks=blocks.clone();
 			newBlocks[newBlock]=blocks[newBlock].conj(value);
-			return new BlockList<T>(newBlocks,shift,size+1,offset);
+			return new PersistentVector<T>(newBlocks,shift,size+1,offset);
 		} else if ((newIx>>(shift+SHIFT_STEP))==0) {
 			// add a final block
 			APersistentList<T>[] newBlocks=new APersistentList[newBlock+1];
 			System.arraycopy(blocks, 0, newBlocks, 0, newBlock);
 			newBlocks[newBlock]=Tuple.of(value);
-			return new BlockList<T>(newBlocks,shift,size+1,offset);
+			return new PersistentVector<T>(newBlocks,shift,size+1,offset);
 		} else {
 			// need to rise one level
-			return new BlockList<T>(new APersistentList[]{this,Tuple.of(value)},shift+SHIFT_STEP,size+1,offset);
+			return new PersistentVector<T>(new APersistentList[]{this,Tuple.of(value)},shift+SHIFT_STEP,size+1,offset);
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public BlockList<T> concat(IPersistentList<T> a) {
+	public PersistentVector<T> concat(IPersistentList<T> a) {
 		int asize=a.size();
 		if (asize==0) return this;
-		if (size==0) return BlockList.coerce(a);
+		if (size==0) return PersistentVector.coerce(a);
 		int end=offset+size;
 		int newEnd=end+asize; // end index of new list
 		int newEndBlock=blockFor(newEnd-1);
@@ -334,7 +331,7 @@ public final class BlockList<T> extends BasePersistentList<T> {
 			} else {
 				newBlocks[newEndBlock]=tail.concat(a);
 			}
-			return new BlockList<T>(newBlocks,shift,size+asize,offset);
+			return new PersistentVector<T>(newBlocks,shift,size+asize,offset);
 		} else {
 			int maxEnd=1<<(shift+SHIFT_STEP); // largest capacity at this level
 			if (newEnd<=maxEnd) {
@@ -363,12 +360,12 @@ public final class BlockList<T> extends BasePersistentList<T> {
 				// update final block using remaining elements
 				int aTailPos=(blockSize-split)+blockSize*innerBlocks;
 				newBlocks[newNumBlocks-1]=a.subList(aTailPos, asize);
-				return new BlockList<T>(newBlocks,shift,size+asize,newOffset);
+				return new PersistentVector<T>(newBlocks,shift,size+asize,newOffset);
 			} else {
 				// need to rise one level
 				int aSplit=maxEnd-end; // elements to cut from front of a to complete block
-				BlockList<T> fullHead=this.concat(a.subList(0, aSplit));
-				BlockList<T> headList=new BlockList<T>(new APersistentList[]{fullHead},shift+SHIFT_STEP,size+aSplit,offset);
+				PersistentVector<T> fullHead=this.concat(a.subList(0, aSplit));
+				PersistentVector<T> headList=new PersistentVector<T>(new APersistentList[]{fullHead},shift+SHIFT_STEP,size+aSplit,offset);
 				return headList.concat(a.subList(aSplit, asize));
 			}
 		}

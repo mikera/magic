@@ -5,6 +5,7 @@ import java.util.Collection;
 import magic.RT;
 import magic.data.IPersistentList;
 import magic.data.ISeq;
+import magic.data.PersistentVector;
 import magic.data.APersistentList;
 
 @SuppressWarnings("serial")
@@ -98,12 +99,12 @@ public abstract class BasePersistentList<T> extends APersistentList<T> {
 
 	@Override
 	public APersistentList<T> concat(IPersistentList<T> values) {
-		return BlockList.coerce(this).concat(values);
+		return PersistentVector.coerce(this).concat(values);
 	}
 	
 	@Override
 	public APersistentList<T> conj(T value) {
-		return BlockList.coerce(this).conj(value);
+		return PersistentVector.coerce(this).conj(value);
 	}
 	
 	@Override
