@@ -8,6 +8,7 @@ import org.junit.Test;
 import magic.data.Tuple;
 import magic.expression.Constant;
 import magic.expression.Expression;
+import magic.expression.Lookup;
 import magic.lang.Context;
 import magic.parser.Parser;
 
@@ -21,7 +22,7 @@ public class TestAnalyse {
 	@Test 
 	public void testLookup() {
 		Context c=Context.createWith("foo",Constant.create(1));
-		Expression<Integer> e=analyse("foo");
+		Expression<?> e=analyse("foo");
 		assertEquals(Integer.valueOf(1),e.compute(c));
 		
 		try {
@@ -33,15 +34,28 @@ public class TestAnalyse {
 	}
 	
 	@Test 
+	public void testInfiniteRecursiveLookup() {
+		Context c=Context.createWith("foo",Lookup.create("foo"));
+		Expression<?> e=analyse("foo");
+		
+		try {
+			e.compute(c);
+			fail("Should not be able to lookup with inifinite recursion");
+		} catch (StackOverflowError t) {
+			// OK
+		}
+	}
+	
+	@Test 
 	public void testConstant() {
-		Expression<Integer> e=analyse("1");
+		Expression<?> e=analyse("1");
 		assertEquals(Long.valueOf(1),e.compute(Context.EMPTY));
 
 	}
 	
 	@Test 
 	public void testVector() {
-		Expression<Integer> e=analyse("[1 2]");
+		Expression<?> e=analyse("[1 2]");
 		assertEquals(Tuple.of(1L,2L),e.compute(Context.EMPTY));
 
 	}

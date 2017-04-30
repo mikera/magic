@@ -2,6 +2,7 @@ package magic.expression;
 
 import magic.data.Symbol;
 import magic.lang.Context;
+import magic.parser.Parser;
 
 /**
  * Expression node for looking up a symbol in a context
@@ -25,6 +26,10 @@ public class Lookup<T> extends Expression<T> {
 	@Override
 	public T compute(Context c) {
 		return (T)(c.getValue(sym));
+	}
+
+	public static <T> Lookup<T> create(String sym) {
+		return create(Parser.parseSymbol(sym));
 	}
 
 }
