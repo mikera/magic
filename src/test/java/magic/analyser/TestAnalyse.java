@@ -34,8 +34,8 @@ public class TestAnalyse {
 	
 	@Test 
 	public void testConstant() {
-		Expression<Integer> e=analyse("[1]");
-		assertEquals(Tuple.of(1L),e.compute(Context.EMPTY));
+		Expression<Integer> e=analyse("1");
+		assertEquals(Long.valueOf(1),e.compute(Context.EMPTY));
 
 	}
 }
