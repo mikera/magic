@@ -7,6 +7,13 @@ import magic.RT;
 import magic.data.impl.BasePersistentList;
 import magic.data.impl.EmptyArrays;
 
+/**
+ * Tuple class implemented using offsets into an Object[] array
+ * 
+ * @author Mike
+ *
+ * @param <T>
+ */
 public final class Tuple<T> extends BasePersistentList<T> {
 	private static final long serialVersionUID = -3717695950215145009L;
 

@@ -7,16 +7,16 @@ import magic.data.ISeq;
 import magic.data.Lists;
 import magic.data.APersistentCollection;
 import magic.data.APersistentList;
-import magic.data.PersistentSet;
+import magic.data.APersistentSet;
 
 public final class ValueCollectionWrapper<K,V> extends APersistentCollection<V> {
 	private static final long serialVersionUID = 5958713253782492446L;
 
 	
-	PersistentSet<Map.Entry<K,V>> source;
+	APersistentSet<Map.Entry<K,V>> source;
 
 	
-	public ValueCollectionWrapper(PersistentSet<Map.Entry<K, V>> base) {
+	public ValueCollectionWrapper(APersistentSet<Map.Entry<K, V>> base) {
 		source=base;
 	}
 
@@ -33,7 +33,7 @@ public final class ValueCollectionWrapper<K,V> extends APersistentCollection<V> 
 	public static class ValueCollectionIterator<K,V> implements Iterator<V> {
 		private Iterator<Map.Entry<K,V>> source;
 		
-		public ValueCollectionIterator(PersistentSet<Map.Entry<K,V>> base) {
+		public ValueCollectionIterator(APersistentSet<Map.Entry<K,V>> base) {
 			source=base.iterator();
 		}
 

@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import magic.data.PersistentHashSet;
-import magic.data.PersistentSet;
+import magic.data.APersistentSet;
 
 /**
  * Wrapper for the key set of a persistent map
@@ -17,15 +17,15 @@ public final class KeySetWrapper<K,V> extends BasePersistentSet<K> {
 	private static final long serialVersionUID = -3297453356838115646L;
 
 	
-	PersistentSet<Map.Entry<K,V>> source;
+	APersistentSet<Map.Entry<K,V>> source;
 	
 	
-	public KeySetWrapper(PersistentSet<Map.Entry<K, V>> base) {
+	public KeySetWrapper(APersistentSet<Map.Entry<K, V>> base) {
 		source=base;
 	}
 	
 	@Override
-	public PersistentSet<K> conj(K value) {
+	public APersistentSet<K> conj(K value) {
 		return PersistentHashSet.coerce(this).conj(value);
 	}
 
@@ -42,7 +42,7 @@ public final class KeySetWrapper<K,V> extends BasePersistentSet<K> {
 	public static class KeySetIterator<K,V> implements Iterator<K> {
 		private Iterator<Map.Entry<K,V>> source;
 		
-		public KeySetIterator(PersistentSet<Map.Entry<K,V>> base) {
+		public KeySetIterator(APersistentSet<Map.Entry<K,V>> base) {
 			source=base.iterator();
 		}
 

@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import magic.data.ISeq;
-import magic.data.PersistentSet;
+import magic.data.APersistentSet;
 import magic.data.Sets;
 import magic.data.Tools;
 
@@ -25,7 +25,7 @@ public final class NullSet<T> extends BasePersistentSet<T> {
 	}
 
 	@Override
-	public PersistentSet<T> conj(T value) {
+	public APersistentSet<T> conj(T value) {
 		return Sets.create(value);
 	}
 
@@ -41,21 +41,21 @@ public final class NullSet<T> extends BasePersistentSet<T> {
 	}
 	
 	@Override
-	public PersistentSet<T> delete(final T value) {
+	public APersistentSet<T> delete(final T value) {
 		return this;
 	}
 
 	@Override
-	public PersistentSet<T> deleteAll(final Collection<T> values) {
+	public APersistentSet<T> deleteAll(final Collection<T> values) {
 		return this;
 	}
 	
 	@Override
-	public PersistentSet<T> includeAll(final Collection<T> values) {
+	public APersistentSet<T> includeAll(final Collection<T> values) {
 		return Sets.createFrom(values);
 	}
 	
-	public PersistentSet<T> include(final PersistentSet<T> values) {
+	public APersistentSet<T> include(final APersistentSet<T> values) {
 		return Sets.create(values);
 	}
 	

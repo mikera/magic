@@ -6,15 +6,15 @@ import java.util.Iterator;
 import magic.RT;
 import magic.data.impl.FilteredIterator;
 
-public abstract class PersistentSet<T> extends APersistentCollection<T> implements IPersistentSet<T> {
+public abstract class APersistentSet<T> extends APersistentCollection<T> implements IPersistentSet<T> {
 	private static final long serialVersionUID = -6984657587635163165L;
 
 	@Override
-	public abstract PersistentSet<T> conj(final T value);
+	public abstract APersistentSet<T> conj(final T value);
 	
 	@Override
-	public PersistentSet<T> includeAll(final Collection<T> values) {
-		PersistentSet<T> ps=this;
+	public APersistentSet<T> includeAll(final Collection<T> values) {
+		APersistentSet<T> ps=this;
 		for (T t: values) {
 			ps=ps.conj(t);
 		}
@@ -28,17 +28,17 @@ public abstract class PersistentSet<T> extends APersistentCollection<T> implemen
 	 * @return
 	 */
 	@Override
-	public PersistentSet<T> includeAll(final IPersistentSet<T> values) {
+	public APersistentSet<T> includeAll(final IPersistentSet<T> values) {
 		return includeAll((Collection<T>)values);
 	}
 
 	@Override
-	public PersistentSet<T> clone() {
-		return (PersistentSet<T>)super.clone();
+	public APersistentSet<T> clone() {
+		return (APersistentSet<T>)super.clone();
 	}
 	
 	@Override
-	public PersistentSet<T> delete(final T value) {
+	public APersistentSet<T> delete(final T value) {
 		if (!contains(value)) return this;
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
 			@Override
@@ -50,7 +50,7 @@ public abstract class PersistentSet<T> extends APersistentCollection<T> implemen
 	}
 
 	@Override
-	public PersistentSet<T> deleteAll(final Collection<T> values) {
+	public APersistentSet<T> deleteAll(final Collection<T> values) {
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
 			APersistentCollection<T> col=Lists.createFromCollection(values);
 			
@@ -63,7 +63,7 @@ public abstract class PersistentSet<T> extends APersistentCollection<T> implemen
 	}
 	
 	@Override
-	public PersistentSet<T> deleteAll(final APersistentCollection<T> values) {
+	public APersistentSet<T> deleteAll(final APersistentCollection<T> values) {
 		if ( values==null) throw new Error();
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
 
@@ -78,11 +78,11 @@ public abstract class PersistentSet<T> extends APersistentCollection<T> implemen
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean equals(Object o) {
-		if ((o instanceof PersistentSet<?>)) return equals((PersistentSet<T>)o);
+		if ((o instanceof APersistentSet<?>)) return equals((APersistentSet<T>)o);
 		return false;
 	}
 	
-	public boolean equals(PersistentSet<T> s) {
+	public boolean equals(APersistentSet<T> s) {
 		if (size()!=s.size()) return false;
 		return s.containsAll(this)&&(this.containsAll(s));
 	}

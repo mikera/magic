@@ -16,11 +16,11 @@ import magic.data.impl.SingletonSet;
  *
  */
 public class Sets {
-	public static <T> PersistentSet<T> create(T value) {
+	public static <T> APersistentSet<T> create(T value) {
 		return SingletonSet.create(value);
 	}
 	
-	public static <T> PersistentSet<T> create() {
+	public static <T> APersistentSet<T> create() {
 		return emptySet();
 	}
 	
@@ -29,35 +29,35 @@ public class Sets {
 		return (NullSet<T>) NullSet.INSTANCE;
 	}
 	
-	public static <T> PersistentSet<T> createFrom(Set<T> source) {
-		if (source instanceof PersistentSet<?>) {
-			return create((PersistentSet<T>)source);
+	public static <T> APersistentSet<T> createFrom(Set<T> source) {
+		if (source instanceof APersistentSet<?>) {
+			return create((APersistentSet<T>)source);
 		}
 		int size=source.size();
 		if (size==0) return emptySet();
 		return PersistentHashSet.createFromSet(source);
 	}
 	
-	public static <T> PersistentSet<T> createFrom(Iterator<T> source) {
+	public static <T> APersistentSet<T> createFrom(Iterator<T> source) {
 		return createFrom(RT.buildHashSet(source));
 	}
 	
-	public static <T> PersistentSet<T> create(PersistentSet<T> source) {
+	public static <T> APersistentSet<T> create(APersistentSet<T> source) {
 		return PersistentHashSet.createFromSet(source);
 	}
 	
-	public static <T> PersistentSet<T> createFrom(Collection<T> source) {
+	public static <T> APersistentSet<T> createFrom(Collection<T> source) {
 		if (source instanceof Set<?>) {
 			return createFrom((Set<T>)source);
 		}
 		return createFrom(source.iterator());
 	}
 	
-	public static <T> PersistentSet<T> createFrom(T[] source) {
+	public static <T> APersistentSet<T> createFrom(T[] source) {
 		return ArraySet.createFromArray(source);
 	}
 	
-	public static <T> PersistentSet<T> concat(PersistentSet<T> a, T value) {
+	public static <T> APersistentSet<T> concat(APersistentSet<T> a, T value) {
 		if (a.contains(value)) return a;
 		if (a.size()==0) return SingletonSet.create(value);
 		return PersistentHashSet.createFromSet(a).conj(value);

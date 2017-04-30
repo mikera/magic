@@ -7,7 +7,7 @@ import java.util.Set;
 
 import magic.RT;
 import magic.data.ISeq;
-import magic.data.PersistentSet;
+import magic.data.APersistentSet;
 
 /**
  * Array based immutable set implementation
@@ -20,7 +20,7 @@ import magic.data.PersistentSet;
  *
  * @param <T>
  */
-public final class ArraySet<T> extends PersistentSet<T> {
+public final class ArraySet<T> extends APersistentSet<T> {
 	private final T[] data;
 	
 	@SuppressWarnings("unchecked")
@@ -29,7 +29,7 @@ public final class ArraySet<T> extends PersistentSet<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> ArraySet<T> createFromSet(PersistentSet<T> source) {
+	public static <T> ArraySet<T> createFromSet(APersistentSet<T> source) {
 		if (source instanceof ArraySet<?>) return (ArraySet<T>)source;
 		return new ArraySet<T>((T[])source.toArray());
 	}
@@ -100,7 +100,7 @@ public final class ArraySet<T> extends PersistentSet<T> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public PersistentSet<T> conj(T value) {
+	public APersistentSet<T> conj(T value) {
 		if (contains(value)) return this;
 		
 		T[] ndata=(T[])new Object[data.length+1];
@@ -111,13 +111,13 @@ public final class ArraySet<T> extends PersistentSet<T> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public PersistentSet<T> delete(T value) {
+	public APersistentSet<T> delete(T value) {
 		int pos=indexOf(value);
 		if (pos<0) return this;
 		int size=data.length;
 		if (size<=2) {
 			if (size==2) return SingletonSet.create(data[1-pos]);
-			return (PersistentSet<T>) NullSet.INSTANCE;
+			return (APersistentSet<T>) NullSet.INSTANCE;
 		}
 		T[] ndata=(T[])new Object[size-1];
 		System.arraycopy(data, 0, ndata, 0, pos);

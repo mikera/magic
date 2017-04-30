@@ -14,7 +14,6 @@ import magic.data.impl.CompositeList;
 import magic.data.impl.NullCollection;
 import magic.data.impl.NullList;
 import magic.data.impl.NullSet;
-import magic.data.impl.PersistentHashMap;
 import magic.data.impl.RepeatList;
 import magic.data.impl.SingletonList;
 import magic.data.impl.SingletonSet;
@@ -80,7 +79,7 @@ public class TestPersistent {
 		testPersistentSet(Sets.createFrom(new Integer[] {1,null,3}));
 	}
 	
-	public <T> void testPersistentSet(PersistentSet<T> a) {
+	public <T> void testPersistentSet(APersistentSet<T> a) {
 		testSetInclude(a);
 		testPersistentCollection(a);
 	}
@@ -161,18 +160,18 @@ public class TestPersistent {
 		}
 	}
 	
-	public <T> void testSetInclude(PersistentSet<T> a) {
+	public <T> void testSetInclude(APersistentSet<T> a) {
 		if (a.size()>0) {
-			PersistentSet<T> b=a.conj(a.iterator().next());
+			APersistentSet<T> b=a.conj(a.iterator().next());
 			assertTrue(b.size()==a.size());
 			assertTrue(b.equals(a));
 		}
 		
 		if (a.allowsNulls()) {
-			PersistentSet<T> an=a.conj(null);
+			APersistentSet<T> an=a.conj(null);
 			assertEquals(a.size()+(a.contains(null)?0:1),an.size());
 		
-			PersistentSet<T> n=a.deleteAll(a);
+			APersistentSet<T> n=a.deleteAll(a);
 			assertTrue(!n.contains(null));
 			n=n.conj(null);
 			assertEquals(1,n.size());

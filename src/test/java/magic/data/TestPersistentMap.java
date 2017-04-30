@@ -12,7 +12,6 @@ import org.junit.Test;
 
 import magic.RT;
 import magic.data.impl.NullMap;
-import magic.data.impl.PersistentHashMap;
 
 public class TestPersistentMap {
 	@Test public void testBitMapFunctions() {
@@ -25,16 +24,16 @@ public class TestPersistentMap {
 	
 	@SuppressWarnings("unchecked")
 	@Test public void testMaps() {
-		PersistentMap<Integer,String> pm=PersistentHashMap.create();
+		APersistentMap<Integer,String> pm=PersistentHashMap.create();
 		testMap(pm);
 		testMap(addRandomMaps(pm));
 		
-		PersistentMap<Integer,String> nm=(PersistentMap<Integer,String>)NullMap.INSTANCE;
+		APersistentMap<Integer,String> nm=(APersistentMap<Integer,String>)NullMap.INSTANCE;
 		testMap(nm);
 		testMap(addRandomMaps(nm));
 	}
 	
-	private PersistentMap<Integer, String> addRandomMaps(PersistentMap<Integer,String> im) {
+	private APersistentMap<Integer, String> addRandomMaps(APersistentMap<Integer,String> im) {
 		for (int i=0; i<Rand.d(50); i++) {
 			im=im.assoc(Rand.r(50),Rand.nextString());
 		}
@@ -42,7 +41,7 @@ public class TestPersistentMap {
 	}
 
 	@Test public void testConvert() {
-		PersistentMap<Integer,String> phm=PersistentHashMap.create();
+		APersistentMap<Integer,String> phm=PersistentHashMap.create();
 
 		HashMap<Integer,String> hm=new HashMap<Integer, String>();
 		for (int i=0; i<10; i++) {
@@ -57,15 +56,15 @@ public class TestPersistentMap {
 		}
 		testMap(phm);
 		
-		PersistentMap<Integer,String> pm=Maps.create(hm);
+		APersistentMap<Integer,String> pm=Maps.create(hm);
 		testMap(pm);
 		
 		HashMap<Integer,String> hm2=pm.toHashMap();
 		assertEquals(hm,hm2);
 		
-		PersistentSet<Integer> ks=Sets.createFrom(hm.keySet());
-		PersistentSet<Integer> ks2=pm.keySet();
-		PersistentSet<Integer> ks3=phm.keySet();
+		APersistentSet<Integer> ks=Sets.createFrom(hm.keySet());
+		APersistentSet<Integer> ks2=pm.keySet();
+		APersistentSet<Integer> ks3=phm.keySet();
 		assertEquals(ks,ks2);
 		assertEquals(ks,ks3);
 		
@@ -77,16 +76,16 @@ public class TestPersistentMap {
 	}
 	
 	@Test public void testMerge() {
-		PersistentMap<Integer,String> pm=PersistentHashMap.create();
+		APersistentMap<Integer,String> pm=PersistentHashMap.create();
 		pm=pm.assoc(1, "Hello");
 		pm=pm.assoc(2, "World");
 		
-		PersistentMap<Integer,String> pm2=PersistentHashMap.create();
+		APersistentMap<Integer,String> pm2=PersistentHashMap.create();
 		pm2=pm2.assoc(2, "My");
 		pm2=pm2.assoc(3, "Good");
 		pm2=pm2.assoc(4, "Friend");
 
-		PersistentMap<Integer,String> mm=pm.include(pm2);
+		APersistentMap<Integer,String> mm=pm.include(pm2);
 		assertEquals(4,mm.size());
 	}
 	
@@ -95,14 +94,14 @@ public class TestPersistentMap {
 		hm.put(1, "Hello");
 		hm.put(2, "World");
 		
-		PersistentMap<Integer,String> pm=PersistentHashMap.create(1,"Hello");
+		APersistentMap<Integer,String> pm=PersistentHashMap.create(1,"Hello");
 		pm=pm.assoc(2,"World");
 		assertEquals(PersistentHashMap.create(hm).toString(),pm.toString());
 		assertEquals("{1=Hello, 2=World}",pm.toString());
 	}
 	
 	@Test public void testChanges() {
-		PersistentMap<Integer,String> pm=PersistentHashMap.create();
+		APersistentMap<Integer,String> pm=PersistentHashMap.create();
 		pm=pm.assoc(1, "Hello");
 		pm=pm.assoc(2, "World");
 		
@@ -129,7 +128,7 @@ public class TestPersistentMap {
 		testMap(pm);
 	}
 	
-	public void testMap(PersistentMap<Integer,String> pm) {
+	public void testMap(APersistentMap<Integer,String> pm) {
 		pm.validate();
 		testIterator(pm);
 		testRandomAdds(pm);
@@ -138,7 +137,7 @@ public class TestPersistentMap {
 		CommonTests.testCommonData(pm);
 	}
 	
-	public void testIterator(PersistentMap<Integer,String> pm) {
+	public void testIterator(APersistentMap<Integer,String> pm) {
 		int i=0;
 		for (Map.Entry<Integer,String> ent: pm.entrySet()) {
 			assertTrue(pm.containsKey(ent.getKey()));
@@ -148,7 +147,7 @@ public class TestPersistentMap {
 		assertEquals(pm.size(),i);
 	}
 	
-	public void testRandomAdds(PersistentMap<Integer,String> pm) {
+	public void testRandomAdds(APersistentMap<Integer,String> pm) {
 		pm=addRandomStuff(pm,100,1000000);
 		int size=pm.size();
 		assertTrue(size>90);
@@ -157,21 +156,21 @@ public class TestPersistentMap {
 		assertEquals(size,pm.values().size());	
 	}
 	
-	public void testNullAdds(PersistentMap<Integer,String> pm) {
+	public void testNullAdds(APersistentMap<Integer,String> pm) {
 		pm=pm.assoc(2,null);	
 		assertTrue(pm.containsKey(2));
 		assertEquals(null,pm.get(2));	
 	}
 	
-	public void testEquals(PersistentMap<Integer,String> pm) {
-		PersistentMap<Integer,String> pm2=pm.assoc(2,new String("Hello"));
-		PersistentMap<Integer,String> pm3=pm.assoc(2,new String("Hello"));
+	public void testEquals(APersistentMap<Integer,String> pm) {
+		APersistentMap<Integer,String> pm2=pm.assoc(2,new String("Hello"));
+		APersistentMap<Integer,String> pm3=pm.assoc(2,new String("Hello"));
 		assertEquals(pm2,pm3);
 	}
 
 
 	
-	public PersistentMap<Integer,String> addRandomStuff(PersistentMap<Integer,String> pm, int n , int maxIndex ) {
+	public APersistentMap<Integer,String> addRandomStuff(APersistentMap<Integer,String> pm, int n , int maxIndex ) {
 		for (int i=0; i<n; i++) {
 			pm=pm.assoc(Rand.r(maxIndex),Rand.nextString());
 		}
@@ -179,7 +178,7 @@ public class TestPersistentMap {
 	}
 	
 	@Test public void testManyChanges() {
-		PersistentMap<Integer,String> pm=PersistentHashMap.create();
+		APersistentMap<Integer,String> pm=PersistentHashMap.create();
 		pm=addRandomStuff(pm,1000,40);
 		assertEquals(40,pm.size());
 		testMap(pm);

@@ -1,16 +1,13 @@
-package magic.data.impl;
+package magic.data;
 
 import java.io.ObjectStreamException;
 import java.util.Iterator;
 import java.util.Map;
 
 import magic.RT;
-import magic.data.Bits;
-import magic.data.APersistentCollection;
-import magic.data.PersistentMap;
-import magic.data.PersistentObject;
-import magic.data.PersistentSet;
-import magic.data.Sets;
+import magic.data.impl.BasePersistentSet;
+import magic.data.impl.KeySetWrapper;
+import magic.data.impl.ValueCollectionWrapper;
 
 /**
  * Persistent HashMap implementation, inspired by Clojure's
@@ -21,7 +18,7 @@ import magic.data.Sets;
  * @param <K> Key type
  * @param <V> Value type
  */
-public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
+public final class PersistentHashMap<K,V> extends APersistentMap<K,V> {
 	private static final long serialVersionUID = -6862000512238861885L;
 
 	/**
@@ -783,7 +780,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		}
 
 		@Override
-		public PersistentSet<Map.Entry<K, V>> conj(
+		public APersistentSet<Map.Entry<K, V>> conj(
 				Map.Entry<K, V> value) {
 			return Sets.create(this).conj(value);
 		}
@@ -841,7 +838,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	}
 
 	@Override
-	public PersistentSet<java.util.Map.Entry<K, V>> entrySet() {
+	public APersistentSet<java.util.Map.Entry<K, V>> entrySet() {
 		return new PHMEntrySet();
 	}
 
@@ -864,7 +861,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	}
 
 	@Override
-	public PersistentSet<K> keySet() {
+	public APersistentSet<K> keySet() {
 		return new KeySetWrapper<K, V>(entrySet());
 	}
 
@@ -886,19 +883,19 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	}
 	
 	@Override
-	public PersistentMap<K, V> include(Map<K, V> values) {
+	public APersistentMap<K, V> include(Map<K, V> values) {
 		if (values instanceof PersistentHashMap<?,?>) {
 			return include((PersistentHashMap<K,V>)values);
 		}
 		
-		PersistentMap<K, V> pm=this;
+		APersistentMap<K, V> pm=this;
 		for (Map.Entry<K, V> entry:values.entrySet()) {
 			pm=pm.assoc(entry.getKey(),entry.getValue());
 		}
 		return pm;
 	}
 	
-	public PersistentMap<K, V> include(PersistentHashMap<K, V> values) {
+	public APersistentMap<K, V> include(PersistentHashMap<K, V> values) {
 		// TODO: Consider fast node-level merging implementation
 		PersistentHashMap<K, V> pm=this;
 		for (Map.Entry<K, V> entry:values.entrySet()) {
@@ -908,7 +905,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	}
 
 	@Override
-	public PersistentMap<K, V> dissoc(K key) {
+	public APersistentMap<K, V> dissoc(K key) {
 		PHMNode<K,V> newRoot=root.delete(key,key.hashCode());
 		if (root==newRoot) return this;
 		return new PersistentHashMap<K, V>(newRoot);

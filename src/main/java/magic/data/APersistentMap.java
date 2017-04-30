@@ -14,7 +14,7 @@ import magic.RT;
  * @param <K>
  * @param <V>
  */
-public abstract class PersistentMap<K,V> extends PersistentObject implements IPersistentMap<K,V> {
+public abstract class APersistentMap<K,V> extends PersistentObject implements IPersistentMap<K,V> {
 	private static final long serialVersionUID = 2304218229796144868L;
 
 	@Override
@@ -45,7 +45,7 @@ public abstract class PersistentMap<K,V> extends PersistentObject implements IPe
 	public abstract java.util.Map.Entry<K, V> getMapEntry(Object key);
 
 	@Override
-	public abstract PersistentSet<java.util.Map.Entry<K, V>> entrySet();
+	public abstract APersistentSet<java.util.Map.Entry<K, V>> entrySet();
 
 	@Override
 	public abstract V get(Object key);
@@ -56,7 +56,7 @@ public abstract class PersistentMap<K,V> extends PersistentObject implements IPe
 	}
 
 	@Override
-	public abstract PersistentSet<K> keySet();
+	public abstract APersistentSet<K> keySet();
 
 	@Override
 	public V put(K arg0, V arg1) {
@@ -81,16 +81,16 @@ public abstract class PersistentMap<K,V> extends PersistentObject implements IPe
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public PersistentMap<K,V> clone() {
-		return (PersistentMap<K,V>)super.clone();
+	public APersistentMap<K,V> clone() {
+		return (APersistentMap<K,V>)super.clone();
 	}
 	
 	@Override
-	public abstract PersistentMap<K, V> dissoc(K key);
+	public abstract APersistentMap<K, V> dissoc(K key);
 
 	@Override
-	public PersistentMap<K, V> delete(Collection<K> keys) {
-		PersistentMap<K, V> pm=this;
+	public APersistentMap<K, V> delete(Collection<K> keys) {
+		APersistentMap<K, V> pm=this;
 		for (K k: keys) {
 			pm=pm.dissoc(k);
 		}
@@ -98,16 +98,16 @@ public abstract class PersistentMap<K,V> extends PersistentObject implements IPe
 	}
 
 	@Override
-	public PersistentMap<K, V> delete(IPersistentSet<K> keys) {
+	public APersistentMap<K, V> delete(IPersistentSet<K> keys) {
 		return delete((Collection<K>) keys);
 	}
 
 	@Override
-	public abstract PersistentMap<K, V> assoc(K key, V value);
+	public abstract APersistentMap<K, V> assoc(K key, V value);
 
 	@Override
-	public PersistentMap<K, V> include(Map<K, V> values) {
-		PersistentMap<K, V> pm=this;
+	public APersistentMap<K, V> include(Map<K, V> values) {
+		APersistentMap<K, V> pm=this;
 		for (Map.Entry<K, V> entry:values.entrySet()) {
 			pm=pm.assoc(entry.getKey(),entry.getValue());
 		}
@@ -115,7 +115,7 @@ public abstract class PersistentMap<K,V> extends PersistentObject implements IPe
 	}
 
 	@Override
-	public PersistentMap<K, V> include(IPersistentMap<K, V> values) {
+	public APersistentMap<K, V> include(IPersistentMap<K, V> values) {
 		return include((Map<K,V>) values);
 	}
 	
@@ -130,8 +130,8 @@ public abstract class PersistentMap<K,V> extends PersistentObject implements IPe
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean equals(Object o) {
-		if (o instanceof PersistentMap<?,?>) {
-			return equals((PersistentMap<K,V>)o);
+		if (o instanceof APersistentMap<?,?>) {
+			return equals((APersistentMap<K,V>)o);
 		}
 		return false;
 	}
@@ -146,13 +146,13 @@ public abstract class PersistentMap<K,V> extends PersistentObject implements IPe
 		return false;
 	}
 	
-	public boolean equals(PersistentMap<K,V> pm) {
+	public boolean equals(APersistentMap<K,V> pm) {
 		if (this==pm) return true;
 		if (this.size()!=pm.size()) return false;
 		return this.containsAll(pm)&&pm.containsAll(this);
 	}
 	
-	public boolean containsAll(PersistentMap<K,V> pm) {
+	public boolean containsAll(APersistentMap<K,V> pm) {
 		for (Map.Entry<K, V> ent:pm.entrySet()) {
 			if (!containsEntry(ent)) return false;
 		}

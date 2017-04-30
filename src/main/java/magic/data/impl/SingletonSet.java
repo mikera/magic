@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 
 import magic.RT;
 import magic.data.PersistentHashSet;
-import magic.data.PersistentSet;
+import magic.data.APersistentSet;
 
 /**
  * Singleton set instance
@@ -38,7 +38,7 @@ public final class SingletonSet<T> extends BasePersistentSet<T> {
 	}
 
 	@Override
-	public PersistentSet<T> conj(T value) {
+	public APersistentSet<T> conj(T value) {
 		return PersistentHashSet.coerce(this).conj(value);
 	}
 	

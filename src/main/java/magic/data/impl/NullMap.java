@@ -4,10 +4,11 @@ import java.io.ObjectStreamException;
 import java.util.Map;
 
 import magic.data.APersistentCollection;
-import magic.data.PersistentMap;
-import magic.data.PersistentSet;
+import magic.data.APersistentMap;
+import magic.data.APersistentSet;
+import magic.data.PersistentHashMap;
 
-public final class NullMap<K,V> extends PersistentMap<K, V> {
+public final class NullMap<K,V> extends APersistentMap<K, V> {
 	private static final long serialVersionUID = 1717634837542733926L;
 
 	
@@ -35,8 +36,8 @@ public final class NullMap<K,V> extends PersistentMap<K, V> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public PersistentSet<java.util.Map.Entry<K, V>> entrySet() {
-		return (PersistentSet<java.util.Map.Entry<K, V>>) NullSet.INSTANCE;
+	public APersistentSet<java.util.Map.Entry<K, V>> entrySet() {
+		return (APersistentSet<java.util.Map.Entry<K, V>>) NullSet.INSTANCE;
 	}
 
 	@Override
@@ -46,8 +47,8 @@ public final class NullMap<K,V> extends PersistentMap<K, V> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public PersistentSet<K> keySet() {
-		return (PersistentSet<K>) NullSet.INSTANCE;
+	public APersistentSet<K> keySet() {
+		return (APersistentSet<K>) NullSet.INSTANCE;
 	}
 
 	@Override
@@ -89,12 +90,12 @@ public final class NullMap<K,V> extends PersistentMap<K, V> {
 	}
 
 	@Override
-	public PersistentMap<K, V> assoc(K key, V value) {
+	public APersistentMap<K, V> assoc(K key, V value) {
 		return PersistentHashMap.create(key,value);
 	}
 
 	@Override
-	public PersistentMap<K, V> dissoc(K key) {
+	public APersistentMap<K, V> dissoc(K key) {
 		return this;
 	}
 
