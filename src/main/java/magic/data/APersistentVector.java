@@ -28,7 +28,7 @@ public abstract class APersistentVector<T> extends APersistentCollection<T> impl
 
 	@Override
 	public boolean addAll(int index, Collection<? extends T> c) {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException(Errors.immutable(this));
 	}
 
 	private class PersistentListIterator implements ListIterator<T> {

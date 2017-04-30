@@ -7,6 +7,12 @@ import java.util.Iterator;
 import magic.RT;
 import magic.data.impl.FilteredIterator;
 
+/**
+ * Abstract base class for all Magic collection types
+ * @author Mike
+ *
+ * @param <T>
+ */
 @SuppressWarnings("unchecked")
 public abstract class APersistentCollection<T> extends PersistentObject implements IPersistentCollection<T> {
 	private static final long serialVersionUID = -962303316004942025L;
