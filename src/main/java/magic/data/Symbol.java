@@ -22,7 +22,7 @@ public class Symbol {
 	private Symbol(String ns, String name) {
 		this.ns = ns;
 		this.name = name;
-		hash=RT.hashCombine(ns.hashCode(),name.hashCode());
+		hash=RT.hashCombine(RT.hashCode(ns),RT.hashCode(name));
 	}
 	
 	private Symbol(String name) {
@@ -39,6 +39,16 @@ public class Symbol {
 			if (foundSym!=null) return foundSym;
 			return intern(s);
 		}
+	}
+	
+    /**
+     * Like create, but different arg order to support parsing
+     * @param name
+     * @param nameSpace
+     * @return
+     */
+	public static Symbol createWithNamespace(String name, String nameSpace) {
+		return create(nameSpace,name);
 	}
 	
 	public synchronized static Symbol intern(Symbol s) {
@@ -84,5 +94,12 @@ public class Symbol {
 	public int hashCode() {
 		return hash;
 	}
+	
+	@Override
+	public String toString() {
+		if (ns==null) return name;
+		return ns+"/"+name;
+	}
+
 
 }

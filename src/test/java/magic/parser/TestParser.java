@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import magic.data.IPersistentList;
+import magic.data.Symbol;
 
 public class TestParser {
 
@@ -21,6 +22,13 @@ public class TestParser {
 	@Test public void testLong() {
 		Object c=Parser.parse("-3");
 		assertEquals(Long.valueOf(-3),c);
+	}
+	
+	@Test public void testQualifiedSymbol() {
+		assertEquals(Symbol.create("foo"),Parser.parse("foo"));
+
+		assertEquals(Symbol.create("/"),Parser.parse("/"));
+
 	}
 	
 	@SuppressWarnings("unchecked")
