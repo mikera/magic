@@ -13,4 +13,10 @@ public abstract class AFn1<T, R> extends AFn<R> implements Function<T, R>, Predi
 	public boolean test(T a) {
 		return RT.bool(apply(a));
 	}
+
+	@Override
+	public R applyToArray(Object... a) {
+		if (a.length!=1) throw new ArityException(1,a.length);
+		return apply(a[1]);
+	}
 }

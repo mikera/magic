@@ -8,6 +8,7 @@ import magic.Types;
 /**
  * General magic function interface
  * @author Mike
+ * @param R return type of the function
  *
  */
 public interface IFn<R> {

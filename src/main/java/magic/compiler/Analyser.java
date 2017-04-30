@@ -9,7 +9,9 @@ import magic.data.Symbol;
 import magic.data.Vectors;
 import magic.expression.Constant;
 import magic.expression.Define;
+import magic.expression.Do;
 import magic.expression.Expression;
+import magic.expression.Lambda;
 import magic.expression.Lookup;
 import magic.expression.Vector;
 import magic.lang.Context;
@@ -51,7 +53,25 @@ public class Analyser {
 
 	private static <T> Expression<T> analyseSymbolApplication(Context c, Symbol first, APersistentList<Object> tail) {
 		if (first==Symbols.DEF) return analyseDefine(c,(Symbol)tail.head(),tail.tail());
+		if (first==Symbols.FN) return analyseFn(c,tail.head(),tail.tail());
 		throw new Error("can't analyse symbol application: "+first);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T> Expression<T> analyseFn(Context c, Object arglist, APersistentList<Object> tail) {
+		int n=tail.size();
+		if (n==0) throw new Error("No function body definition");
+		if (!(arglist instanceof IPersistentVector)) throw new Error("fn requires a vector argument list");
+		IPersistentVector<?> args=(IPersistentVector<?>)arglist;
+		
+		Expression<T>[] exs=new Expression[n];
+		for (int i=0; i<n; i++) {
+			exs[i]=analyse(c,tail.get(i));
+		}
+		
+		Expression<?> doexp=Do.create(exs);
+		
+		return (Expression<T>) Lambda.create((IPersistentVector<Symbol>)args,doexp);
 	}
 
 	private static <T>  Expression<T> analyseDefine(Context c, Symbol sym, APersistentList<Object> args) {

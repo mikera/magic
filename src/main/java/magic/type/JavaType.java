@@ -1,7 +1,7 @@
 package magic.type;
 
-import magic.Keyword;
-import magic.Symbol; 
+import magic.data.Keyword;
+import magic.data.Symbol; 
 import magic.Type;
 
 /**

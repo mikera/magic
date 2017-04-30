@@ -1,0 +1,41 @@
+package magic.expression;
+
+import magic.data.IPersistentVector;
+import magic.data.Symbol;
+import magic.fn.AFn;
+import magic.fn.ArityException;
+import magic.fn.IFn;
+import magic.lang.Context;
+
+public class Lambda<T> extends Expression<IFn<T>> {
+
+	private final IPersistentVector<Symbol> args;
+	private final Expression<T> body;
+	private final int arity;
+
+	public Lambda(IPersistentVector<Symbol> args, Expression<T> body) {
+		this.args=args;
+		this.arity=args.size();
+		this.body=body;
+	}
+
+	@Override
+	public IFn<T> compute(Context context) {
+		return new AFn<T>() {
+			@Override
+			public T applyToArray(Object... a) {
+				if (a.length!=arity) throw new ArityException(arity,a.length);
+				Context c=context;
+				for (int i=0; i<arity; i++) {
+					c=c.define(args.get(i), Constant.create(a[i]));
+				}
+				return body.compute(c);
+			}	
+		};
+	}
+
+	public static <T> Lambda<T> create(IPersistentVector<Symbol> args, Expression<T> body) {
+		return new Lambda<T>(args,body);
+	}
+
+}
