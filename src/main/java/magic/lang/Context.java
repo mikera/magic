@@ -28,6 +28,10 @@ public class Context {
 		return slot.getValue(this);
 	}
 	
+	public <T> T getValue(String sym) {
+		return getValue(Parser.parseSymbol(sym));
+	}
+	
 	public <T> Context define(Symbol sym, Expression<T> exp) {
 		return create(mappings.assoc(sym,Slot.create(exp)));
 	}

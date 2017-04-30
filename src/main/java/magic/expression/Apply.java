@@ -22,7 +22,7 @@ public class Apply<T> extends Expression<T> {
 	
 	@Override
 	public T compute(Context c) {
-		IFn<T> f=(IFn<T>) function.compute(c);
+		IFn<T> f=(IFn<T>) function.compute(c); // get the value of the function
 		Object[] values=new Object[arity];
 		for (int i=0; i<arity; i++) {
 			values[i]=args[i].compute(c);

@@ -73,4 +73,5 @@ public class TestAnalyse {
 		Expression<?> e=analyse("()");
 		assertEquals(PersistentList.EMPTY,e.compute(Context.EMPTY));
 	}
+
 }

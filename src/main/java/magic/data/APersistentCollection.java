@@ -179,7 +179,7 @@ public abstract class APersistentCollection<T> extends PersistentObject implemen
 			} else {
 				sb.append(", ");
 			}
-			sb.append(t.toString());
+			sb.append(RT.toString(t));
 		}		
 		sb.append('}');
 		return sb.toString();

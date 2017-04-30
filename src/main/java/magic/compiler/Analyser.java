@@ -1,5 +1,6 @@
 package magic.compiler;
 
+import magic.RT;
 import magic.data.APersistentList;
 import magic.data.IPersistentList;
 import magic.data.IPersistentVector;
@@ -14,6 +15,13 @@ import magic.expression.Vector;
 import magic.lang.Context;
 import magic.lang.Symbols;
 
+/**
+ * Magic code analyser
+ * Responsible for converting forms into AST representations
+ * 
+ * @author Mike
+ *
+ */
 public class Analyser {
 
 	public static <T> Expression<T> analyse(Object form) {
@@ -38,7 +46,7 @@ public class Analyser {
 		Object first=form.head();
 		if (first instanceof Symbol) return analyseSymbolApplication(c,(Symbol)first,form.tail());
 		
-		throw new Error("can't analyse form: "+form);
+		throw new Error("can't analyse form: "+RT.toString(form));
 	}
 
 	private static <T> Expression<T> analyseSymbolApplication(Context c, Symbol first, APersistentList<Object> tail) {

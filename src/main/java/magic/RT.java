@@ -3,6 +3,8 @@ package magic;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import magic.data.IPersistentList;
+
 /**
  * Static class to support the Magic runtime
  * 
@@ -147,6 +149,11 @@ public class RT {
 
 	public static int hashCombine(int hash1, int hash2) {
 		return (hash1)+(Integer.rotateLeft(hash2, 13));
+	}
+
+	public static String toString(Object o) {
+		if (o==null) return "nil";
+		return o.toString();
 	}
 
 }

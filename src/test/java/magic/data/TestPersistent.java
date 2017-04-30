@@ -190,6 +190,7 @@ public class TestPersistent {
 		testEquals(a);
 		testInserts(a);
 		testExceptions(a);
+		testListConversion(a);
 		testPersistentCollection(a);
 		testFrontBack(a);
 		testHashCode(a);
@@ -383,6 +384,11 @@ public class TestPersistent {
 			APersistentVector<T> aa=Tuple.of(head).concat(tail);
 			assertEquals(a,aa);
 		}
+	}
+	
+	public <T> void testListConversion(APersistentVector<T> a) {
+		APersistentList<T> list=Lists.create(a);
+		assertEquals(a,Vectors.coerce(list));
 	}
 	
 	public <T> void testSubLists(APersistentVector<T> a) {
