@@ -5,8 +5,8 @@ import magic.lang.Context;
 
 public class Define<T> extends Expression<T> {
 
-	private final Symbol sym;
-	private final Expression<T> exp;
+	final Symbol sym;
+	final Expression<T> exp;
 
 	public Define(Symbol sym, Expression<T> exp) {
 		this.sym=sym;

@@ -3,8 +3,6 @@ package magic;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import magic.data.IPersistentList;
-
 /**
  * Static class to support the Magic runtime
  * 
