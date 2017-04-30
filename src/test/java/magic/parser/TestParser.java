@@ -1,6 +1,6 @@
 package magic.parser;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -29,8 +29,13 @@ public class TestParser {
 	}
 	
 	@Test public void testQualifiedSymbol() {
+		assertEquals(Symbol.create("foo","bar"),Parser.parse("foo/bar"));
+		assertEquals("foo",((Symbol)Parser.parse("foo//")).getNamespace());
+		assertEquals(Symbol.create("foo","/"),Parser.parse("foo//"));
+	}
+	
+	@Test public void testUnQualifiedSymbol() {
 		assertEquals(Symbol.create("foo"),Parser.parse("foo"));
-
 		assertEquals(Symbol.create("/"),Parser.parse("/"));
 	}
 	
@@ -45,8 +50,8 @@ public class TestParser {
 	}
 	
 	@Test public void testSet() {
-		Object c=Parser.parse("#{3}");
-		assertEquals(Sets.of(3L),c);
+		assertEquals(Sets.of(3L),Parser.parse("#{3}"));
+		assertEquals(Sets.of(1L,2L,3L),Parser.parse("#{1,3,2,3,1}"));
 	}
 	
 	@Test public void testSetDuplicates() {
@@ -57,5 +62,23 @@ public class TestParser {
 	@Test public void testMap() {
 		Object c=Parser.parse("{1 2}");
 		assertEquals(Maps.create(1L, 2L),c);
+	}
+	
+	@Test public void testExtraInputFail() {
+		try {
+		  Parser.parse("{1 2 3} [1]");
+		  fail("Shouldn't be able to parse multiple expressions!");
+		} catch (Throwable t) {
+			// OK
+		}
+	}
+	
+	@Test public void testMapFail() {
+		try {
+		  Parser.parse("{1 2 3}");
+		  fail("Shouldn't be able to create this map!");
+		} catch (Throwable t) {
+			// OK
+		}
 	}
 }
