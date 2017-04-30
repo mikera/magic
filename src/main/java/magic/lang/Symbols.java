@@ -9,5 +9,6 @@ import magic.data.Symbol;
  */
 public class Symbols {
 
-	public static final Symbol DEF=Symbol.create("def"); 
+	public static final Symbol DEF=Symbol.create("def");
+	public static final Symbol QUOTE = Symbol.create("quote");
 }

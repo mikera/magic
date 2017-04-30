@@ -77,6 +77,10 @@ public class TestParser {
 		assertEquals(Maps.create(1L, 2L),c);
 	}
 	
+	@Test public void testQuote() {
+		assertEquals(Parser.parse("(quote foo/bar)"),Parser.parse("'foo/bar"));
+	}
+	
 	@Test public void testExtraInputFail() {
 		try {
 		  Parser.parse("{1 2 3} [1]");

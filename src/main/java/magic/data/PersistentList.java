@@ -22,11 +22,11 @@ public class PersistentList<T> extends APersistentList<T> {
 	}
 
 	
-	public static <T> APersistentList<T> create(APersistentVector<T> source, int offset, int size) {
+	public static <T> PersistentList<T> create(APersistentVector<T> source, int offset, int size) {
 		return new PersistentList<T>(source,offset,size);	
 	}
 	
-	public static <T> APersistentList<T> create(APersistentVector<T> source) {
+	public static <T> PersistentList<T> create(APersistentVector<T> source) {
 		return new PersistentList<T>(source,0,source.size());	
 	}
 
@@ -197,6 +197,12 @@ public class PersistentList<T> extends APersistentList<T> {
 	@Override
 	public int size() {
 		return size;
+	}
+
+
+	@SuppressWarnings("unchecked")
+	public static <T> PersistentList<T> of(T... vals) {
+		return create(Tuple.of(vals));
 	}
 
 }
