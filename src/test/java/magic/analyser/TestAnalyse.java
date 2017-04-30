@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
+import magic.data.PersistentList;
 import magic.data.Tuple;
 import magic.expression.Constant;
 import magic.expression.Expression;
@@ -58,6 +59,17 @@ public class TestAnalyse {
 		Context c=Context.createWith("foo",Constant.create(2L));
 		Expression<?> e=analyse("[1 foo]");
 		assertEquals(Tuple.of(1L,2L),e.compute(c));
-
+	}
+	
+	@Test 
+	public void testEmptyVector() {
+		Expression<?> e=analyse("[]");
+		assertEquals(Tuple.EMPTY,e.compute(Context.EMPTY));
+	}
+	
+	@Test 
+	public void testEmptyList() {
+		Expression<?> e=analyse("()");
+		assertEquals(PersistentList.EMPTY,e.compute(Context.EMPTY));
 	}
 }

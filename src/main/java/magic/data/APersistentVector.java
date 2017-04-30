@@ -275,6 +275,16 @@ public abstract class APersistentVector<T> extends APersistentCollection<T> impl
 		return true;
 	}
 	
+	public boolean equals(APersistentVector<T> pl) {
+		if (this==pl) return true;
+		int size=size();
+		if (size!=pl.size()) return false;
+		for (int i=0; i<size; i++) {
+			if (!RT.equals(get(i),pl.get(i))) return false;
+		}
+		return true;
+	}
+	
 	@Override
 	public final APersistentVector<T> copyFrom(int dstIndex, IPersistentCollection<T> values, int srcIndex, int length) {
 		return copyFrom(dstIndex,Vectors.coerce(values),srcIndex,length);

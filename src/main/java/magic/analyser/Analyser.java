@@ -1,6 +1,8 @@
 package magic.analyser;
 
+import magic.data.IPersistentList;
 import magic.data.IPersistentVector;
+import magic.data.Lists;
 import magic.data.Symbol;
 import magic.data.Vectors;
 import magic.expression.Constant;
@@ -17,9 +19,20 @@ public class Analyser {
 	
 	@SuppressWarnings("unchecked")
 	public static <T> Expression<T> analyse(Context c, Object form) {
+		if (form instanceof IPersistentList) return analyseList(c,(IPersistentList<Object>)form);
 		if (form instanceof IPersistentVector) return (Expression<T>) analyseVector(c,(IPersistentVector<Object>)form);
 		if (form instanceof Symbol) return analyseSymbol(c,(Symbol)form);
+		
+		// fall through handles constant literals, keywords etc
 		return (Expression<T>) Constant.create(form);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T> Expression<T> analyseList(Context c, IPersistentList<Object> form) {
+		int n=form.size();
+		if (n==0) return (Expression<T>) Constant.create(Lists.EMPTY);
+		
+		throw new Error("can't analyse form: "+form);
 	}
 
 	@SuppressWarnings("unchecked")

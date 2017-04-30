@@ -19,4 +19,17 @@ public abstract class APersistentList<T> extends APersistentCollection<T> implem
 		// TODO: optimise
 		return Vectors.coerce(this).compareTo(Vectors.coerce(o));
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof APersistentList<?>) {
+			return equals((APersistentList<?>)o);
+		}
+		return false;
+	}
+	
+	public boolean equals(APersistentList<?> a) {
+		// TODO: optimise
+		return (Vectors.coerce(this)).equals(Vectors.coerce(a));
+	}
 }

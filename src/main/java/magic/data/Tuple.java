@@ -23,12 +23,12 @@ public final class Tuple<T> extends BasePersistentVector<T> {
 	
 	// Empty Tuple for some special cases
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	static final Tuple<?> EMPTY_TUPLE=new Tuple(EmptyArrays.EMPTY_OBJECTS);
+	public static final Tuple<?> EMPTY=new Tuple(EmptyArrays.EMPTY_OBJECTS);
 	
 	@SuppressWarnings("unchecked")
 	public static <T> Tuple<T> of(T... values) {
 		int n=values.length;
-		if (n==0) return (Tuple<T>) EMPTY_TUPLE;
+		if (n==0) return (Tuple<T>) EMPTY;
 		T[] ndata=(T[]) new Object[n];
 		System.arraycopy(values,0,ndata,0,n);
 		return new Tuple<T>(ndata);
@@ -43,7 +43,7 @@ public final class Tuple<T> extends BasePersistentVector<T> {
 		if ((offset<0)||(offset+size>values.length)||(size<0)) {
 			throw new IndexOutOfBoundsException("Invalid index range start="+offset+" size="+size);
 		}
-		if (size==0) return (Tuple<T>) EMPTY_TUPLE;
+		if (size==0) return (Tuple<T>) EMPTY;
 		return new Tuple<T>(values,offset,size);
 	}
 	
@@ -65,7 +65,7 @@ public final class Tuple<T> extends BasePersistentVector<T> {
 	@SuppressWarnings("unchecked")
 	public static <T> Tuple<T> create(T[] values, int fromIndex, int toIndex) {
 		int n=toIndex-fromIndex;
-		if (n<=0) return (Tuple<T>) EMPTY_TUPLE;
+		if (n<=0) return (Tuple<T>) EMPTY;
 		T[] ndata=(T[]) new Object[n];
 		for (int i=0; i<n; i++) {
 			ndata[i]=values[i+fromIndex];
@@ -93,7 +93,7 @@ public final class Tuple<T> extends BasePersistentVector<T> {
 	public static <T> Tuple<T> createFrom(List<T> values, int fromIndex, int toIndex) {
 		int n=toIndex-fromIndex;
 		if (n<=0) {
-			if (n==0) return (Tuple<T>) EMPTY_TUPLE;
+			if (n==0) return (Tuple<T>) EMPTY;
 			throw new IllegalArgumentException("Negative range in Tuple.create: ("+fromIndex+","+toIndex+")");
 		}
 		T[] ndata=(T[]) new Object[n];
@@ -154,7 +154,7 @@ public final class Tuple<T> extends BasePersistentVector<T> {
 		int newSize=toIndex-fromIndex;
 		if ((fromIndex<0)||(toIndex>size)) throw new IndexOutOfBoundsException();
 		if ((fromIndex==0)&&(toIndex==size)) return this;
-		if (newSize==0) return (Tuple<T>) Tuple.EMPTY_TUPLE;
+		if (newSize==0) return (Tuple<T>) Tuple.EMPTY;
 		if (newSize<0)throw new IllegalArgumentException("Negative range specified");
 
 		return Tuple.wrap(data, offset+fromIndex, newSize);
@@ -165,7 +165,7 @@ public final class Tuple<T> extends BasePersistentVector<T> {
 	public APersistentVector<T> deleteRange(int start, int end) {
 		if ((start<0)||(end>size)) throw new IndexOutOfBoundsException();
 		if (start>end) throw new IllegalArgumentException("Negative range specified");
-		if ((start==0)&&(end==size)) return (APersistentVector<T>) EMPTY_TUPLE;
+		if ((start==0)&&(end==size)) return (APersistentVector<T>) EMPTY;
 		if (start==end) return this;
 		int newSize=size-(end-start);
 		T[] ndata=(T[]) new Object[newSize];
