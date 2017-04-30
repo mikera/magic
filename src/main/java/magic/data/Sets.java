@@ -62,5 +62,10 @@ public class Sets {
 		if (a.size()==0) return SingletonSet.create(value);
 		return PersistentHashSet.createFromSet(a).include(value);
 	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> Set<T> of(T... values) {
+		return createFrom(values);
+	}
 	
 }

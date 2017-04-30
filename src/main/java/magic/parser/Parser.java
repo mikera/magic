@@ -3,6 +3,7 @@ package magic.parser;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.parboiled.Action;
 import org.parboiled.BaseParser;
@@ -10,17 +11,23 @@ import org.parboiled.Context;
 import org.parboiled.Parboiled;
 import org.parboiled.Rule;
 import org.parboiled.annotations.BuildParseTree;
-import org.parboiled.parserunners.RecoveringParseRunner;
+import org.parboiled.buffers.InputBuffer;
+import org.parboiled.errors.ParseError;
+import org.parboiled.parserunners.ReportingParseRunner;
 import org.parboiled.support.ParsingResult;
 import org.parboiled.support.StringVar;
 import org.parboiled.support.Var;
 
 import magic.data.Lists;
+import magic.data.Maps;
+import magic.data.Sets;
 import magic.data.Symbol;
 
 @BuildParseTree
 public class Parser extends BaseParser<Object> {
 
+	// OVERALL PARSING INPUT RULES
+	
 	public Rule ExpressionInput() {
 		return Sequence(
 				Optional(WhiteSpace()),
@@ -30,19 +37,22 @@ public class Parser extends BaseParser<Object> {
 				);
 	}
 	
+    public Rule WhiteSpace() {
+        return OneOrMore(WhiteSpaceCharacter());
+    }
+    
+    public Rule WhiteSpaceCharacter() {
+        return AnyOf(" \t\f,\r\n");
+    }
+	
+	// EXPRESSIONS
+	
 	public Rule Expression() {
 		return FirstOf(
-				Vector(),
+				DataStructure(),
 				Symbol(),
 				Constant()
 				);
-	}
-	
-	public Rule Vector() {
-		return Sequence(
-				'[',
-				ExpressionList(),
-				']');
 	}
 	
 	Action<Object> AddAction(Var<ArrayList<Object>> expVar) {
@@ -74,9 +84,44 @@ public class Parser extends BaseParser<Object> {
 				);
 	}
 	
+	// DATA TYPE LITERALS
+	
+	public Rule DataStructure() {
+		return FirstOf(
+				Vector(),
+				Set(),
+				Map());
+	}
+	
+	public Rule Vector() {
+		return Sequence(
+				'[',
+				ExpressionList(),
+				']');
+	}
+	
+	public Rule Set() {
+		return Sequence(
+				"#{",
+				ExpressionList(),
+				'}',
+				push(Sets.createFrom((List<?>)pop())));
+	}
+	
+	public Rule Map() {
+		return Sequence(
+				"{",
+				ExpressionList(),
+				'}',
+				push(Maps.createFromFlattenedPairs((List<?>)pop())));
+	}
+	
+	// CONSTANT LITERALS
+	
 	public Rule Constant() {
 		return FirstOf(NumberLiteral(),StringLiteral());
 	}
+	
 	public Rule StringLiteral() {
 		StringVar sb=new StringVar("");
 
@@ -97,14 +142,7 @@ public class Parser extends BaseParser<Object> {
         		AnyOf("\\\"")
         		);
     }
-	
-    public Rule WhiteSpace() {
-        return OneOrMore(WhiteSpaceCharacter());
-    }
-    
-    public Rule WhiteSpaceCharacter() {
-        return AnyOf(" \t\f,\r\n");
-    }
+
     
     // SYMBOLS
     
@@ -168,36 +206,68 @@ public class Parser extends BaseParser<Object> {
 		return FirstOf(Double(),Long());
 	}
 	
+	public Rule Digits() {
+        return OneOrMore(Digit());
+    }
+	
+	public Rule SignedInteger() {
+        return Sequence(
+        		 Optional(AnyOf("+-")),
+				 Digits());
+    }
+	
 	public Rule Long() {
         return Sequence(
-        		Sequence(Optional(AnyOf("+-")),
-        				 OneOrMore(Digit())),
+        		SignedInteger(),
         		push(Long.parseLong(match())));
     }
 	
 	public Rule Double() {
         return Sequence(
         		Sequence(Optional(AnyOf("+-")),
-        				 OneOrMore(Digit()),
+        				 Optional(Digits()),
         				 '.',
-        				 OneOrMore(Digit())),
+        				 Digits(),
+        				 Optional(ExponentPart())),
         		push(Double.parseDouble(match())));
     }
+	
+	public Rule ExponentPart() {
+        return Sequence(
+        		AnyOf("eE"),
+        		SignedInteger());
+    }
 
+	// MAIN PARSING FUNCTIONALITY
 	
 	private static Parser parser = Parboiled.createParser(Parser.class);
-	private static final RecoveringParseRunner<Object> expressionParseRunner=new RecoveringParseRunner<>(parser.ExpressionInput());
+	private static final ReportingParseRunner<Object> expressionParseRunner=new ReportingParseRunner<>(parser.ExpressionInput());
 	
 	/**
-	 * Parses an expression and results a form
+	 * Parses an expression and returns a form
 	 * @param string
 	 * @return
 	 */
 	public static Object parse(String source) {
 		ParsingResult<Object> result = expressionParseRunner.run(source);
+		if (result.hasErrors()) {
+			List<ParseError> errors=result.parseErrors;
+			StringBuilder sb=new StringBuilder();
+			for (ParseError error: errors) {
+				InputBuffer ib=error.getInputBuffer();
+				sb.append("Parse error at "+ib.getPosition(error.getStartIndex())+": "+ error.getErrorMessage());
+				sb.append("\n");
+			}
+			throw new Error(sb.toString());
+		}
 		return result.resultValue;
 	}
 	
+	/**
+	 * Parses an expression and returns a form
+	 * @param string
+	 * @return
+	 */
 	public static Object parse(Reader source) throws IOException {
 	    char[] arr = new char[8 * 1024];
 	    StringBuilder buffer = new StringBuilder();
@@ -209,7 +279,7 @@ public class Parser extends BaseParser<Object> {
 	}
 
 	public static void main(String[] args) {
-		Object result = parse("[1 2 3]");
+		Object result = parse("[1 2 3] [2]");
 		
 		System.out.println(result);
 	}
