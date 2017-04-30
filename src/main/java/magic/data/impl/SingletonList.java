@@ -53,12 +53,12 @@ public final class SingletonList<T> extends BasePersistentVector<T> {
 
 	@Override
 	public APersistentVector<T> back() {
-		return Vectors.emptyList();
+		return Vectors.emptyVector();
 	}
 	
 	@Override
 	public APersistentVector<T> tail() {
-		return Vectors.emptyList();
+		return Vectors.emptyVector();
 	}
 
 	@Override

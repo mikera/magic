@@ -10,14 +10,14 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import magic.RT;
-import magic.data.impl.CompositeList;
+import magic.data.impl.CompositeVector;
 import magic.data.impl.NullCollection;
 import magic.data.impl.NullList;
 import magic.data.impl.NullSet;
-import magic.data.impl.RepeatList;
+import magic.data.impl.RepeatVector;
 import magic.data.impl.SingletonList;
 import magic.data.impl.SingletonSet;
-import magic.data.impl.SubList;
+import magic.data.impl.SubVector;
 import mikera.util.Rand;
 
 public class TestPersistent {
@@ -31,11 +31,11 @@ public class TestPersistent {
 		testPersistentList(NullList.INSTANCE);
 		testPersistentList(Tuple.of(1,2,3,4,5));
 		testPersistentList(SingletonList.of("Hello persistent lists!"));
-		testPersistentList(RepeatList.create("Hello", 40));
-		testPersistentList(CompositeList.create(pl));
+		testPersistentList(RepeatVector.create("Hello", 40));
+		testPersistentList(CompositeVector.create(pl));
 		testPersistentList(PersistentVector.create(pl));
-		testPersistentList(PersistentVector.create(RepeatList.create("MM", 40)));
-		testPersistentList(SubList.create(pl,2,3));
+		testPersistentList(PersistentVector.create(RepeatVector.create("MM", 40)));
+		testPersistentList(SubVector.create(pl,2,3));
 	}
 	
 	@Test public void testCollectionTypes() {
@@ -287,7 +287,7 @@ public class TestPersistent {
 	@SuppressWarnings("unchecked")
 	public <T> void testEquals(APersistentVector<T> a) {
 		assertEquals(a,a.clone());
-		assertEquals(a,a.concat((APersistentVector<T>)Vectors.emptyList()));
+		assertEquals(a,a.concat((APersistentVector<T>)Vectors.emptyVector()));
 		assertEquals(a,a.deleteRange(0,0));
 	}
 	
@@ -428,7 +428,7 @@ public class TestPersistent {
 	
 	@Test public void testRepeats() {
 		APersistentVector<Integer> tl=(Tuple.of(1,1,1,1,1));
-		APersistentVector<Integer> rl=(RepeatList.create(1, 5));
+		APersistentVector<Integer> rl=(RepeatVector.create(1, 5));
 		assertEquals(tl,rl);
 		
 		APersistentVector<Integer> t2=(Tuple.of(2,2,2,2,2));

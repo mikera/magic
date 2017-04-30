@@ -17,4 +17,6 @@ public abstract class BasePersistentSet<T> extends APersistentSet<T> {
 	public ISeq<T> seq() {
 		return Tools.seq(this.iterator());
 	}
+	
+
 }

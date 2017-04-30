@@ -21,12 +21,13 @@ public class Vectors<T> {
 	
 	public static APersistentVector<?>[] NULL_PERSISTENT_LIST_ARRAY=new APersistentVector[0];
 	
-	public static <T> IPersistentList<T> create() {
-		return emptyList();
+	@SuppressWarnings("unchecked")
+	public static <T> APersistentVector<T> create() {
+		return (APersistentVector<T>) emptyVector();
 	}	
 	
 	@SuppressWarnings("unchecked")
-	public static <T> APersistentVector<T> emptyList() {
+	public static <T> APersistentVector<T> emptyVector() {
 		return (APersistentVector<T>) NullList.INSTANCE;
 	}	
 	
@@ -64,7 +65,7 @@ public class Vectors<T> {
 			// very small cases
 			if (n<2) {
 				if (n<0) throw new IllegalArgumentException(); 
-				if (n==0) return emptyList();
+				if (n==0) return emptyVector();
 				return SingletonList.of(data[fromIndex]);
 			}	
 			
@@ -109,14 +110,14 @@ public class Vectors<T> {
 		if ((fromIndex<0)||(toIndex>maxSize)) throw new IndexOutOfBoundsException();
 		int newSize=toIndex-fromIndex;
 		if (newSize<=0) {
-			if (newSize==0) return emptyList();
+			if (newSize==0) return emptyVector();
 			throw new IllegalArgumentException();
 		}
 			
 		// use sublist if possible
 		if (source instanceof APersistentVector) {
 			if (newSize==maxSize) return (APersistentVector<T>)source;
-			return createFromList((IPersistentList<T>)source,fromIndex, toIndex);
+			return createFromList((APersistentVector<T>)source,fromIndex, toIndex);
 		}
 		
 		if (newSize==1) return SingletonList.of(source.get(fromIndex));
@@ -129,8 +130,8 @@ public class Vectors<T> {
 		return PersistentVector.create(source, fromIndex, toIndex);
 	}
 	
-	public static <T> APersistentVector<T> createFromList(IPersistentList<T> source, int fromIndex, int toIndex) {
-		return createFromList(source).subList(fromIndex, toIndex);
+	public static <T> APersistentVector<T> createFromList(APersistentVector<T> source, int fromIndex, int toIndex) {
+		return source.subList(fromIndex, toIndex);
 	}
 	
 	public static <T> APersistentVector<T> concat(List<T> a, List<T> b) {
@@ -146,7 +147,12 @@ public class Vectors<T> {
 	 * @param a
 	 * @return
 	 */
-	public static <T> APersistentVector<T> coerce(APersistentCollection<T> a) {
+	public static <T> APersistentVector<T> coerce(IPersistentCollection<T> a) {
+		if (a instanceof APersistentVector<?>) return (APersistentVector<T>)a;
+		return Vectors.createFromCollection(a);
+	}
+
+	public static <T> APersistentVector<T> coerce(Collection<T> a) {
 		if (a instanceof APersistentVector<?>) return (APersistentVector<T>)a;
 		return Vectors.createFromCollection(a);
 	}

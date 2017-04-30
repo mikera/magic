@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import magic.data.IPersistentList;
 import magic.data.ISeq;
 import magic.data.Vectors;
 import magic.data.APersistentVector;
@@ -176,20 +175,13 @@ public final class NullList<T> extends BasePersistentVector<T> {
 	}
 
 	@Override
-	public APersistentVector<T> copyFrom(int index, IPersistentList<T> values,
-			int srcIndex, int length) {
-		if (length>0) throw new IndexOutOfBoundsException();
-		return this;
-	}
-
-	@Override
 	public ISeq<T> seq() {
 		return null;
 	}
 
 	@Override
-	public APersistentVector<T> concat(IPersistentList<T> a) {
-		return APersistentVector.coerce(a);
+	public APersistentVector<T> concat(APersistentVector<T> a) {
+		return a;
 	}
 
 	@Override

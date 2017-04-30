@@ -7,7 +7,7 @@ import java.util.ListIterator;
 
 import magic.Errors;
 import magic.RT;
-import magic.data.impl.SubList;
+import magic.data.impl.SubVector;
 
 /**
  * Abstract base class for persistent lists
@@ -15,7 +15,7 @@ import magic.data.impl.SubList;
  *
  * @param <T>
  */
-public abstract class APersistentVector<T> extends APersistentList<T> implements IPersistentVector<T> {
+public abstract class APersistentVector<T> extends APersistentCollection<T> implements IPersistentVector<T> {
 	private static final long serialVersionUID = -7221238938265002290L;
 
 	@Override
@@ -111,11 +111,35 @@ public abstract class APersistentVector<T> extends APersistentList<T> implements
 	
 	@Override
 	public abstract APersistentVector<T> include(T value);
+	
+	@Override
+	public APersistentVector<T> exclude(T value) {
+		APersistentVector<T> pl=this;
+		int i=pl.indexOf(value);
+		while (i>=0) {
+			pl=pl.deleteAt(i);
+			i=pl.indexOf(value,i);
+		}
+		return pl;
+	}
 
 	@Override
-	public APersistentVector<T> concat(IPersistentList<T> values) {
-		return Vectors.concat(this,values);
+	public APersistentVector<T> excludeAll(Collection<T> values) {
+		APersistentVector<T> pl=this;
+		for (T t : values) { 
+			pl=pl.exclude(t);
+		}
+		return pl;
+	} 
+
+
+
+	@Override 
+	public final APersistentVector<T> concat(IPersistentCollection<T> values) {
+		return concat(Vectors.coerce(values));
 	}
+	
+	public abstract APersistentVector<T> concat(APersistentVector<T> a);
 	
 	@Override
 	public APersistentVector<T> concat(Collection<T> values) {
@@ -180,11 +204,11 @@ public abstract class APersistentVector<T> extends APersistentList<T> implements
 	public APersistentVector<T> subList(int fromIndex, int toIndex) {
 		// checks that return known lists
 		if ((fromIndex==0)&&(toIndex==size())) return this;
-		if (fromIndex==toIndex) return Vectors.emptyList();
+		if (fromIndex==toIndex) return Vectors.emptyVector();
 		
 		// otherwise generate a SubList
 		// this also handles exception cases
-		return SubList.create(this, fromIndex, toIndex);
+		return SubVector.create(this, fromIndex, toIndex);
 	}
 
 	@Override
@@ -201,29 +225,20 @@ public abstract class APersistentVector<T> extends APersistentList<T> implements
 		return firstPart.include(value).concat(lastPart);
 	}
 
-	@Override
-	public APersistentVector<T> insertAll(int index, Collection<T> values) {
-		if (values instanceof APersistentVector<?>) {
-			return insertAll(index,(APersistentVector<T>)values);
-		}
-		APersistentVector<T> pl=Vectors.createFromCollection(values);
-		return subList(0,index).concat(pl).concat(subList(index,size()));
+	public final APersistentVector<T> insertAll(int index, IPersistentCollection<T> values) {
+		return insertAll(index,Vectors.coerce(values));
 	}
 	
 	@Override
-	public APersistentVector<T> insertAll(int index, IPersistentList<T> values) {
+	public APersistentVector<T> insertAll(int index, Collection<T> values) {
+		return insertAll(index,Vectors.coerce(values));
+	}
+	
+	@Override
+	public APersistentVector<T> insertAll(int index, APersistentVector<T> values) {
 		APersistentVector<T> firstPart=subList(0,index);
 		APersistentVector<T> lastPart=subList(index,size());
 		return firstPart.concat(values).concat(lastPart);
-	}
-	
-	@Override
-	public APersistentVector<T> exclude(T value) {
-		APersistentVector<T> pl=this;
-		for (int i = pl.indexOf(value); i>=0; i=pl.indexOf(value)) {
-			pl=pl.subList(0, i).concat(pl.subList(i+1, pl.size()));
-		}
-		return pl;
 	}
 	
 	@Override
@@ -234,6 +249,11 @@ public abstract class APersistentVector<T> extends APersistentList<T> implements
 	@Override
 	public APersistentVector<T> clone() {
 		return (APersistentVector<T>)super.clone();
+	}
+	
+	@Override
+	public APersistentVector<T> empty() {
+		return Vectors.emptyVector();
 	}
 	
 	@Override
@@ -256,7 +276,11 @@ public abstract class APersistentVector<T> extends APersistentList<T> implements
 	}
 	
 	@Override
-	public APersistentVector<T> copyFrom(int dstIndex, IPersistentList<T> values, int srcIndex, int length) {
+	public final APersistentVector<T> copyFrom(int dstIndex, IPersistentCollection<T> values, int srcIndex, int length) {
+		return copyFrom(dstIndex,Vectors.coerce(values),srcIndex,length);
+	}
+	
+	public APersistentVector<T> copyFrom(int dstIndex, APersistentVector<T> values, int srcIndex, int length) {
 		int size=size();
 		if ((dstIndex<0)||((dstIndex+length)>size)) throw new IndexOutOfBoundsException();
 		if (length<0) throw new IllegalArgumentException(Errors.negativeRange());
@@ -267,5 +291,16 @@ public abstract class APersistentVector<T> extends APersistentList<T> implements
 	public static <T> APersistentVector<T> coerce(List<T> a) {
 		if (a instanceof APersistentVector<?>) return (APersistentVector<T>) a;
 		return Vectors.createFromList(a);
+	}
+	
+	public int compareTo(APersistentVector<T> o) {
+		int n=magic.Maths.min(o.size(), size());
+		for (int i=0; i<n; i++) {
+			int r=RT.compare(this.get(i), o.get(i));
+			if (r!=0) return r;
+		}
+		if (size()<o.size()) return -1;
+		if (size()>o.size()) return 1;
+		return 0;
 	}
 }

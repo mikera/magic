@@ -13,7 +13,7 @@ import mikera.randomz.Randomz;
 
 import org.junit.Test;
 
-import magic.data.impl.RepeatList;
+import magic.data.impl.RepeatVector;
 
 public class CommonTests {
 	
@@ -21,7 +21,7 @@ public class CommonTests {
 		testCommonData(Integer.valueOf(3));
 		testCommonData(Short.valueOf((short)3));
 		testCommonData(0.7543245);
-		testCommonData(RepeatList.create("Spam ",100));
+		testCommonData(RepeatVector.create("Spam ",100));
 		testCommonData(Randomz.getGenerator());
 	}
 	

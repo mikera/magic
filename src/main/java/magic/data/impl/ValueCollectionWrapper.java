@@ -63,4 +63,9 @@ public final class ValueCollectionWrapper<K,V> extends APersistentCollection<V> 
 	public ISeq<V> seq() {
 		return Vectors.createFromCollection(this).seq();
 	}
+
+	@Override
+	public APersistentCollection<V> empty() {
+		return Vectors.emptyVector();
+	}
 }

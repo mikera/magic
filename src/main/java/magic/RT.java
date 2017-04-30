@@ -39,15 +39,16 @@ public class RT {
 	 * Compares two Comparable values, considering null as the lowest possible value 
 	 * 
 	 * @param <T>
-	 * @param a
-	 * @param b
+	 * @param t
+	 * @param t2
 	 * @return
 	 */
-	public static <T extends Comparable<? super T>> int compare(T a, T b) {
-		if (a==b) return 0;
-		if (a==null) return -1;
-		if (b==null) return 1;
-		return a.compareTo(b);
+	@SuppressWarnings("unchecked")
+	public static <T> int compare(T t, T t2) {
+		if (t==t2) return 0;
+		if (t==null) return -1;
+		if (t2==null) return 1;
+		return ((Comparable<? super T>)t).compareTo(t2);
 	}
 	
 	/**

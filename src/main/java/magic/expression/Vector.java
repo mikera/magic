@@ -1,6 +1,6 @@
 package magic.expression;
 
-import magic.data.IPersistentList;
+import magic.data.IPersistentVector;
 import magic.data.Vectors;
 import magic.lang.Context;
 
@@ -11,17 +11,17 @@ import magic.lang.Context;
  *
  * @param <T>
  */
-public class Vector<T> extends Expression<IPersistentList<T>> {
+public class Vector<T> extends Expression<IPersistentVector<T>> {
 
-	IPersistentList<Expression<T>> exps;
+	IPersistentVector<Expression<T>> exps;
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private Vector(IPersistentList<Expression<?>> exps) {
-		this.exps=(IPersistentList)exps;
+	private Vector(IPersistentVector<Expression<?>> exps) {
+		this.exps=(IPersistentVector)exps;
 	}
 	
 	@Override
-	public IPersistentList<T> compute(Context c) {
+	public IPersistentVector<T> compute(Context c) {
 		int n=exps.size();
 		@SuppressWarnings("unchecked")
 		T[] results=(T[]) new Object[n];
@@ -31,11 +31,11 @@ public class Vector<T> extends Expression<IPersistentList<T>> {
 		return Vectors.wrap(results);
 	}
 
-	public static Expression<?> create(IPersistentList<Expression<?>> exps) {
+	public static Expression<?> create(IPersistentVector<Expression<?>> exps) {
 		return new Vector<Object>(exps);
 	}
 
-	public IPersistentList<Expression<T>> getExpressions() {
+	public IPersistentVector<Expression<T>> getExpressions() {
 		return exps;
 	}
 	

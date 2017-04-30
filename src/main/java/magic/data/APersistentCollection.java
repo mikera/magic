@@ -135,7 +135,7 @@ public abstract class APersistentCollection<T> extends PersistentObject implemen
 				return (!RT.equals(value, testvalue));
 			}		
 		};
-		return Vectors.createFromIterator(it);
+		return empty().includeAll(Vectors.createFromIterator(it));
 	}
 	
 	@Override
@@ -146,7 +146,7 @@ public abstract class APersistentCollection<T> extends PersistentObject implemen
 				return (!values.contains(value));
 			}		
 		};
-		return Vectors.createFromIterator(it);
+		return empty().includeAll(Vectors.createFromIterator(it));
 	}
 
 	@Override
@@ -159,9 +159,9 @@ public abstract class APersistentCollection<T> extends PersistentObject implemen
 				return (!col.contains(value));
 			}		
 		};
-		return Vectors.createFromIterator(it);
+		return empty().includeAll(Vectors.createFromIterator(it));
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb=new StringBuilder();
@@ -195,6 +195,8 @@ public abstract class APersistentCollection<T> extends PersistentObject implemen
 	public APersistentCollection<T> includeAll(final IPersistentCollection<T> values) {
 		return includeAll((Collection<T>)values);
 	}
+	
+
 	
 	@Override
 	public void validate() {

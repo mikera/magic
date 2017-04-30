@@ -2,7 +2,6 @@ package magic.data.impl;
 
 import java.util.List;
 
-import magic.data.IPersistentList;
 import magic.data.Vectors;
 import magic.data.APersistentVector;
 
@@ -14,45 +13,45 @@ import magic.data.APersistentVector;
  *
  * @param <T>
  */
-public final class SubList<T> extends BasePersistentVector<T>   {	
+public final class SubVector<T> extends BasePersistentVector<T>   {	
 
 	private static final long serialVersionUID = 3559316900529560364L;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static final SubList<?> EMPTY_SUBLIST = new SubList(Vectors.emptyList(),0,0);
+	public static final SubVector<?> EMPTY_SUBLIST = new SubVector(Vectors.emptyVector(),0,0);
 
 	private final APersistentVector<T> data;
 	private final int offset;
 	private final int length;
 	
 	@SuppressWarnings("unchecked")
-	public static <T> SubList<T> create(List<T> source, int fromIndex, int toIndex) {
+	public static <T> SubVector<T> create(List<T> source, int fromIndex, int toIndex) {
 		if ((fromIndex<0)||(toIndex>source.size())) throw new IndexOutOfBoundsException();
 		int newSize=toIndex-fromIndex;
 		if (newSize<=0) {
-			if (newSize==0) return (SubList<T>) SubList.EMPTY_SUBLIST;
+			if (newSize==0) return (SubVector<T>) SubVector.EMPTY_SUBLIST;
 			throw new IllegalArgumentException();
 		}
 		return createLocal(Vectors.createFromList(source),fromIndex,toIndex);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> SubList<T> create(APersistentVector<T> source, int fromIndex, int toIndex) {
+	public static <T> SubVector<T> create(APersistentVector<T> source, int fromIndex, int toIndex) {
 		if ((fromIndex<0)||(toIndex>source.size())) throw new IndexOutOfBoundsException();
 		int newSize=toIndex-fromIndex;
 		if (newSize<=0) {
-			if (newSize==0) return (SubList<T>) SubList.EMPTY_SUBLIST;
+			if (newSize==0) return (SubVector<T>) SubVector.EMPTY_SUBLIST;
 			throw new IllegalArgumentException();
 		}
-		if (source instanceof SubList<?>) {
-			SubList<T> sl=(SubList<T>)source;
+		if (source instanceof SubVector<?>) {
+			SubVector<T> sl=(SubVector<T>)source;
 			return createLocal(sl.data,fromIndex+sl.offset,toIndex+sl.offset);
 		}
 		return createLocal(source,fromIndex,toIndex);
 	}
 	
-	private static <T> SubList<T> createLocal(APersistentVector<T> source, int fromIndex, int toIndex) {
-		return new SubList<T>(source,fromIndex,toIndex-fromIndex);
+	private static <T> SubVector<T> createLocal(APersistentVector<T> source, int fromIndex, int toIndex) {
+		return new SubVector<T>(source,fromIndex,toIndex-fromIndex);
 	}
 	
 	@Override
@@ -60,7 +59,7 @@ public final class SubList<T> extends BasePersistentVector<T>   {
 		return length;
 	}
 	
-	private SubList(APersistentVector<T> source, int off, int len) {
+	private SubVector(APersistentVector<T> source, int off, int len) {
 		data=source;
 		offset=off;
 		length=len;	
@@ -73,7 +72,7 @@ public final class SubList<T> extends BasePersistentVector<T>   {
 	}
 	
 	@Override
-	public SubList<T> clone() {
+	public SubVector<T> clone() {
 		return this;
 	}
 	
@@ -82,20 +81,20 @@ public final class SubList<T> extends BasePersistentVector<T>   {
 	 * Attempts to merge adjacent sublists
 	 */
 	@Override
-	public APersistentVector<T> concat(IPersistentList<T> values) {
-		if (values instanceof SubList<?>) {
-			SubList<T> sl=(SubList<T>)values;
+	public APersistentVector<T> concat(APersistentVector<T> values) {
+		if (values instanceof SubVector<?>) {
+			SubVector<T> sl=(SubVector<T>)values;
 			return concat(sl);
 		}
 		return super.concat(values);
 	}
 	
 	
-	public APersistentVector<T> concat(SubList<T> sl) {
+	public APersistentVector<T> concat(SubVector<T> sl) {
 		if ((data==sl.data)&&((offset+length)==sl.offset)) {
 			int newLength=length+sl.length;
 			if (newLength==data.size()) return data;
-			return new SubList<T>(data,offset,newLength);
+			return new SubVector<T>(data,offset,newLength);
 		}
 		return super.concat(sl);
 	}
@@ -104,7 +103,7 @@ public final class SubList<T> extends BasePersistentVector<T>   {
 	public APersistentVector<T> subList(int fromIndex, int toIndex) {
 		if ((fromIndex<0)||(toIndex>size())) throw new IndexOutOfBoundsException();
 		if (fromIndex>=toIndex) {
-			if (fromIndex==toIndex) return Vectors.emptyList();
+			if (fromIndex==toIndex) return Vectors.emptyVector();
 			throw new IllegalArgumentException();
 		}
 		if ((fromIndex==0)&&(toIndex==size())) return this;

@@ -128,4 +128,9 @@ public final class NullCollection<T> extends APersistentCollection<T> {
 	public ISeq<T> seq() {
 		return null;
 	}
+
+	@Override
+	public APersistentCollection<T> empty() {
+		return this;
+	}
 }

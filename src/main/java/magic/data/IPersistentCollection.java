@@ -45,5 +45,6 @@ public interface IPersistentCollection<T> extends Collection<T>, ISeqable<T>, Cl
 	@Override
 	public ISeq<T> seq();
 	
+	public APersistentCollection<T>  empty();
 	
 }

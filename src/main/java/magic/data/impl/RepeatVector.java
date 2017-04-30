@@ -2,9 +2,8 @@ package magic.data.impl;
 
 import magic.Errors;
 import magic.RT;
-import magic.data.IPersistentList;
-import magic.data.Vectors;
 import magic.data.APersistentVector;
+import magic.data.Vectors;
 
 /**
  * Persistent list that implements a repeating single value
@@ -13,19 +12,19 @@ import magic.data.APersistentVector;
  *
  * @param <T>
  */
-public class RepeatList<T> extends BasePersistentVector<T> {
+public class RepeatVector<T> extends BasePersistentVector<T> {
 	private static final long serialVersionUID = -4991558599811750311L;
 
 	private final T value;
 	private final int size;
 	
-	private RepeatList(T object, int num) {
+	private RepeatVector(T object, int num) {
 		value=object;
 		size=num;
 	}
 	
-	public static <T> RepeatList<T> create(T object, int number) {
-		return new RepeatList<T>(object,number);
+	public static <T> RepeatVector<T> create(T object, int number) {
+		return new RepeatVector<T>(object,number);
 	}
 	
 	@Override
@@ -42,7 +41,7 @@ public class RepeatList<T> extends BasePersistentVector<T> {
 	@Override
 	public APersistentVector<T> subList(int start, int end) {
 		if ((start<0)||(end>size)) throw new IndexOutOfBoundsException(Errors.rangeOutOfBounds(start,end));
-		if (start==end) return Vectors.emptyList();
+		if (start==end) return Vectors.emptyVector();
 		int num=end-start;
 		if (num<0) {
 			throw new IllegalArgumentException(Errors.negativeRange());
@@ -59,15 +58,15 @@ public class RepeatList<T> extends BasePersistentVector<T> {
 		if (numDeleted<0) {
 			throw new IllegalArgumentException(Errors.negativeRange());
 		}
-		if (numDeleted==size) return Vectors.emptyList();
+		if (numDeleted==size) return Vectors.emptyVector();
 		if (numDeleted==0) return this;
 		return create(value,size-numDeleted);
 	}
 	
 	@Override
-	public APersistentVector<T> concat(IPersistentList<T> values) {
-		if (values instanceof RepeatList<?>) {
-			RepeatList<T> ra=(RepeatList<T>)values;
+	public APersistentVector<T> concat(APersistentVector<T> values) {
+		if (values instanceof RepeatVector<?>) {
+			RepeatVector<T> ra=(RepeatVector<T>)values;
 			if (RT.equals(ra.value, value)) {
 				return create(value,ra.size+size);
 			}
@@ -78,7 +77,7 @@ public class RepeatList<T> extends BasePersistentVector<T> {
 	@Override
 	public APersistentVector<T> exclude(final T v) {
 		if (RT.equals(v,value)) {
-			return Vectors.emptyList();
+			return Vectors.emptyVector();
 		}
 		return this;
 	}

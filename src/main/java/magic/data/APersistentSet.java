@@ -96,4 +96,9 @@ public abstract class APersistentSet<T> extends APersistentCollection<T> impleme
 	public int hashCode() {
 		return RT.iteratorHashCode(iterator());
 	}
+	
+	@Override
+	public APersistentSet<T> empty() {
+		return Sets.emptySet();
+	}
 }

@@ -247,9 +247,7 @@ public final class PersistentVector<T> extends BasePersistentVector<T> {
 		if ((fromIndex<0)||(toIndex>size)) {
 			throw new IndexOutOfBoundsException("from: "+fromIndex+" to: " +toIndex+ " with size: "+size+" offset: "+offset+" shift: "+shift);
 		}
-		if (toIndex==fromIndex) return Vectors.emptyList();
-	
-		if (toIndex==fromIndex) return Vectors.emptyList();
+		if (toIndex==fromIndex) return Vectors.emptyVector();
 		if ((fromIndex>toIndex)) {
 			throw new IllegalArgumentException("Negative sized subList from: "+fromIndex+" to: " +toIndex);
 		}
@@ -313,7 +311,8 @@ public final class PersistentVector<T> extends BasePersistentVector<T> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public PersistentVector<T> concat(IPersistentList<T> a) {
+	public PersistentVector<T> concat(APersistentVector<T> src) {
+		APersistentVector<T>a=Vectors.coerce(src);
 		int asize=a.size();
 		if (asize==0) return this;
 		if (size==0) return PersistentVector.coerce(a);
@@ -355,11 +354,11 @@ public final class PersistentVector<T> extends BasePersistentVector<T> {
 				int innerBlocks=newNumBlocks-numBlocks-1;
 				for (int i=0; i<innerBlocks;i++) {
 					int aix=(blockSize-split)+i*blockSize;
-					newBlocks[numBlocks+i]=Vectors.coerce(a.subList(aix, aix+blockSize));
+					newBlocks[numBlocks+i]=a.subList(aix, aix+blockSize);
 				}
 				// update final block using remaining elements
 				int aTailPos=(blockSize-split)+blockSize*innerBlocks;
-				newBlocks[newNumBlocks-1]=Vectors.coerce(a.subList(aTailPos, asize));
+				newBlocks[newNumBlocks-1]=a.subList(aTailPos, asize);
 				return new PersistentVector<T>(newBlocks,shift,size+asize,newOffset);
 			} else {
 				// need to rise one level
@@ -385,5 +384,10 @@ public final class PersistentVector<T> extends BasePersistentVector<T> {
 			throw new Error("Insufficient element is last block");
 		}
 	}
+
+
+
+
+
 
 }

@@ -2,12 +2,11 @@ package magic.data.impl;
 
 import java.util.List;
 
-import magic.data.IPersistentList;
 import magic.data.Vectors;
 import magic.data.APersistentVector;
 import magic.data.Tuple;
 
-public class CompositeList<T> extends BasePersistentVector<T> {
+public class CompositeVector<T> extends BasePersistentVector<T> {
 	private static final long serialVersionUID = 1L;
 	
 	public final APersistentVector<T> front;
@@ -22,19 +21,19 @@ public class CompositeList<T> extends BasePersistentVector<T> {
 		}
 		
 		if (a.size()<(b.size()>>1)) {
-			return new CompositeList<T>(concat(a,b.front()),b.back());
+			return new CompositeVector<T>(concat(a,b.front()),b.back());
 		}
 		
 		if (b.size()<(a.size()>>1)) {
-			return new CompositeList<T>(a.front(),concat(a.back(),b));
+			return new CompositeVector<T>(a.front(),concat(a.back(),b));
 		}
 		
-		return new CompositeList<T>(a,b);
+		return new CompositeVector<T>(a,b);
 	}
 	
-	public static <T> CompositeList<T> create(T[] data,  int fromIndex, int toIndex) {
+	public static <T> CompositeVector<T> create(T[] data,  int fromIndex, int toIndex) {
 		int midIndex=calcMidIndex(fromIndex, toIndex);
-		return new CompositeList<T>(Vectors.createFromArray(data,fromIndex,midIndex),Vectors.createFromArray(data,midIndex,toIndex));
+		return new CompositeVector<T>(Vectors.createFromArray(data,fromIndex,midIndex),Vectors.createFromArray(data,midIndex,toIndex));
 	}
 	
 	public static final int calcMidIndex(int fromIndex, int toIndex) {
@@ -48,17 +47,17 @@ public class CompositeList<T> extends BasePersistentVector<T> {
 		return fromIndex+splitIndex;
 	}
 	
-	public static <T> CompositeList<T> create(List<T> source) {
+	public static <T> CompositeVector<T> create(List<T> source) {
 		return create(source,0,source.size());
 	}
 	
 
-	public static <T> CompositeList<T> create(List<T> source, int fromIndex, int toIndex) {
+	public static <T> CompositeVector<T> create(List<T> source, int fromIndex, int toIndex) {
 		int midIndex=calcMidIndex(fromIndex, toIndex);
-		return new CompositeList<T>(Vectors.createFromList(source,fromIndex,midIndex),Vectors.createFromList(source,midIndex,toIndex));
+		return new CompositeVector<T>(Vectors.createFromList(source,fromIndex,midIndex),Vectors.createFromList(source,midIndex,toIndex));
 	}
 	
-	private CompositeList(APersistentVector<T> a, APersistentVector<T> b ) {
+	private CompositeVector(APersistentVector<T> a, APersistentVector<T> b ) {
 		front=a;
 		back=b;
 		size=a.size()+b.size();
@@ -105,8 +104,8 @@ public class CompositeList<T> extends BasePersistentVector<T> {
 	}
 
 	@Override
-	public APersistentVector<T> concat(IPersistentList<T> values) {
-		return concat(this,APersistentVector.coerce(values));
+	public APersistentVector<T> concat(APersistentVector<T> values) {
+		return concat(this,Vectors.coerce(values));
 	}
 
 	@Override

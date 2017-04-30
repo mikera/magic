@@ -1,13 +1,9 @@
 package magic.data.impl;
 
-import java.util.Collection;
-
-import magic.RT;
-import magic.data.IPersistentList;
+import magic.data.APersistentVector;
 import magic.data.IPersistentVector;
 import magic.data.ISeq;
 import magic.data.PersistentVector;
-import magic.data.APersistentVector;
 
 @SuppressWarnings("serial")
 public abstract class BasePersistentVector<T> extends APersistentVector<T> implements IPersistentVector<T> {
@@ -58,43 +54,10 @@ public abstract class BasePersistentVector<T> extends APersistentVector<T> imple
 		return deleteRange(i,i+1);
 	}
 	
-	/**
-	 * Deletes all instances of a specified value in the collection"
-	 */
-	@Override
-	public APersistentVector<T> exclude(T value) {
-		APersistentVector<T> pl=this;
-		int i=pl.indexOf(value);
-		while (i>=0) {
-			pl=pl.deleteAt(i);
-			i=pl.indexOf(value,i);
-		}
-		return pl;
-	}
+
 
 	@Override
-	public APersistentVector<T> excludeAll(Collection<T> values) {
-		APersistentVector<T> pl=this;
-		for (T t : values) { 
-			pl=pl.exclude(t);
-		}
-		return pl;
-	}
-
-	@Override
-	public int compareTo(APersistentVector<T> o) {
-		int n=magic.Maths.min(o.size(), size());
-		for (int i=0; i<n; i++) {
-			int r=RT.compare(this, o);
-			if (r!=0) return r;
-		}
-		if (size()<o.size()) return -1;
-		if (size()>o.size()) return 1;
-		return 0;
-	}
-
-	@Override
-	public APersistentVector<T> concat(IPersistentList<T> values) {
+	public APersistentVector<T> concat(APersistentVector<T> values) {
 		return PersistentVector.coerce(this).concat(values);
 	}
 	
