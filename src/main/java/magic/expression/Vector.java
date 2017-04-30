@@ -1,7 +1,7 @@
 package magic.expression;
 
 import magic.data.IPersistentList;
-import magic.data.Lists;
+import magic.data.Vectors;
 import magic.lang.Context;
 
 /**
@@ -28,7 +28,7 @@ public class Vector<T> extends Expression<IPersistentList<T>> {
 		for (int i=0; i<n; i++) {
 			results[i]=exps.get(i).compute(c);
 		}
-		return Lists.wrap(results);
+		return Vectors.wrap(results);
 	}
 
 	public static Expression<?> create(IPersistentList<Expression<?>> exps) {

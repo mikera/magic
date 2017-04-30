@@ -8,8 +8,8 @@ import java.util.ListIterator;
 
 import magic.data.IPersistentList;
 import magic.data.ISeq;
-import magic.data.Lists;
-import magic.data.APersistentList;
+import magic.data.Vectors;
+import magic.data.APersistentVector;
 
 public final class NullList<T> extends BasePersistentVector<T> {
 	
@@ -23,23 +23,23 @@ public final class NullList<T> extends BasePersistentVector<T> {
 	}
 
 	@Override
-	public APersistentList<T> deleteAt(int index) {
+	public APersistentVector<T> deleteAt(int index) {
 		throw new IndexOutOfBoundsException();
 	}
 
 	@Override
-	public APersistentList<T> deleteRange(int start, int end) {
+	public APersistentVector<T> deleteRange(int start, int end) {
 		if ((start==0)&&(end==0)) return this;
 		throw new IndexOutOfBoundsException();
 	}
 
 	@Override
-	public APersistentList<T> deleteFirst(T value) {
+	public APersistentVector<T> deleteFirst(T value) {
 		return this;
 	}
 	
 	@Override
-	public APersistentList<T> excludeAll(Collection<T> values) {
+	public APersistentVector<T> excludeAll(Collection<T> values) {
 		return this;
 	}
 
@@ -91,13 +91,13 @@ public final class NullList<T> extends BasePersistentVector<T> {
 	}
 
 	@Override
-	public APersistentList<T> subList(int fromIndex, int toIndex) {
+	public APersistentVector<T> subList(int fromIndex, int toIndex) {
 		if ((fromIndex!=0)||(toIndex!=0)) throw new IllegalArgumentException();
 		return this;
 	}
 
 	@Override
-	public int compareTo(APersistentList<T> o) {
+	public int compareTo(APersistentVector<T> o) {
 		if (o.size()>0) return -1;
 		return 0;
 	}
@@ -128,12 +128,12 @@ public final class NullList<T> extends BasePersistentVector<T> {
 	}
 
 	@Override
-	public APersistentList<T> back() {
+	public APersistentVector<T> back() {
 		return this;
 	}
 
 	@Override
-	public APersistentList<T> front() {
+	public APersistentVector<T> front() {
 		return this;
 	}
 
@@ -143,20 +143,20 @@ public final class NullList<T> extends BasePersistentVector<T> {
 	}
 
 	@Override
-	public APersistentList<T> update(int index, T value) {
+	public APersistentVector<T> update(int index, T value) {
 		throw new IndexOutOfBoundsException();
 	}
 
 	@Override
-	public APersistentList<T> insert(int index, T value) {
+	public APersistentVector<T> insert(int index, T value) {
 		if (index!=0) throw new IndexOutOfBoundsException();
 		return SingletonList.of(value);
 	}
 
 	@Override
-	public APersistentList<T> insertAll(int index, Collection<T> values) {
+	public APersistentVector<T> insertAll(int index, Collection<T> values) {
 		if (index!=0) throw new IndexOutOfBoundsException();
-		return Lists.createFromCollection(values);
+		return Vectors.createFromCollection(values);
 	}
 
 	@Override
@@ -176,7 +176,7 @@ public final class NullList<T> extends BasePersistentVector<T> {
 	}
 
 	@Override
-	public APersistentList<T> copyFrom(int index, IPersistentList<T> values,
+	public APersistentVector<T> copyFrom(int index, IPersistentList<T> values,
 			int srcIndex, int length) {
 		if (length>0) throw new IndexOutOfBoundsException();
 		return this;
@@ -188,8 +188,8 @@ public final class NullList<T> extends BasePersistentVector<T> {
 	}
 
 	@Override
-	public APersistentList<T> concat(IPersistentList<T> a) {
-		return APersistentList.coerce(a);
+	public APersistentVector<T> concat(IPersistentList<T> a) {
+		return APersistentVector.coerce(a);
 	}
 
 	@Override

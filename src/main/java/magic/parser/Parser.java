@@ -18,7 +18,7 @@ import org.parboiled.support.ParsingResult;
 import org.parboiled.support.StringVar;
 import org.parboiled.support.Var;
 
-import magic.data.Lists;
+import magic.data.Vectors;
 import magic.data.Maps;
 import magic.data.Sets;
 import magic.data.Symbol;
@@ -80,7 +80,7 @@ public class Parser extends BaseParser<Object> {
 						 Optional(WhiteSpace())),
 						 EMPTY
 						),
-				push(Lists.createFromList(expVar.get()))
+				push(Vectors.createFromList(expVar.get()))
 				);
 	}
 	

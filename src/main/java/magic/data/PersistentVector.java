@@ -13,7 +13,7 @@ import magic.data.impl.BasePersistentVector;
 public final class PersistentVector<T> extends BasePersistentVector<T> {
 	private static final long serialVersionUID = 7210896608719053578L;
 
-	protected static final int DEFAULT_SHIFT=Lists.TUPLE_BUILD_BITS;
+	protected static final int DEFAULT_SHIFT=Vectors.TUPLE_BUILD_BITS;
 	protected static final int SHIFT_STEP=4;
 	protected static final int SHIFT_MASK=(1<<SHIFT_STEP)-1;
 	
@@ -38,10 +38,10 @@ public final class PersistentVector<T> extends BasePersistentVector<T> {
 	 * The blocks that comprise the storage for the list
 	 * All except the last must be of the correct block size as determined by shift
 	 */
-	private final APersistentList<T>[] blocks;
+	private final APersistentVector<T>[] blocks;
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static final PersistentVector<?> EMPTY_BLOCKLIST=new PersistentVector(Lists.NULL_PERSISTENT_LIST_ARRAY,DEFAULT_SHIFT,0,0);
+	public static final PersistentVector<?> EMPTY_BLOCKLIST=new PersistentVector(Vectors.NULL_PERSISTENT_LIST_ARRAY,DEFAULT_SHIFT,0,0);
 
 
 	
@@ -106,7 +106,7 @@ public final class PersistentVector<T> extends BasePersistentVector<T> {
 			int size=toIndex-fromIndex;
 			int numBlocks=numBlocks(size,shift);
 		
-			APersistentList<T>[] bs=(APersistentList<T>[]) new APersistentList<?>[numBlocks];
+			APersistentVector<T>[] bs=(APersistentVector<T>[]) new APersistentVector<?>[numBlocks];
 			for (int i=0; i<(numBlocks-1); i++) {
 				bs[i]=createLocal(
 						list,
@@ -131,7 +131,7 @@ public final class PersistentVector<T> extends BasePersistentVector<T> {
 			int size=toIndex-fromIndex;
 			int numBlocks=numBlocks(size,shift);
 		
-			APersistentList<T>[] bs=(APersistentList<T>[]) new APersistentList<?>[numBlocks];
+			APersistentVector<T>[] bs=(APersistentVector<T>[]) new APersistentVector<?>[numBlocks];
 			for (int i=0; i<(numBlocks-1); i++) {
 				bs[i]=createLocal(
 						list,
@@ -155,14 +155,14 @@ public final class PersistentVector<T> extends BasePersistentVector<T> {
 		int size=toIndex-fromIndex;
 		int numBlocks=numBlocks(size,shift);
 	
-		APersistentList<T>[] bs=(APersistentList<T>[]) new APersistentList<?>[numBlocks];
+		APersistentVector<T>[] bs=(APersistentVector<T>[]) new APersistentVector<?>[numBlocks];
 		for (int i=0; i<(numBlocks-1); i++) {
-			bs[i]=Lists.subList(
+			bs[i]=Vectors.subList(
 					list,
 					fromIndex+(i<<shift), 
 					fromIndex+((i+1)<<shift));
 		}
-		bs[numBlocks-1]=Lists.subList(
+		bs[numBlocks-1]=Vectors.subList(
 				list,
 				fromIndex+((numBlocks-1)<<shift), 
 				fromIndex+size);
@@ -175,14 +175,14 @@ public final class PersistentVector<T> extends BasePersistentVector<T> {
 		int size=toIndex-fromIndex;
 		int numBlocks=numBlocks(size,shift);
 	
-		APersistentList<T>[] bs=(APersistentList<T>[]) new APersistentList<?>[numBlocks];
+		APersistentVector<T>[] bs=(APersistentVector<T>[]) new APersistentVector<?>[numBlocks];
 		for (int i=0; i<(numBlocks-1); i++) {
-			bs[i]=Lists.createFromArray(
+			bs[i]=Vectors.createFromArray(
 					list,
 					fromIndex+(i<<shift), 
 					fromIndex+((i+1)<<shift));
 		}
-		bs[numBlocks-1]=Lists.createFromArray(
+		bs[numBlocks-1]=Vectors.createFromArray(
 				list,
 				fromIndex+((numBlocks-1)<<shift), 
 				fromIndex+size);
@@ -195,8 +195,8 @@ public final class PersistentVector<T> extends BasePersistentVector<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private PersistentVector(APersistentList<?>[] blocks, int sh, int sz, int off) {
-		this.blocks=(APersistentList<T>[]) blocks;
+	private PersistentVector(APersistentVector<?>[] blocks, int sh, int sz, int off) {
+		this.blocks=(APersistentVector<T>[]) blocks;
 		shift=sh;
 		size=sz;
 		offset=off;
@@ -243,13 +243,13 @@ public final class PersistentVector<T> extends BasePersistentVector<T> {
 	}
 	
 	@Override
-	public APersistentList<T> subList(int fromIndex, int toIndex) {
+	public APersistentVector<T> subList(int fromIndex, int toIndex) {
 		if ((fromIndex<0)||(toIndex>size)) {
 			throw new IndexOutOfBoundsException("from: "+fromIndex+" to: " +toIndex+ " with size: "+size+" offset: "+offset+" shift: "+shift);
 		}
-		if (toIndex==fromIndex) return Lists.emptyList();
+		if (toIndex==fromIndex) return Vectors.emptyList();
 	
-		if (toIndex==fromIndex) return Lists.emptyList();
+		if (toIndex==fromIndex) return Vectors.emptyList();
 		if ((fromIndex>toIndex)) {
 			throw new IllegalArgumentException("Negative sized subList from: "+fromIndex+" to: " +toIndex);
 		}
@@ -296,18 +296,18 @@ public final class PersistentVector<T> extends BasePersistentVector<T> {
 		int blockLength=blocks.length;
 		if (newBlock<blockLength) {
 			// conj to last block
-			APersistentList<T>[] newBlocks=blocks.clone();
+			APersistentVector<T>[] newBlocks=blocks.clone();
 			newBlocks[newBlock]=blocks[newBlock].include(value);
 			return new PersistentVector<T>(newBlocks,shift,size+1,offset);
 		} else if ((newIx>>(shift+SHIFT_STEP))==0) {
 			// add a final block
-			APersistentList<T>[] newBlocks=new APersistentList[newBlock+1];
+			APersistentVector<T>[] newBlocks=new APersistentVector[newBlock+1];
 			System.arraycopy(blocks, 0, newBlocks, 0, newBlock);
 			newBlocks[newBlock]=Tuple.of(value);
 			return new PersistentVector<T>(newBlocks,shift,size+1,offset);
 		} else {
 			// need to rise one level
-			return new PersistentVector<T>(new APersistentList[]{this,Tuple.of(value)},shift+SHIFT_STEP,size+1,offset);
+			return new PersistentVector<T>(new APersistentVector[]{this,Tuple.of(value)},shift+SHIFT_STEP,size+1,offset);
 		}
 	}
 	
@@ -323,8 +323,8 @@ public final class PersistentVector<T> extends BasePersistentVector<T> {
 		int totalBlocks=blockFor(offset+size-1)+1; // num of blocks used (including excess at head due to offset)
 		if (newEndBlock<totalBlocks) {
 			// concat to last block
-			APersistentList<T>[] newBlocks=blocks.clone();
-			APersistentList<T> tail=blocks[newEndBlock].subList(0,offset+size-blockStart(newEndBlock));
+			APersistentVector<T>[] newBlocks=blocks.clone();
+			APersistentVector<T> tail=blocks[newEndBlock].subList(0,offset+size-blockStart(newEndBlock));
 			if (shift<=DEFAULT_SHIFT) {
 				// build a Tuple
 				newBlocks[newEndBlock]=Tuple.concat(tail, a);
@@ -341,7 +341,7 @@ public final class PersistentVector<T> extends BasePersistentVector<T> {
 				int numBlocks=totalBlocks-offsetBlock; // number of currently used blocks
 				int newOffset=offset-blockStart(offsetBlock);
 				int newNumBlocks=newEndBlock-offsetBlock+1; // new total number of blocks
-				APersistentList<T>[] newBlocks=new APersistentList[newNumBlocks];
+				APersistentVector<T>[] newBlocks=new APersistentVector[newNumBlocks];
 				System.arraycopy(blocks, offsetBlock, newBlocks, 0, numBlocks);
 				int blockSize=blockSize();
 				
@@ -349,23 +349,23 @@ public final class PersistentVector<T> extends BasePersistentVector<T> {
 				int split=end-endBlockOffset; // split point in last original block where concat occurs
 				
 				// update last block in currently used blocks, filling up to blockSize
-				APersistentList<T> oldTail=newBlocks[numBlocks-1].subList(0,split-Math.max(0,offset-endBlockOffset));
+				APersistentVector<T> oldTail=newBlocks[numBlocks-1].subList(0,split-Math.max(0,offset-endBlockOffset));
 				newBlocks[numBlocks-1]=oldTail.concat(a.subList(0, blockSize-split));
 				// update inner blocks (if more than 2)
 				int innerBlocks=newNumBlocks-numBlocks-1;
 				for (int i=0; i<innerBlocks;i++) {
 					int aix=(blockSize-split)+i*blockSize;
-					newBlocks[numBlocks+i]=a.subList(aix, aix+blockSize);
+					newBlocks[numBlocks+i]=Vectors.coerce(a.subList(aix, aix+blockSize));
 				}
 				// update final block using remaining elements
 				int aTailPos=(blockSize-split)+blockSize*innerBlocks;
-				newBlocks[newNumBlocks-1]=a.subList(aTailPos, asize);
+				newBlocks[newNumBlocks-1]=Vectors.coerce(a.subList(aTailPos, asize));
 				return new PersistentVector<T>(newBlocks,shift,size+asize,newOffset);
 			} else {
 				// need to rise one level
 				int aSplit=maxEnd-end; // elements to cut from front of a to complete block
 				PersistentVector<T> fullHead=this.concat(a.subList(0, aSplit));
-				PersistentVector<T> headList=new PersistentVector<T>(new APersistentList[]{fullHead},shift+SHIFT_STEP,size+aSplit,offset);
+				PersistentVector<T> headList=new PersistentVector<T>(new APersistentVector[]{fullHead},shift+SHIFT_STEP,size+aSplit,offset);
 				return headList.concat(a.subList(aSplit, asize));
 			}
 		}
@@ -380,7 +380,7 @@ public final class PersistentVector<T> extends BasePersistentVector<T> {
 			int bsize=blocks[i].size();
 			if (bsize!=blockSize)  throw new Error("Wrong blcok size: "+bsize+" at position "+i);
 		}
-		APersistentList<T> lastBlock=blocks[numBlocks-1];
+		APersistentVector<T> lastBlock=blocks[numBlocks-1];
 		if (lastBlock.size()<(offset+size-blockStart(numBlocks-1))) {
 			throw new Error("Insufficient element is last block");
 		}

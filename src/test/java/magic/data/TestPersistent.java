@@ -23,7 +23,7 @@ import mikera.util.Rand;
 public class TestPersistent {
 	
 	@Test public void testListTypes() {	
-		APersistentList<Integer> pl=Lists.createFromArray(new Integer[] {1,2,3,4,5});
+		APersistentVector<Integer> pl=Vectors.createFromArray(new Integer[] {1,2,3,4,5});
 		assertEquals(5,pl.size());
 		
 		testPersistentList(pl);
@@ -179,7 +179,7 @@ public class TestPersistent {
 		}
 	}
 	
-	public <T> void testPersistentList(APersistentList<T> a) {
+	public <T> void testPersistentList(APersistentVector<T> a) {
 		a.validate();
 		testSubLists(a);
 		testHeadTail(a);
@@ -196,15 +196,15 @@ public class TestPersistent {
 		TestLists.testImmutableList(a);
 	}
 
-	public <T> void testFrontBack(APersistentList<T> a) {
-		APersistentList<T> f=a.front();
-		APersistentList<T> b=a.back();
+	public <T> void testFrontBack(APersistentVector<T> a) {
+		APersistentVector<T> f=a.front();
+		APersistentVector<T> b=a.back();
 		
 		assertEquals(a.size(),f.size()+b.size());
 		assertEquals(a,f.concat(b));
 	}
 	
-	public <T> void testHashCode(APersistentList<T> a) {
+	public <T> void testHashCode(APersistentVector<T> a) {
 		int ah=a.hashCode();
 		
 		int ih=RT.iteratorHashCode(a.iterator());
@@ -215,7 +215,7 @@ public class TestPersistent {
 		assertEquals(arh,ah);
 	}
 	
-	public <T> void testExceptions(APersistentList<T> a) {
+	public <T> void testExceptions(APersistentVector<T> a) {
 		try {
 			// just before start
 			a.get(-1);
@@ -285,19 +285,19 @@ public class TestPersistent {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> void testEquals(APersistentList<T> a) {
+	public <T> void testEquals(APersistentVector<T> a) {
 		assertEquals(a,a.clone());
-		assertEquals(a,a.concat((APersistentList<T>)Lists.emptyList()));
+		assertEquals(a,a.concat((APersistentVector<T>)Vectors.emptyList()));
 		assertEquals(a,a.deleteRange(0,0));
 	}
 	
-	public <T> void testDeletes(APersistentList<T> a) {
+	public <T> void testDeletes(APersistentVector<T> a) {
 		int start=Rand.r(a.size());
 		int end=Rand.range(start, a.size());
 		
-		APersistentList<T> sl=a.subList(start,end); // subList to delete
+		APersistentVector<T> sl=a.subList(start,end); // subList to delete
 		
-		APersistentList<T> dl=a.deleteRange(start, end);
+		APersistentVector<T> dl=a.deleteRange(start, end);
 		if (start>0) {
 			assertEquals(a.get(start-1),dl.get(start-1));
 		}
@@ -305,38 +305,38 @@ public class TestPersistent {
 			assertEquals(a.get(end),dl.get(start));
 		}
 		
-		APersistentList<T> nl=dl.insertAll(start, sl);
+		APersistentVector<T> nl=dl.insertAll(start, sl);
 		
 		assertEquals("Problem re-inserting into "+a.getClass()+" for initial list "+a+" and dl="+dl+" and sl="+sl,a,nl);
 	}
 	
-	public <T> void testInserts(APersistentList<T> a) {
+	public <T> void testInserts(APersistentVector<T> a) {
 		int start=Rand.r(a.size());
-		APersistentList<T> pl=a.insertAll(start, a);
+		APersistentVector<T> pl=a.insertAll(start, a);
 		if (a.size()>0) {
 			assertEquals(a.get(0),pl.get(start));
 		}
 	}
 
-	public <T> void testCuts(APersistentList<T> a) {
-		APersistentList<T> front=a.front();
-		APersistentList<T> back=a.back();
+	public <T> void testCuts(APersistentVector<T> a) {
+		APersistentVector<T> front=a.front();
+		APersistentVector<T> back=a.back();
 		
 		assertEquals(a.size(),front.size()+back.size());
 	}
 	
-	public <T> void testConcats(APersistentList<T> a) {
+	public <T> void testConcats(APersistentVector<T> a) {
 		int n=a.size();
-		APersistentList<T> pl=a;
+		APersistentVector<T> pl=a;
 		
 		//System.out.println(pl.getClass()+"="+pl);
-		pl=Lists.concat(pl, pl);
+		pl=Vectors.concat(pl, pl);
 		//System.out.println(pl.getClass()+"="+pl);
-		pl=Lists.concat(pl, pl);
+		pl=Vectors.concat(pl, pl);
 		//System.out.println(pl.getClass()+"="+pl);
-		pl=Lists.concat(pl, pl);
+		pl=Vectors.concat(pl, pl);
 		//System.out.println(pl.getClass()+"="+pl);
-		pl=Lists.concat(pl, pl);
+		pl=Vectors.concat(pl, pl);
 		//System.out.println(pl.getClass()+"="+pl);
 
 		int plsize=pl.size();
@@ -350,7 +350,7 @@ public class TestPersistent {
 		testSubLists(pl);
 	}
 	
-	public <T> void testAppends(APersistentList<T> a) {
+	public <T> void testAppends(APersistentVector<T> a) {
 		ArrayList<T> al=new ArrayList<T>();
 		
 		int n=a.size();	
@@ -358,9 +358,9 @@ public class TestPersistent {
 			al.add(a.get(i));
 		}
 		
-		APersistentList<T> la=Tuple.of(null, null);
+		APersistentVector<T> la=Tuple.of(null, null);
 		
-		APersistentList<T> nl=la.concat(a.concat(la));
+		APersistentVector<T> nl=la.concat(a.concat(la));
 		assertEquals(n+4,nl.size());
 		
 		for (int i=0; i<n; i++) {
@@ -368,29 +368,29 @@ public class TestPersistent {
 		}
 		
 		// check hash code equivalence
-		APersistentList<T> cp=Tuple.createFrom(al);		
+		APersistentVector<T> cp=Tuple.createFrom(al);		
 		assertEquals(cp.hashCode(),a.hashCode());
 	}
 
-	public <T> void testHeadTail(APersistentList<T> a) {
+	public <T> void testHeadTail(APersistentVector<T> a) {
 		if (a.size()>=1) {
 			T head=a.head();
-			APersistentList<T> tail=a.tail();
+			APersistentVector<T> tail=a.tail();
 			
 			assertEquals(head,a.get(0));
 			assertEquals(a.size()-1,tail.size());
 			
-			APersistentList<T> aa=Tuple.of(head).concat(tail);
+			APersistentVector<T> aa=Tuple.of(head).concat(tail);
 			assertEquals(a,aa);
 		}
 	}
 	
-	public <T> void testSubLists(APersistentList<T> a) {
+	public <T> void testSubLists(APersistentVector<T> a) {
 		int n=a.size();
 		for (int i=0; i<10; i++) {
 			int b=Rand.r(n);
 			int c=Rand.range(b, n);
-			APersistentList<T> sl=a.subList(b, c);
+			APersistentVector<T> sl=a.subList(b, c);
 			int sll=c-b;
 			assertEquals(sll,sl.size());
 			if (sll>0) {
@@ -412,14 +412,14 @@ public class TestPersistent {
 		completelyTestRandomProperSublist(a);
 	}
 	
-	public <T> void completelyTestRandomProperSublist(APersistentList<T> a) {
+	public <T> void completelyTestRandomProperSublist(APersistentVector<T> a) {
 		int size=a.size();
 		if (size<=1) return;
 		
 		int b=Rand.r(size-1);
 		int c=Rand.range(b+1,(b==0)?(size-1):size);
 		
-		APersistentList<T> sl=a.subList(b,c);
+		APersistentVector<T> sl=a.subList(b,c);
 		int n=Rand.r(sl.size());
 		assertEquals("Getting from "+sl.getClass()+sl+" at position "+n,a.get(b+n),sl.get(n));
 		
@@ -427,19 +427,19 @@ public class TestPersistent {
 	}
 	
 	@Test public void testRepeats() {
-		APersistentList<Integer> tl=(Tuple.of(1,1,1,1,1));
-		APersistentList<Integer> rl=(RepeatList.create(1, 5));
+		APersistentVector<Integer> tl=(Tuple.of(1,1,1,1,1));
+		APersistentVector<Integer> rl=(RepeatList.create(1, 5));
 		assertEquals(tl,rl);
 		
-		APersistentList<Integer> t2=(Tuple.of(2,2,2,2,2));
+		APersistentVector<Integer> t2=(Tuple.of(2,2,2,2,2));
 		t2=rl.copyFrom(2, t2, 2, 2);
 		assertEquals(Tuple.of(1,1,2,2,1),t2);
 	}
 	
 	@Test public void testDeleting() {
-		APersistentList<Integer> tl=(Tuple.of(1,2,3,4,5));
-		APersistentList<Integer> ol=(Tuple.of(1,3,5));
-		APersistentList<Integer> pl=tl;
+		APersistentVector<Integer> tl=(Tuple.of(1,2,3,4,5));
+		APersistentVector<Integer> ol=(Tuple.of(1,3,5));
+		APersistentVector<Integer> pl=tl;
 		pl=pl.exclude(2);
 		pl=pl.exclude(4);
 		assertEquals(ol,pl);

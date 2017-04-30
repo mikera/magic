@@ -4,12 +4,13 @@ import java.util.Collection;
 
 import magic.RT;
 import magic.data.IPersistentList;
+import magic.data.IPersistentVector;
 import magic.data.ISeq;
 import magic.data.PersistentVector;
-import magic.data.APersistentList;
+import magic.data.APersistentVector;
 
 @SuppressWarnings("serial")
-public abstract class BasePersistentVector<T> extends APersistentList<T> {
+public abstract class BasePersistentVector<T> extends APersistentVector<T> implements IPersistentVector<T> {
 
 	@Override
 	public boolean contains(Object o) {
@@ -51,7 +52,7 @@ public abstract class BasePersistentVector<T> extends APersistentList<T> {
 	/**
 	 * Deletes the first instance of a specified value in the collection"
 	 */
-	public APersistentList<T> deleteFirst(T value) {
+	public APersistentVector<T> deleteFirst(T value) {
 		int i=indexOf(value);
 		if (i<0) return this;
 		return deleteRange(i,i+1);
@@ -61,8 +62,8 @@ public abstract class BasePersistentVector<T> extends APersistentList<T> {
 	 * Deletes all instances of a specified value in the collection"
 	 */
 	@Override
-	public APersistentList<T> exclude(T value) {
-		APersistentList<T> pl=this;
+	public APersistentVector<T> exclude(T value) {
+		APersistentVector<T> pl=this;
 		int i=pl.indexOf(value);
 		while (i>=0) {
 			pl=pl.deleteAt(i);
@@ -72,8 +73,8 @@ public abstract class BasePersistentVector<T> extends APersistentList<T> {
 	}
 
 	@Override
-	public APersistentList<T> excludeAll(Collection<T> values) {
-		APersistentList<T> pl=this;
+	public APersistentVector<T> excludeAll(Collection<T> values) {
+		APersistentVector<T> pl=this;
 		for (T t : values) { 
 			pl=pl.exclude(t);
 		}
@@ -81,7 +82,7 @@ public abstract class BasePersistentVector<T> extends APersistentList<T> {
 	}
 
 	@Override
-	public int compareTo(APersistentList<T> o) {
+	public int compareTo(APersistentVector<T> o) {
 		int n=magic.Maths.min(o.size(), size());
 		for (int i=0; i<n; i++) {
 			int r=RT.compare(this, o);
@@ -93,12 +94,12 @@ public abstract class BasePersistentVector<T> extends APersistentList<T> {
 	}
 
 	@Override
-	public APersistentList<T> concat(IPersistentList<T> values) {
+	public APersistentVector<T> concat(IPersistentList<T> values) {
 		return PersistentVector.coerce(this).concat(values);
 	}
 	
 	@Override
-	public APersistentList<T> include(T value) {
+	public APersistentVector<T> include(T value) {
 		return PersistentVector.coerce(this).include(value);
 	}
 	

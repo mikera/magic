@@ -135,7 +135,7 @@ public abstract class APersistentCollection<T> extends PersistentObject implemen
 				return (!RT.equals(value, testvalue));
 			}		
 		};
-		return Lists.createFromIterator(it);
+		return Vectors.createFromIterator(it);
 	}
 	
 	@Override
@@ -146,20 +146,20 @@ public abstract class APersistentCollection<T> extends PersistentObject implemen
 				return (!values.contains(value));
 			}		
 		};
-		return Lists.createFromIterator(it);
+		return Vectors.createFromIterator(it);
 	}
 
 	@Override
 	public APersistentCollection<T> excludeAll(final Collection<T> values) {
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
-			APersistentCollection<T> col=Lists.createFromCollection(values);
+			APersistentCollection<T> col=Vectors.createFromCollection(values);
 			
 			@Override
 			public boolean filter(Object value) {
 				return (!col.contains(value));
 			}		
 		};
-		return Lists.createFromIterator(it);
+		return Vectors.createFromIterator(it);
 	}
 	
 	@Override

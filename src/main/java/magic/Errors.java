@@ -15,4 +15,8 @@ public class Errors {
 		return "Index out of bounds: "+i;
 	}
 
+	public static String immutable(Object o) {
+		return "Class is immutable: "+o.getClass();
+	}
+
 }

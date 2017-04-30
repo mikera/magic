@@ -104,7 +104,7 @@ public final class Tuple<T> extends BasePersistentVector<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> APersistentList<T> concat(List<T> a, List<T> b) {
+	public static <T> APersistentVector<T> concat(List<T> a, List<T> b) {
 		int aSize=a.size();
 		int bSize=b.size();
 		int newSize=aSize+bSize;
@@ -162,10 +162,10 @@ public final class Tuple<T> extends BasePersistentVector<T> {
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public APersistentList<T> deleteRange(int start, int end) {
+	public APersistentVector<T> deleteRange(int start, int end) {
 		if ((start<0)||(end>size)) throw new IndexOutOfBoundsException();
 		if (start>end) throw new IllegalArgumentException("Negative range specified");
-		if ((start==0)&&(end==size)) return (APersistentList<T>) EMPTY_TUPLE;
+		if ((start==0)&&(end==size)) return (APersistentVector<T>) EMPTY_TUPLE;
 		if (start==end) return this;
 		int newSize=size-(end-start);
 		T[] ndata=(T[]) new Object[newSize];
@@ -181,7 +181,7 @@ public final class Tuple<T> extends BasePersistentVector<T> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public APersistentList<T> include(T value) {
+	public APersistentVector<T> include(T value) {
 		if (size<PersistentVector.BASE_BLOCKSIZE) {
 			int newSize=size+1;
 			T[] ndata=(T[]) new Object[newSize];

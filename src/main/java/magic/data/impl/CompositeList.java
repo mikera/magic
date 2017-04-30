@@ -3,21 +3,21 @@ package magic.data.impl;
 import java.util.List;
 
 import magic.data.IPersistentList;
-import magic.data.Lists;
-import magic.data.APersistentList;
+import magic.data.Vectors;
+import magic.data.APersistentVector;
 import magic.data.Tuple;
 
 public class CompositeList<T> extends BasePersistentVector<T> {
 	private static final long serialVersionUID = 1L;
 	
-	public final APersistentList<T> front;
-	public final APersistentList<T> back;
+	public final APersistentVector<T> front;
+	public final APersistentVector<T> back;
 	private final int size;
 	
-	public static <T> APersistentList<T> concat(APersistentList<T> a, APersistentList<T> b) {
+	public static <T> APersistentVector<T> concat(APersistentVector<T> a, APersistentVector<T> b) {
 		int as=a.size(); if (as==0) return b;
 		int bs=b.size(); if (bs==0) return a;
-		if ((as+bs)<=Lists.MAX_TUPLE_BUILD_SIZE) {
+		if ((as+bs)<=Vectors.MAX_TUPLE_BUILD_SIZE) {
 			return Tuple.concat(a, b);
 		}
 		
@@ -34,16 +34,16 @@ public class CompositeList<T> extends BasePersistentVector<T> {
 	
 	public static <T> CompositeList<T> create(T[] data,  int fromIndex, int toIndex) {
 		int midIndex=calcMidIndex(fromIndex, toIndex);
-		return new CompositeList<T>(Lists.createFromArray(data,fromIndex,midIndex),Lists.createFromArray(data,midIndex,toIndex));
+		return new CompositeList<T>(Vectors.createFromArray(data,fromIndex,midIndex),Vectors.createFromArray(data,midIndex,toIndex));
 	}
 	
 	public static final int calcMidIndex(int fromIndex, int toIndex) {
 		int n=toIndex-fromIndex;
 		if (n<0) throw new IllegalArgumentException();
 		int splitIndex=n>>1;
-		if (splitIndex>Lists.MAX_TUPLE_BUILD_SIZE) {
+		if (splitIndex>Vectors.MAX_TUPLE_BUILD_SIZE) {
 			// round to a whole number of tuple blocks
-			splitIndex=(splitIndex/Lists.MAX_TUPLE_BUILD_SIZE)*Lists.MAX_TUPLE_BUILD_SIZE;
+			splitIndex=(splitIndex/Vectors.MAX_TUPLE_BUILD_SIZE)*Vectors.MAX_TUPLE_BUILD_SIZE;
 		}
 		return fromIndex+splitIndex;
 	}
@@ -55,17 +55,17 @@ public class CompositeList<T> extends BasePersistentVector<T> {
 
 	public static <T> CompositeList<T> create(List<T> source, int fromIndex, int toIndex) {
 		int midIndex=calcMidIndex(fromIndex, toIndex);
-		return new CompositeList<T>(Lists.createFromList(source,fromIndex,midIndex),Lists.createFromList(source,midIndex,toIndex));
+		return new CompositeList<T>(Vectors.createFromList(source,fromIndex,midIndex),Vectors.createFromList(source,midIndex,toIndex));
 	}
 	
-	private CompositeList(APersistentList<T> a, APersistentList<T> b ) {
+	private CompositeList(APersistentVector<T> a, APersistentVector<T> b ) {
 		front=a;
 		back=b;
 		size=a.size()+b.size();
 	}
 	
 	@Override
-	public APersistentList<T> subList(int fromIndex, int toIndex) {
+	public APersistentVector<T> subList(int fromIndex, int toIndex) {
 		if ((fromIndex<0)||(toIndex>size)) throw new IndexOutOfBoundsException();
 		if ((fromIndex==0)&&(toIndex==size)) return this;
 		int fs=front.size();
@@ -75,12 +75,12 @@ public class CompositeList<T> extends BasePersistentVector<T> {
 	}
 	
 	@Override
-	public APersistentList<T> front() {
+	public APersistentVector<T> front() {
 		return front;
 	}
 
 	@Override
-	public APersistentList<T> back() {
+	public APersistentVector<T> back() {
 		return back;
 	}
 
@@ -100,13 +100,13 @@ public class CompositeList<T> extends BasePersistentVector<T> {
 	}
 
 	@Override
-	public APersistentList<T> include(T value) {
+	public APersistentVector<T> include(T value) {
 		return concat(this,Tuple.of(value));
 	}
 
 	@Override
-	public APersistentList<T> concat(IPersistentList<T> values) {
-		return concat(this,APersistentList.coerce(values));
+	public APersistentVector<T> concat(IPersistentList<T> values) {
+		return concat(this,APersistentVector.coerce(values));
 	}
 
 	@Override

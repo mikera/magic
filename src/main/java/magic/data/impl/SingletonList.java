@@ -1,7 +1,7 @@
 package magic.data.impl;
 
-import magic.data.Lists;
-import magic.data.APersistentList;
+import magic.data.Vectors;
+import magic.data.APersistentVector;
 import magic.data.Tuple;
 
 /**
@@ -42,7 +42,7 @@ public final class SingletonList<T> extends BasePersistentVector<T> {
 	}
 	
 	@Override
-	public APersistentList<T> front() {
+	public APersistentVector<T> front() {
 		return this;
 	}
 	
@@ -52,17 +52,17 @@ public final class SingletonList<T> extends BasePersistentVector<T> {
 	}
 
 	@Override
-	public APersistentList<T> back() {
-		return Lists.emptyList();
+	public APersistentVector<T> back() {
+		return Vectors.emptyList();
 	}
 	
 	@Override
-	public APersistentList<T> tail() {
-		return Lists.emptyList();
+	public APersistentVector<T> tail() {
+		return Vectors.emptyList();
 	}
 
 	@Override
-	public APersistentList<T> include(T value) {
+	public APersistentVector<T> include(T value) {
 		return Tuple.of(this.value,value);
 	}
 }

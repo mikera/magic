@@ -4,9 +4,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 import magic.data.ISeq;
-import magic.data.Lists;
+import magic.data.Vectors;
 import magic.data.APersistentCollection;
-import magic.data.APersistentList;
+import magic.data.APersistentVector;
 import magic.data.APersistentSet;
 
 public final class ValueCollectionWrapper<K,V> extends APersistentCollection<V> {
@@ -55,12 +55,12 @@ public final class ValueCollectionWrapper<K,V> extends APersistentCollection<V> 
 	}
 
 	@Override
-	public APersistentList<V> include(V value) {
-		return Lists.createFromCollection(this).include(value);
+	public APersistentVector<V> include(V value) {
+		return Vectors.createFromCollection(this).include(value);
 	}
 
 	@Override
 	public ISeq<V> seq() {
-		return Lists.createFromCollection(this).seq();
+		return Vectors.createFromCollection(this).seq();
 	}
 }

@@ -52,7 +52,7 @@ public abstract class APersistentSet<T> extends APersistentCollection<T> impleme
 	@Override
 	public APersistentSet<T> excludeAll(final Collection<T> values) {
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
-			APersistentCollection<T> col=Lists.createFromCollection(values);
+			APersistentCollection<T> col=Vectors.createFromCollection(values);
 			
 			@Override
 			public boolean filter(Object value) {

@@ -68,9 +68,9 @@ public class TestPersistentMap {
 		assertEquals(ks,ks2);
 		assertEquals(ks,ks3);
 		
-		APersistentList<String> vs=Lists.createFromCollection(hm.values());
-		APersistentList<String> vs2=Lists.createFromCollection(pm.values());
-		APersistentList<String> vs3=Lists.createFromCollection(phm.values());
+		APersistentVector<String> vs=Vectors.createFromCollection(hm.values());
+		APersistentVector<String> vs2=Vectors.createFromCollection(pm.values());
+		APersistentVector<String> vs3=Vectors.createFromCollection(phm.values());
 		assertEquals(Sets.createFrom(vs),Sets.createFrom(vs2));
 		assertEquals(Sets.createFrom(vs),Sets.createFrom(vs3));
 	}

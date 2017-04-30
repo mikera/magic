@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @param <T>
  */
-public interface IPersistentList<T> extends IPersistentCollection<T>, List<T>, Comparable<APersistentList<T>> {
+public interface IPersistentList<T> extends IPersistentCollection<T>, List<T>, Comparable<APersistentVector<T>> {
 	
 	// modifier methods
 	

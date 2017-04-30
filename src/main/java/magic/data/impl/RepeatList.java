@@ -3,8 +3,8 @@ package magic.data.impl;
 import magic.Errors;
 import magic.RT;
 import magic.data.IPersistentList;
-import magic.data.Lists;
-import magic.data.APersistentList;
+import magic.data.Vectors;
+import magic.data.APersistentVector;
 
 /**
  * Persistent list that implements a repeating single value
@@ -40,9 +40,9 @@ public class RepeatList<T> extends BasePersistentVector<T> {
 	}
 	
 	@Override
-	public APersistentList<T> subList(int start, int end) {
+	public APersistentVector<T> subList(int start, int end) {
 		if ((start<0)||(end>size)) throw new IndexOutOfBoundsException(Errors.rangeOutOfBounds(start,end));
-		if (start==end) return Lists.emptyList();
+		if (start==end) return Vectors.emptyList();
 		int num=end-start;
 		if (num<0) {
 			throw new IllegalArgumentException(Errors.negativeRange());
@@ -52,20 +52,20 @@ public class RepeatList<T> extends BasePersistentVector<T> {
 	}
 	
 	@Override
-	public APersistentList<T> deleteRange(int start, int end) {
+	public APersistentVector<T> deleteRange(int start, int end) {
 		if ((start<0)||(end>size)) throw new IndexOutOfBoundsException(Errors.rangeOutOfBounds(start,end));
 		if (start==end) return this;
 		int numDeleted=end-start;
 		if (numDeleted<0) {
 			throw new IllegalArgumentException(Errors.negativeRange());
 		}
-		if (numDeleted==size) return Lists.emptyList();
+		if (numDeleted==size) return Vectors.emptyList();
 		if (numDeleted==0) return this;
 		return create(value,size-numDeleted);
 	}
 	
 	@Override
-	public APersistentList<T> concat(IPersistentList<T> values) {
+	public APersistentVector<T> concat(IPersistentList<T> values) {
 		if (values instanceof RepeatList<?>) {
 			RepeatList<T> ra=(RepeatList<T>)values;
 			if (RT.equals(ra.value, value)) {
@@ -76,9 +76,9 @@ public class RepeatList<T> extends BasePersistentVector<T> {
 	}
 	
 	@Override
-	public APersistentList<T> exclude(final T v) {
+	public APersistentVector<T> exclude(final T v) {
 		if (RT.equals(v,value)) {
-			return Lists.emptyList();
+			return Vectors.emptyList();
 		}
 		return this;
 	}
