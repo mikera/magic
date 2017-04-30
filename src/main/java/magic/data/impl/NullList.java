@@ -11,7 +11,7 @@ import magic.data.ISeq;
 import magic.data.Lists;
 import magic.data.APersistentList;
 
-public final class NullList<T> extends BasePersistentList<T> {
+public final class NullList<T> extends BasePersistentVector<T> {
 	
 	private static final long serialVersionUID = -268387358134950528L;
 

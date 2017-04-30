@@ -13,7 +13,7 @@ import magic.data.APersistentList;
  *
  * @param <T>
  */
-public class RepeatList<T> extends BasePersistentList<T> {
+public class RepeatList<T> extends BasePersistentVector<T> {
 	private static final long serialVersionUID = -4991558599811750311L;
 
 	private final T value;

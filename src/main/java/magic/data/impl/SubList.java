@@ -14,7 +14,7 @@ import magic.data.APersistentList;
  *
  * @param <T>
  */
-public final class SubList<T> extends BasePersistentList<T>   {	
+public final class SubList<T> extends BasePersistentVector<T>   {	
 
 	private static final long serialVersionUID = 3559316900529560364L;
 

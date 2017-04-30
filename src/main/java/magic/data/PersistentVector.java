@@ -2,7 +2,7 @@ package magic.data;
 
 import java.util.List;
 
-import magic.data.impl.BasePersistentList;
+import magic.data.impl.BasePersistentVector;
 
 /**
  * Persistent Vector constructed using fixed size blocks represented by other persistent lists
@@ -10,7 +10,7 @@ import magic.data.impl.BasePersistentList;
  *
  * @param <T>
  */
-public final class PersistentVector<T> extends BasePersistentList<T> {
+public final class PersistentVector<T> extends BasePersistentVector<T> {
 	private static final long serialVersionUID = 7210896608719053578L;
 
 	protected static final int DEFAULT_SHIFT=Lists.TUPLE_BUILD_BITS;

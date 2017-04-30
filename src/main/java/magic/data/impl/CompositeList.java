@@ -7,7 +7,7 @@ import magic.data.Lists;
 import magic.data.APersistentList;
 import magic.data.Tuple;
 
-public class CompositeList<T> extends BasePersistentList<T> {
+public class CompositeList<T> extends BasePersistentVector<T> {
 	private static final long serialVersionUID = 1L;
 	
 	public final APersistentList<T> front;

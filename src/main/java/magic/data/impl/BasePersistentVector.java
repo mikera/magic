@@ -9,7 +9,7 @@ import magic.data.PersistentVector;
 import magic.data.APersistentList;
 
 @SuppressWarnings("serial")
-public abstract class BasePersistentList<T> extends APersistentList<T> {
+public abstract class BasePersistentVector<T> extends APersistentList<T> {
 
 	@Override
 	public boolean contains(Object o) {
