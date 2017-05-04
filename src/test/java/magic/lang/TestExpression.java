@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import magic.expression.Apply;
-import magic.expression.Constant;
+import magic.ast.Apply;
+import magic.ast.Constant;
 import magic.fn.IFn2;
 
 public class TestExpression {

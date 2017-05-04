@@ -1,13 +1,13 @@
-package magic.expression;
+package magic.ast;
 
 import magic.data.PersistentHashMap;
 import magic.data.Symbol;
 import magic.lang.Context;
 
-public class Do<T> extends Expression<T> {
-	private final Expression<?>[] exps;
+public class Do<T> extends Node<T> {
+	private final Node<?>[] exps;
 	
-	public Do(Expression<?>[] exs) {
+	public Do(Node<?>[] exs) {
 		exps=exs;
 	}
 
@@ -21,7 +21,7 @@ public class Do<T> extends Expression<T> {
 		return (T) exps[n-1].compute(c,bindings);
 	}
 
-	public static <T> Expression<T> create(Expression<?>[] exs) {
+	public static <T> Node<T> create(Node<?>[] exs) {
 		return new Do<T>(exs);
 	}
 

@@ -1,11 +1,11 @@
 package magic.compiler;
 
-import magic.expression.Expression;
+import magic.ast.Node;
 import magic.lang.Context;
 
 public class Compiler {
 
-	public static <T> Context compile(Context context, Expression<T> exp) {
+	public static <T> Context compile(Context context, Node<T> exp) {
 		throw new UnsupportedOperationException("TODO");
 	}
 

@@ -1,9 +1,9 @@
 package magic.lang;
 
+import magic.ast.Node;
 import magic.compiler.Parser;
 import magic.data.PersistentHashMap;
 import magic.data.Symbol;
-import magic.expression.Expression;
 
 /**
  * Class representing an Execution context.
@@ -32,7 +32,7 @@ public class Context {
 		return getValue(Parser.parseSymbol(sym));
 	}
 	
-	public <T> Context define(Symbol sym, Expression<T> exp) {
+	public <T> Context define(Symbol sym, Node<T> exp) {
 		return create(mappings.assoc(sym,Slot.create(exp)));
 	}
 
@@ -40,11 +40,11 @@ public class Context {
 		return new Context(mappings);
 	}
 	
-	public static <T> Context createWith(Symbol sym,Expression<T> e) {
+	public static <T> Context createWith(Symbol sym,Node<T> e) {
 		return EMPTY.define(sym, e);
 	}
 	
-	public static <T> Context createWith(String sym,Expression<T> e) {
+	public static <T> Context createWith(String sym,Node<T> e) {
 		return createWith(Parser.parseSymbol(sym),e);
 	}
 

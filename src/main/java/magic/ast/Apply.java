@@ -1,4 +1,4 @@
-package magic.expression;
+package magic.ast;
 
 import magic.data.APersistentList;
 import magic.data.PersistentHashMap;
@@ -11,13 +11,13 @@ import magic.lang.Context;
  * @author Mike
  *
  */
-public class Apply<T> extends Expression<T> {
+public class Apply<T> extends Node<T> {
 
-	private Expression<IFn<T>> function;
-	private Expression<?>[] args;
+	private Node<IFn<T>> function;
+	private Node<?>[] args;
 	private int arity;
 
-	public Apply(Expression<IFn<T>> f, Expression<?>... args) {
+	public Apply(Node<IFn<T>> f, Node<?>... args) {
 		this.function=f;
 		this.args=args;
 		arity=args.length;
@@ -33,12 +33,12 @@ public class Apply<T> extends Expression<T> {
 		return f.applyToArray(values);
 	}
 
-	public static <T> Apply<T> create(Expression<IFn<T>> function, Expression<?>... args) {
+	public static <T> Apply<T> create(Node<IFn<T>> function, Node<?>... args) {
 		return new Apply<T>(function,args);
 	}
 
-	public static <T> Apply<T> create(Expression<IFn<T>> function, APersistentList<Expression<?>> tail) {
-		return create(function,tail.toArray(new Expression[tail.size()]));
+	public static <T> Apply<T> create(Node<IFn<T>> function, APersistentList<Node<?>> tail) {
+		return create(function,tail.toArray(new Node[tail.size()]));
 	}
 
 }

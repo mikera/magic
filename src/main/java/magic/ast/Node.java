@@ -1,4 +1,4 @@
-package magic.expression;
+package magic.ast;
 import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.VirtualFrame;
@@ -17,13 +17,13 @@ import magic.lang.MagicLanguage;
  *
  */
 @NodeInfo(language = "Magic", description = "The abstract base node for all expressions")
-public abstract class Expression<T> extends RootNode {
+public abstract class Node<T> extends RootNode {
 
-	public Expression() {
+	public Node() {
 		this(MagicLanguage.class,null,null);
 	}
 	
-	public Expression(Class<? extends TruffleLanguage<?>> language, SourceSection sourceSection,
+	public Node(Class<? extends TruffleLanguage<?>> language, SourceSection sourceSection,
 			FrameDescriptor frameDescriptor) {
 		super(language, sourceSection, frameDescriptor);
 	}

@@ -1,6 +1,6 @@
 package magic.lang;
 
-import magic.expression.Expression;
+import magic.ast.Node;
 
 /**
  * Represents a "slot" in a magic Context.
@@ -13,12 +13,12 @@ import magic.expression.Expression;
  *
  */
 public class Slot<T> {
-	public final Expression<T> expression;
+	public final Node<T> expression;
 	
 	private T value=null;
 	private volatile boolean computed=false;
 	
-	public Slot(Expression<T> e) {
+	public Slot(Node<T> e) {
 		this.expression=e;
 	}
 	
@@ -35,7 +35,7 @@ public class Slot<T> {
 		return value;
 	}
 
-	public static <T> Slot<T> create(Expression<T> exp) {
+	public static <T> Slot<T> create(Node<T> exp) {
 		return new Slot<T>(exp);
 	}
 }

@@ -1,4 +1,4 @@
-package magic.expression;
+package magic.ast;
 
 import magic.data.IPersistentVector;
 import magic.data.PersistentHashMap;
@@ -14,11 +14,11 @@ import magic.lang.Context;
  *
  * @param <T>
  */
-public class Vector<T> extends Expression<IPersistentVector<T>> {
+public class Vector<T> extends Node<IPersistentVector<T>> {
 
-	IPersistentVector<Expression<T>> exps;
+	IPersistentVector<Node<T>> exps;
 	
-	private Vector(IPersistentVector<Expression<T>> exps) {
+	private Vector(IPersistentVector<Node<T>> exps) {
 		this.exps=exps;
 	}
 	
@@ -34,11 +34,11 @@ public class Vector<T> extends Expression<IPersistentVector<T>> {
 		return Vectors.wrap(results);
 	}
 
-	public static <T> Vector<T> create(IPersistentVector<Expression<T>> exps) {
+	public static <T> Vector<T> create(IPersistentVector<Node<T>> exps) {
 		return new Vector<T>(exps);
 	}
 
-	public IPersistentVector<Expression<T>> getExpressions() {
+	public IPersistentVector<Node<T>> getExpressions() {
 		return exps;
 	}
 	

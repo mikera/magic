@@ -1,15 +1,15 @@
-package magic.expression;
+package magic.ast;
 
 import magic.data.PersistentHashMap;
 import magic.data.Symbol;
 import magic.lang.Context;
 
-public class Define<T> extends Expression<T> {
+public class Define<T> extends Node<T> {
 
 	final Symbol sym;
-	final Expression<T> exp;
+	final Node<T> exp;
 
-	public Define(Symbol sym, Expression<T> exp) {
+	public Define(Symbol sym, Node<T> exp) {
 		this.sym=sym;
 		this.exp=exp;
 	}
@@ -19,7 +19,7 @@ public class Define<T> extends Expression<T> {
 		throw new UnsupportedOperationException("Define only works in compile mode?");
 	}
 
-	public static <T> Define<T> create(Symbol sym, Expression<T> exp) {
+	public static <T> Define<T> create(Symbol sym, Node<T> exp) {
 		// TODO Auto-generated method stub
 		return new Define<T>(sym,exp);
 	}

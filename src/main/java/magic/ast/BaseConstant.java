@@ -1,4 +1,4 @@
-package magic.expression;
+package magic.ast;
 
 /**
  * Base class for constant expressions. Constant expressions always return the same value,
@@ -7,7 +7,7 @@ package magic.expression;
  *
  * @param <T>
  */
-public abstract class BaseConstant<T> extends Expression<T> {
+public abstract class BaseConstant<T> extends Node<T> {
 	@Override
 	public abstract T getValue();
 }

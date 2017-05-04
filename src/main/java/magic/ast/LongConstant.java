@@ -1,4 +1,4 @@
-package magic.expression;
+package magic.ast;
 
 import magic.RT;
 import magic.data.PersistentHashMap;

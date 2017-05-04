@@ -5,27 +5,27 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
+import magic.ast.Constant;
+import magic.ast.Node;
+import magic.ast.Lambda;
+import magic.ast.Lookup;
 import magic.compiler.Analyser;
 import magic.compiler.Parser;
 import magic.data.PersistentList;
 import magic.data.Tuple;
-import magic.expression.Constant;
-import magic.expression.Expression;
-import magic.expression.Lambda;
-import magic.expression.Lookup;
 import magic.lang.Context;
 
 public class TestAnalyse {
 
 	@SuppressWarnings("unchecked")
-	public <T> Expression<T> analyse(String t) {
-		return (Expression<T>) Analyser.analyse(Parser.parse(t));
+	public <T> Node<T> analyse(String t) {
+		return (Node<T>) Analyser.analyse(Parser.parse(t));
 	}
 	
 	@Test 
 	public void testLookup() {
 		Context c=Context.createWith("foo",Constant.create(1));
-		Expression<?> e=analyse("foo");
+		Node<?> e=analyse("foo");
 		assertEquals(Integer.valueOf(1),e.compute(c));
 		
 		try {
@@ -39,7 +39,7 @@ public class TestAnalyse {
 	@Test 
 	public void testInfiniteRecursiveLookup() {
 		Context c=Context.createWith("foo",Lookup.create("foo"));
-		Expression<?> e=analyse("foo");
+		Node<?> e=analyse("foo");
 		
 		try {
 			e.compute(c);
@@ -51,35 +51,35 @@ public class TestAnalyse {
 	
 	@Test 
 	public void testConstant() {
-		Expression<?> e=analyse("1");
+		Node<?> e=analyse("1");
 		assertEquals(Long.valueOf(1),e.compute(Context.EMPTY));
 	}
 	
 	@Test 
 	public void testVector() {
 		Context c=Context.createWith("foo",Constant.create(2L));
-		Expression<?> e=analyse("[1 foo]");
+		Node<?> e=analyse("[1 foo]");
 		assertEquals(Tuple.of(1L,2L),e.compute(c));
 	}
 	
 	@Test 
 	public void testEmptyVector() {
-		Expression<?> e=analyse("[]");
+		Node<?> e=analyse("[]");
 		assertEquals(Tuple.EMPTY,e.compute(Context.EMPTY));
 	}
 	
 	@Test 
 	public void testEmptyList() {
-		Expression<?> e=analyse("()");
+		Node<?> e=analyse("()");
 		assertEquals(PersistentList.EMPTY,e.compute(Context.EMPTY));
 	}
 	
 	@Test 
 	public void testLambda() {
-		Expression<?> e=analyse("(fn [a] a)");
+		Node<?> e=analyse("(fn [a] a)");
 		assertEquals(Lambda.class,e.getClass());
 		Context c=Context.createWith("identity",e);
-		Expression<?> app=analyse("(identity 2)");
+		Node<?> app=analyse("(identity 2)");
 		assertEquals(Long.valueOf(2),app.compute(c));
 
 	}

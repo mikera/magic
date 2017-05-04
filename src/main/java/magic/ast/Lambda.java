@@ -1,4 +1,4 @@
-package magic.expression;
+package magic.ast;
 
 import magic.data.IPersistentVector;
 import magic.data.PersistentHashMap;
@@ -8,13 +8,13 @@ import magic.fn.ArityException;
 import magic.fn.IFn;
 import magic.lang.Context;
 
-public class Lambda<T> extends Expression<IFn<T>> {
+public class Lambda<T> extends Node<IFn<T>> {
 
 	private final IPersistentVector<Symbol> args;
-	private final Expression<T> body;
+	private final Node<T> body;
 	private final int arity;
 
-	public Lambda(IPersistentVector<Symbol> args, Expression<T> body) {
+	public Lambda(IPersistentVector<Symbol> args, Node<T> body) {
 		this.args=args;
 		this.arity=args.size();
 		this.body=body;
@@ -35,7 +35,7 @@ public class Lambda<T> extends Expression<IFn<T>> {
 		};
 	}
 
-	public static <T> Lambda<T> create(IPersistentVector<Symbol> args, Expression<T> body) {
+	public static <T> Lambda<T> create(IPersistentVector<Symbol> args, Node<T> body) {
 		return new Lambda<T>(args,body);
 	}
 

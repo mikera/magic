@@ -1,4 +1,4 @@
-package magic.expression;
+package magic.ast;
 
 import magic.compiler.Parser;
 import magic.data.PersistentHashMap;
@@ -11,7 +11,7 @@ import magic.lang.Context;
  *
  * @param <T>
  */
-public class Lookup<T> extends Expression<T> {
+public class Lookup<T> extends Node<T> {
 
 	private final Symbol sym;
 	
