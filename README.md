@@ -9,4 +9,5 @@ An experimental language, strongly influenced by Clojure
 - First class abstractions 
 - Expansion passing style for ultra-powerful macros
 - Strong integration with Java 8 functional code
+- Mostly compatible with Clojure (most idiomatic regular Clojure code will work in Magic, advanced features may not be compatible)
 
