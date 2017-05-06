@@ -1,6 +1,6 @@
 package magic.ast;
 
-import magic.compiler.Parser;
+import magic.compiler.Reader;
 import magic.data.PersistentHashMap;
 import magic.data.Symbol;
 import magic.lang.Context;
@@ -31,7 +31,7 @@ public class Lookup<T> extends Node<T> {
 	}
 
 	public static <T> Lookup<T> create(String sym) {
-		return create(Parser.parseSymbol(sym));
+		return create(Reader.readSymbol(sym));
 	}
 
 }

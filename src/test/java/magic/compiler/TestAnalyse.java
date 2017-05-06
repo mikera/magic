@@ -10,7 +10,7 @@ import magic.ast.Node;
 import magic.ast.Lambda;
 import magic.ast.Lookup;
 import magic.compiler.Analyser;
-import magic.compiler.Parser;
+import magic.compiler.Reader;
 import magic.data.PersistentList;
 import magic.data.Tuple;
 import magic.lang.Context;
@@ -19,7 +19,7 @@ public class TestAnalyse {
 
 	@SuppressWarnings("unchecked")
 	public <T> Node<T> analyse(String t) {
-		return (Node<T>) Analyser.analyse(Parser.parse(t));
+		return (Node<T>) Analyser.analyse(Reader.read(t));
 	}
 	
 	@Test 

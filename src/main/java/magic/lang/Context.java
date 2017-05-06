@@ -1,7 +1,7 @@
 package magic.lang;
 
 import magic.ast.Node;
-import magic.compiler.Parser;
+import magic.compiler.Reader;
 import magic.data.PersistentHashMap;
 import magic.data.Symbol;
 
@@ -29,7 +29,7 @@ public class Context {
 	}
 	
 	public <T> T getValue(String sym) {
-		return getValue(Parser.parseSymbol(sym));
+		return getValue(Reader.readSymbol(sym));
 	}
 	
 	public <T> Context define(Symbol sym, Node<T> exp) {
@@ -45,7 +45,7 @@ public class Context {
 	}
 	
 	public static <T> Context createWith(String sym,Node<T> e) {
-		return createWith(Parser.parseSymbol(sym),e);
+		return createWith(Reader.readSymbol(sym),e);
 	}
 
 	@SuppressWarnings("unchecked")

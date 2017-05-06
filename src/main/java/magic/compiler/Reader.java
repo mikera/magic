@@ -1,7 +1,6 @@
 package magic.compiler;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +27,7 @@ import magic.data.Sets;
 import magic.data.Symbol;
 
 @BuildParseTree
-public class Parser extends BaseParser<Object> {
+public class Reader extends BaseParser<Object> {
 
 	// OVERALL PARSING INPUT RULES
 	
@@ -262,7 +261,7 @@ public class Parser extends BaseParser<Object> {
 
 	// MAIN PARSING FUNCTIONALITY
 	
-	private static Parser parser = Parboiled.createParser(Parser.class);
+	private static Reader parser = Parboiled.createParser(Reader.class);
 	private static final ReportingParseRunner<Object> expressionParseRunner=new ReportingParseRunner<>(parser.ExpressionInput());
 	private static final ReportingParseRunner<Symbol> symbolParseRunner=new ReportingParseRunner<>(parser.Symbol());
 	
@@ -285,7 +284,7 @@ public class Parser extends BaseParser<Object> {
 	 * @param string
 	 * @return
 	 */
-	public static Object parse(String source) {
+	public static Object read(String source) {
 		ParsingResult<Object> result = expressionParseRunner.run(source);
 		checkErrors(result);
 		return result.resultValue;
@@ -296,7 +295,7 @@ public class Parser extends BaseParser<Object> {
 	 * @param string
 	 * @return
 	 */
-	public static Symbol parseSymbol(String source) {
+	public static Symbol readSymbol(String source) {
 		ParsingResult<Symbol> result = symbolParseRunner.run(source);
 		checkErrors(result);
 		return result.resultValue;
@@ -307,18 +306,18 @@ public class Parser extends BaseParser<Object> {
 	 * @param string
 	 * @return
 	 */
-	public static Object parse(Reader source) throws IOException {
+	public static Object read(java.io.Reader source) throws IOException {
 	    char[] arr = new char[8 * 1024];
 	    StringBuilder buffer = new StringBuilder();
 	    int numCharsRead;
 	    while ((numCharsRead = source.read(arr, 0, arr.length)) != -1) {
 	        buffer.append(arr, 0, numCharsRead);
 	    }
-	    return parse(buffer.toString());
+	    return read(buffer.toString());
 	}
 
 	public static void main(String[] args) {
-		Object result = parse("[1 2 3] [2]");
+		Object result = read("[1 2 3] [2]");
 		
 		System.out.println(result);
 	}
