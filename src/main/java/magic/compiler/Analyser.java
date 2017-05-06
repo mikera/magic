@@ -27,6 +27,11 @@ import magic.lang.Symbols;
  */
 public class Analyser {
 
+	/**
+	 * Analyses a form in an empty context. Useful mainly for debug / test purposes
+	 * @param form
+	 * @return
+	 */
 	public static <T> Node<T> analyse(Object form) {
 		return analyse(Context.EMPTY,form);
 	}

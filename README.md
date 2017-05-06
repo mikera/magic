@@ -11,3 +11,7 @@ An experimental language, strongly influenced by Clojure
 - Strong integration with Java 8 functional code
 - Mostly compatible with Clojure (most idiomatic regular Clojure code will work in Magic, advanced features may not be compatible)
 
+## Notes on compilation approach
+- Text representation of source is read as forms by the Reader
+- Forms are converted to AST nodes
+- AST nodes are expanded into new AST nodes. During expansion, any symbols used are recorded and used to build a symbol dependency list
