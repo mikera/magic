@@ -49,6 +49,11 @@ public class Context {
 	}
 
 	@SuppressWarnings("unchecked")
+	/**
+	 * Gets a slot from the context. Returns null if the slot does not exist
+	 * @param sym
+	 * @return
+	 */
 	public <T> Slot<T> getSlot(Symbol sym) {
 		return (Slot<T>) mappings.get(sym);
 	}

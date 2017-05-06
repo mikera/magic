@@ -11,17 +11,17 @@ import magic.lang.Context;
  * 
  * @author Mike
  */
-public class Form extends Node<Object> {
+public class Form<T> extends Node<T> {
 
 	private Object form;
 	
-	private Form(Object form) {
-		super(Sets.emptySet());
+	private Form(Object form,Symbol dep) {
+		super((dep==null)?Sets.emptySet():dep.symbolSet());
 		this.form=form;
 	}
 	
-	public Form create(Object form) {
-		return new Form(form);
+	public static <T> Form<T> create(Object form,Symbol dep) {
+		return new Form<>(form,dep);
 	}
 	
 	public Object getForm() {
@@ -30,14 +30,18 @@ public class Form extends Node<Object> {
 	
 	@Override
 	public IPersistentSet<Symbol> getDependencies() {
-		throw new UnsupportedOperationException("Trying to get dependencies unexpanded form");
+		throw new UnsupportedOperationException("Trying to get dependencies for unexpanded form: "+form);
 	}
 
 	
 	@Override
-	public Object compute(Context c, PersistentHashMap<Symbol, ?> bindings) {
-		throw new UnsupportedOperationException("Trying to evaluate unexpanded form");
+	public T compute(Context c, PersistentHashMap<Symbol, ?> bindings) {
+		throw new UnsupportedOperationException("Trying to evaluate unexpanded form: "+this);
 	}
-
 	
+	@Override
+	public String toString() {
+		return form.toString();
+	}
+ 	
 }

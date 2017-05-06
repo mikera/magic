@@ -3,12 +3,19 @@ package magic;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import magic.ast.Constant;
+import magic.compiler.Expanders;
+import magic.lang.Context;
+import magic.lang.Symbols;
+
 /**
  * Static class to support the Magic runtime
  * 
  * @author Mike
  */
 public class RT {
+
+	public static final Context INITIAL_CONTEXT = createInitialContext();
 
 	/**
 	 * Converts an object to a boolean primitive value, according to Clojure's truthiness rules
@@ -21,6 +28,14 @@ public class RT {
 		return (o!=null);
 	}
 	
+	private static Context createInitialContext() {
+		Context c=Context.EMPTY;
+		
+		c=c.define(Symbols.QUOTE, Constant.create(Expanders.QUOTE));
+		
+		return c;
+	}
+
 	/**
 	 * Returns true if and only if two Objects are equal.
 	 * Handles nulls as distinct values that are equal to null only.

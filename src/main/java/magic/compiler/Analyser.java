@@ -5,6 +5,7 @@ import magic.ast.Apply;
 import magic.ast.Constant;
 import magic.ast.Define;
 import magic.ast.Do;
+import magic.ast.Form;
 import magic.ast.Node;
 import magic.ast.Lambda;
 import magic.ast.Lookup;
@@ -15,7 +16,10 @@ import magic.data.IPersistentVector;
 import magic.data.Lists;
 import magic.data.Symbol;
 import magic.data.Vectors;
+import magic.fn.Expander;
+import magic.fn.IFn3;
 import magic.lang.Context;
+import magic.lang.Slot;
 import magic.lang.Symbols;
 
 /**
@@ -27,13 +31,22 @@ import magic.lang.Symbols;
  */
 public class Analyser {
 
+	private static final Expander<?> INITAL_EXPANDER = new Expander<Object>() {
+
+		@Override
+		public Node<Object> expand(Context c, Object form, Object ex) {
+			return analyse(c,form);
+		}
+
+	};
+
 	/**
 	 * Analyses a form in an empty context. Useful mainly for debug / test purposes
 	 * @param form
 	 * @return
 	 */
 	public static <T> Node<T> analyse(Object form) {
-		return analyse(Context.EMPTY,form);
+		return analyse(RT.INITIAL_CONTEXT,form);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -62,14 +75,30 @@ public class Analyser {
 		if (n==0) return (Node<T>) Constant.create(Lists.EMPTY);
 		
 		Object first=form.head();
-		if (first instanceof Symbol) return analyseSymbolApplication(c,(Symbol)first,form.tail());
+		if (first instanceof Symbol) return analyseSymbolApplication(c,form);
 		
 		throw new Error("can't analyse form: "+RT.toString(form));
 	}
 
-	private static <T> Node<T> analyseSymbolApplication(Context c, Symbol first, APersistentList<Object> tail) {
+	@SuppressWarnings("unchecked")
+	private static <T> Node<T> analyseSymbolApplication(Context c, IPersistentList<Object> form) {
+		Symbol first=(Symbol) form.head();
+		APersistentList<Object> tail=form.tail();
+		
 		if (first==Symbols.DEF) return analyseDefine(c,(Symbol)tail.head(),tail.tail());
 		if (first==Symbols.FN) return analyseFn(c,tail.head(),tail.tail());
+		
+		Slot<?> slot=c.getSlot(first);
+		if (slot==null) {
+			// we have a form that we don't yet know how to expand
+			return (Node<T>) Form.create(form,first);
+		}
+		
+		if (slot.isExpander(c)) {
+			IFn3<Node<T>> ex=(IFn3<Node<T>>) slot.getValue(c);
+			return ex.apply(c,form,INITAL_EXPANDER);
+		}
+		
 		return Apply.create(Lookup.create(first),analyseAll(c,tail));
 	}
 

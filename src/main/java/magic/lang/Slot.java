@@ -1,6 +1,7 @@
 package magic.lang;
 
 import magic.ast.Node;
+import magic.fn.Expander;
 
 /**
  * Represents a "slot" in a magic Context.
@@ -37,5 +38,9 @@ public class Slot<T> {
 
 	public static <T> Slot<T> create(Node<T> exp) {
 		return new Slot<T>(exp);
+	}
+
+	public boolean isExpander(Context c) {
+		return getValue(c) instanceof Expander;
 	}
 }

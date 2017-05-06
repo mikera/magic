@@ -1,6 +1,7 @@
 package magic.ast;
 
 import magic.RT;
+import magic.data.IPersistentSet;
 import magic.data.PersistentHashMap;
 import magic.data.Sets;
 import magic.data.Symbol;
@@ -16,8 +17,8 @@ public class Constant<T> extends BaseConstant<T> {
 
 	private final T value;
 	
-	public Constant(T value) {
-		super(Sets.emptySet());
+	public Constant(T value, IPersistentSet<Symbol> deps) {
+		super((deps==null)?Sets.emptySet():deps);
 		this.value=value;
 	}
 	
@@ -27,7 +28,11 @@ public class Constant<T> extends BaseConstant<T> {
 	}
 
 	public static <T> Constant<T> create(T v) {
-		return new Constant<T>(v);
+		return new Constant<T>(v,null);
+	}
+	
+	public static <T> Constant<T> create(T v, IPersistentSet<Symbol> deps) {
+		return new Constant<T>(v,deps);
 	}
 	
 	@Override

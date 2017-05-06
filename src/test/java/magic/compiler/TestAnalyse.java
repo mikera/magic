@@ -16,6 +16,7 @@ import magic.data.Sets;
 import magic.data.Symbol;
 import magic.data.Tuple;
 import magic.lang.Context;
+import magic.lang.Symbols;
 
 public class TestAnalyse {
 
@@ -65,6 +66,8 @@ public class TestAnalyse {
 		assertEquals(Sets.of(foo,bar),Analyser.analyse(Reader.read("[foo bar]")).getDependencies());
 		assertEquals(Sets.of(),Analyser.analyse(Reader.read("(fn [bar] bar)")).getDependencies());
 		assertEquals(Sets.of(foo),Analyser.analyse(Reader.read("(fn [bar] foo)")).getDependencies());
+
+		assertEquals(Sets.of(Symbols.QUOTE),Analyser.analyse(Reader.read("'(foo bar)")).getDependencies());
 	}
 	
 	@Test 
@@ -91,7 +94,7 @@ public class TestAnalyse {
 		Node<?> e=analyse("(fn [a] a)");
 		assertEquals(Lambda.class,e.getClass());
 		Context c=Context.createWith("identity",e);
-		Node<?> app=analyse("(identity 2)");
+		Node<?> app=Analyser.analyse(c,Reader.read("(identity 2)"));
 		assertEquals(Long.valueOf(2),app.compute(c));
 
 	}
