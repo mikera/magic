@@ -70,29 +70,23 @@ public class Analyser {
 		throw new Error("can't analyse form: "+RT.toString(form));
 	}
 
-	@SuppressWarnings("unchecked")
 	private static <T> Node<T> analyseSymbolApplication(Context c, IPersistentList<Object> form) {
 		Symbol first=(Symbol) form.head();
 		APersistentList<Object> tail=form.tail();
 		
 		if (first==Symbols.DEF) return analyseDefine(c,(Symbol)tail.head(),tail.tail());
 		if (first==Symbols.FN) return analyseFn(c,tail.head(),tail.tail());
+		if (first==Symbols.QUOTE) return analyseQuote(c,tail);
 		
-		Slot<?> slot=c.getSlot(first);
-		if (slot==null) {
-			// we have a form that we don't yet know how to expand
-			return (Node<T>) Form.create(form,first);
-		}
-		
-		if (slot.isExpander(c)) {
-			IFn3<Node<T>> ex=(IFn3<Node<T>>) slot.getValue(c);
-			return ex.apply(c,form,Expanders.INITAL_EXPANDER);
-		}
 		
 		return Apply.create(Lookup.create(first),analyseAll(c,tail));
 	}
 
-
+	@SuppressWarnings("unchecked")
+	private static <T> Node<T> analyseQuote(Context c, APersistentList<Object> tail) {
+		if (tail.size()!=1) throw new Error("Quote expects a single form");
+		return (Node<T>) Constant.create(tail.head(),Symbols.QUOTE.symbolSet());
+	}
 
 	@SuppressWarnings("unchecked")
 	private static <T> Node<T> analyseFn(Context c, Object arglist, APersistentList<Object> tail) {
@@ -133,5 +127,6 @@ public class Analyser {
 	private static <T> Node<T> analyseSymbol(Context c, Symbol sym) {
 		return Lookup.create(sym);
 	}
+
 
 }

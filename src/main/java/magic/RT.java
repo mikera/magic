@@ -35,7 +35,7 @@ public class RT {
 	private static Context createInitialContext() {
 		Context c=Context.EMPTY;
 		
-		c=c.define(Symbols.QUOTE, Constant.create(Expanders.QUOTE));
+		// c=c.define(Symbols.QUOTE, Constant.create(Expanders.QUOTE));
 		
 		return c;
 	}

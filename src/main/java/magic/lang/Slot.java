@@ -1,7 +1,7 @@
 package magic.lang;
 
 import magic.ast.Node;
-import magic.fn.Expander;
+import magic.compiler.Expander;
 
 /**
  * Represents a "slot" in a magic Context.

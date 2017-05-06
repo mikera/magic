@@ -160,4 +160,9 @@ public class PersistentList<T> extends APersistentList<T> {
 		return create(Tuple.of(vals));
 	}
 
+
+	public static <T> PersistentList<T> wrap(T[] forms) {
+		return create(Tuple.wrap(forms));
+	}
+
 }

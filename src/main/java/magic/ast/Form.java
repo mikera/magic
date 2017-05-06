@@ -7,7 +7,8 @@ import magic.data.Symbol;
 import magic.lang.Context;
 
 /**
- * Represents a raw form
+ * Represents a raw, unexpanded form
+ * Dependency generally exists on the first symbol only
  * 
  * @author Mike
  */
