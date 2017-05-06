@@ -12,9 +12,14 @@ public class TestCompiler {
 	@Test public void testCompileDef() {
 		Context c=RT.INITIAL_CONTEXT;
 		
-		Result<?> r=Compiler.compile(c, "(def a 1) (def b 2)");
+		Result<?> r=Compiler.compile(c, 
+				"(def a 1) " +
+				"(def b 2) " +
+			    "(def id (fn [a] a)) "+
+				"(def c (id a))");
 		Context c2=r.getContext();
 		assertEquals((Long)1L,c2.getValue("a"));
 		assertEquals((Long)2L,c2.getValue("b"));
+		assertEquals((Long)1L,c2.getValue("c"));
 	}
 }

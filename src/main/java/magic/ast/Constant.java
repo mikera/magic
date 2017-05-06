@@ -1,6 +1,7 @@
 package magic.ast;
 
 import magic.RT;
+import magic.compiler.Result;
 import magic.data.IPersistentSet;
 import magic.data.PersistentHashMap;
 import magic.data.Sets;
@@ -45,4 +46,9 @@ public class Constant<T> extends BaseConstant<T> {
 		return "(Constant "+RT.print(value)+")";
 	}
 
+	@Override
+	public Result<T> compile(Context context) {
+		// no change to context, returns pure value
+		return new Result<>(context,value);
+	}
 }

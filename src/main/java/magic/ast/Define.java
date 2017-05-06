@@ -29,7 +29,7 @@ public class Define<T> extends Node<T> {
 	@Override
 	public Result<T> compile(Context context) {
 		context=context.define(sym, exp);
-		return new Result<T>(context,null);
+		return new Result<T>(context,null); // TODO: what should def return??
 	}
 
 }
