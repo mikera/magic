@@ -1,7 +1,9 @@
 package magic.ast;
 
+import magic.compiler.Result;
 import magic.data.IPersistentSet;
 import magic.data.Symbol;
+import magic.lang.Context;
 
 /**
  * Base class for constant expressions. Constant expressions always return the same value,
@@ -18,4 +20,10 @@ public abstract class BaseConstant<T> extends Node<T> {
 
 	@Override
 	public abstract T getValue();
+	
+	@Override
+	public Result<T> compile(Context context) {
+		// no change to context, returns pure value
+		return new Result<>(context,getValue());
+	}
 }
