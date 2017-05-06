@@ -5,7 +5,6 @@ import magic.ast.Apply;
 import magic.ast.Constant;
 import magic.ast.Define;
 import magic.ast.Do;
-import magic.ast.Form;
 import magic.ast.Node;
 import magic.ast.Lambda;
 import magic.ast.Lookup;
@@ -16,9 +15,7 @@ import magic.data.IPersistentVector;
 import magic.data.Lists;
 import magic.data.Symbol;
 import magic.data.Vectors;
-import magic.fn.IFn3;
 import magic.lang.Context;
-import magic.lang.Slot;
 import magic.lang.Symbols;
 
 /**
@@ -67,7 +64,7 @@ public class Analyser {
 		Object first=form.head();
 		if (first instanceof Symbol) return analyseSymbolApplication(c,form);
 		
-		throw new Error("can't analyse form: "+RT.toString(form));
+		return Apply.create(analyse(c,first),analyseAll(c,form.tail()));
 	}
 
 	private static <T> Node<T> analyseSymbolApplication(Context c, IPersistentList<Object> form) {

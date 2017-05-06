@@ -3,10 +3,7 @@ package magic;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import magic.ast.Constant;
-import magic.compiler.Expanders;
 import magic.lang.Context;
-import magic.lang.Symbols;
 
 /**
  * Static class to support the Magic runtime

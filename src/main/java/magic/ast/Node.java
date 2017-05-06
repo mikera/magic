@@ -39,6 +39,12 @@ public abstract class Node<T> extends RootNode {
 		return compute(c,(PersistentHashMap<Symbol, ?>) PersistentHashMap.EMPTY);
 	}
 
+	/**
+	 * Computes the value of a node in the given context
+	 * @param c
+	 * @param bindings
+	 * @return
+	 */
 	public abstract T compute(Context c, PersistentHashMap<Symbol,?> bindings);
 	
 	@Override
@@ -47,7 +53,7 @@ public abstract class Node<T> extends RootNode {
 	}
 	
 	public T getValue() {
-		throw new UnsupportedOperationException("Cannont use getValue() on a non-constant expression");
+		throw new UnsupportedOperationException("Cannot use getValue() on a non-constant expression");
 	}
 	
 	public IPersistentSet<Symbol> getDependencies() {
