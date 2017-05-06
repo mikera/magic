@@ -1,5 +1,6 @@
 package magic.ast;
 
+import magic.compiler.Result;
 import magic.data.PersistentHashMap;
 import magic.data.Symbol;
 import magic.lang.Context;
@@ -23,6 +24,12 @@ public class Define<T> extends Node<T> {
 	public static <T> Define<T> create(Symbol sym, Node<T> exp) {
 		// TODO Auto-generated method stub
 		return new Define<T>(sym,exp);
+	}
+	
+	@Override
+	public Result<T> compile(Context context) {
+		context=context.define(sym, exp);
+		return new Result<T>(context,null);
 	}
 
 }

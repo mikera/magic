@@ -19,6 +19,7 @@ import org.parboiled.support.Var;
 
 import magic.data.Vectors;
 import magic.lang.Symbols;
+import magic.data.APersistentVector;
 import magic.data.IPersistentCollection;
 import magic.data.Lists;
 import magic.data.Maps;
@@ -30,6 +31,15 @@ import magic.data.Symbol;
 public class Reader extends BaseParser<Object> {
 
 	// OVERALL PARSING INPUT RULES
+	
+	public Rule Input() {
+		return Sequence(
+				Optional(WhiteSpace()),
+				ExpressionList(),
+				Optional(WhiteSpace()),
+				EOI
+				);
+	}
 	
 	public Rule ExpressionInput() {
 		return Sequence(
@@ -262,6 +272,7 @@ public class Reader extends BaseParser<Object> {
 	// MAIN PARSING FUNCTIONALITY
 	
 	private static Reader parser = Parboiled.createParser(Reader.class);
+	private static final ReportingParseRunner<APersistentVector<Object>> inputParseRunner=new ReportingParseRunner<>(parser.Input());
 	private static final ReportingParseRunner<Object> expressionParseRunner=new ReportingParseRunner<>(parser.ExpressionInput());
 	private static final ReportingParseRunner<Symbol> symbolParseRunner=new ReportingParseRunner<>(parser.Symbol());
 	
@@ -286,6 +297,17 @@ public class Reader extends BaseParser<Object> {
 	 */
 	public static Object read(String source) {
 		ParsingResult<Object> result = expressionParseRunner.run(source);
+		checkErrors(result);
+		return result.resultValue;
+	}
+	
+	/**
+	 * Parses an expression and returns a form
+	 * @param string
+	 * @return
+	 */
+	public static APersistentVector<Object> readAll(String source) {
+		ParsingResult<APersistentVector<Object>> result = inputParseRunner.run(source);
 		checkErrors(result);
 		return result.resultValue;
 	}

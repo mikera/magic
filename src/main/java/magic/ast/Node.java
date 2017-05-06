@@ -6,6 +6,7 @@ import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.source.SourceSection;
 
+import magic.compiler.Result;
 import magic.data.IPersistentSet;
 import magic.data.IPersistentVector;
 import magic.data.PersistentHashMap;
@@ -81,5 +82,14 @@ public abstract class Node<T> extends RootNode {
 			deps=deps.includeAll(nodes.get(i).getDependencies());
 		}
 		return deps;
+	}
+
+	/**
+	 * Compiles the node in the given context, returning an updated context and value
+	 * @param context
+	 * @return
+	 */
+	public Result<T> compile(Context context) {
+		throw new UnsupportedOperationException("Cannot compile node of type: "+this.getClass());
 	}
 }

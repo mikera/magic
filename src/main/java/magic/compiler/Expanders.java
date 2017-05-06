@@ -42,6 +42,9 @@ public class Expanders {
 		private Object applicationExpand(Context c, IPersistentList<Object> form, Expander ex) {
 			int n=form.size();
 			Object[] forms=new Object[n];
+			for (int i=0; i<n; i++) {
+				forms[i]=expand(c,form.get(i),ex);
+			}
 			
 			return PersistentList.wrap(forms);
 		}
