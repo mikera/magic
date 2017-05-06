@@ -167,23 +167,6 @@ public abstract class APersistentCollection<T> extends PersistentObject implemen
 		};
 		return empty().includeAll(Vectors.createFromIterator(it));
 	}
-
-	@Override
-	public String toString() {
-		StringBuilder sb=new StringBuilder();
-		sb.append('{');
-		boolean first=true;
-		for (T t: this) {
-			if (first) {
-				first=false;
-			} else {
-				sb.append(", ");
-			}
-			sb.append(RT.toString(t));
-		}		
-		sb.append('}');
-		return sb.toString();
-	}
 	
 	@Override
 	public abstract APersistentCollection<T> include(final T value);
@@ -202,8 +185,21 @@ public abstract class APersistentCollection<T> extends PersistentObject implemen
 		return includeAll((Collection<T>)values);
 	}
 	
-
-	
+	@Override
+	public String toString() {
+		StringBuilder sb=new StringBuilder("!{");
+		boolean first=true;
+		for (T t: this) {
+			if (first) {
+				first=false;
+			} else {
+				sb.append(' ');
+			}
+			sb.append(RT.toString(t));
+		}		
+		sb.append('}');
+		return sb.toString();
+	}
 	@Override
 	public void validate() {
 		// TODO: validation

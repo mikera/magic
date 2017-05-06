@@ -20,7 +20,7 @@ public abstract class FilteredIterator<T> implements Iterator<T> {
 	
 	public FilteredIterator(Iterator<T> baseIterator) {
 		base=baseIterator;
-		findNext();
+		havenext=findNext();
 	}
 	
 	public abstract boolean filter(T value);
@@ -36,6 +36,7 @@ public abstract class FilteredIterator<T> implements Iterator<T> {
 			if (filter(t)) {
 				next=t;
 				havenext=true;
+				return true;
 			}
 		}
 		return false;

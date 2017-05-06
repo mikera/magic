@@ -8,6 +8,7 @@ public class Do<T> extends Node<T> {
 	private final Node<?>[] exps;
 	
 	public Do(Node<?>[] exs) {
+		super(calcDependencies(exs));
 		exps=exs;
 	}
 

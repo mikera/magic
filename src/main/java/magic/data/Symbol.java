@@ -16,6 +16,7 @@ public class Symbol {
 	private final String ns;
 	private final String name;
 	private final int hash;
+	private IPersistentSet<Symbol> symbolSet=null;
 
 	private static final WeakHashMap<Symbol,WeakReference<Symbol>> symbols=new WeakHashMap<>();
 	
@@ -99,6 +100,19 @@ public class Symbol {
 	public String toString() {
 		if (ns==null) return name;
 		return ns+"/"+name;
+	}
+
+	/**
+	 * Returns a set containing this symbol
+	 * @return
+	 */
+	public IPersistentSet<Symbol> symbolSet() {
+		if (symbolSet==null) {
+			IPersistentSet<Symbol> result=(IPersistentSet<Symbol>) Sets.of(this);
+			symbolSet=result;
+			return result;
+		}
+		return symbolSet;
 	}
 
 

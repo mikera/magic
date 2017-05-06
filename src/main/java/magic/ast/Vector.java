@@ -19,6 +19,7 @@ public class Vector<T> extends Node<IPersistentVector<T>> {
 	IPersistentVector<Node<T>> exps;
 	
 	private Vector(IPersistentVector<Node<T>> exps) {
+		super(calcDependencies(exps)); 
 		this.exps=exps;
 	}
 	

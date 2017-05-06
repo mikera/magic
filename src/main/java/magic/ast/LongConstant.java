@@ -2,6 +2,7 @@ package magic.ast;
 
 import magic.RT;
 import magic.data.PersistentHashMap;
+import magic.data.Sets;
 import magic.data.Symbol;
 import magic.lang.Context;
 
@@ -10,6 +11,7 @@ public class LongConstant extends BaseConstant<Long> {
 	private final long value;
 
 	public LongConstant(long value) {	
+		super(Sets.emptySet());
 		this.value=value;
 	}
 	

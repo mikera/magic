@@ -313,4 +313,20 @@ public abstract class APersistentVector<T> extends APersistentCollection<T> impl
 		if (size()>o.size()) return 1;
 		return 0;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb=new StringBuilder("[");
+		boolean first=true;
+		for (T t: this) {
+			if (first) {
+				first=false;
+			} else {
+				sb.append(' ');
+			}
+			sb.append(RT.toString(t));
+		}		
+		sb.append(']');
+		return sb.toString();
+	}
 }

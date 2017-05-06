@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.ListIterator;
 
 import magic.Errors;
+import magic.RT;
 
 /**
  * Abstract base class for persistent lists
@@ -67,5 +68,21 @@ public abstract class APersistentList<T> extends APersistentCollection<T> implem
 	@Override
 	public T remove(int index) {
 		throw new UnsupportedOperationException(Errors.immutable(this));
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb=new StringBuilder("(");
+		boolean first=true;
+		for (T t: this) {
+			if (first) {
+				first=false;
+			} else {
+				sb.append(' ');
+			}
+			sb.append(RT.toString(t));
+		}		
+		sb.append(')');
+		return sb.toString();
 	}
 }

@@ -52,7 +52,7 @@ public class RT {
 	}
 	
 	/**
-	 * Creates a HashSet containing the value from the given iterator. Removes duplicates.
+	 * Creates a HashSet containing the values from the given iterator. Removes duplicates.
 	 * @param iterator
 	 * @return
 	 */

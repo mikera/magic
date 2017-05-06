@@ -15,6 +15,7 @@ public class Lambda<T> extends Node<IFn<T>> {
 	private final int arity;
 
 	public Lambda(IPersistentVector<Symbol> args, Node<T> body) {
+		super(body.getDependencies().excludeAll(args));
 		this.args=args;
 		this.arity=args.size();
 		this.body=body;

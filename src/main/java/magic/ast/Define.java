@@ -10,6 +10,7 @@ public class Define<T> extends Node<T> {
 	final Node<T> exp;
 
 	public Define(Symbol sym, Node<T> exp) {
+		super(exp.getDependencies());
 		this.sym=sym;
 		this.exp=exp;
 	}

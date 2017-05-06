@@ -9,6 +9,13 @@ import magic.data.APersistentCollection;
 import magic.data.APersistentVector;
 import magic.data.APersistentSet;
 
+/**
+ * Wrapper for the value list of a map
+ * @author Mike
+ *
+ * @param <K>
+ * @param <V>
+ */
 public final class ValueCollectionWrapper<K,V> extends APersistentCollection<V> {
 	private static final long serialVersionUID = 5958713253782492446L;
 
@@ -68,4 +75,5 @@ public final class ValueCollectionWrapper<K,V> extends APersistentCollection<V> 
 	public APersistentCollection<V> empty() {
 		return Vectors.emptyVector();
 	}
+
 }

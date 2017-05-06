@@ -16,6 +16,7 @@ public class Lookup<T> extends Node<T> {
 	private final Symbol sym;
 	
 	private Lookup(Symbol sym) {
+		super(sym.symbolSet());
 		this.sym=sym;
 	}
 	

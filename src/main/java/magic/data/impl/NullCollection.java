@@ -133,4 +133,9 @@ public final class NullCollection<T> extends APersistentCollection<T> {
 	public APersistentCollection<T> empty() {
 		return this;
 	}
+
+	@Override
+	public String toString() {
+		return "()";
+	}
 }

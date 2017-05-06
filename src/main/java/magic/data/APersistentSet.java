@@ -50,10 +50,9 @@ public abstract class APersistentSet<T> extends APersistentCollection<T> impleme
 	}
 
 	@Override
-	public APersistentSet<T> excludeAll(final Collection<T> values) {
-		Iterator<T> it=new FilteredIterator<T>(iterator()) {
-			APersistentCollection<T> col=Vectors.createFromCollection(values);
-			
+	public APersistentSet<T> excludeAll(Collection<T> values) {
+		final APersistentSet<T> col=Sets.createFrom(values);
+		Iterator<T> it=new FilteredIterator<T>(iterator()) {	
 			@Override
 			public boolean filter(Object value) {
 				return (!col.contains(value));
@@ -95,6 +94,22 @@ public abstract class APersistentSet<T> extends APersistentCollection<T> impleme
 	@Override
 	public int hashCode() {
 		return RT.iteratorHashCode(iterator());
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb=new StringBuilder("#{");
+		boolean first=true;
+		for (T t: this) {
+			if (first) {
+				first=false;
+			} else {
+				sb.append(' ');
+			}
+			sb.append(RT.toString(t));
+		}		
+		sb.append('}');
+		return sb.toString();
 	}
 	
 	@Override

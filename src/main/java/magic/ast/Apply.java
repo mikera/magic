@@ -18,11 +18,12 @@ public class Apply<T> extends Node<T> {
 	private int arity;
 
 	public Apply(Node<IFn<T>> f, Node<?>... args) {
+		super(calcDependencies(f,args));
 		this.function=f;
 		this.args=args;
 		arity=args.length;
 	}
-	
+
 	@Override
 	public T compute(Context c,PersistentHashMap<Symbol,?> bindings) {
 		IFn<T> f=(IFn<T>) function.compute(c,bindings); // get the value of the function

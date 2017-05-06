@@ -1,6 +1,8 @@
 package magic.ast;
 
+import magic.data.IPersistentSet;
 import magic.data.PersistentHashMap;
+import magic.data.Sets;
 import magic.data.Symbol;
 import magic.lang.Context;
 
@@ -14,6 +16,7 @@ public class Form extends Node<Object> {
 	private Object form;
 	
 	private Form(Object form) {
+		super(Sets.emptySet());
 		this.form=form;
 	}
 	
@@ -24,6 +27,12 @@ public class Form extends Node<Object> {
 	public Object getForm() {
 		return form;
 	}
+	
+	@Override
+	public IPersistentSet<Symbol> getDependencies() {
+		throw new UnsupportedOperationException("Trying to get dependencies unexpanded form");
+	}
+
 	
 	@Override
 	public Object compute(Context c, PersistentHashMap<Symbol, ?> bindings) {
