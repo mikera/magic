@@ -16,7 +16,6 @@ import magic.data.IPersistentVector;
 import magic.data.Lists;
 import magic.data.Symbol;
 import magic.data.Vectors;
-import magic.fn.Expander;
 import magic.fn.IFn3;
 import magic.lang.Context;
 import magic.lang.Slot;
@@ -30,15 +29,6 @@ import magic.lang.Symbols;
  *
  */
 public class Analyser {
-
-	private static final Expander<?> INITAL_EXPANDER = new Expander<Object>() {
-
-		@Override
-		public Node<Object> expand(Context c, Object form, Object ex) {
-			return analyse(c,form);
-		}
-
-	};
 
 	/**
 	 * Analyses a form in an empty context. Useful mainly for debug / test purposes
@@ -96,7 +86,7 @@ public class Analyser {
 		
 		if (slot.isExpander(c)) {
 			IFn3<Node<T>> ex=(IFn3<Node<T>>) slot.getValue(c);
-			return ex.apply(c,form,INITAL_EXPANDER);
+			return ex.apply(c,form,Expanders.INITAL_EXPANDER);
 		}
 		
 		return Apply.create(Lookup.create(first),analyseAll(c,tail));

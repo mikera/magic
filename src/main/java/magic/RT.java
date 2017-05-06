@@ -28,6 +28,10 @@ public class RT {
 		return (o!=null);
 	}
 	
+	/**
+	 * Sets up the initial Magic context for language bootstrap
+	 * @return
+	 */
 	private static Context createInitialContext() {
 		Context c=Context.EMPTY;
 		
