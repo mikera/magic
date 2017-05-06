@@ -12,6 +12,8 @@ import magic.ast.Lookup;
 import magic.compiler.Analyser;
 import magic.compiler.Reader;
 import magic.data.PersistentList;
+import magic.data.Sets;
+import magic.data.Symbol;
 import magic.data.Tuple;
 import magic.lang.Context;
 
@@ -53,6 +55,16 @@ public class TestAnalyse {
 	public void testConstant() {
 		Node<?> e=analyse("1");
 		assertEquals(Long.valueOf(1),e.compute(Context.EMPTY));
+	}
+	
+	@Test
+	public void testDeps() {
+		Symbol foo=Symbol.create("foo");
+		Symbol bar=Symbol.create("bar");
+		assertEquals(Sets.of(foo),Analyser.analyse(Reader.read("foo")).getDependencies());
+		assertEquals(Sets.of(foo,bar),Analyser.analyse(Reader.read("[foo bar]")).getDependencies());
+		assertEquals(Sets.of(),Analyser.analyse(Reader.read("(fn [bar] bar)")).getDependencies());
+		assertEquals(Sets.of(foo),Analyser.analyse(Reader.read("(fn [bar] foo)")).getDependencies());
 	}
 	
 	@Test 
