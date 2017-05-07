@@ -32,16 +32,16 @@ public class Cond<T> extends Node<T> {
 	}
 
 	@Override
-	public Result<T> compile(Context context, APersistentMap<Symbol, ?> bindings) {
+	public Result<T> eval(Context context, APersistentMap<Symbol, ?> bindings) {
 		Result<?> r = new Result<>(context,null);
 		for (int i=0; i<nTests; i++) {
-			r=tests[i].compile(r.getContext(),bindings);
+			r=tests[i].eval(r.getContext(),bindings);
 			Object testVal=r.getValue();
 			if (RT.bool(testVal)) {
-				return exps[i].compile(r.getContext(),bindings);
+				return exps[i].eval(r.getContext(),bindings);
 			}
 		}
-		return exps[nTests].compile(r.getContext(),bindings);
+		return exps[nTests].eval(r.getContext(),bindings);
 	}
 
 }

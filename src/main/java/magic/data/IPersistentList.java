@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Interface for all persistent list types, including vectors and lists
+ * Interface for all persistent list types
  * @author Mike
  *
  * @param <T>

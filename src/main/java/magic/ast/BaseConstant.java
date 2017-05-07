@@ -23,7 +23,7 @@ public abstract class BaseConstant<T> extends Node<T> {
 	public abstract T getValue();
 	
 	@Override
-	public Result<T> compile(Context context, APersistentMap<Symbol,?> bindings) {
+	public Result<T> eval(Context context, APersistentMap<Symbol,?> bindings) {
 		// no change to context, returns pure value
 		return new Result<>(context,getValue());
 	}

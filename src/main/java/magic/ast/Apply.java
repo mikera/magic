@@ -26,13 +26,13 @@ public class Apply<T> extends Node<T> {
 	}
 
 	@Override
-	public Result<T> compile(Context c,APersistentMap<Symbol,?> bindings) {
-		Result<IFn<T>> rf= function.compile(c,bindings);
+	public Result<T> eval(Context c,APersistentMap<Symbol,?> bindings) {
+		Result<IFn<T>> rf= function.eval(c,bindings);
 		IFn<T> f=rf.getValue();
 		Object[] values=new Object[arity];
 		Result<?> r=rf;
 		for (int i=0; i<arity; i++) {
-			r=args[i].compile(c,bindings);
+			r=args[i].eval(c,bindings);
 			values[i]=r.getValue();
 		}
 		return Result.create(r.getContext(),f.applyToArray(values));

@@ -26,7 +26,7 @@ public class Vector<T> extends Node<IPersistentVector<T>> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Result<IPersistentVector<T>> compile(Context c,APersistentMap<Symbol,?> bindings) {
+	public Result<IPersistentVector<T>> eval(Context c,APersistentMap<Symbol,?> bindings) {
 		int n=exps.size();
 		if (n==0) return  Result.create(c, (IPersistentVector<T>)Tuple.EMPTY);
 		T[] results=(T[]) new Object[n];

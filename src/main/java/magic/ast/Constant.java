@@ -26,7 +26,7 @@ public class Constant<T> extends BaseConstant<T> {
 	}
 	
 	@Override
-	public Result<T> compile(Context c, APersistentMap<Symbol, ?> bindings) {
+	public Result<T> eval(Context c, APersistentMap<Symbol, ?> bindings) {
 		return new Result<T>(c,value);
 	}
 

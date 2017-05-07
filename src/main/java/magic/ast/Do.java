@@ -19,11 +19,11 @@ public class Do<T> extends Node<T> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Result<T> compile(Context context, APersistentMap<Symbol,?> bindings) {
+	public Result<T> eval(Context context, APersistentMap<Symbol,?> bindings) {
 		int n=exps.length;
 		Result<T> r=new Result<>(context,null);
 		for (int i=0; i<n; i++) {
-			r=(Result<T>) exps[i].compile(r.getContext(),bindings);
+			r=(Result<T>) exps[i].eval(r.getContext(),bindings);
 		}
 		return r;
 	}

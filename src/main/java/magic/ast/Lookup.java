@@ -27,7 +27,7 @@ public class Lookup<T> extends Node<T> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Result<T> compile(Context c,APersistentMap<Symbol,?> bindings) {
+	public Result<T> eval(Context c,APersistentMap<Symbol,?> bindings) {
 		T val = (bindings.containsKey(sym))?(T)bindings.get(sym):c.getValue(sym);
 		return new Result<T>(c,val);
 	}

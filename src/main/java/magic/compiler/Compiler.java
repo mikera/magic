@@ -11,7 +11,7 @@ public class Compiler {
 
 	@SuppressWarnings("unchecked")
 	public static <T> Result<T> compile(Context context, Node<T> node) {
-		return node.compile(context,(APersistentMap<Symbol, ?>) Maps.EMPTY);
+		return node.eval(context,(APersistentMap<Symbol, ?>) Maps.EMPTY);
 	}
 	
 	public static <T> Result<T> compile(Context context, Object form) {

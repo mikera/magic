@@ -49,7 +49,7 @@ public abstract class Node<T> extends RootNode {
 	 * @return
 	 */
 	public final T compute(Context c, APersistentMap<Symbol,?> bindings) {
-		return compile(c,bindings).getValue();
+		return eval(c,bindings).getValue();
 	}
 	
 	@Override
@@ -89,12 +89,12 @@ public abstract class Node<T> extends RootNode {
 	}
 
 	/**
-	 * Compiles the node in the given context, returning an updated context and value
+	 * Evaluates the node in the given context, returning an updated context and value
 	 * @param context
 	 * @param bindings 
 	 * @return
 	 */
-	public Result<T> compile(Context context, APersistentMap<Symbol, ?> bindings) {
+	public Result<T> eval(Context context, APersistentMap<Symbol, ?> bindings) {
 		throw new UnsupportedOperationException("Cannot compile node of type: "+this.getClass());
 	}
 }

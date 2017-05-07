@@ -23,7 +23,7 @@ public class Lambda<T> extends Node<IFn<T>> {
 	}
 
 	@Override
-	public Result<IFn<T>> compile(Context context,APersistentMap<Symbol,?> bindings) {
+	public Result<IFn<T>> eval(Context context,APersistentMap<Symbol,?> bindings) {
 		AFn<T> fn=new AFn<T>() {
 			@Override
 			public T applyToArray(Object... a) {
