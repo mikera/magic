@@ -43,6 +43,10 @@ public class TestPersistent {
 		testPersistentCollection(PersistentHashMap.create().assoc(1, "Sonia").values());
 	}
 	
+	@Test public void testUpdate() {
+		assertEquals(Tuple.of(1,2,3),Tuple.of(1,2,4).update(2, 3));
+	}
+	
 	@Test public void testConcat() {
 		assertEquals(Tuple.of(1,2),Tuple.concat(Tuple.of(1), Tuple.of(2)));
 		

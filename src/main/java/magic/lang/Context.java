@@ -28,6 +28,12 @@ public class Context {
 		return slot.getValue(this);
 	}
 	
+	public <T> Node<T> getExpression(Symbol sym) {
+		Slot<T> slot=getSlot(sym); 
+		if (slot==null) throw new IllegalArgumentException("Symbol not defined: "+sym);
+		return slot.getExpression();
+	}
+	
 	public <T> T getValue(String sym) {
 		return getValue(Reader.readSymbol(sym));
 	}
@@ -57,6 +63,12 @@ public class Context {
 	public <T> Slot<T> getSlot(Symbol sym) {
 		return (Slot<T>) mappings.get(sym);
 	}
+
+	public Node<?> getExpression(String symbol) {
+		return getExpression(Reader.readSymbol(symbol));
+	}
+
+
 
 
 }

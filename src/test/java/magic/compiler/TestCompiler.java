@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import magic.RT;
 import magic.data.Symbol;
+import magic.data.Tuple;
 import magic.lang.Context;
 
 public class TestCompiler {
@@ -48,6 +49,43 @@ public class TestCompiler {
 		Context c2=r.getContext();
 	
 		assertEquals((Long)3L,c2.getValue("b"));
+	}
+	
+	@Test public void testCompileLookup() {
+		Context c=RT.INITIAL_CONTEXT;
+		
+		assertEquals((Long)1L,Compiler.compile(c, "(let [a 1] a)").getValue());
+	}
+	
+	@Test public void testCompileVector() {
+		Context c=RT.INITIAL_CONTEXT;
+		
+		Result<?> r=Compiler.compile(c, 
+				"(def a 1) " +
+				"(def b 1) " +
+				"(def v (let [a 3, c 5] " +
+				"         [a b c]))");
+		Context c2=r.getContext();
+		// System.out.println(c2.getExpression("v"));
+	
+		assertEquals(Tuple.of(3L,1L,5L),c2.getValue("v"));
+	}
+	
+	@Test public void testCompileLambda() {
+		Context c=RT.INITIAL_CONTEXT;
+		
+		//System.out.println("<START>");
+		Result<?> r=Compiler.compile(c, 
+				"(def a 1) " +
+				"(def b 2) " +
+				"(let [a 3, c 5] " +
+				"   (def f (fn [c] [a b c]))) "+
+				"(def r (f 7))");
+		Context c2=r.getContext();
+		//System.out.println(c2.getExpression("f"));
+		Object res=c2.getValue("r");
+		//System.out.println("<END>");
+		assertEquals(Tuple.of(3L,2L,7L),res);
 	}
 	
 	

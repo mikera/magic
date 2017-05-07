@@ -35,6 +35,11 @@ public class Slot<T> {
 		}
 		return value;
 	}
+	
+	public Node<T> getExpression() {
+		return expression;
+	}
+
 
 	public static <T> Slot<T> create(Node<T> exp) {
 		return new Slot<T>(exp);

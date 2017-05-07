@@ -61,6 +61,10 @@ public abstract class Node<T> extends RootNode {
 		throw new UnsupportedOperationException("Cannot use getValue() on a non-constant expression");
 	}
 	
+	public boolean isConstant() {
+		return false;
+	}
+	
 	public IPersistentSet<Symbol> getDependencies() {
 		return deps;
 	}

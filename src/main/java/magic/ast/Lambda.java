@@ -24,22 +24,38 @@ public class Lambda<T> extends Node<IFn<T>> {
 
 	@Override
 	public Result<IFn<T>> eval(Context context,APersistentMap<Symbol, Object> bindings) {
+		Node<T> body=this.body.specialiseValues(bindings.delete(args));
+		// System.out.println(body);
 		AFn<T> fn=new AFn<T>() {
 			@Override
 			public T applyToArray(Object... a) {
 				if (a.length!=arity) throw new ArityException(arity,a.length);
 				Context c=context;
+				APersistentMap<Symbol, Object> bnds=bindings;
 				for (int i=0; i<arity; i++) {
-					c=c.define(args.get(i), Constant.create(a[i]));
+					bnds=bnds.assoc(args.get(i), a[i]);
 				}
-				return body.compute(c,bindings);
+				return body.compute(c,bnds);
 			}	
 		};
 		return new Result<IFn<T>>(context,fn);
 	}
+	
+	@Override
+	public Node<IFn<T>> specialiseValues(APersistentMap<Symbol, Object> bindings) {
+		bindings=bindings.delete(args); // hidden by argument bindings
+		Node<T> newBody=body.specialiseValues(bindings);
+		// System.out.println("Defining lambda as "+newBody+" with bindings "+bindings);
+		return (body==newBody)?this:create(args,newBody);
+	}
 
 	public static <T> Lambda<T> create(IPersistentVector<Symbol> args, Node<T> body) {
 		return new Lambda<T>(args,body);
+	}
+	
+	@Override
+	public String toString() {
+		return "(Lambda "+args+" "+body+")";
 	}
 
 }

@@ -23,6 +23,11 @@ public abstract class BaseConstant<T> extends Node<T> {
 	public abstract T getValue();
 	
 	@Override
+	public boolean isConstant() {
+		return true;
+	}
+	
+	@Override
 	public Result<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
 		// no change to context, returns pure value
 		return new Result<>(context,getValue());

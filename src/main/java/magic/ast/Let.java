@@ -37,7 +37,7 @@ public class Let<T> extends Node<T> {
 		int nBody=body.length;
 		
 		for (int i=0; i<nLets; i++) {
-			bindings=bindings.assoc(syms[i], (Object)(lets[i].compute(context)));
+			bindings=bindings.assoc(syms[i], (Object)(lets[i].compute(context,bindings)));
 		}
 		
 		Result<T> r=new Result<>(context,null);
@@ -49,7 +49,6 @@ public class Let<T> extends Node<T> {
 	
 	@Override
 	public Node<T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
-		Node<?>[] newBody=body;
 		Node<?>[] newLets=lets;
 		boolean changed=false;
 		for (int i=0; i<nLets; i++) {
@@ -62,9 +61,14 @@ public class Let<T> extends Node<T> {
 				}
 				newLets[i]=newNode;
 			} 
-		    bindings=bindings.dissoc(syms[i]); // binding no longer visible
+			if (newNode.isConstant()) {
+				bindings=bindings.assoc(syms[i],newNode.getValue());
+			} else {
+		        bindings=bindings.dissoc(syms[i]); // binding no longer visible, must be calcyulated
+			}
 		}
 		changed=false; // reset changed for body
+		Node<?>[] newBody=body;
 		for (int i=0; i<nBody; i++) {
 			Node<?> node=body[i];
 			Node<?> newNode=node.specialiseValues(bindings);
@@ -78,6 +82,24 @@ public class Let<T> extends Node<T> {
 		}
 		
 		return ((body==newBody)&&(lets==newLets))?this:create(syms,newLets,newBody);
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb= new StringBuilder("(Let [");
+		for (int i=0; i<nLets; i++) {
+			if (i>0) sb.append(' ');
+			sb.append(syms[i]);
+			sb.append(' ');
+			sb.append(lets[i]);
+		}
+		sb.append("] ");
+		for (int i=0; i<nBody; i++) {
+			if (i>0) sb.append(' ');
+			sb.append(body[i]);
+		}
+		sb.append(')');
+		return sb.toString();
 	}
 
 }

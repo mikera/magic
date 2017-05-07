@@ -45,4 +45,8 @@ public class Lookup<T> extends Node<T> {
 		return this;
 	}
 
+	@Override
+	public String toString() {
+		return "(Lookup "+sym+")";
+	}
 }
