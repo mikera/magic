@@ -48,6 +48,12 @@ public class Lambda<T> extends Node<IFn<T>> {
 		// System.out.println("Defining lambda as "+newBody+" with bindings "+bindings);
 		return (body==newBody)?this:create(args,newBody);
 	}
+	
+	@Override
+	public Node<IFn<T>> optimise() {
+		Node<T> newBody=body.optimise();
+		return (body==newBody)?this:create(args,newBody);
+	}
 
 	public static <T> Lambda<T> create(IPersistentVector<Symbol> args, Node<T> body) {
 		return new Lambda<T>(args,body);
@@ -57,5 +63,4 @@ public class Lambda<T> extends Node<IFn<T>> {
 	public String toString() {
 		return "(Lambda "+args+" "+body+")";
 	}
-
 }

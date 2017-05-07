@@ -108,7 +108,13 @@ public abstract class Node<T> extends RootNode {
 	 * @param bindings
 	 * @return
 	 */
-	public Node<T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
-		return this;
-	}
+	public abstract Node<T> specialiseValues(APersistentMap<Symbol, Object> bindings);
+	
+	/** 
+	 * Performs local optimisations on the node. Returns a new node if any optimisation succeeded
+	 * 
+	 * @param bindings
+	 * @return
+	 */
+	public abstract Node<T> optimise();
 }

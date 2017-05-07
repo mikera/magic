@@ -45,5 +45,34 @@ public class Apply<T> extends Node<T> {
 	public static <T> Apply<T> create(Node<IFn<T>> function, APersistentList<Node<?>> tail) {
 		return create(function,tail.toArray(new Node[tail.size()]));
 	}
+	
+
+	@Override
+	public Node<T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
+		Node<IFn<T>> newFunction=function.specialiseValues(bindings);
+		boolean changed=false;
+		Node<?>[] newBody=args;
+		for (int i=0; i<arity; i++) {
+			Node<?> node=args[i];
+			Node<?> newNode=node.specialiseValues(bindings);
+			if (node!=newNode) {
+				if (!changed) {
+					newBody=newBody.clone();
+					changed=true;
+				}
+				newBody[i]=newNode;
+			} 
+		}
+		return (newFunction==function)&&(args==newBody)?this:create(newFunction,newBody);	
+	}
+
+	@Override
+	public Node<T> optimise() {
+		if ((arity==0)&&(function.isConstant())) {
+			return Constant.create(function.getValue().apply());
+		}
+		return this;
+	}
+
 
 }

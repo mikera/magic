@@ -32,4 +32,14 @@ public abstract class BaseConstant<T> extends Node<T> {
 		// no change to context, returns pure value
 		return new Result<>(context,getValue());
 	}
+	
+	@Override
+	public Node<T> optimise() {
+		return this;
+	}
+	
+	@Override
+	public Node<T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
+		return this;
+	}
 }

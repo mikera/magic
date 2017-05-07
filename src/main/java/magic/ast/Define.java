@@ -33,4 +33,9 @@ public class Define<T> extends Node<T> {
 		return (exp==newExp)?this:create(sym,newExp);
 	}
 
+	@Override
+	public Node<T> optimise() {
+		Node<T> newExp=exp.optimise();
+		return (exp==newExp)?this:create(sym,newExp);
+	}
 }

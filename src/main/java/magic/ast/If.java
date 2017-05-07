@@ -47,6 +47,18 @@ public class If<T> extends Node<T> {
 		Node<T> newFalse=falseExp.specialiseValues(bindings);
 		return ((newTest==test)&&(newTrue==trueExp)&&(newFalse==falseExp))?this:createIf(newTest,newTrue,newFalse);
 	}
+	
+	@Override
+	public Node<T> optimise() {
+		Node<Object> newTest=test.optimise();
+		Node<T> newTrue=trueExp.optimise();
+		Node<T> newFalse=falseExp.optimise();
+		if (newTest.isConstant()) {
+			// TODO: type check for possible truthiness / falsiness
+			return RT.bool(newTest.getValue())?newTrue:newFalse;
+		}
+		return ((newTest==test)&&(newTrue==trueExp)&&(newFalse==falseExp))?this:createIf(newTest,newTrue,newFalse);
+	}
 
 	@Override
 	public String toString() {

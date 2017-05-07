@@ -51,6 +51,21 @@ public class Vector<T> extends Node<IPersistentVector<T>> {
 		}
 		return (exps==newExps)?this:create(newExps);
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Node<IPersistentVector<T>> optimise() {
+		int nExps=exps.size();
+		IPersistentVector<Node<T>> newExps=exps;
+		for (int i=0; i<nExps; i++) {
+			Node<?> node=exps.get(i);
+			Node<?> newNode=node.optimise();
+			if (node!=newNode) {
+				newExps=newExps.update(i,(Node<T>) newNode);
+			} 
+		}
+		return (exps==newExps)?this:create(newExps);
+	}
 
 	public static <T> Vector<T> create(IPersistentVector<Node<T>> exps) {
 		return new Vector<T>(exps);
@@ -71,4 +86,6 @@ public class Vector<T> extends Node<IPersistentVector<T>> {
 		sb.append(')');
 		return sb.toString();
 	}
+
+
 }

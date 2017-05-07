@@ -46,4 +46,13 @@ public class Form<T> extends Node<T> {
 		return form.toString();
 	}
  	
+	@Override
+	public Node<T> optimise() {
+		return this;
+	}
+
+	@Override
+	public Node<T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
+		return this;
+	}
 }

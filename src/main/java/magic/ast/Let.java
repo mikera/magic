@@ -76,6 +76,28 @@ public class Let<T> extends Node<T> {
 	}
 	
 	@Override
+	public Node<T> optimise() {
+		Node<?>[] newLets=lets;
+		boolean changed=false;
+		for (int i=0; i<nLets; i++) {
+			Node<?> node=lets[i];
+			Node<?> newNode=node.optimise();
+			if (node!=newNode) {
+				if (!changed) {
+					newLets=newLets.clone();
+					changed=true;
+				}
+				newLets[i]=newNode;
+			} 
+		}
+
+		Node<T> newBody=body.optimise();
+		if (body.isConstant()) return body;
+		
+		return ((body==newBody)&&(lets==newLets))?this:create(syms,newLets,newBody);
+	}
+	
+	@Override
 	public String toString() {
 		StringBuilder sb= new StringBuilder("(Let [");
 		for (int i=0; i<nLets; i++) {
@@ -89,5 +111,7 @@ public class Let<T> extends Node<T> {
 		sb.append(')');
 		return sb.toString();
 	}
+
+
 
 }

@@ -49,6 +49,27 @@ public class Do<T> extends Node<T> {
 		return (body==newBody)?this:create(newBody);
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Node<T> optimise() {
+		if (nBody==0) return (Node<T>) Constant.NULL;
+		if (nBody==1) return (Node<T>) body[0].optimise();
+		boolean changed=false;
+		Node<?>[] newBody=body;
+		for (int i=0; i<nBody; i++) {
+			Node<?> node=body[i];
+			Node<?> newNode=node.optimise();
+			if (node!=newNode) {
+				if (!changed) {
+					newBody=newBody.clone();
+					changed=true;
+				}
+				newBody[i]=newNode;
+			} 
+		}
+		return (body==newBody)?this:create(newBody);		
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder sb= new StringBuilder("(Do ");
