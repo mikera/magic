@@ -6,6 +6,12 @@ import magic.data.APersistentMap;
 import magic.data.Symbol;
 import magic.lang.Context;
 
+/**
+ * AST `let` node capable of defining lexical bindings
+ * @author Mike
+ *
+ * @param <T>
+ */
 public class Let<T> extends Node<T> {
 	private final int nLets;
 	private final Node<T> body;
