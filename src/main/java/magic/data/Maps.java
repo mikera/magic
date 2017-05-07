@@ -12,6 +12,8 @@ import magic.data.impl.NullMap;
  *
  */
 public class Maps {
+	public static final APersistentMap<?, ?> EMPTY = NullMap.INSTANCE;
+
 	@SuppressWarnings("unchecked")
 	public static <K,V> APersistentMap<K,V> create() {
 		return (APersistentMap<K,V>)NullMap.INSTANCE;

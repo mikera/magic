@@ -30,4 +30,9 @@ public class Result<T> {
 	public String toString() {
 		return "(Result "+context+" : "+value+")";
 	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static <T> Result<T> create(Context c, T value) {
+		return new Result(c,value);
+	}
 }

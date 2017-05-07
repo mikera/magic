@@ -1,7 +1,8 @@
 package magic.ast;
 
+import magic.compiler.Result;
+import magic.data.APersistentMap;
 import magic.data.IPersistentSet;
-import magic.data.PersistentHashMap;
 import magic.data.Sets;
 import magic.data.Symbol;
 import magic.lang.Context;
@@ -36,7 +37,7 @@ public class Form<T> extends Node<T> {
 
 	
 	@Override
-	public T compute(Context c, PersistentHashMap<Symbol, ?> bindings) {
+	public Result<T> compile(Context c, APersistentMap<Symbol, ?> bindings) {
 		throw new UnsupportedOperationException("Trying to evaluate unexpanded form: "+this);
 	}
 	

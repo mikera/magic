@@ -2,7 +2,7 @@ package magic.ast;
 
 import magic.RT;
 import magic.compiler.Result;
-import magic.data.PersistentHashMap;
+import magic.data.APersistentMap;
 import magic.data.Symbol;
 import magic.lang.Context;
 
@@ -32,21 +32,16 @@ public class Cond<T> extends Node<T> {
 	}
 
 	@Override
-	public Result<T> compile(Context context) {
+	public Result<T> compile(Context context, APersistentMap<Symbol, ?> bindings) {
 		Result<?> r = new Result<>(context,null);
 		for (int i=0; i<nTests; i++) {
-			r=tests[i].compile(r.getContext());
+			r=tests[i].compile(r.getContext(),bindings);
 			Object testVal=r.getValue();
 			if (RT.bool(testVal)) {
-				return exps[i].compile(r.getContext());
+				return exps[i].compile(r.getContext(),bindings);
 			}
 		}
-		return exps[nTests].compile(r.getContext());
-	}
-
-	@Override
-	public T compute(Context c, PersistentHashMap<Symbol, ?> bindings) {
-		return compile(c).getValue();
+		return exps[nTests].compile(r.getContext(),bindings);
 	}
 
 }

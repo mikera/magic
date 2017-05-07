@@ -1,7 +1,7 @@
 package magic.ast;
 
 import magic.compiler.Result;
-import magic.data.PersistentHashMap;
+import magic.data.APersistentMap;
 import magic.data.Symbol;
 import magic.lang.Context;
 
@@ -13,27 +13,17 @@ public class Do<T> extends Node<T> {
 		exps=exs;
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public T compute(Context c,PersistentHashMap<Symbol,?> bindings) {
-		int n=exps.length;
-		for (int i=0; i<(n-1); i++) {
-			exps[i].compute(c,bindings);
-		}
-		return (T) exps[n-1].compute(c,bindings);
-	}
-
 	public static <T> Node<T> create(Node<?>[] exs) {
 		return new Do<T>(exs);
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Result<T> compile(Context context) {
+	public Result<T> compile(Context context, APersistentMap<Symbol,?> bindings) {
 		int n=exps.length;
 		Result<T> r=new Result<>(context,null);
 		for (int i=0; i<n; i++) {
-			r=(Result<T>) exps[i].compile(r.getContext());
+			r=(Result<T>) exps[i].compile(r.getContext(),bindings);
 		}
 		return r;
 	}

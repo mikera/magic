@@ -1,7 +1,8 @@
 package magic.ast;
 
+import magic.compiler.Result;
+import magic.data.APersistentMap;
 import magic.data.IPersistentVector;
-import magic.data.PersistentHashMap;
 import magic.data.Symbol;
 import magic.data.Tuple;
 import magic.data.Vectors;
@@ -25,14 +26,14 @@ public class Vector<T> extends Node<IPersistentVector<T>> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public IPersistentVector<T> compute(Context c,PersistentHashMap<Symbol,?> bindings) {
+	public Result<IPersistentVector<T>> compile(Context c,APersistentMap<Symbol,?> bindings) {
 		int n=exps.size();
-		if (n==0) return (IPersistentVector<T>) Tuple.EMPTY;
+		if (n==0) return  Result.create(c, (IPersistentVector<T>)Tuple.EMPTY);
 		T[] results=(T[]) new Object[n];
 		for (int i=0; i<n; i++) {
 			results[i]=exps.get(i).compute(c,bindings);
 		}
-		return Vectors.wrap(results);
+		return Result.create(c, (IPersistentVector<T>)Vectors.wrap(results));
 	}
 
 	public static <T> Vector<T> create(IPersistentVector<Node<T>> exps) {

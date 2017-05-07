@@ -7,6 +7,7 @@ import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.source.SourceSection;
 
 import magic.compiler.Result;
+import magic.data.APersistentMap;
 import magic.data.IPersistentSet;
 import magic.data.IPersistentVector;
 import magic.data.PersistentHashMap;
@@ -42,11 +43,14 @@ public abstract class Node<T> extends RootNode {
 
 	/**
 	 * Computes the value of an expression  node in the given context
+	 * Discards and effects on the context
 	 * @param c
 	 * @param bindings
 	 * @return
 	 */
-	public abstract T compute(Context c, PersistentHashMap<Symbol,?> bindings);
+	public final T compute(Context c, APersistentMap<Symbol,?> bindings) {
+		return compile(c,bindings).getValue();
+	}
 	
 	@Override
 	public Object execute(VirtualFrame virtualFrame) {
@@ -87,9 +91,10 @@ public abstract class Node<T> extends RootNode {
 	/**
 	 * Compiles the node in the given context, returning an updated context and value
 	 * @param context
+	 * @param bindings 
 	 * @return
 	 */
-	public Result<T> compile(Context context) {
+	public Result<T> compile(Context context, APersistentMap<Symbol, ?> bindings) {
 		throw new UnsupportedOperationException("Cannot compile node of type: "+this.getClass());
 	}
 }

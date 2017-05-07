@@ -1,6 +1,7 @@
 package magic.ast;
 
 import magic.compiler.Result;
+import magic.data.APersistentMap;
 import magic.data.IPersistentSet;
 import magic.data.Symbol;
 import magic.lang.Context;
@@ -22,7 +23,7 @@ public abstract class BaseConstant<T> extends Node<T> {
 	public abstract T getValue();
 	
 	@Override
-	public Result<T> compile(Context context) {
+	public Result<T> compile(Context context, APersistentMap<Symbol,?> bindings) {
 		// no change to context, returns pure value
 		return new Result<>(context,getValue());
 	}

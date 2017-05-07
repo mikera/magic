@@ -1,7 +1,8 @@
 package magic.ast;
 
+import magic.compiler.Result;
 import magic.data.APersistentList;
-import magic.data.PersistentHashMap;
+import magic.data.APersistentMap;
 import magic.data.Symbol;
 import magic.fn.IFn;
 import magic.lang.Context;
@@ -25,13 +26,16 @@ public class Apply<T> extends Node<T> {
 	}
 
 	@Override
-	public T compute(Context c,PersistentHashMap<Symbol,?> bindings) {
-		IFn<T> f=(IFn<T>) function.compute(c,bindings); // get the value of the function
+	public Result<T> compile(Context c,APersistentMap<Symbol,?> bindings) {
+		Result<IFn<T>> rf= function.compile(c,bindings);
+		IFn<T> f=rf.getValue();
 		Object[] values=new Object[arity];
+		Result<?> r=rf;
 		for (int i=0; i<arity; i++) {
-			values[i]=args[i].compute(c,bindings);
+			r=args[i].compile(c,bindings);
+			values[i]=r.getValue();
 		}
-		return f.applyToArray(values);
+		return Result.create(r.getContext(),f.applyToArray(values));
 	}
 
 	public static <T> Apply<T> create(Node<IFn<T>> function, Node<?>... args) {

@@ -1,7 +1,8 @@
 package magic.ast;
 
+import magic.compiler.Result;
+import magic.data.APersistentMap;
 import magic.data.IPersistentVector;
-import magic.data.PersistentHashMap;
 import magic.data.Symbol;
 import magic.fn.AFn;
 import magic.fn.ArityException;
@@ -22,8 +23,8 @@ public class Lambda<T> extends Node<IFn<T>> {
 	}
 
 	@Override
-	public IFn<T> compute(Context context,PersistentHashMap<Symbol,?> bindings) {
-		return new AFn<T>() {
+	public Result<IFn<T>> compile(Context context,APersistentMap<Symbol,?> bindings) {
+		AFn<T> fn=new AFn<T>() {
 			@Override
 			public T applyToArray(Object... a) {
 				if (a.length!=arity) throw new ArityException(arity,a.length);
@@ -34,6 +35,7 @@ public class Lambda<T> extends Node<IFn<T>> {
 				return body.compute(c,bindings);
 			}	
 		};
+		return new Result<IFn<T>>(context,fn);
 	}
 
 	public static <T> Lambda<T> create(IPersistentVector<Symbol> args, Node<T> body) {
