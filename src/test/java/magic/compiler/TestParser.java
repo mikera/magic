@@ -1,7 +1,6 @@
 package magic.compiler;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -23,6 +22,10 @@ public class TestParser {
 		assertEquals(Double.valueOf(-3.0),Reader.read("-3.0"));
 		assertEquals(Double.valueOf(.3e10),Reader.read(".3e10"));
 		assertEquals(Double.valueOf(-.3e10),Reader.read("-0.3e10"));
+	}
+	
+	@Test public void testNil() {
+		assertNull(Reader.read("nil"));
 	}
 	
 	@Test public void testLong() {

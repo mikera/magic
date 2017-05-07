@@ -64,8 +64,8 @@ public class Reader extends BaseParser<Object> {
 		return FirstOf(
 				DataStructure(),
 				QuotedExpression(),
-				Symbol(),
-				Constant()
+				Constant(),
+				Symbol()
 				);
 	}
 	
@@ -150,7 +150,13 @@ public class Reader extends BaseParser<Object> {
 	// CONSTANT LITERALS
 	
 	public Rule Constant() {
-		return FirstOf(NumberLiteral(),StringLiteral());
+		return FirstOf(NumberLiteral(),StringLiteral(),NilLiteral());
+	}
+	
+	public Rule NilLiteral() {
+		return Sequence(
+				"nil",
+				push(null));
 	}
 	
 	public Rule StringLiteral() {

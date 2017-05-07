@@ -2,6 +2,7 @@ package magic.compiler;
 
 import magic.RT;
 import magic.ast.Apply;
+import magic.ast.Cond;
 import magic.ast.Constant;
 import magic.ast.Define;
 import magic.ast.Do;
@@ -15,6 +16,7 @@ import magic.data.IPersistentVector;
 import magic.data.Lists;
 import magic.data.Symbol;
 import magic.data.Vectors;
+import magic.fn.ArityException;
 import magic.lang.Context;
 import magic.lang.Symbols;
 
@@ -48,11 +50,13 @@ public class Analyser {
 	
 	@SuppressWarnings("unchecked")
 	public static <T> Node<T> analyse(Context c, Object form) {
+		if (form==null) return (Node<T>) Constant.NULL;
 		if (form instanceof IPersistentList) return analyseList(c,(IPersistentList<Object>)form);
 		if (form instanceof IPersistentVector) return (Node<T>) analyseVector(c,(IPersistentVector<Object>)form);
 		if (form instanceof Symbol) return analyseSymbol(c,(Symbol)form);
 		
 		// fall through handles constant literals, keywords etc
+
 		return (Node<T>) Constant.create(form);
 	}
 
@@ -75,6 +79,7 @@ public class Analyser {
 		if (first==Symbols.FN) return analyseFn(c,tail.head(),tail.tail());
 		if (first==Symbols.QUOTE) return analyseQuote(c,tail);
 		if (first==Symbols.DO) return analyseDo(c,tail);
+		if (first==Symbols.IF) return analyseIf(c,tail);
 		
 		
 		return Apply.create(Lookup.create(first),analyseAll(c,tail));
@@ -88,6 +93,17 @@ public class Analyser {
 			exs[i]=analyse(c,forms.get(i));
 		}		
 		return Do.create(exs);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private static <T> Node<T> analyseIf(Context c,APersistentList<Object> forms) {
+		int n=forms.size();
+		if (n<2) throw new ArityException("If requires at least one test expreesion and a true result, got "+n);
+		if (n>3) throw new ArityException("Too many subexpressions for if, got "+n);
+		Node<Object> test=analyse(c,forms.get(0));
+		Node<T> trueExp=analyse(c,forms.get(1));
+		Node<T> falseExp=(n>2)?analyse(c,forms.get(2)):(Node<T>) Constant.NULL;
+		return Cond.createIf(test,trueExp,falseExp);
 	}
 
 	@SuppressWarnings("unchecked")

@@ -13,4 +13,5 @@ public class Symbols {
 	public static final Symbol QUOTE = Symbol.create("quote");
 	public static final Symbol FN = Symbol.create("fn");
 	public static final Symbol DO = Symbol.create("do");
+	public static final Symbol IF =  Symbol.create("if");
 }
