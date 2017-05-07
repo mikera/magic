@@ -150,13 +150,19 @@ public class Reader extends BaseParser<Object> {
 	// CONSTANT LITERALS
 	
 	public Rule Constant() {
-		return FirstOf(NumberLiteral(),StringLiteral(),NilLiteral());
+		return FirstOf(NumberLiteral(),StringLiteral(),NilLiteral(),BooleanLiteral());
 	}
 	
 	public Rule NilLiteral() {
 		return Sequence(
 				"nil",
 				push(null));
+	}
+	
+	public Rule BooleanLiteral() {
+		return FirstOf(
+				Sequence("true",push(Boolean.TRUE)),
+				Sequence("false",push(Boolean.FALSE)));
 	}
 	
 	public Rule StringLiteral() {

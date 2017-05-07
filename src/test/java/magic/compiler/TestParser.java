@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import magic.RT;
 import magic.compiler.Reader;
 import magic.data.IPersistentList;
 import magic.data.IPersistentVector;
@@ -27,6 +28,14 @@ public class TestParser {
 	@Test public void testNil() {
 		assertNull(Reader.read("nil"));
 	}
+	
+	@Test public void testBooleans() {
+		assertTrue((Boolean)Reader.read("true"));
+		assertFalse((Boolean)Reader.read("false"));
+		assertTrue(RT.bool(Reader.read("true")));
+		assertFalse(RT.bool(Reader.read("false")));
+	}
+
 	
 	@Test public void testLong() {
 		assertEquals(Long.valueOf(-3),Reader.read("-3"));
