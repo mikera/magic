@@ -39,6 +39,14 @@ public class If<T> extends Node<T> {
 			
 		}
 	}
+	
+	@Override
+	public Node<T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
+		Node<Object> newTest=test.specialiseValues(bindings);
+		Node<T> newTrue=trueExp.specialiseValues(bindings);
+		Node<T> newFalse=falseExp.specialiseValues(bindings);
+		return ((newTest==test)&&(newTrue==trueExp)&&(newFalse==falseExp))?this:createIf(newTest,newTrue,newFalse);
+	}
 
 	@Override
 	public String toString() {
