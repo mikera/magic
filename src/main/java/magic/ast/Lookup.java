@@ -35,5 +35,14 @@ public class Lookup<T> extends Node<T> {
 	public static <T> Lookup<T> create(String sym) {
 		return create(Reader.readSymbol(sym));
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Node<T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
+		if (bindings.containsKey(sym)) {
+			return (Node<T>) Constant.create(bindings.get(sym));
+		}
+		return this;
+	}
 
 }

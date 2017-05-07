@@ -21,4 +21,6 @@ public interface IPersistentSet<T> extends Set<T>, Iterable<T> {
 	// query methods
 	
 	public boolean allowsNulls();
+
+	public IPersistentSet<T> excludeAll(T[] syms);
 }

@@ -39,6 +39,17 @@ public class TestCompiler {
 		assertEquals((Long)1L,c2.getValue("b"));
 	}
 	
+	@Test public void testCompileLet() {
+		Context c=RT.INITIAL_CONTEXT;
+		
+		Result<?> r=Compiler.compile(c, 
+				"(let [a 3] " +
+				"    (def b a)) ");
+		Context c2=r.getContext();
+	
+		assertEquals((Long)3L,c2.getValue("b"));
+	}
+	
 	
 	@Test public void testCompileVal() {
 		Context c=RT.INITIAL_CONTEXT;

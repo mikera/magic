@@ -80,9 +80,35 @@ public class Analyser {
 		if (first==Symbols.QUOTE) return analyseQuote(c,tail);
 		if (first==Symbols.DO) return analyseDo(c,tail);
 		if (first==Symbols.IF) return analyseIf(c,tail);
+		if (first==Symbols.LET) return analyseLet(c,tail);
 		
 		
 		return Apply.create(Lookup.create(first),analyseAll(c,tail));
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T> Node<T> analyseLet(Context c, APersistentList<Object> forms) {
+		Object head=forms.head();
+		if (!(head instanceof IPersistentVector)) throw new Error("First argument to let must be a binding vector");
+		IPersistentVector<Object> bindingVector=(IPersistentVector<Object>) head;
+		int vSize=bindingVector.size();
+		int n=vSize/2;
+		if (n*2!=vSize) throw new Error("let binging vector must contain an even number of forms");
+		Symbol[] syms=new Symbol[n];
+		Node<?>[] exps=new Node<?>[n];
+		for (int i=0; i<n; i++) {
+			syms[i]=(Symbol)bindingVector.get(2*i);
+			exps[i]=analyse(c,bindingVector.get(2*i+1));
+		}
+		
+		APersistentList<Object> bodyForms=forms.tail();
+		int nBody=bodyForms.size();
+		Node<?>[] body=new Node<?>[nBody];
+		for (int i=0; i<nBody; i++) {
+			body[i]=analyse(c,bodyForms.get(i));
+		}
+		
+		return Let.create(syms, exps, body);
 	}
 
 	@SuppressWarnings("unchecked")

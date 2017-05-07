@@ -12,13 +12,13 @@ public class Let<T> extends Node<T> {
 	private final Symbol[] syms;
 	private final Node<?>[] lets;
 	
-	public Let(Node<?>[] exs, Symbol[] syms, Node<?>[] lets) {
-		super(calcDependencies(exs));
+	public Let(Node<?>[] bodyExprs, Symbol[] syms, Node<?>[] lets) {
+		super(calcDependencies(bodyExprs).excludeAll(syms));
 		n=syms.length;
 		if (n!=lets.length) throw new IllegalArgumentException("Incorrect number of bindings forms for let");
 		this.syms=syms;
 		this.lets=lets;
-		body=exs;
+		body=bodyExprs;
 	}
 
 	public static <T> Node<T> create(Node<?>[] body) {
