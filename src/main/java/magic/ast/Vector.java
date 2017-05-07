@@ -35,6 +35,21 @@ public class Vector<T> extends Node<IPersistentVector<T>> {
 		}
 		return Result.create(c, (IPersistentVector<T>)Vectors.wrap(results));
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Node<IPersistentVector<T>> specialiseValues(APersistentMap<Symbol, Object> bindings) {
+		int nExps=exps.size();
+		IPersistentVector<Node<T>> newExps=exps;
+		for (int i=0; i<nExps; i++) {
+			Node<?> node=exps.get(i);
+			Node<?> newNode=node.specialiseValues(bindings);
+			if (node!=newNode) {
+				newExps=newExps.update(i,(Node<T>) newNode);
+			} 
+		}
+		return (exps==newExps)?this:create(exps);
+	}
 
 	public static <T> Vector<T> create(IPersistentVector<Node<T>> exps) {
 		return new Vector<T>(exps);

@@ -7,15 +7,17 @@ import magic.data.Symbol;
 import magic.lang.Context;
 
 public class Let<T> extends Node<T> {
-	private final int n;
+	private final int nLets;
+	private final int nBody;
 	private final Node<?>[] body;
 	private final Symbol[] syms;
 	private final Node<?>[] lets;
 	
 	public Let(Node<?>[] bodyExprs, Symbol[] syms, Node<?>[] lets) {
 		super(calcDependencies(bodyExprs).excludeAll(syms));
-		n=syms.length;
-		if (n!=lets.length) throw new IllegalArgumentException("Incorrect number of bindings forms for let");
+		nLets=syms.length;
+		nBody=bodyExprs.length;
+		if (nLets!=lets.length) throw new IllegalArgumentException("Incorrect number of bindings forms for let");
 		this.syms=syms;
 		this.lets=lets;
 		body=bodyExprs;
@@ -34,7 +36,7 @@ public class Let<T> extends Node<T> {
 	public Result<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
 		int nBody=body.length;
 		
-		for (int i=0; i<n; i++) {
+		for (int i=0; i<nLets; i++) {
 			bindings=bindings.assoc(syms[i], (Object)(lets[i].compute(context)));
 		}
 		
@@ -43,6 +45,39 @@ public class Let<T> extends Node<T> {
 			r=(Result<T>) body[i].eval(r.getContext(),bindings);
 		}
 		return r;
+	}
+	
+	@Override
+	public Node<T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
+		Node<?>[] newBody=body;
+		Node<?>[] newLets=lets;
+		boolean changed=false;
+		for (int i=0; i<nLets; i++) {
+			Node<?> node=lets[i];
+			Node<?> newNode=node.specialiseValues(bindings);
+			if (node!=newNode) {
+				if (!changed) {
+					newLets=newLets.clone();
+					changed=true;
+				}
+				newLets[i]=newNode;
+			} 
+		    bindings=bindings.dissoc(syms[i]); // binding no longer visible
+		}
+		changed=false; // reset changed for body
+		for (int i=0; i<nBody; i++) {
+			Node<?> node=body[i];
+			Node<?> newNode=node.specialiseValues(bindings);
+			if (node!=newNode) {
+				if (!changed) {
+					newBody=newBody.clone();
+					changed=true;
+				}
+				newBody[i]=newNode;
+			} 
+		}
+		
+		return ((body==newBody)&&(lets==newLets))?this:create(syms,newLets,newBody);
 	}
 
 }

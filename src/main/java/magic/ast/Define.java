@@ -17,7 +17,6 @@ public class Define<T> extends Node<T> {
 	}
 
 	public static <T> Define<T> create(Symbol sym, Node<T> exp) {
-		// TODO Auto-generated method stub
 		return new Define<T>(sym,exp);
 	}
 	
