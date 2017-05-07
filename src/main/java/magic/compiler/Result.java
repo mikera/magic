@@ -25,4 +25,9 @@ public class Result<T> {
 	public T getValue() {
 		return value;
 	}
+	
+	@Override
+	public String toString() {
+		return "(Result "+context+" : "+value+")";
+	}
 }

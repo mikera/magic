@@ -74,9 +74,20 @@ public class Analyser {
 		if (first==Symbols.DEF) return analyseDefine(c,(Symbol)tail.head(),tail.tail());
 		if (first==Symbols.FN) return analyseFn(c,tail.head(),tail.tail());
 		if (first==Symbols.QUOTE) return analyseQuote(c,tail);
+		if (first==Symbols.DO) return analyseDo(c,tail);
 		
 		
 		return Apply.create(Lookup.create(first),analyseAll(c,tail));
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T> Node<T> analyseDo(Context c,APersistentList<Object> forms) {
+		int n=forms.size();
+		Node<T>[] exs=new Node[n];
+		for (int i=0; i<n; i++) {
+			exs[i]=analyse(c,forms.get(i));
+		}		
+		return Do.create(exs);
 	}
 
 	@SuppressWarnings("unchecked")
