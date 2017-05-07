@@ -8,7 +8,7 @@ import magic.lang.Context;
  *
  * @param <T>
  */
-public class Result<T> {
+public final class Result<T> {
 
 	private Context context;
 	private T value;
