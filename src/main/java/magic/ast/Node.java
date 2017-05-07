@@ -41,7 +41,7 @@ public abstract class Node<T> extends RootNode {
 	}
 
 	/**
-	 * Computes the value of a node in the given context
+	 * Computes the value of an expression  node in the given context
 	 * @param c
 	 * @param bindings
 	 * @return
@@ -50,7 +50,7 @@ public abstract class Node<T> extends RootNode {
 	
 	@Override
 	public Object execute(VirtualFrame virtualFrame) {
-		return compute(null);
+		throw new UnsupportedOperationException("Can't execute a Magic node without a context");
 	}
 	
 	public T getValue() {

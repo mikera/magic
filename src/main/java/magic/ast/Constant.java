@@ -15,6 +15,8 @@ import magic.lang.Context;
  */
 public class Constant<T> extends BaseConstant<T> {
 
+	public static final Constant<?> NULL = Constant.create(null);
+	
 	private final T value;
 	
 	public Constant(T value, IPersistentSet<Symbol> deps) {
