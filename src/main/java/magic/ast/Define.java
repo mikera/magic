@@ -22,7 +22,7 @@ public class Define<T> extends Node<T> {
 	}
 	
 	@Override
-	public Result<T> eval(Context context, APersistentMap<Symbol, ?> bindings) {
+	public Result<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
 		context=context.define(sym, exp); // TODO: what about bindings?
 		return new Result<T>(context,null); // TODO: what should def return??
 	}

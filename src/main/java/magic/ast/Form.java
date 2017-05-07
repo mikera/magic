@@ -37,7 +37,7 @@ public class Form<T> extends Node<T> {
 
 	
 	@Override
-	public Result<T> eval(Context c, APersistentMap<Symbol, ?> bindings) {
+	public Result<T> eval(Context c, APersistentMap<Symbol, Object> bindings) {
 		throw new UnsupportedOperationException("Trying to evaluate unexpanded form: "+this);
 	}
 	

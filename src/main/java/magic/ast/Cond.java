@@ -32,7 +32,7 @@ public class Cond<T> extends Node<T> {
 	}
 
 	@Override
-	public Result<T> eval(Context context, APersistentMap<Symbol, ?> bindings) {
+	public Result<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
 		Result<?> r = new Result<>(context,null);
 		for (int i=0; i<nTests; i++) {
 			r=tests[i].eval(r.getContext(),bindings);

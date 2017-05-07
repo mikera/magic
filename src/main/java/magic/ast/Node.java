@@ -38,7 +38,7 @@ public abstract class Node<T> extends RootNode {
 
 	@SuppressWarnings("unchecked")
 	public final T compute(Context c) {
-		return compute(c,(PersistentHashMap<Symbol, ?>) PersistentHashMap.EMPTY);
+		return compute(c,(PersistentHashMap<Symbol, Object>) PersistentHashMap.EMPTY);
 	}
 
 	/**
@@ -48,7 +48,7 @@ public abstract class Node<T> extends RootNode {
 	 * @param bindings
 	 * @return
 	 */
-	public final T compute(Context c, APersistentMap<Symbol,?> bindings) {
+	public final T compute(Context c, APersistentMap<Symbol,Object> bindings) {
 		return eval(c,bindings).getValue();
 	}
 	
@@ -94,7 +94,7 @@ public abstract class Node<T> extends RootNode {
 	 * @param bindings 
 	 * @return
 	 */
-	public Result<T> eval(Context context, APersistentMap<Symbol, ?> bindings) {
+	public Result<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
 		throw new UnsupportedOperationException("Cannot compile node of type: "+this.getClass());
 	}
 }

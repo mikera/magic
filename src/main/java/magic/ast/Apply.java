@@ -26,7 +26,7 @@ public class Apply<T> extends Node<T> {
 	}
 
 	@Override
-	public Result<T> eval(Context c,APersistentMap<Symbol,?> bindings) {
+	public Result<T> eval(Context c,APersistentMap<Symbol, Object> bindings) {
 		Result<IFn<T>> rf= function.eval(c,bindings);
 		IFn<T> f=rf.getValue();
 		Object[] values=new Object[arity];

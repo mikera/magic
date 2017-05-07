@@ -3,6 +3,8 @@ package magic;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import magic.ast.Node;
+import magic.data.Symbol;
 import magic.lang.Context;
 
 /**
@@ -13,6 +15,8 @@ import magic.lang.Context;
 public class RT {
 
 	public static final Context INITIAL_CONTEXT = createInitialContext();
+	public static final Symbol[] EMPTY_SYMBOLS = new Symbol[0];
+	public static final Node<?>[] EMPTY_NODES = new Node<?>[0];
 
 	/**
 	 * Converts an object to a boolean primitive value, according to Clojure's truthiness rules

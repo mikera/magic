@@ -5,7 +5,7 @@ import magic.ast.Apply;
 import magic.ast.Cond;
 import magic.ast.Constant;
 import magic.ast.Define;
-import magic.ast.Do;
+import magic.ast.Let;
 import magic.ast.Node;
 import magic.ast.Lambda;
 import magic.ast.Lookup;
@@ -92,7 +92,7 @@ public class Analyser {
 		for (int i=0; i<n; i++) {
 			exs[i]=analyse(c,forms.get(i));
 		}		
-		return Do.create(exs);
+		return Let.create(exs);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -124,7 +124,7 @@ public class Analyser {
 			exs[i]=analyse(c,tail.get(i));
 		}
 		
-		Node<?> doexp=Do.create(exs);
+		Node<?> doexp=Let.create(exs);
 		
 		return (Node<T>) Lambda.create((IPersistentVector<Symbol>)args,doexp);
 	}
