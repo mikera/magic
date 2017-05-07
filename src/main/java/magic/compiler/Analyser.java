@@ -2,7 +2,7 @@ package magic.compiler;
 
 import magic.RT;
 import magic.ast.Apply;
-import magic.ast.Cond;
+import magic.ast.If;
 import magic.ast.Constant;
 import magic.ast.Define;
 import magic.ast.Let;
@@ -129,7 +129,7 @@ public class Analyser {
 		Node<Object> test=analyse(c,forms.get(0));
 		Node<T> trueExp=analyse(c,forms.get(1));
 		Node<T> falseExp=(n>2)?analyse(c,forms.get(2)):(Node<T>) Constant.NULL;
-		return Cond.createIf(test,trueExp,falseExp);
+		return If.createIf(test,trueExp,falseExp);
 	}
 
 	@SuppressWarnings("unchecked")
