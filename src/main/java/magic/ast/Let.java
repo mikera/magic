@@ -8,42 +8,38 @@ import magic.lang.Context;
 
 public class Let<T> extends Node<T> {
 	private final int nLets;
-	private final int nBody;
-	private final Node<?>[] body;
+	private final Node<T> body;
 	private final Symbol[] syms;
 	private final Node<?>[] lets;
 	
-	public Let(Node<?>[] bodyExprs, Symbol[] syms, Node<?>[] lets) {
-		super(calcDependencies(bodyExprs).excludeAll(syms));
+	public Let(Symbol[] syms, Node<?>[] lets, Node<T> bodyExpr) {
+		super(bodyExpr.getDependencies().excludeAll(syms));
 		nLets=syms.length;
-		nBody=bodyExprs.length;
 		if (nLets!=lets.length) throw new IllegalArgumentException("Incorrect number of bindings forms for let");
 		this.syms=syms;
 		this.lets=lets;
-		body=bodyExprs;
+		body=bodyExpr;
 	}
 
 	public static <T> Node<T> create(Node<?>[] body) {
 		return create(RT.EMPTY_SYMBOLS,RT.EMPTY_NODES,body);
 	}
 	
-	public static <T> Node<T> create(Symbol[] syms,Node<?>[] lets,Node<?>[] body) {
-		return new Let<T>(body,syms,lets);
+	public static <T> Node<T> create(Symbol[] syms,Node<?>[] lets,Node<?>[] bodyExprs) {
+		return new Let<T>(syms,lets,Do.create(bodyExprs));
 	}
 	
-	@SuppressWarnings({"unchecked"})
+	public static <T> Node<T> create(Symbol[] syms,Node<?>[] lets,Node<T> bodyExpr) {
+		return new Let<T>(syms,lets,bodyExpr);
+	}
+	
 	@Override
 	public Result<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
-		int nBody=body.length;
-		
 		for (int i=0; i<nLets; i++) {
 			bindings=bindings.assoc(syms[i], (Object)(lets[i].compute(context,bindings)));
 		}
 		
-		Result<T> r=new Result<>(context,null);
-		for (int i=0; i<nBody; i++) {
-			r=(Result<T>) body[i].eval(r.getContext(),bindings);
-		}
+		Result<T> r=body.eval(context,bindings);
 		return r;
 	}
 	
@@ -67,19 +63,8 @@ public class Let<T> extends Node<T> {
 		        bindings=bindings.dissoc(syms[i]); // binding no longer visible, must be calcyulated
 			}
 		}
-		changed=false; // reset changed for body
-		Node<?>[] newBody=body;
-		for (int i=0; i<nBody; i++) {
-			Node<?> node=body[i];
-			Node<?> newNode=node.specialiseValues(bindings);
-			if (node!=newNode) {
-				if (!changed) {
-					newBody=newBody.clone();
-					changed=true;
-				}
-				newBody[i]=newNode;
-			} 
-		}
+
+		Node<T> newBody=body.specialiseValues(bindings);
 		
 		return ((body==newBody)&&(lets==newLets))?this:create(syms,newLets,newBody);
 	}
@@ -94,10 +79,7 @@ public class Let<T> extends Node<T> {
 			sb.append(lets[i]);
 		}
 		sb.append("] ");
-		for (int i=0; i<nBody; i++) {
-			if (i>0) sb.append(' ');
-			sb.append(body[i]);
-		}
+		sb.append(body);
 		sb.append(')');
 		return sb.toString();
 	}
