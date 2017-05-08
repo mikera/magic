@@ -6,6 +6,8 @@ import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.source.SourceSection;
 
+import magic.Type;
+import magic.Types;
 import magic.compiler.Result;
 import magic.data.APersistentMap;
 import magic.data.IPersistentSet;
@@ -90,6 +92,13 @@ public abstract class Node<T> extends RootNode {
 			deps=deps.includeAll(nodes.get(i).getDependencies());
 		}
 		return deps;
+	}
+	
+	/**
+	 * Gets the Magic Type for this expression
+	 */
+	public Type getType() {
+		return Types.ANYTHING;
 	}
 
 	/**

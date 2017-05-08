@@ -149,4 +149,9 @@ public class JavaType<T> extends Type {
 		// OK
 	}
 
+	@SuppressWarnings("unchecked")
+	public static <T> JavaType<T> create(T value) {
+		return (JavaType<T>) create(value.getClass());
+	}
+
 }
