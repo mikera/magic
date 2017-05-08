@@ -21,6 +21,18 @@ public final class NullCollection<T> extends APersistentCollection<T> {
 	}
 	
 	@Override
+	public final T valAt(Object key) {
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public final T valAt(Object key,Object notFound) {
+		return (T) notFound;		
+	}
+
+	
+	@Override
 	public boolean add(T e) {
 		throw new UnsupportedOperationException();
 	}

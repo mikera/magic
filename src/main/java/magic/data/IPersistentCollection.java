@@ -29,7 +29,20 @@ public interface IPersistentCollection<T> extends Collection<T>, ISeqable<T>, Cl
 	
 	@Override
 	public boolean contains(Object o);
-
+	
+	/**
+	 * Gets the value at a specific key position
+	 * Returns null if not found
+	 */
+	public Object valAt(Object key);
+	
+	/**
+	 * Gets the value at a specific key position
+	 * Returns notFound if not found
+	 */
+	public Object valAt(Object key,Object notFound);
+	
+	
 	@Override
 	public boolean containsAll(Collection<?> c);
 	

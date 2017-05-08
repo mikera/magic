@@ -21,6 +21,20 @@ public abstract class APersistentSet<T> extends APersistentCollection<T> impleme
 		return ps;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public final T valAt(Object key) {
+		if (contains(key)) return (T) key;
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public final T valAt(Object key,Object notFound) {
+		if (contains(key)) return (T) key;
+		return (T) notFound;		
+	}
+	
 	/**
 	 * Default implementation for include
 	 * Note: should be overridden if faster implementation is possible

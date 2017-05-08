@@ -3,11 +3,11 @@ package magic.data.impl;
 import java.util.Iterator;
 import java.util.Map;
 
+import magic.data.APersistentCollection;
+import magic.data.APersistentSet;
+import magic.data.APersistentVector;
 import magic.data.ISeq;
 import magic.data.Vectors;
-import magic.data.APersistentCollection;
-import magic.data.APersistentVector;
-import magic.data.APersistentSet;
 
 /**
  * Wrapper for the value list of a map
@@ -72,8 +72,18 @@ public final class ValueCollectionWrapper<K,V> extends APersistentCollection<V> 
 	}
 
 	@Override
-	public APersistentCollection<V> empty() {
+	public APersistentVector<V> empty() {
 		return Vectors.emptyVector();
+	}
+
+	@Override
+	public Object valAt(Object key) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Object valAt(Object key, Object notFound) {
+		throw new UnsupportedOperationException();
 	}
 
 }
