@@ -16,7 +16,7 @@ import magic.data.impl.SubVector;
  *
  * @param <T>
  */
-public abstract class APersistentVector<T> extends APersistentCollection<T> implements IPersistentVector<T> {
+public abstract class APersistentVector<T> extends APersistentSequence<T> implements IPersistentVector<T> {
 	private static final long serialVersionUID = -7221238938265002290L;
 
 	@Override

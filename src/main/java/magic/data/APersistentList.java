@@ -14,7 +14,7 @@ import magic.fn.AFn1;
  * @param <T>
  */
 @SuppressWarnings("serial")
-public abstract class APersistentList<T> extends APersistentCollection<T> implements IPersistentList<T> {
+public abstract class APersistentList<T> extends APersistentSequence<T> implements IPersistentList<T> {
    
 	@Override
 	public APersistentList<T> empty() {
