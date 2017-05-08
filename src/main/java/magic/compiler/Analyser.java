@@ -55,7 +55,7 @@ public class Analyser {
 	@SuppressWarnings("unchecked")
 	public static <T> Node<T> analyse(Context c, Object form) {
 		if (form==null) return (Node<T>) Constant.NULL;
-		if (form instanceof IPersistentList) return analyseList(c,(IPersistentList<Object>)form);
+		if (form instanceof APersistentList) return analyseList(c,(APersistentList<Object>)form);
 		if (form instanceof IPersistentVector) return (Node<T>) analyseVector(c,(IPersistentVector<Object>)form);
 		if (form instanceof Symbol) return analyseSymbol(c,(Symbol)form);
 		
@@ -65,7 +65,7 @@ public class Analyser {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T> Node<T> analyseList(Context c, IPersistentList<Object> form) {
+	private static <T> Node<T> analyseList(Context c, APersistentList<Object> form) {
 		int n=form.size();
 		if (n==0) return (Node<T>) Constant.create(Lists.EMPTY);
 		
@@ -75,13 +75,14 @@ public class Analyser {
 		return Apply.create(analyse(c,first),analyseAll(c,form.tail()));
 	}
 
-	private static <T> Node<T> analyseSymbolApplication(Context c, IPersistentList<Object> form) {
+	private static <T> Node<T> analyseSymbolApplication(Context c, APersistentList<Object> form) {
 		Symbol first=(Symbol) form.head();
 		APersistentList<Object> tail=form.tail();
 		
 		if (first==Symbols.DEF) return analyseDefine(c,(Symbol)tail.head(),tail.tail());
 		if (first==Symbols.FN) return analyseFn(c,tail.head(),tail.tail());
-		if (first==Symbols.QUOTE) return analyseQuote(c,tail);
+		if (first==Symbols.QUOTE) return analyseQuote(c,form,false);
+		if (first==Symbols.SYNTAX_QUOTE) return analyseQuote(c,form,true);
 		if (first==Symbols.DO) return analyseDo(c,tail);
 		if (first==Symbols.IF) return analyseIf(c,tail);
 		if (first==Symbols.LET) return analyseLet(c,tail);
@@ -172,9 +173,9 @@ public class Analyser {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T> Node<T> analyseQuote(Context c, APersistentList<Object> tail) {
-		if (tail.size()!=1) throw new Error("Quote expects a single form");
-		return (Node<T>) Constant.create(tail.head(),Symbols.QUOTE.symbolSet());
+	private static <T> Node<T> analyseQuote(Context c, APersistentList<Object> form, boolean syntaxQuote) {
+		if (form.size()!=2) throw new Error("Quote expects a single form");
+		return (Node<T>) Constant.create(form.get(1),((Symbol)form.head()).symbolSet());
 	}
 
 	@SuppressWarnings("unchecked")
