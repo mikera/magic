@@ -1,9 +1,8 @@
 package magic.data;
 
-import java.io.Serializable;
 import java.util.Collection;
 
-public interface IPersistentCollection<T> extends Collection<T>, ISeqable<T>, Cloneable, Serializable {
+public interface IPersistentCollection<T> extends Collection<T>, ISeqable<T> {
 
 	// include methods
 	

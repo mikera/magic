@@ -1,8 +1,6 @@
 package magic.data;
 
-import java.io.Serializable;
-
-public interface IPersistentObject extends Cloneable, Serializable {
+public interface IPersistentObject {
 
 	public IPersistentObject clone();
 	
