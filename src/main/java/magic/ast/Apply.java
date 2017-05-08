@@ -74,5 +74,15 @@ public class Apply<T> extends Node<T> {
 		return this;
 	}
 
-
+	@Override
+	public String toString() {
+		StringBuilder sb= new StringBuilder("(Apply ");
+		sb.append(function);
+		for (int i=0; i<arity; i++) {
+			sb.append(' ');
+			sb.append(args[i]);
+		}
+		sb.append(')');
+		return sb.toString();
+	}
 }

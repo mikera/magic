@@ -96,7 +96,7 @@ public class TestCompiler {
 				"(def r (f 7))" +
 				"\n");
 		Context c2=r.getContext();
-		System.out.println(c2.getExpression("f"));
+		// System.out.println(c2.getExpression("f"));
 		Object res=c2.getValue("r");
 		assertEquals((Long)2L,res);
 	}

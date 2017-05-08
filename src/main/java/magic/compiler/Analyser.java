@@ -2,21 +2,24 @@ package magic.compiler;
 
 import magic.RT;
 import magic.ast.Apply;
-import magic.ast.If;
 import magic.ast.Constant;
 import magic.ast.Define;
 import magic.ast.Do;
-import magic.ast.Let;
-import magic.ast.Node;
+import magic.ast.If;
 import magic.ast.Lambda;
+import magic.ast.Let;
 import magic.ast.Lookup;
+import magic.ast.Node;
 import magic.ast.Vector;
 import magic.data.APersistentList;
+import magic.data.APersistentMap;
 import magic.data.IPersistentList;
 import magic.data.IPersistentVector;
 import magic.data.Lists;
+import magic.data.Maps;
 import magic.data.Symbol;
 import magic.data.Vectors;
+import magic.fn.AFn;
 import magic.fn.ArityException;
 import magic.lang.Context;
 import magic.lang.Symbols;
@@ -82,15 +85,50 @@ public class Analyser {
 		if (first==Symbols.DO) return analyseDo(c,tail);
 		if (first==Symbols.IF) return analyseIf(c,tail);
 		if (first==Symbols.LET) return analyseLet(c,tail);
+		if (first==Symbols.EXPANDER) return analyseExpander(c,form);
 		
 		
 		return Apply.create(Lookup.create(first),analyseAll(c,tail));
 	}
 
 	@SuppressWarnings("unchecked")
+	private static <T> Node<T> analyseExpander(Context c, IPersistentList<Object> form) {
+		int n=form.size();
+		if (n<3) throw new AnalyserException("expander requires at least an argument vector and an expansion body",form);
+		Object argObj=form.get(1);
+		if (!(argObj instanceof IPersistentVector<?>)) {
+			throw new AnalyserException("expander expects a vector [ex [args ...]]",argObj);
+		}
+		IPersistentVector<Object> args=(IPersistentVector<Object>) argObj;
+		if (args.size()!=2) {
+			throw new AnalyserException("expander expects arguments of the form [ex [args ...]]",argObj);
+		}
+		Symbol exSym=(Symbol) args.get(0);
+		IPersistentVector<Object> binds=(IPersistentVector<Object>) args.get(1);
+		int nBinds=binds.size();
+		
+		Node<T> fNode=analyseFn(c,args.get(1),form.subList(2, n));
+		
+		return (Node<T>) Constant.create(new ListExpander() {
+			@Override
+			public Object expand(Context c, IPersistentList<Object> form, Expander ex) {
+				if (form.size()!=nBinds+1) {
+					throw new AnalyserException("Wrong number of args passed to exander, expected "+nBinds,form);
+				}
+				Object[] vals=new Object[nBinds];
+				for (int i=0; i<nBinds; i++) vals[i]=form.get(i+1);
+				
+				APersistentMap<Symbol, Object> bnds=Maps.create(exSym, ex);
+				AFn<Object> fn= (AFn<Object>) fNode.eval(c, bnds).getValue();
+				return fn.applyTo(vals);
+			}
+		});
+	}
+
+	@SuppressWarnings("unchecked")
 	private static <T> Node<T> analyseLet(Context c, APersistentList<Object> forms) {
 		Object head=forms.head();
-		if (!(head instanceof IPersistentVector)) throw new Error("First argument to let must be a binding vector");
+		if (!(head instanceof IPersistentVector)) throw new AnalyserException("First argument to let must be a binding vector",head);
 		IPersistentVector<Object> bindingVector=(IPersistentVector<Object>) head;
 		int vSize=bindingVector.size();
 		int n=vSize/2;

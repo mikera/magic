@@ -40,6 +40,7 @@ public class RT {
 		Context c=Context.EMPTY;
 		c=c.define(Symbols.DEFN, Constant.create(Expanders.DEFN));
 		c=c.define(Symbols.DEFMACRO, Constant.create(Expanders.DEFMACRO));
+		c=c.define(Symbols.MACRO, Constant.create(Expanders.MACRO));
 		return c;
 	}
 
