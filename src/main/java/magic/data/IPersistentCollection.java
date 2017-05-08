@@ -1,6 +1,7 @@
 package magic.data;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface IPersistentCollection<T> extends Collection<T>, ISeqable<T> {
 
@@ -59,6 +60,12 @@ public interface IPersistentCollection<T> extends Collection<T>, ISeqable<T> {
 	 * Returns null if not found
 	 */
 	public Object valAt(Object key);
+	
+	/**
+	 * Accocs into a nested structure
+	 * Returns null if not found
+	 */
+	public Object assocIn(List<Object> keys, Object value);
 	
 	/**
 	 * Gets the value at a specific key position

@@ -114,4 +114,7 @@ public abstract class APersistentList<T> extends APersistentSequence<T> implemen
 		}
 		return PersistentList.wrap(results);
 	}
+	
+	@Override
+	public abstract APersistentList<T> subList(int fromIndex, int toIndex);
 }

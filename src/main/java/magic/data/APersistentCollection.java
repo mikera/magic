@@ -3,6 +3,7 @@ package magic.data;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import magic.RT;
 import magic.data.impl.FilteredIterator;
@@ -166,6 +167,15 @@ public abstract class APersistentCollection<T> extends APersistentObject impleme
 			}		
 		};
 		return empty().includeAll(Vectors.createFromIterator(it));
+	}
+	
+	@Override
+	public Object assocIn(List<Object> keys, Object value) {
+		int n=keys.size();
+		if (n==0) return value;
+		Object key=keys.get(0);
+		if (n==1) return assoc(key,value);
+		return ((APersistentCollection<?>)valAt(0)).assocIn(keys.subList(1, n),value);
 	}
 	
 	@Override

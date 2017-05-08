@@ -14,7 +14,6 @@ import magic.ast.Quote;
 import magic.ast.Vector;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
-import magic.data.IPersistentList;
 import magic.data.IPersistentVector;
 import magic.data.Lists;
 import magic.data.Maps;
@@ -94,7 +93,7 @@ public class Analyser {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T> Node<T> analyseExpander(Context c, IPersistentList<Object> form) {
+	private static <T> Node<T> analyseExpander(Context c, APersistentList<Object> form) {
 		int n=form.size();
 		if (n<3) throw new AnalyserException("expander requires at least an argument vector and an expansion body",form);
 		Object argObj=form.get(1);
@@ -113,7 +112,7 @@ public class Analyser {
 		
 		return (Node<T>) Constant.create(new AListExpander() {
 			@Override
-			public Object expand(Context c, IPersistentList<Object> form, Expander ex) {
+			public Object expand(Context c, APersistentList<Object> form, Expander ex) {
 				if (form.size()!=nBinds+1) {
 					throw new AnalyserException("Wrong number of args passed to exander, expected "+nBinds,form);
 				}

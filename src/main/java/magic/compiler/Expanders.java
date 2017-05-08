@@ -19,7 +19,7 @@ public class Expanders {
 	
 	private static final class DefnExpander extends AListExpander {
 		@Override
-		public Object expand(Context c, IPersistentList<Object> form,Expander ex) {
+		public Object expand(Context c, APersistentList<Object> form,Expander ex) {
 			int n=form.size();
 			if (n<3) throw new ExpansionException("Can't expand defn, requires at least function name and arg vector",form);
 			
@@ -75,7 +75,7 @@ public class Expanders {
 
 	public static final Expander DEFMACRO = new AListExpander() {
 		@Override
-		public Object expand(Context c, IPersistentList<Object> form,Expander ex) {
+		public Object expand(Context c, APersistentList<Object> form,Expander ex) {
 			int n=form.size();
 			if (n<3) throw new ExpansionException("Can't expand defmacro, requires at least macro name and arg vector",form);
 			
@@ -89,7 +89,7 @@ public class Expanders {
 
 	public static final Expander MACRO = new AListExpander() {
 		@Override
-		public Object expand(Context c, IPersistentList<Object> form,Expander ex) {
+		public Object expand(Context c, APersistentList<Object> form,Expander ex) {
 			int n=form.size();
 			if (n<3) throw new ExpansionException("Can't expand macro, requires at least an arg vector and body",form);
 			

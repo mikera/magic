@@ -1,5 +1,6 @@
 package magic.data;
 
+import java.util.List;
 
 /**
  * Abstract base type for sequence objects indexed by integers
@@ -8,7 +9,7 @@ package magic.data;
  * @param <T>
  */
 @SuppressWarnings("serial")
-public abstract class APersistentSequence<T> extends APersistentCollection<T> {
+public abstract class APersistentSequence<T> extends APersistentCollection<T> implements List<T> {
 
 	@Override
 	public final Object valAt(Object key) {
@@ -43,5 +44,13 @@ public abstract class APersistentSequence<T> extends APersistentCollection<T> {
 		return false;
 	}
 	
+	@Override
 	public abstract T get(int i);
+	
+	/**
+	 * Returns a subset of the given list
+	 * Can be the whole list, or an empty list
+	 */
+	@Override
+	public abstract APersistentSequence<T> subList(int fromIndex, int toIndex);
 }

@@ -1,7 +1,6 @@
 package magic.data;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Interface for all persistent list types
@@ -9,7 +8,7 @@ import java.util.List;
  *
  * @param <T>
  */
-public interface IPersistentList<T> extends IPersistentCollection<T>, List<T>, Comparable<APersistentList<T>> {
+public interface IPersistentList<T> extends IPersistentCollection<T>, Comparable<APersistentList<T>> {
 	
 	// modifier methods
 	
@@ -68,16 +67,7 @@ public interface IPersistentList<T> extends IPersistentCollection<T>, List<T>, C
 	 */
 	public APersistentList<T> back();
 	
-	/**
-	 * Returns a subset of the given list
-	 * Can be the whole list, or an empty list
-	 */
-	@Override
-	public APersistentList<T> subList(int fromIndex, int toIndex);
 
-	// access methods
-	
-	@Override
 	public T get(int i);
 
 	APersistentList<T> concat(APersistentList<T> values);
