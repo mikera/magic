@@ -17,8 +17,6 @@ import org.parboiled.support.ParsingResult;
 import org.parboiled.support.StringVar;
 import org.parboiled.support.Var;
 
-import magic.data.Vectors;
-import magic.lang.Symbols;
 import magic.data.APersistentVector;
 import magic.data.IPersistentCollection;
 import magic.data.Lists;
@@ -26,6 +24,8 @@ import magic.data.Maps;
 import magic.data.PersistentList;
 import magic.data.Sets;
 import magic.data.Symbol;
+import magic.data.Vectors;
+import magic.lang.Symbols;
 
 @BuildParseTree
 public class Reader extends BaseParser<Object> {
@@ -65,6 +65,7 @@ public class Reader extends BaseParser<Object> {
 				DataStructure(),
 				QuotedExpression(),
 				Constant(),
+				Keyword(),
 				Symbol()
 				);
 	}
@@ -187,10 +188,16 @@ public class Reader extends BaseParser<Object> {
     }
 
     
-    // SYMBOLS
+    // SYMBOLS and KEYWORDS
     
     public Rule Symbol() {
     	return FirstOf(QualifiedSymbol(),UnqualifiedSymbol());
+    }    
+     
+    public Rule Keyword() {
+    	return Sequence(
+    			Sequence(':',Symbol()),
+    			push(magic.data.Keyword.create((Symbol)pop())));
     }    
     
     public Rule QualifiedSymbol() {

@@ -8,6 +8,7 @@ import magic.RT;
 import magic.compiler.Reader;
 import magic.data.IPersistentList;
 import magic.data.IPersistentVector;
+import magic.data.Keyword;
 import magic.data.Maps;
 import magic.data.Sets;
 import magic.data.Symbol;
@@ -27,6 +28,10 @@ public class TestParser {
 	
 	@Test public void testNil() {
 		assertNull(Reader.read("nil"));
+	}
+	
+	@Test public void testKeywords() {
+		assertEquals(Keyword.class,Reader.read(":foo").getClass());
 	}
 	
 	@Test public void testBooleans() {
