@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import magic.RT;
-import magic.data.impl.CompositeVector;
 import magic.data.impl.NullCollection;
 import magic.data.impl.EmptyVector;
 import magic.data.impl.NullSet;
@@ -32,7 +31,6 @@ public class TestPersistent {
 		testPersistentList(RepeatVector.create("Hello persistent lists!",1));
 		testPersistentList(RepeatVector.create("Hello", 40));
 		testPersistentList(MapEntry.create(Keyword.create("foo"), 40));
-		testPersistentList(CompositeVector.create(pl));
 		testPersistentList(PersistentVector.create(pl));
 		testPersistentList(PersistentVector.create(RepeatVector.create("MM", 40)));
 		testPersistentList(SubVector.create(pl,2,3));
