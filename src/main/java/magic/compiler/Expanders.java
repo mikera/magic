@@ -19,7 +19,7 @@ public class Expanders {
 		@SuppressWarnings("unchecked")
 		public Object expand(Context c, Object form,Expander ex) {
 			if (form instanceof IPersistentList) return expand(c,(IPersistentList<Object>)form,ex);
-			return form; // TODO: should this be an error?
+			return form; 
 		}
 			
 		public Object expand(Context c, IPersistentList<Object> form,Expander ex) {
@@ -51,15 +51,8 @@ public class Expanders {
 	
 	};
 	
-	public static final Expander DEFN = new Expander() {
-
-		@SuppressWarnings("unchecked")
+	public static final Expander DEFN = new ListExpander() {
 		@Override
-		public Object expand(Context c, Object form, Expander ex) {
-			if (form instanceof IPersistentList) return expand(c,(IPersistentList<Object>)form,ex);
-			return form; // TODO: should this be an error?
-		}
-		
 		public Object expand(Context c, IPersistentList<Object> form,Expander ex) {
 			int n=form.size();
 			if (n<3) throw new ExpansionFailedException("Can't expand defn, requires at least function name and arg vector",form);

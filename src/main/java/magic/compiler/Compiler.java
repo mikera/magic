@@ -14,6 +14,9 @@ public class Compiler {
 		return node.eval(context,(APersistentMap<Symbol, Object>) Maps.EMPTY);
 	}
 	
+	/*
+	 * Compiles a form in the given context. Performs expansion using the default expander
+	 */
 	public static <T> Result<T> compile(Context context, Object form) {
 		form=Analyser.expand(context,form);
 		Node<T> node=Analyser.analyse(context, form);
