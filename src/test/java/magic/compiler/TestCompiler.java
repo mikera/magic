@@ -88,6 +88,19 @@ public class TestCompiler {
 		assertEquals(Tuple.of(3L,2L,7L),res);
 	}
 	
+	@Test public void testCompileDefn() {
+		Context c=RT.INITIAL_CONTEXT;
+		
+		Result<?> r=Compiler.compile(c, 
+				"(defn f [a] 2) " +
+				"(def r (f 7))" +
+				"\n");
+		Context c2=r.getContext();
+		System.out.println(c2.getExpression("f"));
+		Object res=c2.getValue("r");
+		assertEquals((Long)2L,res);
+	}
+	
 	
 	@Test public void testCompileVal() {
 		Context c=RT.INITIAL_CONTEXT;

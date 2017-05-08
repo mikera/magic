@@ -110,7 +110,7 @@ public class PersistentList<T> extends APersistentList<T> {
 		if ((fromIndex<0)||(toIndex>size)) {
 			throw new IndexOutOfBoundsException("from: "+fromIndex+" to: " +toIndex+ " with size: "+size);
 		}
-		int newSize=fromIndex-toIndex;
+		int newSize=toIndex-fromIndex;
 		if (newSize==0) return (APersistentList<T>) EMPTY;
 		if (newSize<0) {
 			throw new IllegalArgumentException("Negative sized subList from: "+fromIndex+" to: " +toIndex);

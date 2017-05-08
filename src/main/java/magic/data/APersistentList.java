@@ -5,6 +5,7 @@ import java.util.ListIterator;
 
 import magic.Errors;
 import magic.RT;
+import magic.fn.AFn1;
 
 /**
  * Abstract base class for persistent lists
@@ -84,5 +85,15 @@ public abstract class APersistentList<T> extends APersistentCollection<T> implem
 		}		
 		sb.append(')');
 		return sb.toString();
+	}
+
+	@SuppressWarnings("unchecked")
+	public <R> APersistentList<R> map(AFn1<T, R> f) {
+		int n=size();
+		R[] results=(R[]) new Object[n];
+		for (int i =0; i<n; i++) {
+			results[i]=f.apply(get(i));
+		}
+		return PersistentList.wrap(results);
 	}
 }

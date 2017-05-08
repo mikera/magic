@@ -15,6 +15,7 @@ public class Compiler {
 	}
 	
 	public static <T> Result<T> compile(Context context, Object form) {
+		form=Analyser.expand(context,form);
 		Node<T> node=Analyser.analyse(context, form);
 		return compile(context,node);
 	}

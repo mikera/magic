@@ -6,6 +6,7 @@ import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.lang.Context;
 import magic.lang.Slot;
+import magic.lang.Symbols;
 
 public class Expanders {
 
@@ -17,10 +18,9 @@ public class Expanders {
 		@Override
 		@SuppressWarnings("unchecked")
 		public Object expand(Context c, Object form,Expander ex) {
-				if (form instanceof IPersistentList) return expand(c,(IPersistentList<Object>)form,ex);
-				
-				return form;
-			}
+			if (form instanceof IPersistentList) return expand(c,(IPersistentList<Object>)form,ex);
+			return form; // TODO: should this be an error?
+		}
 			
 		public Object expand(Context c, IPersistentList<Object> form,Expander ex) {
 			int n=form.size();
@@ -51,7 +51,25 @@ public class Expanders {
 	
 	};
 	
-	
+	public static final Expander DEFN = new Expander() {
 
-
+		@SuppressWarnings("unchecked")
+		@Override
+		public Object expand(Context c, Object form, Expander ex) {
+			if (form instanceof IPersistentList) return expand(c,(IPersistentList<Object>)form,ex);
+			return form; // TODO: should this be an error?
+		}
+		
+		public Object expand(Context c, IPersistentList<Object> form,Expander ex) {
+			int n=form.size();
+			if (n<3) throw new ExpansionFailedException("Can't expand defn, requires at least function name and arg vector",form);
+			
+			Object nameObj=ex.expand(c, form.get(1), ex);
+			Object argObj=ex.expand(c, form.get(2), ex);
+			
+			Object fnDef=PersistentList.of(Symbols.FN,argObj).concat(ex.expandAll(c,form.subList(3,n),ex));
+			return PersistentList.of(Symbols.DEF, nameObj,fnDef);
+			
+		}
+	};
 }

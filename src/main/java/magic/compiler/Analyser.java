@@ -158,7 +158,7 @@ public class Analyser {
 
 	private static <T>  Node<T> analyseDefine(Context c, Symbol sym, APersistentList<Object> args) {
 		if (args.size()!=1) {
-			throw new Error("Define requires exactly one agument");
+			throw new Error("Define requires exactly one body, got: "+args);
 		}
 		return Define.create(sym,analyse(c,args.get(0)));
 	}
@@ -177,6 +177,17 @@ public class Analyser {
 
 	private static <T> Node<T> analyseSymbol(Context c, Symbol sym) {
 		return Lookup.create(sym);
+	}
+
+	/**
+	 * Expands a form in a given context
+	 * @param context
+	 * @param form
+	 * @return
+	 */
+	public static Object expand(Context context, Object form) {
+		Expander ex=Expanders.INITAL_EXPANDER;
+		return ex.expand(context, form, ex);
 	}
 
 

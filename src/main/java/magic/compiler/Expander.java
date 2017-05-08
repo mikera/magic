@@ -1,6 +1,9 @@
 package magic.compiler;
 
+import magic.data.APersistentList;
+import magic.data.IPersistentList;
 import magic.fn.AFn;
+import magic.fn.AFn1;
 import magic.fn.ArityException;
 import magic.fn.IFn3;
 import magic.lang.Context;
@@ -24,6 +27,19 @@ public abstract class Expander extends AFn<Object> implements IFn3<Object> {
 	}
 	
 	public abstract Object expand(Context c, Object form, Expander ex);
+
+
+	public IPersistentList<Object> expandAll(Context c, APersistentList<Object> forms,Expander ex) {
+		return forms.map(new AFn1<Object,Object>(){
+
+			@Override
+			public Object apply(Object a) {
+				return expand(c,a,ex);
+			}
+			
+		}
+		);
+	}
 
 
 }

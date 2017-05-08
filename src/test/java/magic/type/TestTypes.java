@@ -48,7 +48,7 @@ public class TestTypes {
 	
 	@Test public void testLambdaTypes() {
 		Node<?> fnExpr=Analyser.analyse(Reader.read("(fn [a b] 3)"));
-		System.out.println(fnExpr);
+		//System.out.println(fnExpr);
 		FunctionType fType=(FunctionType) fnExpr.getType();
 		assertEquals(Long.class,fType.getReturnType().getJavaClass());
 	

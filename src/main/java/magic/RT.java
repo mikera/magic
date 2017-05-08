@@ -3,9 +3,12 @@ package magic;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import magic.ast.Constant;
 import magic.ast.Node;
+import magic.compiler.Expanders;
 import magic.data.Symbol;
 import magic.lang.Context;
+import magic.lang.Symbols;
 
 /**
  * Static class to support the Magic runtime
@@ -36,7 +39,7 @@ public class RT {
 	private static Context createInitialContext() {
 		Context c=Context.EMPTY;
 		
-		// c=c.define(Symbols.QUOTE, Constant.create(Expanders.QUOTE));
+		c=c.define(Symbols.DEFN, Constant.create(Expanders.DEFN));
 		
 		return c;
 	}
