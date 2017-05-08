@@ -1,11 +1,11 @@
 package magic.compiler;
 
-public class ExpansionFailedException extends CompilerException {
+public class ExpansionException extends CompilerException {
 
 	private static final long serialVersionUID = 5766500154253913151L;
 	private Object form;
 
-	public ExpansionFailedException(String message, Object form) {
+	public ExpansionException(String message, Object form) {
 		super(message);
 		this.form=form;
 	}

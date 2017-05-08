@@ -109,7 +109,7 @@ public class Analyser {
 		
 		Node<T> fNode=analyseFn(c,args.get(1),form.subList(2, n));
 		
-		return (Node<T>) Constant.create(new ListExpander() {
+		return (Node<T>) Constant.create(new AListExpander() {
 			@Override
 			public Object expand(Context c, IPersistentList<Object> form, Expander ex) {
 				if (form.size()!=nBinds+1) {

@@ -17,11 +17,11 @@ public class Expanders {
 	 */
 	public static final Expander INITAL_EXPANDER = new InitialExpander();
 	
-	private static final class DefnExpander extends ListExpander {
+	private static final class DefnExpander extends AListExpander {
 		@Override
 		public Object expand(Context c, IPersistentList<Object> form,Expander ex) {
 			int n=form.size();
-			if (n<3) throw new ExpansionFailedException("Can't expand defn, requires at least function name and arg vector",form);
+			if (n<3) throw new ExpansionException("Can't expand defn, requires at least function name and arg vector",form);
 			
 			Object nameObj=ex.expand(c, form.get(1), ex);
 			Object argObj=ex.expand(c, form.get(2), ex);
@@ -73,11 +73,11 @@ public class Expanders {
 		}
 	}
 
-	public static final Expander DEFMACRO = new ListExpander() {
+	public static final Expander DEFMACRO = new AListExpander() {
 		@Override
 		public Object expand(Context c, IPersistentList<Object> form,Expander ex) {
 			int n=form.size();
-			if (n<3) throw new ExpansionFailedException("Can't expand demacro, requires at least macro name and arg vector",form);
+			if (n<3) throw new ExpansionException("Can't expand demacro, requires at least macro name and arg vector",form);
 			
 			Object nameObj=ex.expand(c, form.get(1), ex);
 			Object argObj=ex.expand(c, form.get(2), ex);
@@ -87,11 +87,11 @@ public class Expanders {
 		}
 	};
 
-	public static final Expander MACRO = new ListExpander() {
+	public static final Expander MACRO = new AListExpander() {
 		@Override
 		public Object expand(Context c, IPersistentList<Object> form,Expander ex) {
 			int n=form.size();
-			if (n<3) throw new ExpansionFailedException("Can't expand macro, requires at least an arg vector and body",form);
+			if (n<3) throw new ExpansionException("Can't expand macro, requires at least an arg vector and body",form);
 			
 			Object argObj=form.get(1);
 			
