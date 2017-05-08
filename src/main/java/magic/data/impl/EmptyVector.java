@@ -149,7 +149,7 @@ public final class EmptyVector<T> extends APersistentVector<T> {
 	@Override
 	public APersistentVector<T> insert(int index, T value) {
 		if (index!=0) throw new IndexOutOfBoundsException();
-		return SingletonVector.of(value);
+		return RepeatVector.create(value,1);
 	}
 
 	@Override
@@ -185,8 +185,8 @@ public final class EmptyVector<T> extends APersistentVector<T> {
 	}
 
 	@Override
-	public SingletonVector<T> include(T value) {
-		return SingletonVector.of(value);
+	public RepeatVector<T> include(T value) {
+		return RepeatVector.create(value,1);
 	}
 
 }

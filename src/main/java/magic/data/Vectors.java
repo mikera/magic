@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import magic.data.impl.EmptyVector;
-import magic.data.impl.SingletonVector;
+import magic.data.impl.RepeatVector;
 
 /**
  * Static function class for persistent list types
@@ -32,7 +32,7 @@ public class Vectors<T> {
 	}	
 	
 	public static <T> APersistentVector<T> of(T value) {
-		return SingletonVector.of(value);
+		return RepeatVector.create(value,1);
 	}
 	
 	public static <T> APersistentVector<T> of(T a, T b) {
@@ -66,7 +66,7 @@ public class Vectors<T> {
 			if (n<2) {
 				if (n<0) throw new IllegalArgumentException(); 
 				if (n==0) return emptyVector();
-				return SingletonVector.of(data[fromIndex]);
+				return RepeatVector.create(data[fromIndex],1);
 			}	
 			
 			// note this covers negative length case
@@ -120,7 +120,7 @@ public class Vectors<T> {
 			return createFromList((APersistentVector<T>)source,fromIndex, toIndex);
 		}
 		
-		if (newSize==1) return SingletonVector.of(source.get(fromIndex));
+		if (newSize==1) return RepeatVector.create(source.get(fromIndex),1);
 		if (newSize<=MAX_TUPLE_BUILD_SIZE) {
 			// note this covers negative length case
 			return Tuple.createFrom(source,fromIndex,toIndex);

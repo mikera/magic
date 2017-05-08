@@ -77,7 +77,7 @@ public class RepeatVector<T> extends APersistentVector<T> {
 	
 	@Override
 	public APersistentVector<T> include(T value) {
-		if (value==this.value) {
+		if ((size==0)||(value==this.value)) {
 			return create(value,size+1);
 		}
 		return PersistentVector.coerce(this).include(value);

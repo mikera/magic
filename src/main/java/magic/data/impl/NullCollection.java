@@ -133,7 +133,7 @@ public final class NullCollection<T> extends APersistentCollection<T> {
 
 	@Override
 	public APersistentCollection<T> include(T value) {
-		return SingletonVector.of(value);
+		return RepeatVector.create(value,1);
 	}
 
 	@Override

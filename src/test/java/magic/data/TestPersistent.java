@@ -15,7 +15,6 @@ import magic.data.impl.NullCollection;
 import magic.data.impl.EmptyVector;
 import magic.data.impl.NullSet;
 import magic.data.impl.RepeatVector;
-import magic.data.impl.SingletonVector;
 import magic.data.impl.SingletonSet;
 import magic.data.impl.SubVector;
 import mikera.util.Rand;
@@ -30,7 +29,7 @@ public class TestPersistent {
 		testPersistentList(pl.subList(1, 4));
 		testPersistentList(EmptyVector.INSTANCE);
 		testPersistentList(Tuple.of(1,2,3,4,5));
-		testPersistentList(SingletonVector.of("Hello persistent lists!"));
+		testPersistentList(RepeatVector.create("Hello persistent lists!",1));
 		testPersistentList(RepeatVector.create("Hello", 40));
 		testPersistentList(MapEntry.create(Keyword.create("foo"), 40));
 		testPersistentList(CompositeVector.create(pl));
