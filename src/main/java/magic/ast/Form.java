@@ -1,6 +1,6 @@
 package magic.ast;
 
-import magic.compiler.Result;
+import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
 import magic.data.IPersistentSet;
 import magic.data.Sets;
@@ -37,7 +37,7 @@ public class Form<T> extends Node<T> {
 
 	
 	@Override
-	public Result<T> eval(Context c, APersistentMap<Symbol, Object> bindings) {
+	public EvalResult<T> eval(Context c, APersistentMap<Symbol, Object> bindings) {
 		throw new UnsupportedOperationException("Trying to evaluate unexpanded form: "+this);
 	}
 	

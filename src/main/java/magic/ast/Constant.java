@@ -3,7 +3,7 @@ package magic.ast;
 import magic.RT;
 import magic.Type;
 import magic.Types;
-import magic.compiler.Result;
+import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
 import magic.data.IPersistentSet;
 import magic.data.Sets;
@@ -29,8 +29,8 @@ public class Constant<T> extends BaseConstant<T> {
 	}
 	
 	@Override
-	public Result<T> eval(Context c, APersistentMap<Symbol, Object> bindings) {
-		return new Result<T>(c,value);
+	public EvalResult<T> eval(Context c, APersistentMap<Symbol, Object> bindings) {
+		return new EvalResult<T>(c,value);
 	}
 
 	public static <T> Constant<T> create(T v) {

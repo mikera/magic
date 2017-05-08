@@ -1,7 +1,7 @@
 package magic.ast;
 
 import magic.Type;
-import magic.compiler.Result;
+import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
 import magic.data.APersistentVector;
 import magic.data.IPersistentVector;
@@ -29,14 +29,14 @@ public class Vector<T> extends Node<IPersistentVector<T>> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Result<IPersistentVector<T>> eval(Context c,APersistentMap<Symbol, Object> bindings) {
+	public EvalResult<IPersistentVector<T>> eval(Context c,APersistentMap<Symbol, Object> bindings) {
 		int n=exps.size();
-		if (n==0) return  Result.create(c, (IPersistentVector<T>)Tuple.EMPTY);
+		if (n==0) return  EvalResult.create(c, (IPersistentVector<T>)Tuple.EMPTY);
 		T[] results=(T[]) new Object[n];
 		for (int i=0; i<n; i++) {
 			results[i]=exps.get(i).compute(c,bindings);
 		}
-		return Result.create(c, (IPersistentVector<T>)Vectors.wrap(results));
+		return EvalResult.create(c, (IPersistentVector<T>)Vectors.wrap(results));
 	}
 	
 	@SuppressWarnings("unchecked")

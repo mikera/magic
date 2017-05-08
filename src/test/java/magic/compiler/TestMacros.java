@@ -13,7 +13,7 @@ public class TestMacros {
 	@Test public void testExpander() {
 		Context c=RT.INITIAL_CONTEXT;
 		
-		Result<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.compile(c, 
 				"(def m (expander [_ [a]] 7 [1 2 3])) " +
 				"(def b (m 3))");
 		Context c2=r.getContext();
@@ -26,7 +26,7 @@ public class TestMacros {
 	@Test public void testMacro() {
 		Context c=RT.INITIAL_CONTEXT;
 		
-		Result<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.compile(c, 
 				"(defmacro m [_] 7 [1 2 3])");
 		
 		c=r.getContext();

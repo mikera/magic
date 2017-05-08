@@ -2,7 +2,7 @@ package magic.ast;
 
 import magic.RT;
 import magic.Type;
-import magic.compiler.Result;
+import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
 import magic.data.Symbol;
 import magic.lang.Context;
@@ -41,12 +41,12 @@ public class Let<T> extends Node<T> {
 	}
 	
 	@Override
-	public Result<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
+	public EvalResult<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
 		for (int i=0; i<nLets; i++) {
 			bindings=bindings.assoc(syms[i], (Object)(lets[i].compute(context,bindings)));
 		}
 		
-		Result<T> r=body.eval(context,bindings);
+		EvalResult<T> r=body.eval(context,bindings);
 		return r;
 	}
 	

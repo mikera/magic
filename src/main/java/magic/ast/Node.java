@@ -8,7 +8,7 @@ import com.oracle.truffle.api.source.SourceSection;
 
 import magic.Type;
 import magic.Types;
-import magic.compiler.Result;
+import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
 import magic.data.IPersistentSet;
 import magic.data.IPersistentVector;
@@ -107,7 +107,7 @@ public abstract class Node<T> extends RootNode {
 	 * @param bindings 
 	 * @return
 	 */
-	public Result<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
+	public EvalResult<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
 		throw new UnsupportedOperationException("Cannot compile node of type: "+this.getClass());
 	}
 

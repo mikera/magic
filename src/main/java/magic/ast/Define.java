@@ -1,6 +1,6 @@
 package magic.ast;
 
-import magic.compiler.Result;
+import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
 import magic.data.Symbol;
 import magic.lang.Context;
@@ -21,10 +21,10 @@ public class Define<T> extends Node<T> {
 	}
 	
 	@Override
-	public Result<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
+	public EvalResult<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
 		Node<T> specExp=exp.specialiseValues(bindings);
 		context=context.define(sym, specExp); 
-		return new Result<T>(context,null); // TODO: what should def return??
+		return new EvalResult<T>(context,null); // TODO: what should def return??
 	}
 	
 	@Override

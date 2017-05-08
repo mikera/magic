@@ -1,6 +1,6 @@
 package magic.ast;
 
-import magic.compiler.Result;
+import magic.compiler.EvalResult;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.Symbol;
@@ -26,16 +26,16 @@ public class Apply<T> extends Node<T> {
 	}
 
 	@Override
-	public Result<T> eval(Context c,APersistentMap<Symbol, Object> bindings) {
-		Result<IFn<T>> rf= function.eval(c,bindings);
+	public EvalResult<T> eval(Context c,APersistentMap<Symbol, Object> bindings) {
+		EvalResult<IFn<T>> rf= function.eval(c,bindings);
 		IFn<T> f=rf.getValue();
 		Object[] values=new Object[arity];
-		Result<?> r=rf;
+		EvalResult<?> r=rf;
 		for (int i=0; i<arity; i++) {
 			r=args[i].eval(c,bindings);
 			values[i]=r.getValue();
 		}
-		return Result.create(r.getContext(),f.applyToArray(values));
+		return EvalResult.create(r.getContext(),f.applyToArray(values));
 	}
 
 	public static <T> Apply<T> create(Node<IFn<T>> function, Node<?>... args) {

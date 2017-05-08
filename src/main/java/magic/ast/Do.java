@@ -2,7 +2,7 @@ package magic.ast;
 
 import magic.Type;
 import magic.Types;
-import magic.compiler.Result;
+import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
 import magic.data.Symbol;
 import magic.lang.Context;
@@ -23,12 +23,12 @@ public class Do<T> extends Node<T> {
 	
 	@SuppressWarnings({"unchecked"})
 	@Override
-	public Result<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
+	public EvalResult<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
 		int nBody=body.length;
 		
-		Result<T> r=new Result<>(context,null);
+		EvalResult<T> r=new EvalResult<>(context,null);
 		for (int i=0; i<nBody; i++) {
-			r=(Result<T>) body[i].eval(r.getContext(),bindings);
+			r=(EvalResult<T>) body[i].eval(r.getContext(),bindings);
 		}
 		return r;
 	}

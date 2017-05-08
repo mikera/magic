@@ -2,7 +2,7 @@ package magic.ast;
 
 import magic.Type;
 import magic.Types;
-import magic.compiler.Result;
+import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
 import magic.data.IPersistentVector;
 import magic.data.Symbol;
@@ -26,7 +26,7 @@ public class Lambda<T> extends Node<IFn<T>> {
 	}
 
 	@Override
-	public Result<IFn<T>> eval(Context context,APersistentMap<Symbol, Object> bindings) {
+	public EvalResult<IFn<T>> eval(Context context,APersistentMap<Symbol, Object> bindings) {
 		Node<T> body=this.body.specialiseValues(bindings.delete(args));
 		// System.out.println(body);
 		AFn<T> fn=new AFn<T>() {
@@ -41,7 +41,7 @@ public class Lambda<T> extends Node<IFn<T>> {
 				return body.compute(c,bnds);
 			}	
 		};
-		return new Result<IFn<T>>(context,fn);
+		return new EvalResult<IFn<T>>(context,fn);
 	}
 	
 	@Override

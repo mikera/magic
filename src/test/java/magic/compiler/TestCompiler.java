@@ -14,7 +14,7 @@ public class TestCompiler {
 	@Test public void testCompileDef() {
 		Context c=RT.INITIAL_CONTEXT;
 		
-		Result<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.compile(c, 
 				"(def a 1) " +
 				"(def b 2) " +
 			    "(def id (fn [a] a)) "+
@@ -31,7 +31,7 @@ public class TestCompiler {
 	@Test public void testCompileDo() {
 		Context c=RT.INITIAL_CONTEXT;
 		
-		Result<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.compile(c, 
 				"(do (def a 1) " +
 				"    (def b a)) ");
 		Context c2=r.getContext();
@@ -43,7 +43,7 @@ public class TestCompiler {
 	@Test public void testCompileLet() {
 		Context c=RT.INITIAL_CONTEXT;
 		
-		Result<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.compile(c, 
 				"(let [a 3] " +
 				"    (def b a)) ");
 		Context c2=r.getContext();
@@ -60,7 +60,7 @@ public class TestCompiler {
 	@Test public void testCompileVector() {
 		Context c=RT.INITIAL_CONTEXT;
 		
-		Result<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.compile(c, 
 				"(def a 1) " +
 				"(def b 1) " +
 				"(def v (let [a 3, c 5] " +
@@ -75,7 +75,7 @@ public class TestCompiler {
 		Context c=RT.INITIAL_CONTEXT;
 		
 		//System.out.println("<START>");
-		Result<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.compile(c, 
 				"(def a 1) " +
 				"(def b 2) " +
 				"(let [a 3, c 5] " +
@@ -91,7 +91,7 @@ public class TestCompiler {
 	@Test public void testCompileDefn() {
 		Context c=RT.INITIAL_CONTEXT;
 		
-		Result<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.compile(c, 
 				"(defn f [a] 2) " +
 				"(def r (f 7))" +
 				"\n");
@@ -105,7 +105,7 @@ public class TestCompiler {
 	@Test public void testCompileVal() {
 		Context c=RT.INITIAL_CONTEXT;
 		
-		Result<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.compile(c, 
 				"(def a 1) " +
 				"(def b 2) " +
 				"a");
@@ -117,7 +117,7 @@ public class TestCompiler {
 	@Test public void testConditional() {
 		Context c=RT.INITIAL_CONTEXT;
 		
-		Result<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.compile(c, 
 				"(if nil (def a 1) (def b 2))");
 		Context c2=r.getContext();
 		

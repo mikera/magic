@@ -1,7 +1,7 @@
 package magic.ast;
 
 import magic.compiler.Reader;
-import magic.compiler.Result;
+import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
 import magic.data.Symbol;
 import magic.lang.Context;
@@ -27,9 +27,9 @@ public class Lookup<T> extends Node<T> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Result<T> eval(Context c,APersistentMap<Symbol, Object> bindings) {
+	public EvalResult<T> eval(Context c,APersistentMap<Symbol, Object> bindings) {
 		T val = (bindings.containsKey(sym))?(T)bindings.get(sym):c.getValue(sym);
-		return new Result<T>(c,val);
+		return new EvalResult<T>(c,val);
 	}
 
 	public static <T> Lookup<T> create(String sym) {

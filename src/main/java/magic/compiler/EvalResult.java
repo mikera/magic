@@ -3,17 +3,17 @@ package magic.compiler;
 import magic.lang.Context;
 
 /**
- * Class for a combined context + value result
+ * Class for a combined context + value result from eval
  * @author Mike
  *
  * @param <T>
  */
-public final class Result<T> {
+public final class EvalResult<T> {
 
 	private Context context;
 	private T value;
 
-	public Result(Context c, T value) {
+	public EvalResult(Context c, T value) {
 		this.context=c;
 		this.value=value;
 	}
@@ -32,7 +32,7 @@ public final class Result<T> {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static <T> Result<T> create(Context c, T value) {
-		return new Result(c,value);
+	public static <T> EvalResult<T> create(Context c, T value) {
+		return new EvalResult(c,value);
 	}
 }

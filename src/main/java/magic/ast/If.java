@@ -1,7 +1,7 @@
 package magic.ast;
 
 import magic.RT;
-import magic.compiler.Result;
+import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
 import magic.data.Symbol;
 import magic.lang.Context;
@@ -28,8 +28,8 @@ public class If<T> extends Node<T> {
 	}
 
 	@Override
-	public Result<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
-		Result<?> r = test.eval(context,bindings);
+	public EvalResult<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
+		EvalResult<?> r = test.eval(context,bindings);
 		Object testVal=r.getValue();
 		context=r.getContext();
 		if (RT.bool(testVal)) {
