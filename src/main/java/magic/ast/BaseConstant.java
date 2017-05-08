@@ -45,6 +45,9 @@ public abstract class BaseConstant<T> extends Node<T> {
 		return this;
 	}
 	
+	/**
+	 * Gets the Java Type of this constant
+	 */
 	@Override
 	public Type getType() {
 		return JavaType.create(getValue());

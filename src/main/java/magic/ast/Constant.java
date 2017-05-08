@@ -1,12 +1,15 @@
 package magic.ast;
 
 import magic.RT;
+import magic.Type;
+import magic.Types;
 import magic.compiler.Result;
 import magic.data.APersistentMap;
 import magic.data.IPersistentSet;
 import magic.data.Sets;
 import magic.data.Symbol;
 import magic.lang.Context;
+import magic.type.JavaType;
 
 /**
  * Expression representing a constant.
@@ -48,6 +51,13 @@ public class Constant<T> extends BaseConstant<T> {
 		return "(Constant "+RT.print(value)+")";
 	}
 	
-
+	/**
+	 * Gets the Java Type of this constant, or Types.NULL if null
+	 */
+	@Override
+	public Type getType() {
+		if (value==null) return Types.NULL;
+		return (Type) JavaType.create(value);
+	}
 
 }
