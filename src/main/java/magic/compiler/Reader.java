@@ -63,10 +63,10 @@ public class Reader extends BaseParser<Object> {
 	public Rule Expression() {
 		return FirstOf(
 				DataStructure(),
-				QuotedExpression(),
 				Constant(),
 				Keyword(),
-				Symbol()
+				Symbol(),
+				QuotedExpression()
 				);
 	}
 	
@@ -99,11 +99,37 @@ public class Reader extends BaseParser<Object> {
 				);
 	}
 	
+	// QUOTING and UNQUOTING
+	
 	public Rule QuotedExpression() {
+		return FirstOf(
+				Quote(),
+				Unquote(), 
+				UnquoteSplice()
+				);
+	}
+	
+	public Rule Quote() {
 		return Sequence(
 				'\'',
 				Expression(),
 				push(PersistentList.of(Symbols.QUOTE,pop()))
+				);
+	}
+	
+	public Rule Unquote() {
+		return Sequence(
+				'~',
+				Expression(),
+				push(PersistentList.of(Symbols.UNQUOTE,pop()))
+				);
+	}
+	
+	public Rule UnquoteSplice() {
+		return Sequence(
+				"~@",
+				Expression(),
+				push(PersistentList.of(Symbols.UNQUOTE_SPLICING,pop()))
 				);
 	}
 	

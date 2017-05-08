@@ -11,12 +11,14 @@ public class Symbols {
 
 	// special form symbols
 	public static final Symbol DEF=Symbol.create("def");
-	public static final Symbol QUOTE = Symbol.create("quote");
 	public static final Symbol FN = Symbol.create("fn");
 	public static final Symbol DO = Symbol.create("do");
 	public static final Symbol IF =  Symbol.create("if");
 	public static final Symbol LET = Symbol.create("let");
-	
+	public static final Symbol QUOTE = Symbol.create("quote");
+	public static final Symbol UNQUOTE = Symbol.create("unquote");
+	public static final Symbol UNQUOTE_SPLICING = Symbol.create("unquote-splicing");
+
 	// special symbols
 	public static final Symbol UNDERSCORE = Symbol.create("_");
 
@@ -26,5 +28,6 @@ public class Symbols {
 	public static final Symbol DEFMACRO = Symbol.create("defmacro");
 	public static final Symbol EXPANDER = Symbol.create("expander");
 	public static final Symbol DEFEXPANDER = Symbol.create("defexpander");
+	
 	
 }

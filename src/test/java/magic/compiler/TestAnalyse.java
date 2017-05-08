@@ -1,10 +1,10 @@
 package magic.compiler;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import magic.RT;
 import magic.ast.Constant;
 import magic.ast.Node;
 import magic.ast.Lambda;
@@ -37,6 +37,23 @@ public class TestAnalyse {
 		} catch (Throwable t) {
 			// OK
 		}
+	}
+	
+	@Test public void testQuote() {
+		Context c=RT.INITIAL_CONTEXT;
+		EvalResult<?> r=Compiler.compile(c,"(def sym 'x)");
+		Context c2=r.getContext();
+		assertEquals(Symbol.create("x"),c2.getValue("sym"));
+	}
+	
+	@Test public void testUnquote() {
+		Context c=RT.INITIAL_CONTEXT;
+		EvalResult<?> r=Compiler.compile(c,"(def a 1) (def v '[~a 2])");
+		Context c2=r.getContext();
+		// TODO: fix this!
+		Object v=c2.getValue("v");
+		assertNotNull(v);
+		// assertEquals(Tuple.of(1L,2L),v);
 	}
 	
 	@Test 
