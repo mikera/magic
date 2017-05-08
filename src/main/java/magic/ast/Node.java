@@ -75,7 +75,7 @@ public abstract class Node<T> extends RootNode {
 		return deps;
 	}
 	
-	protected static IPersistentSet<Symbol> calcDependencies(Node<?>[] nodes) {
+	protected static IPersistentSet<Symbol> calcDependencies(Node<?>... nodes) {
 		IPersistentSet<Symbol> deps=Sets.emptySet();
 		for (int i=0; i<nodes.length; i++) {
 			deps=deps.includeAll(nodes[i].getDependencies());
