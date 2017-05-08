@@ -46,6 +46,13 @@ public class TestAnalyse {
 		assertEquals(Symbol.create("x"),c2.getValue("sym"));
 	}
 	
+	@Test public void testSyntaxQuote() {
+		Context c=RT.INITIAL_CONTEXT;
+		EvalResult<?> r=Compiler.compile(c,"(def sym `x)");
+		Context c2=r.getContext();
+		assertEquals(Symbol.create("x"),c2.getValue("sym"));
+	}
+	
 	@Test public void testUnquote() {
 		Context c=RT.INITIAL_CONTEXT;
 		EvalResult<?> r=Compiler.compile(c,"(def a 1) (def v '[~a 2])");

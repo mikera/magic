@@ -120,7 +120,7 @@ public class Reader extends BaseParser<Object> {
 	
 	public Rule SyntaxQuote() {
 		return Sequence(
-				'\'',
+				'`',
 				Expression(),
 				push(PersistentList.of(Symbols.SYNTAX_QUOTE,pop()))
 				);
