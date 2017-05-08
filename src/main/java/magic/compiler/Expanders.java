@@ -65,4 +65,18 @@ public class Expanders {
 			
 		}
 	};
+	
+	public static final Expander DEFMACRO = new ListExpander() {
+		@Override
+		public Object expand(Context c, IPersistentList<Object> form,Expander ex) {
+			int n=form.size();
+			if (n<3) throw new ExpansionFailedException("Can't expand demacro, requires at least macro name and arg vector",form);
+			
+			Object nameObj=ex.expand(c, form.get(1), ex);
+			Object argObj=ex.expand(c, form.get(2), ex);
+			
+			Object fnDef=PersistentList.of(Symbols.MACRO,argObj).concat(ex.expandAll(c,form.subList(3,n),ex));
+			return PersistentList.of(Symbols.DEF, nameObj,fnDef);
+		}
+	};
 }

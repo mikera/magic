@@ -39,6 +39,7 @@ public class RT {
 	private static Context createInitialContext() {
 		Context c=Context.EMPTY;
 		c=c.define(Symbols.DEFN, Constant.create(Expanders.DEFN));
+		c=c.define(Symbols.DEFMACRO, Constant.create(Expanders.DEFMACRO));
 		return c;
 	}
 

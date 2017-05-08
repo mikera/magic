@@ -16,4 +16,6 @@ public class Symbols {
 	public static final Symbol IF =  Symbol.create("if");
 	public static final Symbol LET = Symbol.create("let");
 	public static final Symbol DEFN = Symbol.create("defn");
+	public static final Symbol MACRO = Symbol.create("macro");
+	public static final Symbol DEFMACRO = Symbol.create("defmacro");
 }
