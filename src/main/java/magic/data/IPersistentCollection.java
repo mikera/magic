@@ -9,7 +9,7 @@ public interface IPersistentCollection<T> extends Collection<T>, ISeqable<T>, Cl
 	
 	/**
 	 * Adds a value to this collection.
-	 * Behaviour depends on the specific collection semantics
+	 * Behaviour depends on the specific collection semantics, equivalent to Clojure conj
 	 */
 	public APersistentCollection<T> include(T value);
 	
@@ -58,6 +58,10 @@ public interface IPersistentCollection<T> extends Collection<T>, ISeqable<T>, Cl
 	@Override
 	public ISeq<T> seq();
 	
+	/**
+	 * Returns an empty collection of the same collection type as this collection.
+	 * @return
+	 */
 	public APersistentCollection<T>  empty();
 	
 }
