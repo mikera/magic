@@ -33,7 +33,6 @@ public class TestTypes {
 	
 	@Test public void testDoTypes() {
 		Node<?> emptyDo=Analyser.analyse(Reader.read("(do)"));
-		System.out.println(emptyDo);
 		assertEquals(Types.NULL,emptyDo.getType());
 		
 		assertEquals(String.class,analyseClass(Reader.read("(do [1 a] 2 \"foo\")")));
@@ -41,9 +40,17 @@ public class TestTypes {
 	
 	@Test public void testLetTypes() {
 		Node<?> emptyLet=Analyser.analyse(Reader.read("(let [a 3])"));
-		System.out.println(emptyLet);
+		//System.out.println(emptyLet);
 		assertEquals(Types.NULL,emptyLet.getType());
 		
 		assertEquals(Long.class,analyseClass(Reader.read("(let [a 1] 2)")));
+	}
+	
+	@Test public void testLambdaTypes() {
+		Node<?> fnExpr=Analyser.analyse(Reader.read("(fn [a b] 3)"));
+		System.out.println(fnExpr);
+		FunctionType fType=(FunctionType) fnExpr.getType();
+		assertEquals(Long.class,fType.getReturnType().getJavaClass());
+	
 	}
 }
