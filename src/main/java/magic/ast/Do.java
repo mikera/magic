@@ -1,5 +1,7 @@
 package magic.ast;
 
+import magic.Type;
+import magic.Types;
 import magic.compiler.Result;
 import magic.data.APersistentMap;
 import magic.data.Symbol;
@@ -68,6 +70,15 @@ public class Do<T> extends Node<T> {
 			} 
 		}
 		return (body==newBody)?this:create(newBody);		
+	}
+	
+	/**
+	 * Returns the type of this `do` expression, i.e. the type of the last subexpression
+	 */
+	@Override
+	public Type getType() {
+		if (nBody==0) return Types.NULL;
+		return body[nBody-1].getType();
 	}
 	
 	@Override

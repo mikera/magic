@@ -5,6 +5,7 @@ import magic.ast.Apply;
 import magic.ast.If;
 import magic.ast.Constant;
 import magic.ast.Define;
+import magic.ast.Do;
 import magic.ast.Let;
 import magic.ast.Node;
 import magic.ast.Lambda;
@@ -118,7 +119,7 @@ public class Analyser {
 		for (int i=0; i<n; i++) {
 			exs[i]=analyse(c,forms.get(i));
 		}		
-		return Let.create(exs);
+		return Do.create(exs);
 	}
 	
 	@SuppressWarnings("unchecked")

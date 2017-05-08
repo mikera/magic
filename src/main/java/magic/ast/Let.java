@@ -1,6 +1,7 @@
 package magic.ast;
 
 import magic.RT;
+import magic.Type;
 import magic.compiler.Result;
 import magic.data.APersistentMap;
 import magic.data.Symbol;
@@ -95,6 +96,14 @@ public class Let<T> extends Node<T> {
 		if (body.isConstant()) return body;
 		
 		return ((body==newBody)&&(lets==newLets))?this:create(syms,newLets,newBody);
+	}
+	
+	/**
+	 * Returns the type of this `do` expression, i.e. the type of the last subexpression
+	 */
+	@Override
+	public Type getType() {
+		return body.getType();
 	}
 	
 	@Override

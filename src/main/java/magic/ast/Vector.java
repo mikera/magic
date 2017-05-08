@@ -1,12 +1,15 @@
 package magic.ast;
 
+import magic.Type;
 import magic.compiler.Result;
 import magic.data.APersistentMap;
+import magic.data.APersistentVector;
 import magic.data.IPersistentVector;
 import magic.data.Symbol;
 import magic.data.Tuple;
 import magic.data.Vectors;
 import magic.lang.Context;
+import magic.type.JavaType;
 
 /**
  * Expression class representing a vector construction literal.
@@ -73,6 +76,15 @@ public class Vector<T> extends Node<IPersistentVector<T>> {
 
 	public IPersistentVector<Node<T>> getExpressions() {
 		return exps;
+	}
+	
+	/**
+	 * Gets the Type of this vector expression
+	 */
+	@Override
+	public Type getType() {
+		//TODO: include length info in type?
+		return JavaType.create(APersistentVector.class);
 	}
 	
 	@Override
