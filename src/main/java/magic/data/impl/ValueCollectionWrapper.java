@@ -91,4 +91,15 @@ public final class ValueCollectionWrapper<K,V> extends APersistentCollection<V> 
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public boolean containsKey(Object key) {
+		if (key instanceof Number) {
+			Number num=(Number) key;
+			int k=num.intValue();
+			if ((num.doubleValue()!=k)||(k<0)||(k>=size())) return false;
+			return true;
+		}
+		return false;
+	}
+
 }

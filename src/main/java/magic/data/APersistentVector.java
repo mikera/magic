@@ -251,28 +251,6 @@ public abstract class APersistentVector<T> extends APersistentSequence<T> implem
 	}
 	
 	@Override
-	public final Object valAt(Object key) {
-		if (key instanceof Number) {
-			return valAt((Number)key,null);
-		}
-		return null;
-	}
-
-	@Override
-	public final Object valAt(Object key,Object notFound) {
-		if (key instanceof Number) {
-			return valAt((Number)key,null);
-		}
-		return null;		
-	}
-	
-	public Object valAt(Number key,Object notFound) {
-		int k=key.intValue();
-		if ((key.doubleValue()!=k)||(k<0)||(k>=size())) return notFound;
-		return get(k);		
-	}
-	
-	@Override
 	public final APersistentVector<T> assoc(Object key,Object value) {
 		if (key instanceof Number) {
 			return assoc((Number)key,null);

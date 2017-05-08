@@ -23,7 +23,7 @@ public abstract class APersistentMap<K,V> extends APersistentObject implements I
 	}
 
 	@Override
-	public abstract boolean containsKey(Object arg0);
+	public abstract boolean containsKey(Object key);
 
 	@Override
 	public boolean containsValue(Object value) {

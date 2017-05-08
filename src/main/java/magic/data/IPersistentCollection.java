@@ -50,6 +50,11 @@ public interface IPersistentCollection<T> extends Collection<T>, ISeqable<T> {
 	public boolean contains(Object o);
 	
 	/**
+	 * Returns true if the collection contains the specified key.
+	 */
+	public boolean containsKey(Object o);
+	
+	/**
 	 * Gets the value at a specific key position
 	 * Returns null if not found
 	 */

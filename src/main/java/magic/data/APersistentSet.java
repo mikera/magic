@@ -35,6 +35,11 @@ public abstract class APersistentSet<T> extends APersistentCollection<T> impleme
 		return (T) notFound;		
 	}
 	
+	@Override
+	public final  boolean containsKey(Object key) {
+		return contains(key);
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public final APersistentSet<T> assoc(Object key,Object value) {
