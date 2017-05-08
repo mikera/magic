@@ -10,6 +10,7 @@ import magic.ast.Lambda;
 import magic.ast.Let;
 import magic.ast.Lookup;
 import magic.ast.Node;
+import magic.ast.Quote;
 import magic.ast.Vector;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
@@ -175,7 +176,7 @@ public class Analyser {
 	@SuppressWarnings("unchecked")
 	private static <T> Node<T> analyseQuote(Context c, APersistentList<Object> form, boolean syntaxQuote) {
 		if (form.size()!=2) throw new Error("Quote expects a single form");
-		return (Node<T>) Constant.create(form.get(1),((Symbol)form.head()).symbolSet());
+		return (Node<T>) Quote.create(form.get(1),syntaxQuote,((Symbol)form.head()).symbolSet());
 	}
 
 	@SuppressWarnings("unchecked")
