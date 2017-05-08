@@ -314,7 +314,7 @@ public class Reader extends BaseParser<Object> {
 	}
 	
 	/**
-	 * Parses an expression and returns a form
+	 * Parses an expression list and returns a collection form
 	 * @param string
 	 * @return
 	 */
@@ -351,7 +351,7 @@ public class Reader extends BaseParser<Object> {
 	}
 
 	public static void main(String[] args) {
-		Object result = read("[1 2 3] [2]");
+		Object result = read("[1 2 3]");
 		
 		System.out.println(result);
 	}
