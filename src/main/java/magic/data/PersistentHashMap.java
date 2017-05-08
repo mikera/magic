@@ -2,6 +2,7 @@ package magic.data;
 
 import java.io.ObjectStreamException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import magic.RT;
@@ -882,6 +883,18 @@ public final class PersistentHashMap<K,V> extends APersistentMap<K,V> {
 		return new PersistentHashMap<K, V>(newRoot);
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Object assocIn(List<Object> keys, Object value) {
+		int n=keys.size();
+		if (n==0) return value;
+		Object key=keys.get(0);
+		if (n==1) return assoc((K)key,(V)value);
+		IAssociative<?,?> sub=((IAssociative<?,?>)get(key));
+		if (sub==null) sub=(IAssociative<?,?>)Maps.EMPTY;
+		return sub.assocIn(keys.subList(1, n),value);
+	}
+	
 	@Override
 	public APersistentMap<K, V> include(Map<K, V> values) {
 		if (values instanceof PersistentHashMap<?,?>) {
@@ -921,4 +934,5 @@ public final class PersistentHashMap<K,V> extends APersistentMap<K,V> {
 	public boolean allowsNullKey() {
 		return false;
 	}
+
 }

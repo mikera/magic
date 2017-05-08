@@ -1,6 +1,7 @@
 package magic.data.impl;
 
 import java.io.ObjectStreamException;
+import java.util.List;
 import java.util.Map;
 
 import magic.data.APersistentCollection;
@@ -19,6 +20,16 @@ public final class NullMap<K,V> extends APersistentMap<K, V> {
 		
 	}
 
+	@Override
+	public V valAt(K key) {
+		return null;
+	}
+
+	@Override
+	public V valAt(K key, V notFound) {
+		return notFound;
+	}
+	
 	@Override
 	public void clear() {
 		// We are already empty, so nothing to do
@@ -112,5 +123,11 @@ public final class NullMap<K,V> extends APersistentMap<K, V> {
 	@Override
 	public boolean allowsNullKey() {
 		return false;
+	}
+
+	@Override
+	public Object assocIn(List<Object> keys, Object value) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

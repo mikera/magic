@@ -2,6 +2,7 @@ package magic.data;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import magic.RT;
@@ -14,7 +15,7 @@ import magic.RT;
  * @param <K>
  * @param <V>
  */
-public abstract class APersistentMap<K,V> extends APersistentObject implements IPersistentMap<K,V> {
+public abstract class APersistentMap<K,V> extends APersistentObject implements IPersistentMap<K,V>, IAssociative<K,V> {
 	private static final long serialVersionUID = 2304218229796144868L;
 
 	@Override
@@ -103,7 +104,30 @@ public abstract class APersistentMap<K,V> extends APersistentObject implements I
 
 	@Override
 	public abstract APersistentMap<K, V> assoc(K key, V value);
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Object assocIn(List<Object> keys, Object value) {
+		int n=keys.size();
+		if (n==0) return value;
+		Object key=keys.get(0);
+		if (n==1) return assoc((K)key,(V)value);
+		IAssociative<?,?> sub=((IAssociative<?,?>)valAt((K)key));
+		if (sub==null) sub=(IAssociative<?,?>)Maps.EMPTY;
+		return sub.assocIn(keys.subList(1, n),value);
+	}
 
+	@Override
+	public V valAt(K key) {
+		return get(key);
+	}
+
+	@Override
+	public V valAt(K key, V notFound) {
+		if (!containsKey(key)) return notFound;
+		return get(key);
+	}
+	
 	@Override
 	public APersistentMap<K, V> include(Map<K, V> values) {
 		APersistentMap<K, V> pm=this;
