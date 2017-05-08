@@ -1,7 +1,6 @@
 package magic.data;
 
 import java.util.Collection;
-import java.util.List;
 
 public interface IPersistentCollection<T> extends Collection<T>, ISeqable<T> {
 
@@ -55,23 +54,8 @@ public interface IPersistentCollection<T> extends Collection<T>, ISeqable<T> {
 	 */
 	public boolean containsKey(Object o);
 	
-	/**
-	 * Gets the value at a specific key position
-	 * Returns null if not found
-	 */
-	public Object valAt(Object key);
-	
-	/**
-	 * Accocs into a nested structure
-	 * Returns null if not found
-	 */
-	public Object assocIn(List<Object> keys, Object value);
-	
-	/**
-	 * Gets the value at a specific key position
-	 * Returns notFound if not found
-	 */
-	public Object valAt(Object key,Object notFound);
+
+
 	
 	/**
 	 * Updates this collection by including the specified value at the given key position.

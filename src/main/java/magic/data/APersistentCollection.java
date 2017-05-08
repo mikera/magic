@@ -15,7 +15,7 @@ import magic.data.impl.FilteredIterator;
  * @param <T>
  */
 @SuppressWarnings("unchecked")
-public abstract class APersistentCollection<T> extends APersistentObject implements IPersistentCollection<T> {
+public abstract class APersistentCollection<T> extends APersistentObject implements IPersistentCollection<T>, IAssociative<Object,Object> {
 	private static final long serialVersionUID = -962303316004942025L;
 
 	@Override
@@ -175,7 +175,9 @@ public abstract class APersistentCollection<T> extends APersistentObject impleme
 		if (n==0) return value;
 		Object key=keys.get(0);
 		if (n==1) return assoc(key,value);
-		return ((APersistentCollection<?>)valAt(0)).assocIn(keys.subList(1, n),value);
+		IAssociative<?,?> sub=((IAssociative<?,?>)valAt(0));
+		if (sub==null) sub=(IAssociative<?,?>)Maps.EMPTY;
+		return sub.assocIn(keys.subList(1, n),value);
 	}
 	
 	@Override
