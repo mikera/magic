@@ -11,7 +11,7 @@ import magic.data.Tuple;
  *
  * @param <T>
  */
-public final class SingletonList<T> extends BasePersistentVector<T> {
+public final class SingletonList<T> extends APersistentVector<T> {
 
 	private static final long serialVersionUID = 8273587747838774580L;
 	

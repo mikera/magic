@@ -7,6 +7,7 @@ import java.util.ListIterator;
 
 import magic.Errors;
 import magic.RT;
+import magic.data.impl.ListIndexSeq;
 import magic.data.impl.SubVector;
 
 /**
@@ -110,9 +111,6 @@ public abstract class APersistentVector<T> extends APersistentCollection<T> impl
 	}
 	
 	@Override
-	public abstract APersistentVector<T> include(T value);
-	
-	@Override
 	public APersistentVector<T> exclude(T value) {
 		APersistentVector<T> pl=this;
 		int i=pl.indexOf(value);
@@ -138,8 +136,15 @@ public abstract class APersistentVector<T> extends APersistentCollection<T> impl
 	public final APersistentVector<T> concat(IPersistentCollection<T> values) {
 		return concat(Vectors.coerce(values));
 	}
+
+	public APersistentVector<T> concat(APersistentVector<T> values) {
+		return PersistentVector.coerce(this).concat(values);
+	}
 	
-	public abstract APersistentVector<T> concat(APersistentVector<T> a);
+	@Override
+	public APersistentVector<T> include(T value) {
+		return PersistentVector.coerce(this).include(value);
+	}
 	
 	@Override
 	public APersistentVector<T> concat(Collection<T> values) {
@@ -149,6 +154,12 @@ public abstract class APersistentVector<T> extends APersistentCollection<T> impl
 	@Override
 	public T remove(int index) {
 		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public ISeq<T> seq() {
+		if (size()==0) return null;
+		return new ListIndexSeq<T>(this);
 	}
 	
 	@Override
@@ -168,6 +179,40 @@ public abstract class APersistentVector<T> extends APersistentCollection<T> impl
 	}
 	
 	@Override
+	public boolean contains(Object o) {
+		return indexOf(o)>=0;
+	}
+	
+	/**
+	 * Returns hashcode of the persistent array. Defined as XOR of hashcodes of all elements rotated right for each element
+	 */
+	@Override
+	public int hashCode() {
+		int result=0;
+		for (int i=0; i<size(); i++) {
+			Object v=get(i);
+			if (v!=null) {
+				result^=v.hashCode();
+			}
+			result=Integer.rotateRight(result, 1);
+		}
+		return result;
+	}
+
+	
+	@Override
+	public int lastIndexOf(Object o) {
+		int size=size();
+		int i=size-1;
+		while(i>=0) {
+			T it=get(i);
+			if (RT.equals(o, it)) return i;
+			i--;
+		}
+		return -1;
+	}
+	
+	@Override
 	public APersistentVector<T> deleteRange(int start, int end) {
 		int size=size();
 		if ((start<0)||(end>size)) throw new IndexOutOfBoundsException();
@@ -176,6 +221,15 @@ public abstract class APersistentVector<T> extends APersistentCollection<T> impl
 		if (start==0) return subList(end,size);
 		if (end==size) return subList(0,start);
 		return subList(0,start).concat(subList(end,size));
+	}
+	
+	/**
+	 * Deletes the first instance of a specified value in the collection"
+	 */
+	public APersistentVector<T> deleteFirst(T value) {
+		int i=indexOf(value);
+		if (i<0) return this;
+		return deleteRange(i,i+1);
 	}
 	
 	@Override

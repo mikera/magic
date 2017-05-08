@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 
 import magic.RT;
-import magic.data.impl.BasePersistentVector;
 import magic.data.impl.EmptyArrays;
 
 /**
@@ -14,7 +13,7 @@ import magic.data.impl.EmptyArrays;
  *
  * @param <T>
  */
-public final class Tuple<T> extends BasePersistentVector<T> {
+public final class Tuple<T> extends APersistentVector<T> {
 	private static final long serialVersionUID = -3717695950215145009L;
 
 	public final T[] data;

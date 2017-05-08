@@ -13,7 +13,7 @@ import magic.data.APersistentVector;
  *
  * @param <T>
  */
-public final class SubVector<T> extends BasePersistentVector<T>   {	
+public final class SubVector<T> extends APersistentVector<T>   {	
 
 	private static final long serialVersionUID = 3559316900529560364L;
 

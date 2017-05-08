@@ -10,7 +10,7 @@ import magic.data.ISeq;
 import magic.data.Vectors;
 import magic.data.APersistentVector;
 
-public final class NullList<T> extends BasePersistentVector<T> {
+public final class NullList<T> extends APersistentVector<T> {
 	
 	private static final long serialVersionUID = -268387358134950528L;
 

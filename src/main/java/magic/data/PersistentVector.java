@@ -2,15 +2,13 @@ package magic.data;
 
 import java.util.List;
 
-import magic.data.impl.BasePersistentVector;
-
 /**
  * Persistent Vector constructed using fixed size blocks represented by other persistent lists
  * @author Mike
  *
  * @param <T>
  */
-public final class PersistentVector<T> extends BasePersistentVector<T> {
+public final class PersistentVector<T> extends APersistentVector<T> {
 	private static final long serialVersionUID = 7210896608719053578L;
 
 	protected static final int DEFAULT_SHIFT=Vectors.TUPLE_BUILD_BITS;

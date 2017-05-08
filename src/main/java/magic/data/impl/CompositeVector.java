@@ -6,7 +6,7 @@ import magic.data.Vectors;
 import magic.data.APersistentVector;
 import magic.data.Tuple;
 
-public class CompositeVector<T> extends BasePersistentVector<T> {
+public class CompositeVector<T> extends APersistentVector<T> {
 	private static final long serialVersionUID = 1L;
 	
 	public final APersistentVector<T> front;

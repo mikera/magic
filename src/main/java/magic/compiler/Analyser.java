@@ -178,7 +178,7 @@ public class Analyser {
 		if (form.size()!=2) throw new Error("Quote expects a single form");
 		return (Node<T>) Quote.create(form.get(1),syntaxQuote,((Symbol)form.head()).symbolSet());
 	}
-
+ 
 	@SuppressWarnings("unchecked")
 	private static <T> Node<T> analyseFn(Context c, Object arglist, APersistentList<Object> tail) {
 		int n=tail.size();
