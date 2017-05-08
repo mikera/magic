@@ -35,6 +35,12 @@ public abstract class APersistentSet<T> extends APersistentCollection<T> impleme
 		return (T) notFound;		
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public final APersistentSet<T> assoc(Object key,Object value) {
+		return include((T) key);		
+	}
+	
 	/**
 	 * Default implementation for include
 	 * Note: should be overridden if faster implementation is possible

@@ -271,6 +271,23 @@ public abstract class APersistentVector<T> extends APersistentCollection<T> impl
 		if ((key.doubleValue()!=k)||(k<0)||(k>=size())) return notFound;
 		return get(k);		
 	}
+	
+	@Override
+	public final APersistentVector<T> assoc(Object key,Object value) {
+		if (key instanceof Number) {
+			return assoc((Number)key,null);
+		}
+		throw new IllegalArgumentException("Vector assoc requires an integer key");		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public APersistentVector<T> assoc(Number key,Object value) {
+		int k=key.intValue();
+		if ((key.doubleValue()!=k)||(k<0)||(k>=size())) {
+			throw new IllegalArgumentException("Vector assoc requires an integer key");
+		}
+		return assocAt(k,(T) value);		
+	}
 
 	@Override
 	public APersistentVector<T> subList(int fromIndex, int toIndex) {
@@ -284,7 +301,7 @@ public abstract class APersistentVector<T> extends APersistentCollection<T> impl
 	}
 
 	@Override
-	public APersistentVector<T> update(int index, T value) {
+	public APersistentVector<T> assocAt(int index, T value) {
 		APersistentVector<T> firstPart=subList(0,index);
 		APersistentVector<T> lastPart=subList(index+1,size());
 		return firstPart.include(value).concat(lastPart);

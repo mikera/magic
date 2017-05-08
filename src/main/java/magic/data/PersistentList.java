@@ -95,7 +95,7 @@ public class PersistentList<T> extends APersistentList<T> {
 
 	@Override
 	public APersistentList<T> update(int index, T value) {
-		return create(vector.update(index+offset,value),offset,size);
+		return create(vector.assocAt(index+offset,value),offset,size);
 	}
 
 	@Override
@@ -181,6 +181,12 @@ public class PersistentList<T> extends APersistentList<T> {
 	public static <T> PersistentList<T> wrap(T[] forms) {
 		return create(Tuple.wrap(forms));
 	}
+
+	@Override
+	public APersistentList<T> assocAt(int index, Object value) {
+		return create(vector.assoc(offset+index, value),offset,size);
+	}
+
 
 
 

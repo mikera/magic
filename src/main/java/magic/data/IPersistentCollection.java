@@ -13,16 +13,36 @@ public interface IPersistentCollection<T> extends Collection<T>, ISeqable<T>, Cl
 	 */
 	public APersistentCollection<T> include(T value);
 	
+	/**
+	 * Adds all values from another collection into this collection.
+	 * Behaviour depends on the specific collection semantics, equivalent to Clojure into
+	 */
 	public APersistentCollection<T> includeAll(final Collection<T> values);
 
+	/**
+	 * Adds all values from another collection into this collection.
+	 * Behaviour depends on the specific collection semantics, equivalent to Clojure into
+	 */
 	public APersistentCollection<T> includeAll(final IPersistentCollection<T> values);
 
 	// delete methods
 	
+	/**
+	 * Removes all instances of a value from this collection.
+	 * Behaviour depends on the specific collection semantics.
+	 */
 	public APersistentCollection<T> exclude(final T value);
 	
+	/**
+	 * Removes all instances of a collection of values from this collection.
+	 * Behaviour depends on the specific collection semantics.
+	 */
 	public APersistentCollection<T> excludeAll(final Collection<T> values);
 
+	/**
+	 * Removes all instances of a collection of values from this collection.
+	 * Behaviour depends on the specific collection semantics.
+	 */
 	public APersistentCollection<T> excludeAll(final IPersistentCollection<T> values);
 
 	// query methods
@@ -42,10 +62,22 @@ public interface IPersistentCollection<T> extends Collection<T>, ISeqable<T>, Cl
 	 */
 	public Object valAt(Object key,Object notFound);
 	
+	/**
+	 * Updates this collection by including the specified value at the given key position.
+	 * The same value can subsequently be retrieved with valAt using the same key.
+	 * @throws IllegalArgumentException if the key or value is not supported by the collection.
+	 */
+	public APersistentCollection<T> assoc(Object key,Object value);
+	
 	
 	@Override
 	public boolean containsAll(Collection<?> c);
 	
+	/**
+	 * Returns true if this collection contains any of the elements in the specified collection.
+	 * @param c Another collection of elements to test
+	 * @return
+	 */
 	public boolean containsAny(Collection<?> c);
 	
 	@Override

@@ -32,7 +32,7 @@ public interface IPersistentVector<T> extends IPersistentCollection<T>, List<T> 
 
 	public APersistentVector<T> deleteRange(int startIndex, int endIndex);
 
-	public APersistentVector<T> update(int index, T value);
+	public APersistentVector<T> assocAt(int index, T value);
 	
 	// query methods
 	

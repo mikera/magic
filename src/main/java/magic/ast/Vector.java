@@ -49,7 +49,7 @@ public class Vector<T> extends Node<IPersistentVector<T>> {
 			Node<?> newNode=node.specialiseValues(bindings);
 			if (node!=newNode) {
 				// System.out.println("Specialising "+node+ " to "+newNode);
-				newExps=newExps.update(i,(Node<T>) newNode);
+				newExps=newExps.assocAt(i,(Node<T>) newNode);
 			} 
 		}
 		return (exps==newExps)?this:create(newExps);
@@ -64,7 +64,7 @@ public class Vector<T> extends Node<IPersistentVector<T>> {
 			Node<?> node=exps.get(i);
 			Node<?> newNode=node.optimise();
 			if (node!=newNode) {
-				newExps=newExps.update(i,(Node<T>) newNode);
+				newExps=newExps.assocAt(i,(Node<T>) newNode);
 			} 
 		}
 		return (exps==newExps)?this:create(newExps);

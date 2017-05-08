@@ -142,7 +142,7 @@ public final class EmptyVector<T> extends APersistentVector<T> {
 	}
 
 	@Override
-	public APersistentVector<T> update(int index, T value) {
+	public APersistentVector<T> assocAt(int index, T value) {
 		throw new IndexOutOfBoundsException();
 	}
 

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import magic.RT;
-import magic.data.impl.NullCollection;
 import magic.data.impl.EmptyVector;
 import magic.data.impl.NullSet;
 import magic.data.impl.RepeatVector;
@@ -37,12 +36,11 @@ public class TestPersistent {
 	}
 	
 	@Test public void testCollectionTypes() {
-		testPersistentCollection(NullCollection.INSTANCE);
 		testPersistentCollection(PersistentHashMap.create().assoc(1, "Sonia").values());
 	}
 	
 	@Test public void testUpdate() {
-		assertEquals(Tuple.of(1,2,3),Tuple.of(1,2,4).update(2, 3));
+		assertEquals(Tuple.of(1,2,3),Tuple.of(1,2,4).assocAt(2, 3));
 	}
 	
 	@Test public void testConcat() {

@@ -86,4 +86,9 @@ public final class ValueCollectionWrapper<K,V> extends APersistentCollection<V> 
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public APersistentCollection<V> assoc(Object key, Object value) {
+		throw new UnsupportedOperationException();
+	}
+
 }

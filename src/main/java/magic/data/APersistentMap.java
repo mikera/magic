@@ -35,7 +35,6 @@ public abstract class APersistentMap<K,V> extends APersistentObject implements I
 		return false;
 	}
 	
-	
 	public boolean containsEntry(Map.Entry<K,V> entry) {
 		Map.Entry<K,V> e=getMapEntry(entry.getKey());
 		if (e==null) return false;

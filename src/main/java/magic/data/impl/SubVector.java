@@ -117,7 +117,7 @@ public final class SubVector<T> extends APersistentVector<T>   {
 			if(data.get(newIndex)==value) {
 				return create(data,offset,newIndex+1);
 			} 
-			return data.update(newIndex, value).subList(offset, newIndex+1);
+			return data.assocAt(newIndex, value).subList(offset, newIndex+1);
 			
 		}
 		return data.include(value).subList(offset, newIndex+1);

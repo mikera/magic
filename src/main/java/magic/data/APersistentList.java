@@ -81,6 +81,25 @@ public abstract class APersistentList<T> extends APersistentCollection<T> implem
 		if ((key.doubleValue()!=k)||(k<0)||(k>=size())) return notFound;
 		return get(k);		
 	}
+	
+	@Override
+	public final APersistentList<T> assoc(Object key,Object value) {
+		if (key instanceof Number) {
+			return assoc((Number)key,null);
+		}
+		throw new IllegalArgumentException("Vector assoc requires an integer key");		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public APersistentList<T> assoc(Number key,Object value) {
+		int k=key.intValue();
+		if ((key.doubleValue()!=k)||(k<0)||(k>=size())) {
+			throw new IllegalArgumentException("Vector assoc requires an integer key");
+		}
+		return assocAt(k,(T) value);		
+	}
+	
+	public abstract APersistentList<T> assocAt(int key,Object value);
 
 	@Override
 	public T set(int index, T element) {
