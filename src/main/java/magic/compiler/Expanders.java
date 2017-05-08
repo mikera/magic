@@ -77,7 +77,7 @@ public class Expanders {
 		@Override
 		public Object expand(Context c, IPersistentList<Object> form,Expander ex) {
 			int n=form.size();
-			if (n<3) throw new ExpansionException("Can't expand demacro, requires at least macro name and arg vector",form);
+			if (n<3) throw new ExpansionException("Can't expand defmacro, requires at least macro name and arg vector",form);
 			
 			Object nameObj=ex.expand(c, form.get(1), ex);
 			Object argObj=ex.expand(c, form.get(2), ex);

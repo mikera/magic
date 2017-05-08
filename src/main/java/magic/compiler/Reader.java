@@ -104,6 +104,7 @@ public class Reader extends BaseParser<Object> {
 	public Rule QuotedExpression() {
 		return FirstOf(
 				Quote(),
+				SyntaxQuote(),
 				Unquote(), 
 				UnquoteSplice()
 				);
@@ -114,6 +115,14 @@ public class Reader extends BaseParser<Object> {
 				'\'',
 				Expression(),
 				push(PersistentList.of(Symbols.QUOTE,pop()))
+				);
+	}
+	
+	public Rule SyntaxQuote() {
+		return Sequence(
+				'\'',
+				Expression(),
+				push(PersistentList.of(Symbols.SYNTAX_QUOTE,pop()))
 				);
 	}
 	
