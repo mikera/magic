@@ -96,7 +96,8 @@ public class Expanders {
 			Object argObj=form.get(1);
 			
 			APersistentList<Object> body=form.subList(2,n);
-			APersistentList<Object> newForm=PersistentList.of(Symbols.EXPANDER, Tuple.of(Symbols.UNDERSCORE,argObj)).concat(body);
+			APersistentList<Object> newForm=PersistentList.of((Object)Symbols.EXPANDER, Tuple.of(Symbols.UNDERSCORE,argObj));
+			newForm=newForm.concat(body);
 			return ex.expandAll(c, newForm,ex);
 		}
 	};

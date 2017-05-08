@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import magic.data.impl.NullList;
-import magic.data.impl.SingletonList;
+import magic.data.impl.EmptyVector;
+import magic.data.impl.SingletonVector;
 
 /**
  * Static function class for persistent list types
@@ -28,11 +28,11 @@ public class Vectors<T> {
 	
 	@SuppressWarnings("unchecked")
 	public static <T> APersistentVector<T> emptyVector() {
-		return (APersistentVector<T>) NullList.INSTANCE;
+		return (APersistentVector<T>) EmptyVector.INSTANCE;
 	}	
 	
 	public static <T> APersistentVector<T> of(T value) {
-		return SingletonList.of(value);
+		return SingletonVector.of(value);
 	}
 	
 	public static <T> APersistentVector<T> of(T a, T b) {
@@ -66,7 +66,7 @@ public class Vectors<T> {
 			if (n<2) {
 				if (n<0) throw new IllegalArgumentException(); 
 				if (n==0) return emptyVector();
-				return SingletonList.of(data[fromIndex]);
+				return SingletonVector.of(data[fromIndex]);
 			}	
 			
 			// note this covers negative length case
@@ -120,7 +120,7 @@ public class Vectors<T> {
 			return createFromList((APersistentVector<T>)source,fromIndex, toIndex);
 		}
 		
-		if (newSize==1) return SingletonList.of(source.get(fromIndex));
+		if (newSize==1) return SingletonVector.of(source.get(fromIndex));
 		if (newSize<=MAX_TUPLE_BUILD_SIZE) {
 			// note this covers negative length case
 			return Tuple.createFrom(source,fromIndex,toIndex);

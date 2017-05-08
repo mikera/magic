@@ -14,7 +14,7 @@ import magic.data.impl.FilteredIterator;
  * @param <T>
  */
 @SuppressWarnings("unchecked")
-public abstract class APersistentCollection<T> extends PersistentObject implements IPersistentCollection<T> {
+public abstract class APersistentCollection<T> extends APersistentObject implements IPersistentCollection<T> {
 	private static final long serialVersionUID = -962303316004942025L;
 
 	@Override

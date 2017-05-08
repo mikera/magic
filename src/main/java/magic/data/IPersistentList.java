@@ -79,5 +79,7 @@ public interface IPersistentList<T> extends IPersistentCollection<T>, List<T>, C
 	
 	@Override
 	public T get(int i);
+
+	APersistentList<T> concat(APersistentList<T> values);
 	
 }

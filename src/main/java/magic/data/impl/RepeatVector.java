@@ -3,6 +3,7 @@ package magic.data.impl;
 import magic.Errors;
 import magic.RT;
 import magic.data.APersistentVector;
+import magic.data.PersistentVector;
 import magic.data.Vectors;
 
 /**
@@ -72,6 +73,11 @@ public class RepeatVector<T> extends APersistentVector<T> {
 			}
 		}
 		return super.concat(values);
+	}
+	
+	@Override
+	public APersistentVector<T> include(T value) {
+		return PersistentVector.coerce(this).include(value);
 	}
 	
 	@Override

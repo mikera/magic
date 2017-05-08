@@ -121,7 +121,7 @@ public final class NullCollection<T> extends APersistentCollection<T> {
 
 	@Override
 	public APersistentCollection<T> include(T value) {
-		return SingletonList.of(value);
+		return SingletonVector.of(value);
 	}
 
 	@Override

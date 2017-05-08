@@ -14,7 +14,7 @@ import magic.RT;
  * @param <K>
  * @param <V>
  */
-public abstract class APersistentMap<K,V> extends PersistentObject implements IPersistentMap<K,V> {
+public abstract class APersistentMap<K,V> extends APersistentObject implements IPersistentMap<K,V> {
 	private static final long serialVersionUID = 2304218229796144868L;
 
 	@Override

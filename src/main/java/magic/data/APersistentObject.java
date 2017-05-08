@@ -6,7 +6,7 @@ package magic.data;
  * @author Mike Anderson
  *
  */
-public abstract class PersistentObject implements IPersistentObject {
+public abstract class APersistentObject implements IPersistentObject {
 	private static final long serialVersionUID = -4077880416849448410L;
 
 	/**
@@ -15,7 +15,7 @@ public abstract class PersistentObject implements IPersistentObject {
 	 * 
 	 */
 	@Override
-	public PersistentObject clone() {
+	public APersistentObject clone() {
 		return this;
 	}
 	

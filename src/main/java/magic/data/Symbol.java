@@ -12,7 +12,9 @@ import magic.RT;
  * @author Mike
  *
  */
-public class Symbol {
+public class Symbol extends APersistentObject {
+	private static final long serialVersionUID = -3902663236353633212L;
+
 	private final String ns;
 	private final String name;
 	private final int hash;

@@ -30,9 +30,26 @@ public class PersistentList<T> extends APersistentList<T> {
 	}
 
 	@Override
-	public APersistentList<T> concat(IPersistentList<T> values) {
+	public APersistentList<T> concat(APersistentList<T> values) {
 		return create(vector.concat(values),offset,size+values.size());
 	}
+	
+
+	@Override
+	public APersistentList<T> concat(IPersistentList<T> values) {
+		if (values instanceof APersistentList) {
+			return concat((APersistentList<T>)values);
+		}
+		return concat(coerce(values));
+	}
+
+	public static <T> APersistentList<T> coerce(IPersistentCollection<T> values) {
+		if (values instanceof APersistentList) {
+			return ((APersistentList<T>)values);
+		}	
+		return create(Vectors.coerce(values));
+	}
+
 
 	@Override
 	public APersistentList<T> concat(Collection<T> values) {
@@ -164,5 +181,7 @@ public class PersistentList<T> extends APersistentList<T> {
 	public static <T> PersistentList<T> wrap(T[] forms) {
 		return create(Tuple.wrap(forms));
 	}
+
+
 
 }

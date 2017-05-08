@@ -11,14 +11,14 @@ import magic.data.Tuple;
  *
  * @param <T>
  */
-public final class SingletonList<T> extends APersistentVector<T> {
+public final class SingletonVector<T> extends APersistentVector<T> {
 
 	private static final long serialVersionUID = 8273587747838774580L;
 	
 	final T value;
 	
-	public static <T> SingletonList<T> of(T object) {
-		return new SingletonList<T>(object);
+	public static <T> SingletonVector<T> of(T object) {
+		return new SingletonVector<T>(object);
 	}
 	
 	@Override
@@ -37,7 +37,7 @@ public final class SingletonList<T> extends APersistentVector<T> {
 		throw new IndexOutOfBoundsException();
 	}
 	
-	private SingletonList(T object) {
+	private SingletonVector(T object) {
 		value=object;
 	}
 	

@@ -89,7 +89,7 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 		return node.size();
 	}
 	
-	private abstract static class PHSNode<T> extends PersistentObject {
+	private abstract static class PHSNode<T> extends APersistentObject {
 		private static final long serialVersionUID = -4378011224932646278L;
 
 		/**

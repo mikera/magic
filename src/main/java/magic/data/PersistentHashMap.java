@@ -73,7 +73,7 @@ public final class PersistentHashMap<K,V> extends APersistentMap<K,V> {
 		return node.size();
 	}
 	
-	private abstract static class PHMNode<K,V> extends PersistentObject {
+	private abstract static class PHMNode<K,V> extends APersistentObject {
 		private static final long serialVersionUID = -4378011224932646278L;
 
 		/**

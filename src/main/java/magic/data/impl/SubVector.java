@@ -2,8 +2,8 @@ package magic.data.impl;
 
 import java.util.List;
 
-import magic.data.Vectors;
 import magic.data.APersistentVector;
+import magic.data.Vectors;
 
 /**
  * Implements a persistent list that is a subset of an existing tuple
@@ -32,7 +32,7 @@ public final class SubVector<T> extends APersistentVector<T>   {
 			if (newSize==0) return (SubVector<T>) SubVector.EMPTY_SUBLIST;
 			throw new IllegalArgumentException();
 		}
-		return createLocal(Vectors.createFromList(source),fromIndex,toIndex);
+		return createLocal(Vectors.createFromList(source),fromIndex,newSize);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -108,5 +108,18 @@ public final class SubVector<T> extends APersistentVector<T>   {
 		}
 		if ((fromIndex==0)&&(toIndex==size())) return this;
 		return data.subList(offset+fromIndex, offset+toIndex);
+	}
+
+	@Override
+	public APersistentVector<T> include(T value) {
+		int newIndex=offset+length;
+		if ((data.size()>newIndex)) {
+			if(data.get(newIndex)==value) {
+				return create(data,offset,newIndex+1);
+			} 
+			return data.update(newIndex, value).subList(offset, newIndex+1);
+			
+		}
+		return data.include(value).subList(offset, newIndex+1);
 	}
 }

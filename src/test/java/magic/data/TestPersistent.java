@@ -12,10 +12,10 @@ import org.junit.Test;
 import magic.RT;
 import magic.data.impl.CompositeVector;
 import magic.data.impl.NullCollection;
-import magic.data.impl.NullList;
+import magic.data.impl.EmptyVector;
 import magic.data.impl.NullSet;
 import magic.data.impl.RepeatVector;
-import magic.data.impl.SingletonList;
+import magic.data.impl.SingletonVector;
 import magic.data.impl.SingletonSet;
 import magic.data.impl.SubVector;
 import mikera.util.Rand;
@@ -28,10 +28,11 @@ public class TestPersistent {
 		
 		testPersistentList(pl);
 		testPersistentList(pl.subList(1, 4));
-		testPersistentList(NullList.INSTANCE);
+		testPersistentList(EmptyVector.INSTANCE);
 		testPersistentList(Tuple.of(1,2,3,4,5));
-		testPersistentList(SingletonList.of("Hello persistent lists!"));
+		testPersistentList(SingletonVector.of("Hello persistent lists!"));
 		testPersistentList(RepeatVector.create("Hello", 40));
+		testPersistentList(MapEntry.create(Keyword.create("foo"), 40));
 		testPersistentList(CompositeVector.create(pl));
 		testPersistentList(PersistentVector.create(pl));
 		testPersistentList(PersistentVector.create(RepeatVector.create("MM", 40)));
@@ -159,7 +160,7 @@ public class TestPersistent {
 			assertFalse(ad.contains(v));
 			
 			APersistentCollection<T> adi=ad.include(v);		
-			assertTrue(adi.contains(v));
+			assertTrue("Can't find value "+v+" in: "+adi,adi.contains(v));
 			assertTrue(adi.containsAll(a));
 		}
 	}
@@ -411,7 +412,7 @@ public class TestPersistent {
 		
 		assertTrue(a==a.subList(0,n));
 		int rp=Rand.r(n);
-		assertEquals(NullList.INSTANCE,a.subList(rp,rp));
+		assertEquals(EmptyVector.INSTANCE,a.subList(rp,rp));
 		
 		// zero length copyFrom
 		assertEquals(a,a.copyFrom(Rand.r(n), a, Rand.r(n), 0));

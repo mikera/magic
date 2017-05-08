@@ -142,9 +142,7 @@ public abstract class APersistentVector<T> extends APersistentCollection<T> impl
 	}
 	
 	@Override
-	public APersistentVector<T> include(T value) {
-		return PersistentVector.coerce(this).include(value);
-	}
+	public abstract APersistentVector<T> include(T value);
 	
 	@Override
 	public APersistentVector<T> concat(Collection<T> values) {
@@ -191,9 +189,7 @@ public abstract class APersistentVector<T> extends APersistentCollection<T> impl
 		int result=0;
 		for (int i=0; i<size(); i++) {
 			Object v=get(i);
-			if (v!=null) {
-				result^=v.hashCode();
-			}
+			result^=RT.hashCode(v);
 			result=Integer.rotateRight(result, 1);
 		}
 		return result;

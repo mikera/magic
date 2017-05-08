@@ -10,14 +10,14 @@ import magic.data.ISeq;
 import magic.data.Vectors;
 import magic.data.APersistentVector;
 
-public final class NullList<T> extends APersistentVector<T> {
+public final class EmptyVector<T> extends APersistentVector<T> {
 	
 	private static final long serialVersionUID = -268387358134950528L;
 
 	@SuppressWarnings("rawtypes")
-	public static NullList<?> INSTANCE=new NullList();
+	public static EmptyVector<?> INSTANCE=new EmptyVector();
 	
-	private NullList() {
+	private EmptyVector() {
 		
 	}
 
@@ -149,7 +149,7 @@ public final class NullList<T> extends APersistentVector<T> {
 	@Override
 	public APersistentVector<T> insert(int index, T value) {
 		if (index!=0) throw new IndexOutOfBoundsException();
-		return SingletonList.of(value);
+		return SingletonVector.of(value);
 	}
 
 	@Override
@@ -185,8 +185,8 @@ public final class NullList<T> extends APersistentVector<T> {
 	}
 
 	@Override
-	public SingletonList<T> include(T value) {
-		return SingletonList.of(value);
+	public SingletonVector<T> include(T value) {
+		return SingletonVector.of(value);
 	}
 
 }
