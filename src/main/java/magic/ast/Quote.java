@@ -1,5 +1,6 @@
 package magic.ast;
 
+import magic.RT;
 import magic.Type;
 import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
@@ -66,6 +67,11 @@ public class Quote extends Node<Object> {
 		if (unquotes.size()==0) return Constant.create(form);
 		// TODO: optimise unquotes into constants?
 		return this;
+	}
+	
+	@Override
+	public String toString() {
+		return (syntaxQuote?"(Syntax-Quote ":"(Quote ")+RT.toString(form)+")";
 	}
 
 }

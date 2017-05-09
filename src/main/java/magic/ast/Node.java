@@ -128,4 +128,7 @@ public abstract class Node<T> extends RootNode {
 	 * @return
 	 */
 	public abstract Node<T> optimise();
+	
+	@Override
+	public abstract String toString();
 }

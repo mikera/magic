@@ -162,10 +162,7 @@ public class RT {
 	}
 
 	public static String print(Object value) {
-		if (value instanceof String) {
-			return "\""+value.toString()+"\"";
-		} 
-		return value.toString();
+		return RT.toString(value);
 	}
 
 	public static int hashCombine(int hash1, int hash2) {

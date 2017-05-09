@@ -1,5 +1,6 @@
 package magic.ast;
 
+import magic.RT;
 import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
 import magic.data.Symbol;
@@ -47,5 +48,10 @@ public class Define<T> extends Node<T> {
 	public Node<T> optimise() {
 		Node<T> newExp=exp.optimise();
 		return (exp==newExp)?this:create(sym,newExp);
+	}
+
+	@Override
+	public String toString() {
+		return "(Def "+sym+" "+RT.toString(exp)+")";
 	}
 }
