@@ -86,5 +86,10 @@ public class Null extends Type {
 	public void validate() {
 		if (this!=Null.INSTANCE) throw new TypeError(this+ " should be a singleton!");
 	}
+	
+	@Override
+	public String toString() {
+		return "Null";
+	}
 
 }

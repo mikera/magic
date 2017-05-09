@@ -39,6 +39,11 @@ public class ValueSet<T> extends Type {
 		return new ValueSet<T>((PersistentHashSet<T>) PersistentHashSet.create(values));
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static <T> Type of(T... values) {
+		return create(values);
+	}
+	
 	public Type update(PersistentHashSet<T> values) {
 		if (values==this.values) return this;
 		int n=values.size();
@@ -155,6 +160,8 @@ public class ValueSet<T> extends Type {
 		
 		// TODO: class tests?
 	}
+
+
 
 
 }

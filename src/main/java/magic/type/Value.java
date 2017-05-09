@@ -1,5 +1,6 @@
 package magic.type;
 
+import magic.RT;
 import magic.Type;
 import magic.lang.Tools;
 
@@ -23,6 +24,10 @@ public class Value<T> extends Type {
 	public static <T> Type create(T value) {
 		if (value==null) return Null.INSTANCE;
 		return new Value<T>(value);
+	}
+	
+	public static <T> Type of(T value) {
+		return create(value);
 	}
 	
 	@Override
@@ -116,13 +121,15 @@ public class Value<T> extends Type {
 	
 	@Override
 	public String toString() {
-		return "(Value "+value.toString()+")";
+		return "(Value "+RT.toString(value)+")";
 	}
 	
 	@Override
 	public void validate() {
 		if (!(klass.isInstance(value))) throw new TypeError(value+ " is of wrong type, should be "+klass);
 	}
+
+
 
 
 }

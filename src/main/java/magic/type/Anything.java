@@ -64,5 +64,10 @@ public class Anything extends Type {
 	public void validate() {
 		if (this!=Anything.INSTANCE) throw new Error(this+ " should be a singleton!");
 	}
+	
+	@Override
+	public String toString() {
+		return "Any";
+	}
 
 }

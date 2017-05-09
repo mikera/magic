@@ -174,6 +174,7 @@ public class RT {
 
 	public static String toString(Object o) {
 		if (o==null) return "nil";
+		if (o instanceof String) return "\""+(String)o+"\"";
 		return o.toString();
 	}
 

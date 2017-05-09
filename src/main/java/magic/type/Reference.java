@@ -71,5 +71,10 @@ public class Reference extends Type {
 	public void validate() {
 		// OK?
 	}
+	
+	@Override
+	public String toString() {
+		return "Reference";
+	}
 
 }
