@@ -75,11 +75,12 @@ public class Maybe extends Type {
 
 	@Override
 	public boolean canBeTruthy() {
-		return true;
+		return type.canBeTruthy();
 	}
 
 	@Override
 	public boolean canBeFalsey() {
+		// always possible to be falsey because of null value
 		return true;
 	}
 

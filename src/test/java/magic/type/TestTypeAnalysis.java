@@ -13,7 +13,7 @@ import magic.compiler.Reader;
 import magic.data.APersistentVector;
 import magic.data.Symbol;
 
-public class TestTypes {
+public class TestTypeAnalysis {
 	private Class<?>  analyseClass(Object form) {
 		Node<?> node=Analyser.analyse(form);
 		Type type=node.getType();
