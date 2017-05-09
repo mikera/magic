@@ -18,7 +18,6 @@ public abstract class Expander extends AFn<Object> implements IFn3<Object> {
 		return expand((Context)o1,o2,(Expander)o3);
 	}
 
-
 	@Override
 	public final Object applyToArray(Object... a) {
 		if (a.length!=3) throw new ArityException("Expander requires 3 arguments (context, form, next-expander)");
@@ -26,7 +25,6 @@ public abstract class Expander extends AFn<Object> implements IFn3<Object> {
 	}
 	
 	public abstract Object expand(Context c, Object form, Expander ex);
-
 
 	public APersistentList<Object> expandAll(Context c, APersistentList<Object> forms,Expander ex) {
 		return forms.map(new AFn1<Object,Object>(){
