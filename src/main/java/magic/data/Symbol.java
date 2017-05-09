@@ -45,7 +45,7 @@ public class Symbol extends APersistentObject {
 	}
 	
     /**
-     * Like create, but different arg order to support parsing
+     * Like create, but different arg order to support parsing (i.e. ordering of pop()s)
      * @param name
      * @param nameSpace
      * @return
