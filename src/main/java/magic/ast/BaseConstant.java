@@ -9,8 +9,9 @@ import magic.lang.Context;
 import magic.type.JavaType;
 
 /**
- * Base class for constant expressions. Constant expressions always return the same value,
- * independent of the context.
+ * Abstract base class for AST nodes representing constant expressions. 
+ * 
+ * Constant expressions always return the same value, independent of the context.
  * @author Mike
  *
  * @param <T>

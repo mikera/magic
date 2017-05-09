@@ -12,6 +12,13 @@ import magic.fn.IFn;
 import magic.lang.Context;
 import magic.type.FunctionType;
 
+/**
+ * AST node representing a lambda expression a.k.a. "(fn [...] ...)"
+ * 
+ * @author Mike
+ *
+ * @param <T>
+ */
 public class Lambda<T> extends Node<IFn<T>> {
 
 	private final IPersistentVector<Symbol> args;

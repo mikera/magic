@@ -3,6 +3,14 @@ package magic.ast;
 import magic.RT;
 import magic.data.Sets;
 
+/**
+ * AST node representing a constant long primitive value
+ * 
+ * TODO: figure out if primitives are best handles in a standard Constant node.
+ * 
+ * @author Mike
+ *
+ */
 public class LongConstant extends BaseConstant<Long> {
 
 	private final long value;

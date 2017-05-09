@@ -11,6 +11,13 @@ import magic.data.Tuple;
 import magic.lang.Context;
 import magic.type.JavaType;
 
+/**
+ * AST node representing a quoted form
+ * 
+ * This may possibly include unquoted elements, which are analysed to produce AST replacement nodes
+ * @author Mike
+ *
+ */
 public class Quote extends Node<Object> {
 
 	private final boolean syntaxQuote;

@@ -12,7 +12,9 @@ import magic.lang.Context;
 import magic.type.JavaType;
 
 /**
- * Expression representing a constant.
+ * AST node representing a constant value.
+ * 
+ * May still have symbolic dependencies, e.g. when it is constructed from expansion and optimisation of another form/node
  * 
  * @author Mike
  *

@@ -7,6 +7,13 @@ import magic.data.APersistentMap;
 import magic.data.Symbol;
 import magic.lang.Context;
 
+/**
+ * AST node representing a `do` block of sequential expressions
+ * 
+ * @author Mike
+ *
+ * @param <T>
+ */
 public class Do<T> extends Node<T> {
 	private final int nBody;
 	private final Node<?>[] body;

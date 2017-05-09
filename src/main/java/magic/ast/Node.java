@@ -19,7 +19,8 @@ import magic.lang.Context;
 import magic.lang.MagicLanguage;
  
 /**
- * Base class for Expressions
+ * Abstract base class for expressions AST nodes
+ * 
  * @author Mike
  *
  */

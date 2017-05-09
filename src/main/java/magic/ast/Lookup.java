@@ -8,8 +8,8 @@ import magic.lang.Context;
 
 /**
  * Expression node for looking up a symbol in a context
+ * 
  * @author Mike
- *
  * @param <T>
  */
 public class Lookup<T> extends Node<T> {

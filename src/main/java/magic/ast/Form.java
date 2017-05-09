@@ -9,7 +9,8 @@ import magic.lang.Context;
 
 /**
  * Represents a raw, unexpanded form
- * Dependency generally exists on the first symbol only
+ * 
+ * Dependency initially exists on the first symbol only: this must be resolved in order to expansion to continue.
  * 
  * @author Mike
  */

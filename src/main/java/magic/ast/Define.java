@@ -5,6 +5,16 @@ import magic.data.APersistentMap;
 import magic.data.Symbol;
 import magic.lang.Context;
 
+/**
+ * AST node representing a definitions
+ * 
+ * Currently the only valid way to make changes to the context, which occurs due to evaluation of
+ * Def nodes during the compilation phase.
+ * 
+ * @author Mike
+ *
+ * @param <T>
+ */
 public class Define<T> extends Node<T> {
 
 	final Symbol sym;

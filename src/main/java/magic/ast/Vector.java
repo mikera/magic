@@ -12,7 +12,7 @@ import magic.lang.Context;
 import magic.type.JavaType;
 
 /**
- * Expression class representing a vector construction literal.
+ * AST node class representing a vector construction literal.
  * 
  * @author Mike
  *

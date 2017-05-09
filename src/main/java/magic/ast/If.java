@@ -6,6 +6,13 @@ import magic.data.APersistentMap;
 import magic.data.Symbol;
 import magic.lang.Context;
 
+/**
+ * AST node representing a condition `if` expression.
+ * 
+ * @author Mike
+ *
+ * @param <T>
+ */
 public class If<T> extends Node<T> {
 	private final Node<Object> test; 
 	private final Node<T> trueExp; 

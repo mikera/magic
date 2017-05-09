@@ -8,9 +8,9 @@ import magic.fn.IFn;
 import magic.lang.Context;
 
 /**
- * Expression representing a function application
+ * AST node representing a function application
+ * 
  * @author Mike
- *
  */
 public class Apply<T> extends Node<T> {
 
