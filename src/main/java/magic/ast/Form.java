@@ -1,5 +1,6 @@
 package magic.ast;
 
+import magic.RT;
 import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
 import magic.data.IPersistentSet;
@@ -44,7 +45,7 @@ public class Form<T> extends Node<T> {
 	
 	@Override
 	public String toString() {
-		return form.toString();
+		return RT.toString(form);
 	}
  	
 	@Override
