@@ -1,41 +1,19 @@
-package magic;
+package magic.type;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import magic.Type;
-import magic.type.*;
-
 import org.junit.Test;
 
-public class TypeTests {
-	
-	static final Type[] testTypes={
-		Nothing.INSTANCE,
-		Something.INSTANCE,
-		Anything.INSTANCE,
-		JavaType.create(Integer.class),
-		JavaType.create(String.class),
-		JavaType.create(Number.class),
-		Value.create("foo"),
-		Value.create(1),
-		Null.INSTANCE,
-		Maybe.create(JavaType.create(Integer.class)),
-		Maybe.create(JavaType.create(String.class)),
-		Not.create(JavaType.create(Integer.class)),
-		Not.create(Value.create("foo")),
-		ValueSet.create(new Object[] {1, "foo"}),
-		FunctionType.create(Something.INSTANCE, Something.INSTANCE),
-		FunctionType.create(Something.INSTANCE),
-		FunctionType.create(Something.INSTANCE, JavaType.create(Number.class))
-	}; 
-	
-	static final Object[] testObjects={null,0,1,true,false,"Foo",1.0,new Object(),Anything.INSTANCE};
+import magic.Type;
 
+public class TypeTests {
 
 	@Test public void testFnType() {
 		FunctionType t=FunctionType.create(Null.INSTANCE,JavaType.create(Integer.class));
@@ -52,38 +30,7 @@ public class TypeTests {
 	}
 
 	
-	@Test public void testIntersections() {
-		for (Type a:testTypes) {
-			for (Type b: testTypes) {
-				Type c=a.intersection(b);
-				Type d=b.intersection(a);
-				if (!c.equals(d)) throw new Error(a+ " x "+b +"Intersections: "+c+","+d);
- 				assertEquals(c,b.intersection(a));
-			}
-		}
-		
-		for (Type a:testTypes) {
-			assertTrue("Anything intersection with "+a,a==a.intersection(Anything.INSTANCE));
-			assertTrue(a==Anything.INSTANCE.intersection(a));
-			assertTrue(Nothing.INSTANCE==a.intersection(Nothing.INSTANCE));
-			assertTrue(Nothing.INSTANCE==Nothing.INSTANCE.intersection(a));
-		}
-	}
-	
-	@Test public void testUnions() {
-		for (Type a:testTypes) {
-			for (Type b: testTypes) {
-				Type c=a.union(b);
-				
-				for (Object o:testObjects) {
-					if (a.checkInstance(o) || b.checkInstance(o)) {
-						assertTrue("Union of "+a+" and "+b+" = "+c+ " should include "+o,c.checkInstance(o));
-					}
-				}
-			}
-		}
 
-	}
 	
 	@Test public void testIntersectionOverlap() {
 		Type i1=Intersection.create(Not.create(JavaType.create(Integer.class)),Something.INSTANCE);
@@ -117,24 +64,7 @@ public class TypeTests {
 //		assertEquals(Number.class,Type.parse("(U Integer java.lang.Long)").getJavaClass());
 	}
 	
-	@Test 
-	public void testProperties() {
-		for (Type a:testTypes) {
-			a.validate();
-			
-			if (a.canBeNull()) assertTrue(a.checkInstance(null));
-			if (a.cannotBeNull()) assertFalse(a.checkInstance(null));	
-			
-			if (a.canBeFalsey()) assertTrue("Issue with canBeFalsey with: "+a, 
-					a.checkInstance(null)||a.checkInstance(Boolean.FALSE));
-			
-			for (Object o: testObjects) {
-				assertTrue(a.checkInstance(o)!=a.inverse().checkInstance(o));
-			}
-			
-		}
-		
-	}
+
 	
 	@Test public void testBooleans() {
 //		assertTrue(Constant.TRUE.getType().canBeTruthy());
