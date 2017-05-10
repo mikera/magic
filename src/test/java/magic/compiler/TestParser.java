@@ -96,6 +96,8 @@ public class TestParser {
 	
 	@Test public void testQuote() {
 		assertEquals(Reader.read("(quote foo/bar)"),Reader.read("'foo/bar"));
+		assertEquals(Reader.read("(unquote (quote foo))"),Reader.read("~'foo"));
+		assertEquals(Reader.read("(unquote (syntax-quote foo))"),Reader.read("~`foo"));
 	}
 	
 	@Test public void testExtraInputFail() {
