@@ -78,11 +78,14 @@ public class TestTypes1Param {
 		Type a=type;
 			
 		for (Object o: testObjects) {
+			Type ot=RT.inferType(o);
 			assertTrue(a.checkInstance(o)!=a.inverse().checkInstance(o));
 			if (a.checkInstance(o)) {
-				Type ot=RT.inferType(o);
 				assertTrue(a.intersection(ot).checkInstance(o));
 				assertTrue(ot.intersection(a).checkInstance(o));
+			} else {
+				assertFalse(a.intersection(ot).checkInstance(o));
+				assertFalse(ot.intersection(a).checkInstance(o));
 			}
 		}	
 	}
