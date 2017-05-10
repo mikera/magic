@@ -17,6 +17,7 @@ import magic.data.Symbol;
 import magic.data.Tuple;
 import magic.lang.Context;
 import magic.lang.Symbols;
+import magic.lang.UnresolvedException;
 
 public class TestAnalyse {
 
@@ -44,6 +45,18 @@ public class TestAnalyse {
 		EvalResult<?> r=Compiler.compile(c,"(def sym 'x)");
 		Context c2=r.getContext();
 		assertEquals(Symbol.create("x"),c2.getValue("sym"));
+	}
+	
+	@Test public void testUnexpanded() {
+		Context c=RT.INITIAL_CONTEXT;
+		EvalResult<?> r=Compiler.compile(c,"(def x a)");
+		Context c2=r.getContext();
+		try {
+			c2.getValue("x");
+			fail();
+		} catch (UnresolvedException e) {
+			assertEquals(Symbol.create("a"),e.getSymbol());
+		}
 	}
 	
 	@Test public void testSyntaxQuote() {
