@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import magic.RT;
 import magic.Type;
 
 @RunWith(Parameterized.class)
@@ -73,6 +74,20 @@ public class TestTypes1Param {
 	}
 	
 	@Test 
+	public void testObjectProperties() {
+		Type a=type;
+			
+		for (Object o: testObjects) {
+			assertTrue(a.checkInstance(o)!=a.inverse().checkInstance(o));
+			if (a.checkInstance(o)) {
+				Type ot=RT.inferType(o);
+				assertTrue(a.intersection(ot).checkInstance(o));
+				assertTrue(ot.intersection(a).checkInstance(o));
+			}
+		}	
+	}
+	
+	@Test 
 	public void testProperties() {
 		Type a=type;
 		a.validate();
@@ -82,9 +97,5 @@ public class TestTypes1Param {
 		
 		if (a.canBeFalsey()) assertTrue("Issue with canBeFalsey with: "+a, 
 				a.checkInstance(null)||a.checkInstance(Boolean.FALSE));
-			
-		for (Object o: testObjects) {
-			assertTrue(a.checkInstance(o)!=a.inverse().checkInstance(o));
-		}	
 	}
 }

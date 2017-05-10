@@ -31,6 +31,10 @@ public class Vector extends JavaType<APersistentVector>{
 		this.elementType=type;
 	}
 	
+	public static Vector create(int n) {
+		return new Vector(null,n);
+	}
+	
 	public Type getElementType() {
 		return (elementType==null)?Anything.INSTANCE:elementType;
 	}
