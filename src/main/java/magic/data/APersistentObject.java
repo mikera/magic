@@ -2,6 +2,9 @@ package magic.data;
 
 import java.io.Serializable;
 
+import magic.Type;
+import magic.type.JavaType;
+
 /**
  * Base for all magic persistent data classes
  * 
@@ -31,5 +34,10 @@ public abstract class APersistentObject implements IPersistentObject, Cloneable,
 		if (!this.clone().equals(this)) {
 			throw new Error("Clone problem!");
 		}
+	}
+	
+	@Override
+	public Type getType() {
+		return JavaType.create(this.getClass());
 	}
 }

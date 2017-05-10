@@ -6,9 +6,11 @@ import java.util.Iterator;
 import magic.ast.Constant;
 import magic.ast.Node;
 import magic.compiler.Expanders;
+import magic.data.IPersistentObject;
 import magic.data.Symbol;
 import magic.lang.Context;
 import magic.lang.Symbols;
+import magic.type.JavaType;
 
 /**
  * Static class to support the Magic runtime
@@ -175,6 +177,18 @@ public class RT {
 		if (o==null) return "nil";
 		if (o instanceof String) return "\""+(String)o+"\"";
 		return o.toString();
+	}
+
+	public static Type inferType(Object value) {
+		if (value==null) return Types.NULL;
+		// TODO: function type inference
+//		if (value instanceof IFn) {
+//			return ((IFn)value).getType();
+//		}
+		if (value instanceof IPersistentObject) {
+			return ((IPersistentObject)value).getType();
+		}
+		return (Type) JavaType.create(value);
 	}
 
 }

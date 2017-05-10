@@ -5,6 +5,7 @@ import java.lang.ref.WeakReference;
 import java.util.WeakHashMap;
 
 import magic.RT;
+import magic.Type;
 
 /**
  * Class to represent a Magic symbol with optional namespace
@@ -115,6 +116,11 @@ public class Symbol extends APersistentObject {
 			return result;
 		}
 		return symbolSet;
+	}
+
+	@Override
+	public Type getType() {
+		return magic.type.Symbol.INSTANCE;
 	}
 
 

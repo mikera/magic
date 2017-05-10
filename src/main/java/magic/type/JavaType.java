@@ -19,7 +19,11 @@ public class JavaType<T> extends Type {
 	public static final JavaType<Type> MAGIC_TYPE = create(Type.class);
 	public static final JavaType<Symbol> SYMBOL = create(Symbol.class);
 	public static final JavaType<Keyword> KEYWORD = create(Keyword.class);
+	
 	public static final JavaType<Number> NUMBER = create(Number.class);
+	public static final JavaType<Long> LONG = create(Long.class);
+	public static final JavaType<Integer> INTEGER = create(Integer.class);
+	
 	public static final JavaType<Object> OBJECT = create(Object.class);
 	public static final JavaType<String> STRING = create(String.class);
 	

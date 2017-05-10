@@ -51,6 +51,7 @@ public class FunctionType extends AFunctionType {
 
 	@Override
 	public boolean checkInstance(Object o) {
+		// TODO: check arity compatibility?
 		if (o instanceof IFn) {
 			IFn<?> fn=(IFn<?>)o;
 			if (!returnType.contains(fn.getReturnType())) return false; // covariance on return type
@@ -59,7 +60,7 @@ public class FunctionType extends AFunctionType {
 			}
 			return true;
 		} else {
-			// not a function, so return false
+			// not a Magic function, so return false
 			return false;			
 		}
 	}

@@ -1,5 +1,7 @@
 package magic.data;
 
+import magic.Type;
+
 /**
  * Class representing a keyword literal.
  * 
@@ -61,6 +63,11 @@ public class Keyword extends APersistentObject {
 	@Override
 	public void validate() {
 		sym.validate();
+	}
+
+	@Override
+	public Type getType() {
+		return magic.type.Keyword.INSTANCE;
 	}
 
 

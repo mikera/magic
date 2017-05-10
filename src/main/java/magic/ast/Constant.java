@@ -2,14 +2,12 @@ package magic.ast;
 
 import magic.RT;
 import magic.Type;
-import magic.Types;
 import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
 import magic.data.Sets;
 import magic.data.Symbol;
 import magic.lang.Context;
-import magic.type.JavaType;
 
 /**
  * AST node representing a constant value.
@@ -24,10 +22,12 @@ public class Constant<T> extends BaseConstant<T> {
 	public static final Constant<?> NULL = Constant.create(null);
 	
 	private final T value;
+	private final Type type;
 	
 	public Constant(T value, APersistentSet<Symbol> deps) {
 		super((deps==null)?Sets.emptySet():deps);
 		this.value=value;
+		this.type=RT.inferType(value);
 	}
 	
 	@Override
@@ -58,8 +58,7 @@ public class Constant<T> extends BaseConstant<T> {
 	 */
 	@Override
 	public Type getType() {
-		if (value==null) return Types.NULL;
-		return (Type) JavaType.create(value);
+		return type;
 	}
 
 }

@@ -7,6 +7,7 @@ import java.util.ListIterator;
 
 import magic.Errors;
 import magic.RT;
+import magic.Type;
 import magic.data.impl.ListIndexSeq;
 import magic.data.impl.SubVector;
 
@@ -395,5 +396,10 @@ public abstract class APersistentVector<T> extends APersistentSequence<T> implem
 		}		
 		sb.append(']');
 		return sb.toString();
+	}
+	
+	@Override
+	public Type getType() {
+		return magic.type.Vector.create(size());
 	}
 }

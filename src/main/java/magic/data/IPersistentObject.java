@@ -1,5 +1,7 @@
 package magic.data;
 
+import magic.Type;
+
 public interface IPersistentObject {
 
 	public IPersistentObject clone();
@@ -12,5 +14,7 @@ public interface IPersistentObject {
 	 * Should throw an exception in case of any problem
 	 */
 	public void validate();
+
+	public Type getType();
 
 }
