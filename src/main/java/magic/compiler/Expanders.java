@@ -31,6 +31,17 @@ public class Expanders {
 			return ex.expandAll(c, newForm, ex);
 		}
 	}
+	
+	public static final Expander SPECIAL_FORM = new AListExpander() {
+
+		@Override
+		public Object expand(Context c, APersistentList<Object> form, Expander ex) {
+			// TODO confirn this is correct for special form expanders?
+			return form;
+		}
+		
+	};
+
 
 	/**
 	 * An expander that expands defn forms

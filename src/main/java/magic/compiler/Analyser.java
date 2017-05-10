@@ -14,6 +14,7 @@ import magic.ast.Quote;
 import magic.ast.Vector;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
+import magic.data.APersistentVector;
 import magic.data.IPersistentVector;
 import magic.data.Lists;
 import magic.data.Maps;
@@ -182,8 +183,8 @@ public class Analyser {
 	private static <T> Node<T> analyseFn(Context c, Object arglist, APersistentList<Object> tail) {
 		int n=tail.size();
 		if (n==0) throw new Error("No function body definition");
-		if (!(arglist instanceof IPersistentVector)) throw new Error("fn requires a vector argument list, got: "+arglist);
-		IPersistentVector<?> args=(IPersistentVector<?>)arglist;
+		if (!(arglist instanceof APersistentVector)) throw new Error("fn requires a vector argument list, got: "+arglist);
+		APersistentVector<?> args=(APersistentVector<?>)arglist;
 		
 		Node<T>[] exs=new Node[n];
 		for (int i=0; i<n; i++) {
@@ -192,7 +193,7 @@ public class Analyser {
 		
 		Node<?> doexp=Let.create(exs);
 		
-		return (Node<T>) Lambda.create((IPersistentVector<Symbol>)args,doexp);
+		return (Node<T>) Lambda.create((APersistentVector<Symbol>)args,doexp);
 	}
 
 	private static <T>  Node<T> analyseDefine(Context c, Symbol sym, APersistentList<Object> args) {

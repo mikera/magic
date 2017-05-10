@@ -5,7 +5,7 @@ import magic.Type;
 import magic.Types;
 import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
-import magic.data.IPersistentSet;
+import magic.data.APersistentSet;
 import magic.data.Sets;
 import magic.data.Symbol;
 import magic.lang.Context;
@@ -25,7 +25,7 @@ public class Constant<T> extends BaseConstant<T> {
 	
 	private final T value;
 	
-	public Constant(T value, IPersistentSet<Symbol> deps) {
+	public Constant(T value, APersistentSet<Symbol> deps) {
 		super((deps==null)?Sets.emptySet():deps);
 		this.value=value;
 	}
@@ -39,7 +39,7 @@ public class Constant<T> extends BaseConstant<T> {
 		return new Constant<T>(v,null);
 	}
 	
-	public static <T> Constant<T> create(T v, IPersistentSet<Symbol> deps) {
+	public static <T> Constant<T> create(T v, APersistentSet<Symbol> deps) {
 		return new Constant<T>(v,deps);
 	}
 	

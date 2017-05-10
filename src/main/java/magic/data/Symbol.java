@@ -18,7 +18,7 @@ public class Symbol extends APersistentObject {
 	private final String ns;
 	private final String name;
 	private final int hash;
-	private IPersistentSet<Symbol> symbolSet=null;
+	private APersistentSet<Symbol> symbolSet=null;
 
 	private static final WeakHashMap<Symbol,WeakReference<Symbol>> symbols=new WeakHashMap<>();
 	
@@ -108,9 +108,9 @@ public class Symbol extends APersistentObject {
 	 * Returns a set containing this symbol
 	 * @return
 	 */
-	public IPersistentSet<Symbol> symbolSet() {
+	public APersistentSet<Symbol> symbolSet() {
 		if (symbolSet==null) {
-			IPersistentSet<Symbol> result=(IPersistentSet<Symbol>) Sets.of(this);
+			APersistentSet<Symbol> result=Sets.of(this);
 			symbolSet=result;
 			return result;
 		}

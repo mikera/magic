@@ -35,6 +35,9 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 	@SuppressWarnings("rawtypes")
 	private static final PHSNode<?> EMPTY_NODE_LIST=new PHSNullList();
 	
+
+	private static final PersistentHashSet<?> EMPTY=new PersistentHashSet<Object>();
+
 	@SuppressWarnings("unchecked")
 	public PersistentHashSet() {
 		this((PHSNode<T>) EMPTY_NODE_LIST);
@@ -46,8 +49,9 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 		root=newRoot;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static<T> PersistentHashSet<T> createFromSet(Set<T> values) {
-		PersistentHashSet<T> pm=new PersistentHashSet<T>();
+		PersistentHashSet<T> pm=(PersistentHashSet<T>) EMPTY;
 		if (values==null) return pm;
 		for (T ent: values) {
 			pm=pm.include(ent);
@@ -872,16 +876,11 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 	}
 	
 	@Override
-	public PersistentHashSet<T> includeAll(Collection<T> values) {
+	public PersistentHashSet<T> includeAll(APersistentSet<T> values) {
 		if (values instanceof PersistentHashSet<?>) {
 			return include((PersistentHashSet<T>)values);
 		}
-		
-		PersistentHashSet<T> pm=this;
-		for (T entry:values) {
-			pm=pm.include(entry);
-		}
-		return pm;
+		return includeAll(coerce(values));
 	}
 	
 	public PersistentHashSet<T> include(PersistentHashSet<T> values) {

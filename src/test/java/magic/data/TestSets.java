@@ -19,6 +19,6 @@ public class TestSets {
 		IPersistentSet<Integer> t=Sets.of(2,3);
 		IPersistentSet<Integer> r=s1.excludeAll(s2);
 		
-		assertEquals(t,r);
+		assertEquals("Removing from: "+s1.toString(),t,r);
 	}
 }

@@ -64,7 +64,7 @@ public class Sets {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> IPersistentSet<T> of(T... values) {
+	public static <T> APersistentSet<T> of(T... values) {
 		return createFrom(values);
 	}
 	

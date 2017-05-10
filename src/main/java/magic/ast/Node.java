@@ -10,7 +10,7 @@ import magic.Type;
 import magic.Types;
 import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
-import magic.data.IPersistentSet;
+import magic.data.APersistentSet;
 import magic.data.IPersistentVector;
 import magic.data.PersistentHashMap;
 import magic.data.Sets;
@@ -27,9 +27,9 @@ import magic.lang.MagicLanguage;
 @NodeInfo(language = "Magic", description = "The abstract base node for all expressions")
 public abstract class Node<T> extends RootNode {
 
-	private IPersistentSet<Symbol> deps;
+	private APersistentSet<Symbol> deps;
 
-	public Node(IPersistentSet<Symbol> deps) {
+	public Node(APersistentSet<Symbol> deps) {
 		this(MagicLanguage.class,null,null);
 		this.deps=deps;
 	}
@@ -68,26 +68,26 @@ public abstract class Node<T> extends RootNode {
 		return false;
 	}
 	
-	public IPersistentSet<Symbol> getDependencies() {
+	public APersistentSet<Symbol> getDependencies() {
 		return deps;
 	}
 	
-	protected static IPersistentSet<Symbol> calcDependencies(Node<?> f, Node<?>[] args) {
-		IPersistentSet<Symbol> deps=f.getDependencies();
+	protected static APersistentSet<Symbol> calcDependencies(Node<?> f, Node<?>[] args) {
+		APersistentSet<Symbol> deps=f.getDependencies();
 		deps=deps.includeAll(calcDependencies(args));
 		return deps;
 	}
 	
-	protected static IPersistentSet<Symbol> calcDependencies(Node<?>... nodes) {
-		IPersistentSet<Symbol> deps=Sets.emptySet();
+	protected static APersistentSet<Symbol> calcDependencies(Node<?>... nodes) {
+		APersistentSet<Symbol> deps=Sets.emptySet();
 		for (int i=0; i<nodes.length; i++) {
 			deps=deps.includeAll(nodes[i].getDependencies());
 		}
 		return deps;
 	}
 	
-	protected static <T> IPersistentSet<Symbol> calcDependencies(IPersistentVector<Node<T>> nodes) {
-		IPersistentSet<Symbol> deps=Sets.emptySet();
+	protected static <T> APersistentSet<Symbol> calcDependencies(IPersistentVector<Node<T>> nodes) {
+		APersistentSet<Symbol> deps=Sets.emptySet();
 		int n=nodes.size();
 		for (int i=0; i<n; i++) {
 			deps=deps.includeAll(nodes.get(i).getDependencies());

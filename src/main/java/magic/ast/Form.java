@@ -3,7 +3,7 @@ package magic.ast;
 import magic.RT;
 import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
-import magic.data.IPersistentSet;
+import magic.data.APersistentSet;
 import magic.data.Sets;
 import magic.data.Symbol;
 import magic.lang.Context;
@@ -33,7 +33,7 @@ public class Form<T> extends Node<T> {
 	}
 	
 	@Override
-	public IPersistentSet<Symbol> getDependencies() {
+	public APersistentSet<Symbol> getDependencies() {
 		throw new UnsupportedOperationException("Trying to get dependencies for unexpanded form: "+form);
 	}
 

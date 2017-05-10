@@ -41,6 +41,8 @@ public class RT {
 		c=c.define(Symbols.DEFN, Constant.create(Expanders.DEFN));
 		c=c.define(Symbols.DEFMACRO, Constant.create(Expanders.DEFMACRO));
 		c=c.define(Symbols.MACRO, Constant.create(Expanders.MACRO));
+		c=c.define(Symbols.QUOTE, Constant.create(Expanders.SPECIAL_FORM));
+		c=c.define(Symbols.SYNTAX_QUOTE, Constant.create(Expanders.SPECIAL_FORM));
 		return c;
 	}
 

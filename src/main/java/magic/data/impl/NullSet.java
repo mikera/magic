@@ -1,11 +1,10 @@
 package magic.data.impl;
 
 import java.io.ObjectStreamException;
-import java.util.Collection;
 import java.util.Iterator;
 
-import magic.data.ISeq;
 import magic.data.APersistentSet;
+import magic.data.ISeq;
 import magic.data.Sets;
 import magic.data.Tools;
 
@@ -46,17 +45,13 @@ public final class NullSet<T> extends BasePersistentSet<T> {
 	}
 
 	@Override
-	public APersistentSet<T> excludeAll(final Collection<T> values) {
+	public APersistentSet<T> excludeAll(APersistentSet<T> values) {
 		return this;
 	}
 	
 	@Override
-	public APersistentSet<T> includeAll(final Collection<T> values) {
-		return Sets.createFrom(values);
-	}
-	
-	public APersistentSet<T> include(final APersistentSet<T> values) {
-		return Sets.create(values);
+	public APersistentSet<T> includeAll(APersistentSet<T> values) {
+		return values;
 	}
 	
 	private Object readResolve() throws ObjectStreamException {

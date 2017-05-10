@@ -13,7 +13,17 @@ public abstract class APersistentSet<T> extends APersistentCollection<T> impleme
 	public abstract APersistentSet<T> include(final T value);
 	
 	@Override
-	public APersistentSet<T> includeAll(final Collection<T> values) {
+	public final APersistentSet<T> includeAll(final Collection<T> values) {
+		if (values instanceof APersistentSet<?>) return includeAll((APersistentSet<T>)values);
+		APersistentSet<T> ps=this;
+		for (T t: values) {
+			ps=ps.include(t);
+		}
+		return ps;
+	}
+	
+	public APersistentSet<T> includeAll(final APersistentSet<T> values) {
+		// TODO: use merge
 		APersistentSet<T> ps=this;
 		for (T t: values) {
 			ps=ps.include(t);
@@ -75,7 +85,21 @@ public abstract class APersistentSet<T> extends APersistentCollection<T> impleme
 	}
 
 	@Override
-	public APersistentSet<T> excludeAll(Collection<T> values) {
+	public final APersistentSet<T> excludeAll(Collection<T> values) {
+		if (values instanceof APersistentSet<?>) return excludeAll((APersistentSet<T>)values);
+		final APersistentSet<T> col=Sets.createFrom(values);
+		Iterator<T> it=new FilteredIterator<T>(iterator()) {	
+			@Override
+			public boolean filter(Object value) {
+				return (!col.contains(value));
+			}		
+		};
+		return Sets.createFrom(it);
+	}
+	
+	@Override
+	public final APersistentSet<T> excludeAll(IPersistentCollection<T> values) {
+		if (values instanceof APersistentSet<?>) return excludeAll((APersistentSet<T>)values);
 		final APersistentSet<T> col=Sets.createFrom(values);
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {	
 			@Override
@@ -99,8 +123,19 @@ public abstract class APersistentSet<T> extends APersistentCollection<T> impleme
 	}
 	
 	@Override
-	public APersistentSet<T> excludeAll(final APersistentCollection<T> values) {
-		if ( values==null) throw new Error();
+	public final APersistentSet<T> excludeAll(final APersistentCollection<T> values) {
+		if (values instanceof APersistentSet<?>) return excludeAll((APersistentSet<T>)values);
+		Iterator<T> it=new FilteredIterator<T>(iterator()) {
+
+			@Override
+			public boolean filter(Object value) {
+				return (!values.contains(value));
+			}		
+		};
+		return Sets.createFrom(it);
+	}
+	
+	public APersistentSet<T> excludeAll(final APersistentSet<T> values) {
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
 
 			@Override

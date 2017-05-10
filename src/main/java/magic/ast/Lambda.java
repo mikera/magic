@@ -4,7 +4,7 @@ import magic.Type;
 import magic.Types;
 import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
-import magic.data.IPersistentVector;
+import magic.data.APersistentVector;
 import magic.data.Symbol;
 import magic.fn.AFn;
 import magic.fn.ArityException;
@@ -21,11 +21,11 @@ import magic.type.FunctionType;
  */
 public class Lambda<T> extends Node<IFn<T>> {
 
-	private final IPersistentVector<Symbol> args;
+	private final APersistentVector<Symbol> args;
 	private final Node<T> body;
 	private final int arity;
-
-	public Lambda(IPersistentVector<Symbol> args, Node<T> body) {
+  
+	public Lambda(APersistentVector<Symbol> args, Node<T> body) {
 		super(body.getDependencies().excludeAll(args));
 		this.args=args;
 		this.arity=args.size();
@@ -65,7 +65,7 @@ public class Lambda<T> extends Node<IFn<T>> {
 		return (body==newBody)?this:create(args,newBody);
 	}
 
-	public static <T> Lambda<T> create(IPersistentVector<Symbol> args, Node<T> body) {
+	public static <T> Lambda<T> create(APersistentVector<Symbol> args, Node<T> body) {
 		return new Lambda<T>(args,body);
 	}
 	
