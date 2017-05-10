@@ -22,6 +22,7 @@ public class Symbols {
 
 	// special symbols
 	public static final Symbol UNDERSCORE = Symbol.create("_");
+	public static final Symbol DOT = Symbol.create(".");
 
 	// macros and expanders
 	public static final Symbol DEFN = Symbol.create("defn");

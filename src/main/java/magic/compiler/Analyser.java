@@ -5,6 +5,7 @@ import magic.ast.Apply;
 import magic.ast.Constant;
 import magic.ast.Define;
 import magic.ast.Do;
+import magic.ast.Dot;
 import magic.ast.If;
 import magic.ast.Lambda;
 import magic.ast.Let;
@@ -87,10 +88,27 @@ public class Analyser {
 		if (first==Symbols.DO) return analyseDo(c,tail);
 		if (first==Symbols.IF) return analyseIf(c,tail);
 		if (first==Symbols.LET) return analyseLet(c,tail);
+		if (first==Symbols.DOT) return analyseDot(c,form);
 		if (first==Symbols.EXPANDER) return analyseExpander(c,form);
 		
 		
 		return Apply.create(Lookup.create(first),analyseAll(c,tail));
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T> Node<T> analyseDot(Context c, APersistentList<Object> form) {
+		int n=form.size();
+		if (n<3) throw new AnalyserException("dot special form requires at least an instance and a method name symbol",form);
+		Object symObj=form.get(2);
+		if (!(symObj instanceof Symbol)) new AnalyserException("dot special form requires a method name symbol",form);
+		Symbol method=(Symbol) symObj;
+		Node<?> inst=analyse(c,form.get(1));
+		int nArgs=n-3;
+		Node<Object>[] args=new Node[nArgs];
+		for (int i=0; i<nArgs; i++) {
+			args[i]=analyse(c,form.get(i+3));
+		}
+		return (Node<T>)Dot.create(inst, method, args);
 	}
 
 	@SuppressWarnings("unchecked")

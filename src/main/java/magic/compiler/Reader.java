@@ -249,6 +249,7 @@ public class Reader extends BaseParser<Object> {
 		return Sequence(
 				FirstOf(
 						'/', // allowed on its own as a symbol
+						'.', // dot special form
 						Sequence(InitialSymbolCharacter(),
 								 ZeroOrMore(FollowingSymbolCharacter())),
 				        Sequence(AnyOf(".+-"),
