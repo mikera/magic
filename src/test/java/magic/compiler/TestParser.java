@@ -112,6 +112,7 @@ public class TestParser {
 		  Reader.read("{1 2 3}");
 		  fail("Shouldn't be able to create this map!");
 		} catch (Throwable t) {
+			//System.out.println(t.getMessage());
 			// OK
 		}
 	}

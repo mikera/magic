@@ -69,7 +69,7 @@ public class Reader extends BaseParser<Object> {
 				QuotedExpression()
 				);
 	}
-	
+
 	Action<Object> AddAction(Var<ArrayList<Object>> expVar) {
 		return new Action<Object>() {
 			@Override

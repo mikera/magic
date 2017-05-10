@@ -30,7 +30,7 @@ public class TestMacros {
 				"(defmacro m [_] 7 [1 2 3])");
 		
 		c=r.getContext();
-		System.out.println(c.getExpression("m"));
+		// System.out.println(c.getExpression("m"));
 		r=Compiler.compile(c, 
 				"(def b (m 3))");
 		
