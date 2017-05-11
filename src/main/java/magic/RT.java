@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import magic.compiler.EvalResult;
 import magic.ast.Constant;
 import magic.ast.Node;
 import magic.compiler.Expanders;
@@ -29,6 +30,7 @@ import magic.type.JavaType;
  */
 public class RT {
 
+	public static final Context BOOTSTRAP_CONTEXT = createBootstrapContext();
 	public static final Context INITIAL_CONTEXT = createInitialContext();
 	public static final Symbol[] EMPTY_SYMBOLS = new Symbol[0];
 	public static final Node<?>[] EMPTY_NODES = new Node<?>[0];
@@ -48,7 +50,7 @@ public class RT {
 	 * Sets up the initial Magic context for language bootstrap
 	 * @return
 	 */
-	private static Context createInitialContext() {
+	private static Context createBootstrapContext() {
 		Context c=Context.EMPTY;
 		c=c.define(Symbols.DEFN, Constant.create(Expanders.DEFN));
 		c=c.define(Symbols.DEFMACRO, Constant.create(Expanders.DEFMACRO));
@@ -57,6 +59,22 @@ public class RT {
 		c=c.define(Symbols.SYNTAX_QUOTE, Constant.create(Expanders.SPECIAL_FORM));
 		c=c.define(Symbols.PRINTLN, Constant.create(Functions.PRINTLN)); 
 		return c;
+	}
+	
+	/**
+	 * Loads magic.core to create the initial user context
+	 * @return
+	 * @throws FileNotFoundException 
+	 */
+	private static Context createInitialContext() {
+		Context c=BOOTSTRAP_CONTEXT;
+		EvalResult<?> r;
+		try {
+			r=(EvalResult<?>) magic.compiler.Compiler.compile(c, RT.getResourceAsString("magic/core.mag"));
+		} catch (FileNotFoundException e) {
+			throw new Error(e);
+		}
+		return r.getContext();
 	}
 
 	/**
