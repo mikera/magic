@@ -27,6 +27,13 @@ import magic.data.Symbol;
 import magic.data.Vectors;
 import magic.lang.Symbols;
 
+/**
+ * Parboiled Parser implementation which reads Magic source code and produces a tree of parsed objects.
+ * 
+ * 
+ * @author Mike
+ *
+ */
 @BuildParseTree
 public class Reader extends BaseParser<Object> {
 
@@ -186,13 +193,34 @@ public class Reader extends BaseParser<Object> {
 	// CONSTANT LITERALS
 	
 	public Rule Constant() {
-		return FirstOf(NumberLiteral(),StringLiteral(),NilLiteral(),BooleanLiteral());
+		return FirstOf(
+				NumberLiteral(),
+				StringLiteral(),
+				NilLiteral(),
+				BooleanLiteral(),
+				CharLiteral());
 	}
 	
 	public Rule NilLiteral() {
 		return Sequence(
 				"nil",
 				push(null));
+	}
+	
+	public Rule CharLiteral() {
+		return Sequence(
+				'\\',
+				FirstOf(Sequence("newline",push('\n')),
+						Sequence("space",push(' ')),
+						Sequence("tab",push('\t')),
+						Sequence("formfeed",push('\f')),
+						Sequence("backspace",push('\b')),
+						Sequence("return",push('\r')),
+						this.
+						Sequence("u", 
+								NTimes(4,HexDigit()),
+								push((char) Long.parseLong(match(), 16)))
+						));
 	}
 	
 	public Rule BooleanLiteral() {
@@ -283,6 +311,10 @@ public class Reader extends BaseParser<Object> {
     
 	public Rule Digit() {
         return CharRange('0', '9');
+    }
+	
+	public Rule HexDigit() {
+        return FirstOf(CharRange('0', '9'),CharRange('a','f'),CharRange('A','F'));
     }
 	
     

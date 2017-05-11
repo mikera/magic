@@ -24,6 +24,9 @@ public class Symbol extends APersistentObject {
 	private static final WeakHashMap<Symbol,WeakReference<Symbol>> symbols=new WeakHashMap<>();
 	
 	private Symbol(String ns, String name) {
+		// TODO: figure out if interning is a good idea or not
+//		this.ns = ns.intern();
+//		this.name = name.intern();
 		this.ns = ns;
 		this.name = name;
 		hash=RT.hashCombine(RT.hashCode(ns),RT.hashCode(name));

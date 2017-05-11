@@ -15,6 +15,11 @@ public interface IPersistentObject {
 	 */
 	public void validate();
 
+	/**
+	 * Returns the Type of this object.
+	 * 
+	 * @return
+	 */
 	public Type getType();
 
 }

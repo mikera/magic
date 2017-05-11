@@ -48,6 +48,12 @@ public class TestParser {
 		assertEquals(Long.valueOf(-21),Reader.read("-21"));
 	}
 	
+	@Test public void testChars() {
+		assertEquals('\t',Reader.read("\\tab"));
+		assertEquals('\u03A9',Reader.read("\\u03a9"));
+		assertEquals(' ',Reader.read("\\space"));
+	}
+	
 	@Test public void testQualifiedSymbol() {
 		assertEquals(Symbol.create("foo","bar"),Reader.read("foo/bar"));
 		assertEquals("foo",((Symbol)Reader.read("foo//")).getNamespace());
