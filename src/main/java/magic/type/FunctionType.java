@@ -36,6 +36,12 @@ public class FunctionType extends AFunctionType {
 		return new FunctionType(returnType,ptypes,false);
 	}
 	
+	public static FunctionType createMultiArity(Type returnType) {
+		// TODO: how to handle types for variable arity?
+		Type[] ptypes=new Type[0];
+		return new FunctionType(returnType,ptypes,true);
+	}
+	
 	public boolean hasArity(int n) {
 		if (variadic) {
 			return n>=minArity;

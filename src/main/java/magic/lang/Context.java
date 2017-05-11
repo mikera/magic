@@ -38,6 +38,7 @@ public class Context {
 		return getValue(Reader.readSymbol(sym));
 	}
 	
+	// TODO: need to attach source?
 	public <T> Context define(Symbol sym, Node<T> exp) {
 		return create(mappings.assoc(sym,Slot.create(exp)));
 	}

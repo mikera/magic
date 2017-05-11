@@ -19,6 +19,7 @@ public class Types {
 	public static final Nothing NOTHING = Nothing.INSTANCE;
 	public static final Null NULL = Null.INSTANCE;
 	public static final Type TYPE = JavaType.MAGIC_TYPE;
+	public static final Type PREDICATE = FunctionType.create(BOOLEAN, ANYTHING);
 	
 	public static Type intersect(Type a, Type b) {
 		if (a==null) return b;

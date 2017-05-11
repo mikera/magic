@@ -1,5 +1,7 @@
 package magic.lang;
 
+import magic.Type;
+import magic.Types;
 import magic.fn.AFn1;
 
 /**
@@ -19,4 +21,9 @@ public abstract class Predicate<T> extends AFn1<T,Boolean> implements java.util.
 	
 	@Override
 	public abstract boolean test(T a);
+	
+	@Override
+	public Type getType() {
+		return Types.PREDICATE;
+	}
 }
