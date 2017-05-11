@@ -31,5 +31,8 @@ public class Symbols {
 	public static final Symbol EXPANDER = Symbol.create("expander");
 	public static final Symbol DEFEXPANDER = Symbol.create("defexpander");
 	
+	// core functions
+	public static final Symbol PRINTLN = Symbol.create("println");
+	
 	
 }

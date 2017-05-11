@@ -1,5 +1,14 @@
 package magic;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -8,6 +17,7 @@ import magic.ast.Node;
 import magic.compiler.Expanders;
 import magic.data.IPersistentObject;
 import magic.data.Symbol;
+import magic.fn.Functions;
 import magic.lang.Context;
 import magic.lang.Symbols;
 import magic.type.JavaType;
@@ -45,6 +55,7 @@ public class RT {
 		c=c.define(Symbols.MACRO, Constant.create(Expanders.MACRO));
 		c=c.define(Symbols.QUOTE, Constant.create(Expanders.SPECIAL_FORM));
 		c=c.define(Symbols.SYNTAX_QUOTE, Constant.create(Expanders.SPECIAL_FORM));
+		c=c.define(Symbols.PRINTLN, Constant.create(Functions.PRINTLN)); 
 		return c;
 	}
 
@@ -177,6 +188,65 @@ public class RT {
 		if (o==null) return "nil";
 		if (o instanceof String) return "\""+(String)o+"\"";
 		return o.toString();
+	}
+	
+	public static URL getResourceURL(String filename) {
+		return Thread.currentThread().getContextClassLoader().getResource(filename);
+	}
+	
+	public static InputStream getResourceAsStream(String filename) {
+		return Thread.currentThread().getContextClassLoader().getResourceAsStream(filename);
+	}
+	
+	public static String getResourceAsString(String filename) throws FileNotFoundException {
+		InputStream is=getResourceAsStream(filename);
+		if (is==null) throw new FileNotFoundException(filename);
+		return readStringFromStream(is);
+	}
+	
+	public static String readStringFromStream(InputStream stream) {
+		return readStringFromStream(stream,Charset.defaultCharset());
+	}
+	
+	public static ArrayList<String> readStringLinesFromStream(InputStream stream) {
+		ArrayList<String> al=new ArrayList<String>();
+		BufferedReader reader=null;
+		try {
+			try {
+				reader = new BufferedReader(new InputStreamReader(stream, Charset.defaultCharset()));
+				String s;
+				while ((s=reader.readLine())!=null) {
+					al.add(s);
+				}
+			} finally {
+		        if (reader!=null) reader.close();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+	    }  
+		
+		return al;
+	}
+	
+	public static String readStringFromStream(InputStream stream, Charset cs) {
+		try {
+		    Reader reader=null;
+			try {
+		        reader = new BufferedReader(new InputStreamReader(stream, cs));
+		        StringBuilder builder = new StringBuilder();
+		        char[] buffer = new char[4096];
+		        int readBytes;
+		        while ((readBytes = reader.read(buffer, 0, buffer.length)) > 0) {
+		            builder.append(buffer, 0, readBytes);
+		        }
+		        return builder.toString();
+		    } finally {
+		        if (reader!=null) reader.close();
+		    }   
+		} catch (Throwable t) {
+			throw new Error(t);
+		}
 	}
 
 	public static Type inferType(Object value) {
