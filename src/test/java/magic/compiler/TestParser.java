@@ -49,9 +49,15 @@ public class TestParser {
 	}
 	
 	@Test public void testChars() {
-		assertEquals('\t',Reader.read("\\tab"));
-		assertEquals('\u03A9',Reader.read("\\u03a9"));
 		assertEquals(' ',Reader.read("\\space"));
+		assertEquals('\t',Reader.read("\\tab"));
+		assertEquals('\f',Reader.read("\\formfeed"));
+		assertEquals('\b',Reader.read("\\backspace"));
+		assertEquals('\n',Reader.read("\\newline"));
+		assertEquals('\r',Reader.read("\\return"));
+		assertEquals('*',Reader.read("\\u002A"));
+		assertEquals('\u03A9',Reader.read("\\u03a9"));
+		assertEquals('\uAABB',Reader.read("\\uaAbB"));
 	}
 	
 	@Test public void testQualifiedSymbol() {
