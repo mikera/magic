@@ -84,8 +84,8 @@ public class TestTypes1Param {
 				assertTrue(a.intersection(ot).checkInstance(o));
 				assertTrue(ot.intersection(a).checkInstance(o));
 			} else {
-				assertFalse(a.intersection(ot).checkInstance(o));
-				assertFalse(ot.intersection(a).checkInstance(o));
+				assertFalse("Intersection with: "+o,a.intersection(ot).checkInstance(o));
+				assertFalse("Intersection with: "+ot,ot.intersection(a).checkInstance(o));
 			}
 		}	
 	}

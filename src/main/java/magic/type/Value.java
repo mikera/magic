@@ -11,18 +11,17 @@ import magic.lang.Tools;
  *
  * @param <T>
  */
-public class Value<T> extends Type {
+public class Value<T> extends JavaType<T> {
 	final T value;
-	private final Class<T> klass;
 	
 	@SuppressWarnings("unchecked")
 	private Value(T value) {
+		super((Class<T>) value.getClass());
 		this.value=value;
-		this.klass=(Class<T>) value.getClass();
+		
 	}
 	
-	public static <T> Type create(T value) {
-		if (value==null) return Null.INSTANCE;
+	public static <T> Value<T> create(T value) {
 		return new Value<T>(value);
 	}
 	
@@ -35,10 +34,6 @@ public class Value<T> extends Type {
 		return value.equals(o);
 	}
 	
-	@Override
-	public Class<T> getJavaClass() {
-		return klass;
-	}
 	@Override
 	public boolean canBeNull() {
 		return false;

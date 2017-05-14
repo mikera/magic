@@ -13,7 +13,7 @@ import magic.Type;
  *
  */
 public class JavaType<T> extends Type {
-	final Class<T> klass;
+	protected final Class<T> klass;
 	
 	public static final JavaType<Boolean> BOOLEAN=create(Boolean.class);
 	public static final JavaType<Type> MAGIC_TYPE = create(Type.class);
@@ -77,7 +77,7 @@ public class JavaType<T> extends Type {
 		if (t instanceof Maybe) {
 			return ((Maybe)t).intersection(this);
 		}
-		if (t instanceof JavaType) {
+		if (t.getClass()==JavaType.class) { // careful to ensure exact class match! e.g. Value extends JavaType
 			JavaType<?> jt=(JavaType<?>)t;
 			if (this.klass==jt.klass) return this;
 			if (this.contains(t)) return t;

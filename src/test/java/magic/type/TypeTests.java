@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import magic.RT;
 import magic.Type;
 
 public class TypeTests {
@@ -26,7 +27,7 @@ public class TypeTests {
 	}
 	
 	@Test public void testExactValue() {
-		assertTrue(Null.INSTANCE==Value.create(null));
+		assertTrue(Null.INSTANCE==RT.inferType(null));
 	}
 
 	

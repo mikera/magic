@@ -13,7 +13,6 @@ public class Null extends Type {
 	public static final Null INSTANCE = new Null();
 	
 	private Null() {
-		// nothing to do
 	}
 
 	@Override
@@ -28,7 +27,7 @@ public class Null extends Type {
 	}
 
 	@Override
-	public Class<?> getJavaClass() {
+	public Class<Object> getJavaClass() {
 		return Object.class;
 	}
 	

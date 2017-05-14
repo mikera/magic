@@ -54,7 +54,7 @@ public class Constant<T> extends BaseConstant<T> {
 	}
 	
 	/**
-	 * Gets the Java Type of this constant, or Types.NULL if null
+	 * Gets the Type of this constant, or Types.NULL if null
 	 */
 	@Override
 	public Type getType() {
