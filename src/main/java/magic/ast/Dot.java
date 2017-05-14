@@ -3,6 +3,7 @@ package magic.ast;
 import java.lang.reflect.Method;
 
 import magic.compiler.EvalResult;
+import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
 import magic.data.Symbol;
@@ -24,8 +25,8 @@ public class Dot<T> extends Node<T> {
 	private final Node<?>[] args;
 	private final int nArgs;
 
-	private Dot(APersistentSet<Symbol> deps, Node<?> instance, Symbol method, Node<?>[] args) {
-		super(deps);
+	private Dot(APersistentSet<Symbol> deps, Node<?> instance, Symbol method, Node<?>[] args,SourceInfo source) {
+		super(deps,source);
 		this.instance=instance;
 		this.method=method;
 		this.args=args;
@@ -33,12 +34,16 @@ public class Dot<T> extends Node<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> Dot<T> create(Node<?> instance, Symbol method, Node<?>[] args) {
+	public static <T> Dot<T> create(Node<?> instance, Symbol method, Node<?>[] args,SourceInfo source) {
 		APersistentSet<Symbol> deps=instance.getDependencies();
 		for (Node<?> a: args) {
 			deps=deps.includeAll(a.getDependencies());
 		}
-		return (Dot<T>)new Dot<>(deps,instance, method,args);
+		return (Dot<T>)new Dot<>(deps,instance, method,args,source);
+	}
+	
+	public static <T> Dot<T> create(Node<?> instance, Symbol method, Node<?>[] args) {
+		return create(instance, method,args,null);
 	}
 	
 	

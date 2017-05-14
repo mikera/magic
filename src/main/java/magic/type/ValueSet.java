@@ -22,6 +22,7 @@ public class ValueSet<T> extends Type {
 	@SuppressWarnings("unchecked")
 	private ValueSet(PersistentHashSet<T> values) {
 		this.values=values;
+		// TODO: get spanning class?
 		this.klass=(Class<T>) Object.class;
 	}
 	

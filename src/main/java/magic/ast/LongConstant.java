@@ -1,6 +1,7 @@
 package magic.ast;
 
 import magic.RT;
+import magic.compiler.SourceInfo;
 import magic.data.Sets;
 
 /**
@@ -15,13 +16,17 @@ public class LongConstant extends BaseConstant<Long> {
 
 	private final long value;
 
-	public LongConstant(long value) {	
-		super(Sets.emptySet());
+	public LongConstant(long value,SourceInfo source) {	
+		super(Sets.emptySet(),source);
 		this.value=value;
 	}
 	
+	public static LongConstant create(long value,SourceInfo source) {	
+		return new LongConstant(value,source);
+	}
+	
 	public static LongConstant create(long value) {	
-		return new LongConstant(value);
+		return create(value,null);
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package magic.type;
 
+import magic.RT;
 import magic.Type;
 
 public class Union extends ACompoundType {
@@ -76,14 +77,7 @@ public class Union extends ACompoundType {
 
 	@Override
 	public Class<?> getJavaClass() {
-		Class<?> c=types[0].getJavaClass();
-		for (int i=1; i<types.length; i++) {
-			Class<?> ci=types[i].getJavaClass();
-			while (!c.isAssignableFrom(ci)) {
-				c=c.getSuperclass();
-			}
-		}
-		return c;
+		return RT.getCommonSuperclass(types);
 	}
 	
 	@Override

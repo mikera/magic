@@ -2,6 +2,7 @@ package magic.ast;
 
 import magic.RT;
 import magic.compiler.EvalResult;
+import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
 import magic.data.Sets;
@@ -19,13 +20,17 @@ public class Form<T> extends Node<T> {
 
 	private Object form;
 	
-	private Form(Object form,Symbol dep) {
-		super((dep==null)?Sets.emptySet():dep.symbolSet());
+	private Form(Object form,Symbol dep,SourceInfo source) {
+		super((dep==null)?Sets.emptySet():dep.symbolSet(),source);
 		this.form=form;
 	}
 	
+	public static <T> Form<T> create(Object form,Symbol dep,SourceInfo source) {
+		return new Form<>(form,dep,source);
+	}
+	
 	public static <T> Form<T> create(Object form,Symbol dep) {
-		return new Form<>(form,dep);
+		return create(form,dep,null);
 	}
 	
 	public Object getForm() {

@@ -1,6 +1,7 @@
 package magic.ast;
 
 import magic.compiler.Reader;
+import magic.compiler.SourceInfo;
 import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
 import magic.data.Symbol;
@@ -16,13 +17,17 @@ public class Lookup<T> extends Node<T> {
 
 	private final Symbol sym;
 	
-	private Lookup(Symbol sym) {
-		super(sym.symbolSet());
+	private Lookup(Symbol sym, SourceInfo source) {
+		super(sym.symbolSet(),source);
 		this.sym=sym;
 	}
 	
 	public static <T> Lookup<T> create(Symbol sym) {
-		return new Lookup<T>(sym);
+		return create(sym,null);
+	}
+	
+	public static <T> Lookup<T> create(Symbol sym, SourceInfo source) {
+		return new Lookup<T>(sym,source);
 	}
 
 	@SuppressWarnings("unchecked")

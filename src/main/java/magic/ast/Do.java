@@ -3,6 +3,7 @@ package magic.ast;
 import magic.Type;
 import magic.Types;
 import magic.compiler.EvalResult;
+import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.Symbol;
 import magic.lang.Context;
@@ -18,14 +19,18 @@ public class Do<T> extends Node<T> {
 	private final int nBody;
 	private final Node<?>[] body;
 	
-	public Do(Node<?>[] bodyExprs) {
-		super(calcDependencies(bodyExprs));
+	public Do(Node<?>[] bodyExprs,SourceInfo source) {
+		super(calcDependencies(bodyExprs),source);
 		nBody=bodyExprs.length;
 		body=bodyExprs;
 	}
 
 	public static <T> Node<T> create(Node<?>[] body) {
-		return new Do<T>(body);
+		return new Do<T>(body,null);
+	}
+	
+	public static <T> Node<T> create(Node<?>[] body,SourceInfo source) {
+		return new Do<T>(body,source);
 	}
 	
 	@SuppressWarnings({"unchecked"})

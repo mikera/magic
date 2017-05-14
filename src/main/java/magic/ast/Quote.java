@@ -3,6 +3,7 @@ package magic.ast;
 import magic.RT;
 import magic.Type;
 import magic.compiler.EvalResult;
+import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
 import magic.data.APersistentVector;
@@ -25,18 +26,23 @@ public class Quote extends Node<Object> {
 	private final Object form;
 	private final APersistentMap<APersistentVector<Object>,Node<Object>> unquotes;
 
-	public Quote(Object form, boolean syntaxQuote, APersistentSet<Symbol> symbolSet, APersistentMap<APersistentVector<Object>,Node<Object>> unquotes) {
-		super (symbolSet);
+	public Quote(Object form, boolean syntaxQuote, APersistentSet<Symbol> symbolSet, APersistentMap<APersistentVector<Object>,Node<Object>> unquotes, SourceInfo source) {
+		super (symbolSet,source);
 		this.unquotes=unquotes;
 		this.syntaxQuote=syntaxQuote;
 		this.form=form;
 	}
 
-	@SuppressWarnings("unchecked")
 	public static Quote create(Object form, boolean syntaxQuote, APersistentSet<Symbol> symbolSet) {
-		// TODO: identify unquotes
-		return new Quote(form,syntaxQuote,symbolSet,(APersistentMap<APersistentVector<Object>, Node<Object>>) Maps.EMPTY);
+		return create(form,syntaxQuote,symbolSet,null);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public static Quote create(Object form, boolean syntaxQuote, APersistentSet<Symbol> symbolSet, SourceInfo source) {
+		// TODO: identify unquotes
+		return new Quote(form,syntaxQuote,symbolSet,(APersistentMap<APersistentVector<Object>, Node<Object>>) Maps.EMPTY,source);
+	}
+	
 	
 	@Override
 	public EvalResult<Object> eval(Context context, APersistentMap<Symbol, Object> bindings) {

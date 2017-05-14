@@ -3,6 +3,7 @@ package magic.ast;
 import magic.Type;
 import magic.Types;
 import magic.compiler.EvalResult;
+import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.APersistentVector;
 import magic.data.Symbol;
@@ -25,11 +26,20 @@ public class Lambda<T> extends Node<IFn<T>> {
 	private final Node<T> body;
 	private final int arity;
   
-	public Lambda(APersistentVector<Symbol> args, Node<T> body) {
-		super(body.getDependencies().excludeAll(args));
+	public Lambda(APersistentVector<Symbol> args, Node<T> body,SourceInfo source) {
+		super(body.getDependencies().excludeAll(args),source);
 		this.args=args;
 		this.arity=args.size();
 		this.body=body;
+	}
+	
+
+	public static <T> Lambda<T> create(APersistentVector<Symbol> args, Node<T> body) {
+		return create(args,body,null);
+	}
+	
+	public static <T> Lambda<T> create(APersistentVector<Symbol> args, Node<T> body,SourceInfo source) {
+		return new Lambda<T>(args,body,source);
 	}
 
 	@Override
@@ -65,9 +75,6 @@ public class Lambda<T> extends Node<IFn<T>> {
 		return (body==newBody)?this:create(args,newBody);
 	}
 
-	public static <T> Lambda<T> create(APersistentVector<Symbol> args, Node<T> body) {
-		return new Lambda<T>(args,body);
-	}
 	
 	/**
 	 * Returns the type of this `lambda` expression, i.e. the a function type returning the type of the body

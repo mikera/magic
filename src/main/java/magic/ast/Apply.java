@@ -1,6 +1,7 @@
 package magic.ast;
 
 import magic.compiler.EvalResult;
+import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.Symbol;
@@ -18,8 +19,8 @@ public class Apply<T> extends Node<T> {
 	private Node<?>[] args;
 	private int arity;
 
-	public Apply(Node<IFn<T>> f, Node<?>... args) {
-		super(calcDependencies(f,args));
+	public Apply(Node<IFn<T>> f, Node<?>[] args, SourceInfo source) {
+		super(calcDependencies(f,args),source);
 		this.function=f;
 		this.args=args;
 		arity=args.length;
@@ -39,7 +40,7 @@ public class Apply<T> extends Node<T> {
 	}
 
 	public static <T> Apply<T> create(Node<IFn<T>> function, Node<?>... args) {
-		return new Apply<T>(function,args);
+		return new Apply<T>(function,args,null);
 	}
 
 	public static <T> Apply<T> create(Node<IFn<T>> function, APersistentList<Node<?>> tail) {

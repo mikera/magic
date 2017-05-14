@@ -2,6 +2,7 @@ package magic.ast;
 
 import magic.Type;
 import magic.compiler.EvalResult;
+import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.APersistentVector;
 import magic.data.IPersistentVector;
@@ -22,9 +23,19 @@ public class Vector<T> extends Node<IPersistentVector<T>> {
 
 	IPersistentVector<Node<T>> exps;
 	
-	private Vector(IPersistentVector<Node<T>> exps) {
-		super(calcDependencies(exps)); 
+	private Vector(IPersistentVector<Node<T>> exps, SourceInfo source) {
+		super(calcDependencies(exps),source); 
 		this.exps=exps;
+	}
+	
+
+	public static <T> Vector<T> create(IPersistentVector<Node<T>> exps, SourceInfo source) {
+		return new Vector<T>(exps,source);
+	}
+	
+
+	public static <T> Vector<T> create(IPersistentVector<Node<T>> exps) {
+		return create(exps,null);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -70,9 +81,6 @@ public class Vector<T> extends Node<IPersistentVector<T>> {
 		return (exps==newExps)?this:create(newExps);
 	}
 
-	public static <T> Vector<T> create(IPersistentVector<Node<T>> exps) {
-		return new Vector<T>(exps);
-	}
 
 	public IPersistentVector<Node<T>> getExpressions() {
 		return exps;

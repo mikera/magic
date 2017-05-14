@@ -266,6 +266,18 @@ public class RT {
 			throw new Error(t);
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> Class<T> getCommonSuperclass(Type[] types) {
+		Class<?> c=types[0].getJavaClass();
+		for (int i=1; i<types.length; i++) {
+			Class<?> ci=types[i].getJavaClass();
+			while (!c.isAssignableFrom(ci)) {
+				c=c.getSuperclass();
+			}
+		}
+		return (Class<T>) c;
+	}
 
 	public static Type inferType(Object value) {
 		if (value==null) return Types.NULL;

@@ -2,6 +2,7 @@ package magic.ast;
 
 import magic.RT;
 import magic.compiler.EvalResult;
+import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.Symbol;
 import magic.lang.Context;
@@ -21,14 +22,18 @@ public class Define<T> extends Node<T> {
 	final Symbol sym;
 	final Node<T> exp;
 
-	public Define(Symbol sym, Node<T> exp) {
-		super(exp.getDependencies());
+	public Define(Symbol sym, Node<T> exp, SourceInfo source) {
+		super(exp.getDependencies(),source);
 		this.sym=sym;
 		this.exp=exp;
 	}
 
 	public static <T> Define<T> create(Symbol sym, Node<T> exp) {
-		return new Define<T>(sym,exp);
+		return new Define<T>(sym,exp,null);
+	}
+	
+	public static <T> Define<T> create(Symbol sym, Node<T> exp,SourceInfo source) {
+		return new Define<T>(sym,exp,null);
 	}
 	
 	@Override

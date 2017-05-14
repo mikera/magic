@@ -9,6 +9,7 @@ import com.oracle.truffle.api.source.SourceSection;
 import magic.Type;
 import magic.Types;
 import magic.compiler.EvalResult;
+import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
 import magic.data.IPersistentVector;
@@ -27,11 +28,13 @@ import magic.lang.MagicLanguage;
 @NodeInfo(language = "Magic", description = "The abstract base node for all expressions")
 public abstract class Node<T> extends RootNode {
 
-	private APersistentSet<Symbol> deps;
+	protected APersistentSet<Symbol> deps;
+	protected SourceInfo source;
 
-	public Node(APersistentSet<Symbol> deps) {
+	public Node(APersistentSet<Symbol> deps, SourceInfo source) {
 		this(MagicLanguage.class,null,null);
 		this.deps=deps;
+		this.source=source;
 	}
 	
 	public Node(Class<? extends TruffleLanguage<?>> language, SourceSection sourceSection,
@@ -100,6 +103,10 @@ public abstract class Node<T> extends RootNode {
 	 */
 	public Type getType() {
 		return Types.ANYTHING;
+	}
+	
+	public SourceInfo getSourceInfo() {
+		return source;
 	}
 
 	/**

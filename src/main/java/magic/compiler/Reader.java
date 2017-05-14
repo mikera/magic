@@ -13,7 +13,9 @@ import org.parboiled.annotations.BuildParseTree;
 import org.parboiled.buffers.InputBuffer;
 import org.parboiled.errors.ParseError;
 import org.parboiled.parserunners.ReportingParseRunner;
+import org.parboiled.support.IndexRange;
 import org.parboiled.support.ParsingResult;
+import org.parboiled.support.Position;
 import org.parboiled.support.StringVar;
 import org.parboiled.support.Var;
 
@@ -347,9 +349,13 @@ public class Reader extends BaseParser<Object> {
         				 '.',
         				 Digits(),
         				 Optional(ExponentPart())),
-        		push(Double.parseDouble(match())));
+        		// push(magic.ast.Constant.create(Double.parseDouble(match()),getSourceInfo()))
+        		push(Double.parseDouble(match()))
+        		);
     }
 	
+
+
 	public Rule ExponentPart() {
         return Sequence(
         		AnyOf("eE"),
@@ -357,6 +363,16 @@ public class Reader extends BaseParser<Object> {
     }
 
 	// MAIN PARSING FUNCTIONALITY
+	
+	@SuppressWarnings("unused")
+	private SourceInfo getSourceInfo() {
+		IndexRange ir=matchRange();
+		String source=getContext().getInputBuffer().toString();
+		int start=ir.start;
+		int end=ir.end;
+		Position p=position();
+		return SourceInfo.create(source.substring(start, end),p.line,p.column);
+	}
 	
 	private static Reader parser = Parboiled.createParser(Reader.class);
 	private static final ReportingParseRunner<APersistentVector<Object>> inputParseRunner=new ReportingParseRunner<>(parser.Input());

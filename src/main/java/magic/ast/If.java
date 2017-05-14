@@ -2,6 +2,7 @@ package magic.ast;
 
 import magic.RT;
 import magic.compiler.EvalResult;
+import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.Symbol;
 import magic.lang.Context;
@@ -18,8 +19,8 @@ public class If<T> extends Node<T> {
 	private final Node<T> trueExp; 
 	private final Node<T> falseExp; 
 	
-	private If(Node<Object> test, Node<T> trueExp, Node<T> falseExp) {
-		super(test.getDependencies().includeAll(trueExp.getDependencies()).includeAll(falseExp.getDependencies()));
+	private If(Node<Object> test, Node<T> trueExp, Node<T> falseExp, SourceInfo source) {
+		super(test.getDependencies().includeAll(trueExp.getDependencies()).includeAll(falseExp.getDependencies()),source);
 		this.test=test;
 		this.trueExp=trueExp;
 		this.falseExp=falseExp;
@@ -27,11 +28,15 @@ public class If<T> extends Node<T> {
 
 	@SuppressWarnings("unchecked")
 	public static <T> Node<T> createIf(Node<Object> test, Node<T> trueExp) {
-		return createIf(test,trueExp, (Node<T>)Constant.NULL);
+		return createIf(test,trueExp, (Node<T>)Constant.NULL,null);
 	}
 	
 	public static <T> Node<T> createIf(Node<Object> test, Node<T> trueExp, Node<T> falseExp) {
-		return new If<T>(test,trueExp,falseExp);
+		return createIf(test,trueExp,falseExp,null);
+	}
+	
+	public static <T> Node<T> createIf(Node<Object> test, Node<T> trueExp, Node<T> falseExp, SourceInfo source) {
+		return new If<T>(test,trueExp,falseExp,source);
 	}
 
 	@Override

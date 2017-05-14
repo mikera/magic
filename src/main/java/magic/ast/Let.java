@@ -3,6 +3,7 @@ package magic.ast;
 import magic.RT;
 import magic.Type;
 import magic.compiler.EvalResult;
+import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.Symbol;
 import magic.lang.Context;
@@ -20,8 +21,8 @@ public class Let<T> extends Node<T> {
 	private final Symbol[] syms;
 	private final Node<?>[] lets;
 	
-	public Let(Symbol[] syms, Node<?>[] lets, Node<T> bodyExpr) {
-		super(bodyExpr.getDependencies().excludeAll(syms));
+	public Let(Symbol[] syms, Node<?>[] lets, Node<T> bodyExpr,SourceInfo source) {
+		super(bodyExpr.getDependencies().excludeAll(syms),source);
 		nLets=syms.length;
 		if (nLets!=lets.length) throw new IllegalArgumentException("Incorrect number of bindings forms for let");
 		this.syms=syms;
@@ -29,16 +30,28 @@ public class Let<T> extends Node<T> {
 		body=bodyExpr;
 	}
 
+	public static <T> Node<T> create(Node<?>[] body, SourceInfo source) {
+		return create(RT.EMPTY_SYMBOLS,RT.EMPTY_NODES,body,source);
+	}
+	
 	public static <T> Node<T> create(Node<?>[] body) {
-		return create(RT.EMPTY_SYMBOLS,RT.EMPTY_NODES,body);
+		return create(body,null);
 	}
 	
 	public static <T> Node<T> create(Symbol[] syms,Node<?>[] lets,Node<?>[] bodyExprs) {
-		return new Let<T>(syms,lets,Do.create(bodyExprs));
+		return create(syms,lets,Do.create(bodyExprs));
+	}
+	
+	public static <T> Node<T> create(Symbol[] syms,Node<?>[] lets,Node<?>[] bodyExprs,SourceInfo source) {
+		return create(syms,lets,Do.create(bodyExprs),source);
+	}
+	
+	public static <T> Node<T> create(Symbol[] syms,Node<?>[] lets,Node<T> body,SourceInfo source) {
+		return new Let<T>(syms,lets,body,source);
 	}
 	
 	public static <T> Node<T> create(Symbol[] syms,Node<?>[] lets,Node<T> bodyExpr) {
-		return new Let<T>(syms,lets,bodyExpr);
+		return create(syms,lets,bodyExpr,null);
 	}
 	
 	@Override
