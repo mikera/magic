@@ -57,6 +57,11 @@ public class Lambda<T> extends Node<IFn<T>> {
 				}
 				return body.compute(c,bnds);
 			}	
+			
+			@Override
+			public Type getReturnType() {
+				return body.getType();
+			}
 		};
 		return new EvalResult<IFn<T>>(context,fn);
 	}

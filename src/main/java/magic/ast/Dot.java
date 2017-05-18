@@ -2,6 +2,7 @@ package magic.ast;
 
 import java.lang.reflect.Method;
 
+import magic.Type;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
@@ -85,9 +86,18 @@ public class Dot<T> extends Node<T> {
 		return this;
 	}
 
-	@Override
+	@Override 
 	public String toString() {
-		return "(Dot ...)";
+		StringBuilder sb=new StringBuilder ("(Dot ");
+		sb.append(instance);
+		sb.append(' ');
+		sb.append(method);
+		for (Node<?> a : args) {
+			sb.append(' ');
+			sb.append(a);
+		}
+		sb.append(')');
+		return sb.toString();
 	}
 
 }

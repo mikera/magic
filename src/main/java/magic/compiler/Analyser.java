@@ -6,6 +6,7 @@ import magic.ast.Constant;
 import magic.ast.Define;
 import magic.ast.Do;
 import magic.ast.Dot;
+import magic.ast.Form;
 import magic.ast.If;
 import magic.ast.Lambda;
 import magic.ast.Let;
@@ -16,6 +17,7 @@ import magic.ast.Vector;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentVector;
+import magic.data.IPersistentList;
 import magic.data.IPersistentVector;
 import magic.data.Lists;
 import magic.data.Maps;
@@ -58,8 +60,8 @@ public class Analyser {
 	public static <T> Node<T> analyse(Context c, Object form) {
 		if (form==null) return (Node<T>) Constant.NULL;
 		if (form instanceof APersistentList) return analyseList(c,(APersistentList<Object>)form);
-		if (form instanceof IPersistentVector) return (Node<T>) analyseVector(c,(IPersistentVector<Object>)form);
-		if (form instanceof Symbol) return analyseSymbol(c,(Symbol)form);
+		if (form instanceof APersistentVector) return (Node<T>) analyseVector(c,(APersistentVector<Object>)form);
+		// if (form instanceof Symbol) return analyseSymbol(c,(Symbol)form);
 		
 		// fall through handles constant literals, keywords etc
 
@@ -72,13 +74,12 @@ public class Analyser {
 		if (n==0) return (Node<T>) Constant.create(Lists.EMPTY);
 		
 		Object first=form.head();
-		if (first instanceof Symbol) return analyseSymbolApplication(c,form);
+		if (first instanceof Symbol) return analyseSymbolApplication(c,(Symbol)first,form);
 		
 		return Apply.create(analyse(c,first),analyseAll(c,form.tail()));
 	}
 
-	private static <T> Node<T> analyseSymbolApplication(Context c, APersistentList<Object> form) {
-		Symbol first=(Symbol) form.head();
+	private static <T> Node<T> analyseSymbolApplication(Context c, Symbol first, APersistentList<Object> form) {
 		APersistentList<Object> tail=form.tail();
 		
 		if (first==Symbols.DEF) return analyseDefine(c,(Symbol)tail.head(),tail.tail());
@@ -131,7 +132,7 @@ public class Analyser {
 		
 		return (Node<T>) Constant.create(new AListExpander() {
 			@Override
-			public Object expand(Context c, APersistentList<Object> form, Expander ex) {
+			public Node<T> expand(Context c, Form<?> form, Expander ex) {
 				if (form.size()!=nBinds+1) {
 					throw new AnalyserException("Wrong number of args passed to exander, expected "+nBinds,form);
 				}
@@ -140,7 +141,7 @@ public class Analyser {
 				
 				APersistentMap<Symbol, Object> bnds=Maps.create(exSym, ex);
 				AFn<Object> fn= (AFn<Object>) fNode.eval(c, bnds).getValue();
-				return fn.applyTo(vals);
+				return (Node<T>) fn.applyTo(vals);
 			}
 		});
 	}
@@ -229,7 +230,7 @@ public class Analyser {
 			exs[i]=analyse(c,form.get(i));
 		}
 		
-		IPersistentVector<Node<T>> exps=Vectors.wrap(exs);
+		APersistentVector<Node<T>> exps=Vectors.wrap(exs);
 		return Vector.create(exps);
 	}
 
@@ -243,9 +244,10 @@ public class Analyser {
 	 * @param form
 	 * @return
 	 */
-	public static Object expand(Context context, Object form) {
+	@SuppressWarnings("unchecked")
+	public static <T> Node<T> expand(Context context, Node<T> form) {
 		Expander ex=Expanders.INITAL_EXPANDER;
-		return ex.expand(context, form, ex);
+		return (Node<T>) ex.expand(context, form, ex);
 	}
 
 

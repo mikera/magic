@@ -165,6 +165,19 @@ public class FunctionType extends AFunctionType {
 		if (t==this) return t;
 		return Union.create(this,t);
 	}
+	
+	@Override 
+	public String toString() {
+		StringBuilder sb=new StringBuilder ("(Fn [");
+		for (Type t: paramTypes) {
+			sb.append(t);
+			sb.append(" ");
+		}
+		sb.append("] ");
+		sb.append(returnType);
+		sb.append(')');
+		return sb.toString();
+	}
 
 	@Override
 	public void validate() {

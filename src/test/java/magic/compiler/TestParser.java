@@ -35,8 +35,8 @@ public class TestParser {
 	}
 	
 	@Test public void testBooleans() {
-		assertTrue((Boolean)Reader.read("true"));
-		assertFalse((Boolean)Reader.read("false"));
+		assertTrue((Boolean)Reader.read("true").getValue());
+		assertFalse((Boolean)Reader.read("false").getValue());
 		assertTrue(RT.bool(Reader.read("true")));
 		assertFalse(RT.bool(Reader.read("false")));
 	}
@@ -62,7 +62,7 @@ public class TestParser {
 	
 	@Test public void testQualifiedSymbol() {
 		assertEquals(Symbol.create("foo","bar"),Reader.read("foo/bar"));
-		assertEquals("foo",((Symbol)Reader.read("foo//")).getNamespace());
+		assertEquals("foo",Reader.readSymbol("foo//").getNamespace());
 		assertEquals(Symbol.create("foo","/"),Reader.read("foo//"));
 	}
 	

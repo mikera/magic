@@ -1,11 +1,15 @@
 package magic.compiler;
 
+import magic.ast.Form;
+import magic.ast.Node;
 import magic.data.APersistentList;
 import magic.data.IPersistentList;
 import magic.data.Lists;
 import magic.data.PersistentList;
+import magic.data.PersistentVector;
 import magic.data.Symbol;
 import magic.data.Tuple;
+import magic.data.Vectors;
 import magic.lang.Context;
 import magic.lang.Slot;
 import magic.lang.Symbols;
@@ -19,24 +23,24 @@ public class Expanders {
 	
 	private static final class DefnExpander extends AListExpander {
 		@Override
-		public Object expand(Context c, APersistentList<Object> form,Expander ex) {
+		public Node<?> expand(Context c, Form<?> form,Expander ex) {
 			int n=form.size();
 			if (n<3) throw new ExpansionException("Can't expand defn, requires at least function name and arg vector",form);
 			
-			Object nameObj=ex.expand(c, form.get(1), ex);
-			Object argObj=ex.expand(c, form.get(2), ex);
+			Node<?> nameObj=ex.expand(c, Analyser.analyse(c,form.get(1)), ex);
+			Node<?> argObj=ex.expand(c, Analyser.analyse(c,form.get(2)), ex);
 			
-			APersistentList<Object> fnDef=PersistentList.of(Symbols.FN,argObj).concat(form.subList(3,n));
-			APersistentList<Object> newForm=PersistentList.of(Symbols.DEF, nameObj,fnDef);
-			return ex.expandAll(c, newForm, ex);
+			APersistentList<Object> fnDef=PersistentList.of((Object)Symbols.FN,argObj).concat(form.getElements().subList(3,n));
+			Form<?> newForm=Form.create(Tuple.of(Symbols.DEF, nameObj,fnDef));
+			return ex.expand(c, newForm, ex);
 		}
 	}
 	
 	public static final Expander SPECIAL_FORM = new AListExpander() {
 
 		@Override
-		public Object expand(Context c, APersistentList<Object> form, Expander ex) {
-			// TODO confirn this is correct for special form expanders?
+		public Node<?> expand(Context c, Form<?> form, Expander ex) {
+			// TODO confirm this is correct for special form expanders?
 			return form;
 		}
 		
@@ -51,14 +55,14 @@ public class Expanders {
 	private static final class InitialExpander extends Expander {
 		@Override
 		@SuppressWarnings("unchecked")
-		public Object expand(Context c, Object form,Expander ex) {
-			if (form instanceof IPersistentList) return expand(c,(IPersistentList<Object>)form,ex);
+		public Node<?> expand(Context c, Node<?> form,Expander ex) {
+			if (form instanceof Form) return expand(c,(Form<?>)form,ex);
 			return form; 
 		}
 
-		public Object expand(Context c, IPersistentList<Object> form,Expander ex) {
+		public Node<?> expand(Context c, Form<?> form,Expander ex) {
 			int n=form.size();
-			if (n==0) return Lists.EMPTY;
+			if (n==0) return Form.EMPTY;
 			
 			Object first=form.head();
 			
@@ -86,7 +90,7 @@ public class Expanders {
 
 	public static final Expander DEFMACRO = new AListExpander() {
 		@Override
-		public Object expand(Context c, APersistentList<Object> form,Expander ex) {
+		public Node<?> expand(Context c, Form<?> form,Expander ex) {
 			int n=form.size();
 			if (n<3) throw new ExpansionException("Can't expand defmacro, requires at least macro name and arg vector",form);
 			
@@ -100,7 +104,7 @@ public class Expanders {
 
 	public static final Expander MACRO = new AListExpander() {
 		@Override
-		public Object expand(Context c, APersistentList<Object> form,Expander ex) {
+		public Node<?> expand(Context c, Form<?> form,Expander ex) {
 			int n=form.size();
 			if (n<3) throw new ExpansionException("Can't expand macro, requires at least an arg vector and body",form);
 			

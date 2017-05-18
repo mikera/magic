@@ -25,7 +25,7 @@ public class Do<T> extends Node<T> {
 		body=bodyExprs;
 	}
 
-	public static <T> Node<T> create(Node<?>[] body) {
+	public static <T> Node<T> create(Node<?>... body) {
 		return new Do<T>(body,null);
 	}
 	

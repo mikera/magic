@@ -1,5 +1,7 @@
 package magic.ast;
 
+import java.util.List;
+
 import magic.Type;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
@@ -17,44 +19,53 @@ import magic.type.JavaType;
  * 
  * @author Mike
  *
- * @param <T>
+ * @param <T> the type of all nodes in the Vector
  */
-public class Vector<T> extends Node<IPersistentVector<T>> {
+public class Vector<T> extends Node<APersistentVector<T>> {
 
-	IPersistentVector<Node<T>> exps;
+	APersistentVector<Node<T>> exps;
 	
-	private Vector(IPersistentVector<Node<T>> exps, SourceInfo source) {
+	private Vector(APersistentVector<Node<T>> exps, SourceInfo source) {
 		super(calcDependencies(exps),source); 
 		this.exps=exps;
 	}
 	
 
-	public static <T> Vector<T> create(IPersistentVector<Node<T>> exps, SourceInfo source) {
+	public static <T> Vector<T> create(APersistentVector<Node<T>> exps, SourceInfo source) {
 		return new Vector<T>(exps,source);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static <T> Vector<T> create(List<?> list, SourceInfo source) {
+		return create((APersistentVector<Node<T>>)Vectors.createFromList(list),source);
+	}
 
-	public static <T> Vector<T> create(IPersistentVector<Node<T>> exps) {
+	public static <T> Vector<T> create(APersistentVector<Node<T>> exps) {
 		return create(exps,null);
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Override
-	public EvalResult<IPersistentVector<T>> eval(Context c,APersistentMap<Symbol, Object> bindings) {
-		int n=exps.size();
-		if (n==0) return  EvalResult.create(c, (IPersistentVector<T>)Tuple.EMPTY);
-		T[] results=(T[]) new Object[n];
-		for (int i=0; i<n; i++) {
-			results[i]=exps.get(i).compute(c,bindings);
-		}
-		return EvalResult.create(c, (IPersistentVector<T>)Vectors.wrap(results));
+	public static <T> Vector<T> create(Node<T>... exps) {
+		return create(Vectors.createFromArray(exps),null);
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Node<IPersistentVector<T>> specialiseValues(APersistentMap<Symbol, Object> bindings) {
+	public EvalResult<APersistentVector<T>> eval(Context c,APersistentMap<Symbol, Object> bindings) {
+		int n=exps.size();
+		if (n==0) return  EvalResult.create(c, (APersistentVector<T>)Tuple.EMPTY);
+		T[] results=(T[]) new Object[n];
+		for (int i=0; i<n; i++) {
+			results[i]=exps.get(i).compute(c,bindings);
+		}
+		return EvalResult.create(c, Vectors.wrap(results));
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Node<APersistentVector<T>> specialiseValues(APersistentMap<Symbol, Object> bindings) {
 		int nExps=exps.size();
-		IPersistentVector<Node<T>> newExps=exps;
+		APersistentVector<Node<T>> newExps=exps;
 		for (int i=0; i<nExps; i++) {
 			Node<?> node=exps.get(i);
 			Node<?> newNode=node.specialiseValues(bindings);
@@ -68,9 +79,9 @@ public class Vector<T> extends Node<IPersistentVector<T>> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Node<IPersistentVector<T>> optimise() {
+	public Node<APersistentVector<T>> optimise() {
 		int nExps=exps.size();
-		IPersistentVector<Node<T>> newExps=exps;
+		APersistentVector<Node<T>> newExps=exps;
 		for (int i=0; i<nExps; i++) {
 			Node<?> node=exps.get(i);
 			Node<?> newNode=node.optimise();
@@ -106,6 +117,22 @@ public class Vector<T> extends Node<IPersistentVector<T>> {
 		sb.append(')');
 		return sb.toString();
 	}
+
+
+	public int size() {
+		return exps.size();
+	}
+
+
+	public Node<T> get(int i) {
+		return exps.get(i);
+	}
+
+	public APersistentVector<Node<T>> getNodes() {
+		return exps;
+	}
+
+
 
 
 }

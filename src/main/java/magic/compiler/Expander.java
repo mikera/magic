@@ -1,5 +1,6 @@
 package magic.compiler;
 
+import magic.ast.Node;
 import magic.data.APersistentList;
 import magic.fn.AFn;
 import magic.fn.AFn1;
@@ -8,30 +9,30 @@ import magic.fn.IFn3;
 import magic.lang.Context;
 
 /**
- * An expander expands a code given a context, a form and a continuation expander 
+ * An expander expands code given a context, a form and a continuation expander 
  * @author Mike
  *
  */
 public abstract class Expander extends AFn<Object> implements IFn3<Object> {
 	@Override
 	public Object apply(Object o1, Object o2, Object o3) {
-		return expand((Context)o1,o2,(Expander)o3);
+		return expand((Context)o1,(Node<?>)o2,(Expander)o3);
 	}
 
 	@Override
-	public final Object applyToArray(Object... a) {
+	public final Node<?> applyToArray(Object... a) {
 		if (a.length!=3) throw new ArityException("Expander requires 3 arguments (context, form, next-expander)");
-		return expand((Context)a[0],a[1],(Expander)a[2]);
+		return expand((Context)a[0],(Node<?>) a[1],(Expander)a[2]);
 	}
 	
-	public abstract Object expand(Context c, Object form, Expander ex);
+	public abstract Node<?> expand(Context c, Node<?> form, Expander ex);
 
-	public APersistentList<Object> expandAll(Context c, APersistentList<Object> forms,Expander ex) {
-		return forms.map(new AFn1<Object,Object>(){
+	public APersistentList<Node<?>> expandAll(Context c, APersistentList<Node<?>> forms,Expander ex) {
+		return forms.map(new AFn1<Node<?>,Node<?>>(){
 
 			@Override
-			public Object apply(Object a) {
-				return expand(c,a,ex);
+			public Node<?> apply(Object a) {
+				return expand(c,(Node<?>) a,ex);
 			}
 			
 		});

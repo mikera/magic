@@ -34,7 +34,7 @@ public class Let<T> extends Node<T> {
 		return create(RT.EMPTY_SYMBOLS,RT.EMPTY_NODES,body,source);
 	}
 	
-	public static <T> Node<T> create(Node<?>[] body) {
+	public static <T> Node<T> create(Node<?>... body) {
 		return create(body,null);
 	}
 	

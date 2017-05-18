@@ -151,6 +151,16 @@ public class Vectors<T> {
 		if (a instanceof APersistentVector<?>) return (APersistentVector<T>)a;
 		return Vectors.createFromCollection(a);
 	}
+	
+	/**
+	 * Coerces any collection to a persistent vector
+	 * @param a
+	 * @return
+	 */
+	public static <T> APersistentVector<T> coerce(APersistentCollection<T> a) {
+		if (a instanceof APersistentVector<?>) return (APersistentVector<T>)a;
+		return Vectors.createFromCollection(a);
+	}
 
 	public static <T> APersistentVector<T> coerce(Collection<T> a) {
 		if (a instanceof APersistentVector<?>) return (APersistentVector<T>)a;

@@ -1,6 +1,7 @@
 package magic.ast;
 
 import magic.RT;
+import magic.Type;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
@@ -50,6 +51,11 @@ public class If<T> extends Node<T> {
 			return falseExp.eval(context, bindings);
 			
 		}
+	}
+	
+	@Override
+	public Type getType() {
+		return trueExp.getType().union(falseExp.getType());
 	}
 	
 	@Override

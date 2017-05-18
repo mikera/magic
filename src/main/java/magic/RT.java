@@ -52,13 +52,17 @@ public class RT {
 	 */
 	private static Context createBootstrapContext() {
 		Context c=Context.EMPTY;
-		c=c.define(Symbols.DEFN, Constant.create(Expanders.DEFN));
-		c=c.define(Symbols.DEFMACRO, Constant.create(Expanders.DEFMACRO));
-		c=c.define(Symbols.MACRO, Constant.create(Expanders.MACRO));
-		c=c.define(Symbols.QUOTE, Constant.create(Expanders.SPECIAL_FORM));
-		c=c.define(Symbols.SYNTAX_QUOTE, Constant.create(Expanders.SPECIAL_FORM));
-		c=c.define(Symbols.PRINTLN, Constant.create(Functions.PRINTLN)); 
-		return c;
+		try {
+			c=c.define(Symbols.DEFN, Constant.create(Expanders.DEFN));
+			c=c.define(Symbols.DEFMACRO, Constant.create(Expanders.DEFMACRO));
+			c=c.define(Symbols.MACRO, Constant.create(Expanders.MACRO));
+			c=c.define(Symbols.QUOTE, Constant.create(Expanders.SPECIAL_FORM));
+			c=c.define(Symbols.SYNTAX_QUOTE, Constant.create(Expanders.SPECIAL_FORM));
+			c=c.define(Symbols.PRINTLN, Constant.create(Functions.PRINTLN)); 
+		} catch (Throwable t) {
+			t.printStackTrace(System.err);
+		}
+		return c;				
 	}
 	
 	/**
@@ -71,8 +75,9 @@ public class RT {
 		EvalResult<?> r;
 		try {
 			r=(EvalResult<?>) magic.compiler.Compiler.compile(c, RT.getResourceAsString("magic/core.mag"));
-		} catch (FileNotFoundException e) {
-			throw new Error(e);
+		} catch (Throwable t) {
+			t.printStackTrace(System.err);
+			throw new Error(t);
 		}
 		return r.getContext();
 	}

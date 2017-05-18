@@ -13,20 +13,17 @@ import org.parboiled.annotations.BuildParseTree;
 import org.parboiled.buffers.InputBuffer;
 import org.parboiled.errors.ParseError;
 import org.parboiled.parserunners.ReportingParseRunner;
-import org.parboiled.support.IndexRange;
 import org.parboiled.support.ParsingResult;
 import org.parboiled.support.Position;
 import org.parboiled.support.StringVar;
 import org.parboiled.support.Var;
 
-import magic.data.APersistentVector;
-import magic.data.IPersistentCollection;
-import magic.data.Lists;
+import magic.ast.Form;
+import magic.ast.Node;
 import magic.data.Maps;
 import magic.data.PersistentList;
 import magic.data.Sets;
 import magic.data.Symbol;
-import magic.data.Vectors;
 import magic.lang.Symbols;
 
 /**
@@ -79,20 +76,20 @@ public class Reader extends BaseParser<Object> {
 				);
 	}
 
-	Action<Object> AddAction(Var<ArrayList<Object>> expVar) {
+	Action<Object> AddAction(Var<ArrayList<Node<?>>> expVar) {
 		return new Action<Object>() {
 			@Override
 			public boolean run(Context<Object> context) {
 				Object o=pop();
 				// System.out.println(o);
-				expVar.get().add(o);
+				expVar.get().add((Node<?>) o);
 				return true;
 			}
 		};
 	}
 	
 	public Rule ExpressionList() {
-		Var<ArrayList<Object>> expVar=new Var<>(new ArrayList<>());
+		Var<ArrayList<Node<?>>> expVar=new Var<>(new ArrayList<>());
 		return Sequence(
 				Optional(WhiteSpace()),
 				FirstOf(Sequence(
@@ -104,7 +101,7 @@ public class Reader extends BaseParser<Object> {
 						 Optional(WhiteSpace())),
 						 EMPTY
 						),
-				push(Vectors.createFromList(expVar.get()))
+				push(magic.ast.Vector.create(expVar.get(),getSourceInfo()))
 				);
 	}
 	
@@ -168,12 +165,13 @@ public class Reader extends BaseParser<Object> {
 				']');
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Rule List() {
 		return Sequence(
 				'(',
 				ExpressionList(),
 				')',
-				push(Lists.create((IPersistentCollection<?>) pop())));
+				push(Form.create((magic.ast.Vector<Object>) pop(),getSourceInfo())));
 	}
 	
 	public Rule Set() {
@@ -218,10 +216,9 @@ public class Reader extends BaseParser<Object> {
 						Sequence("formfeed",push('\f')),
 						Sequence("backspace",push('\b')),
 						Sequence("return",push('\r')),
-						this.
 						Sequence("u", 
 								NTimes(4,HexDigit()),
-								push((char) Long.parseLong(match(), 16)))
+								push(push(magic.ast.Constant.create((char) Long.parseLong(match(), 16),getSourceInfo()))))
 						));
 	}
 	
@@ -237,7 +234,7 @@ public class Reader extends BaseParser<Object> {
 		return Sequence(
 				'"',
 				ZeroOrMore(Sequence(StringCharacter(),sb.append(matchOrDefault("0")))),
-				push(sb.get().toString()),
+				push(magic.ast.Constant.create(sb.get().toString(),getSourceInfo())),
 				'"');
 	}
 	
@@ -262,7 +259,7 @@ public class Reader extends BaseParser<Object> {
     public Rule Keyword() {
     	return Sequence(
     			Sequence(':',Symbol()),
-    			push(magic.data.Keyword.create((Symbol)pop())));
+    			push(magic.ast.Constant.create(magic.data.Keyword.create((Symbol)pop()),getSourceInfo())));
     }    
     
     public Rule QualifiedSymbol() {
@@ -270,9 +267,9 @@ public class Reader extends BaseParser<Object> {
 				UnqualifiedSymbol(),
 				'/',
 				UnqualifiedSymbol(),
-				push(Symbol.createWithNamespace(
+				push(magic.ast.Constant.create(Symbol.createWithNamespace(
 						((Symbol)pop()).getName(),
-						((Symbol)pop()).getName())) );
+						((Symbol)pop()).getName()),getSourceInfo())));
 	}
 
     public Rule UnqualifiedSymbol() {
@@ -285,7 +282,7 @@ public class Reader extends BaseParser<Object> {
 				        Sequence(AnyOf(".+-"),
 				        		 NonNumericSymbolCharacter(),
 				        		 ZeroOrMore(FollowingSymbolCharacter())) ),
-				push(Symbol.create(match())));
+				push(magic.ast.Constant.create(Symbol.create(match()),getSourceInfo())));
 	}
 
 	public Rule InitialSymbolCharacter() {
@@ -339,7 +336,7 @@ public class Reader extends BaseParser<Object> {
 	public Rule Long() {
         return Sequence(
         		SignedInteger(),
-        		push(Long.parseLong(match())));
+        		push(magic.ast.Constant.create(Long.parseLong(match()),getSourceInfo())));
     }
 	
 	public Rule Double() {
@@ -349,8 +346,7 @@ public class Reader extends BaseParser<Object> {
         				 '.',
         				 Digits(),
         				 Optional(ExponentPart())),
-        		// push(magic.ast.Constant.create(Double.parseDouble(match()),getSourceInfo()))
-        		push(Double.parseDouble(match()))
+        		push(magic.ast.Constant.create(Double.parseDouble(match()),getSourceInfo()))
         		);
     }
 	
@@ -364,20 +360,19 @@ public class Reader extends BaseParser<Object> {
 
 	// MAIN PARSING FUNCTIONALITY
 	
-	@SuppressWarnings("unused")
-	private SourceInfo getSourceInfo() {
-		IndexRange ir=matchRange();
+	protected SourceInfo getSourceInfo() {
+		// IndexRange ir=matchRange();
 		String source=getContext().getInputBuffer().toString();
-		int start=ir.start;
-		int end=ir.end;
+		//int start=ir.start;
+		// int end=ir.end;
 		Position p=position();
-		return SourceInfo.create(source.substring(start, end),p.line,p.column);
+		return SourceInfo.create(source,p.line,p.column);
 	}
 	
 	private static Reader parser = Parboiled.createParser(Reader.class);
-	private static final ReportingParseRunner<APersistentVector<Object>> inputParseRunner=new ReportingParseRunner<>(parser.Input());
-	private static final ReportingParseRunner<Object> expressionParseRunner=new ReportingParseRunner<>(parser.ExpressionInput());
-	private static final ReportingParseRunner<Symbol> symbolParseRunner=new ReportingParseRunner<>(parser.Symbol());
+	private static final ReportingParseRunner<magic.ast.Vector<?>> inputParseRunner=new ReportingParseRunner<>(parser.Input());
+	private static final ReportingParseRunner<Node<?>> expressionParseRunner=new ReportingParseRunner<>(parser.ExpressionInput());
+	private static final ReportingParseRunner<magic.ast.Constant<Symbol>> symbolParseRunner=new ReportingParseRunner<>(parser.Symbol());
 	
 	private static <T> void checkErrors(ParsingResult<T> result) {
 		if (result.hasErrors()) {
@@ -398,8 +393,8 @@ public class Reader extends BaseParser<Object> {
 	 * @param string
 	 * @return
 	 */
-	public static Object read(String source) {
-		ParsingResult<Object> result = expressionParseRunner.run(source);
+	public static Node<?> read(String source) {
+		ParsingResult<Node<?>> result = expressionParseRunner.run(source);
 		checkErrors(result);
 		return result.resultValue;
 	}
@@ -409,8 +404,8 @@ public class Reader extends BaseParser<Object> {
 	 * @param string
 	 * @return
 	 */
-	public static APersistentVector<Object> readAll(String source) {
-		ParsingResult<APersistentVector<Object>> result = inputParseRunner.run(source);
+	public static magic.ast.Vector<?> readAll(String source) {
+		ParsingResult<magic.ast.Vector<?>> result = inputParseRunner.run(source);
 		checkErrors(result);
 		return result.resultValue;
 	}
@@ -421,17 +416,17 @@ public class Reader extends BaseParser<Object> {
 	 * @return
 	 */
 	public static Symbol readSymbol(String source) {
-		ParsingResult<Symbol> result = symbolParseRunner.run(source);
+		ParsingResult<magic.ast.Constant<magic.data.Symbol>> result = symbolParseRunner.run(source);
 		checkErrors(result);
-		return result.resultValue;
+		return result.resultValue.getValue();
 	}
 	
 	/**
-	 * Parses an expression and returns a form
+	 * Parses an expression and returns a form as an AST Node
 	 * @param string
 	 * @return
 	 */
-	public static Object read(java.io.Reader source) throws IOException {
+	public static Node<?> read(java.io.Reader source) throws IOException {
 	    char[] arr = new char[8 * 1024];
 	    StringBuilder buffer = new StringBuilder();
 	    int numCharsRead;

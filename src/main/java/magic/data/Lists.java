@@ -13,4 +13,8 @@ public class Lists {
 		return PersistentList.create(Vectors.coerce(a));
 	}
 
+	public static APersistentList coerce(APersistentVector<Object> vs) {
+		return PersistentList.wrap(vs);
+	}
+
 }

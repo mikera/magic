@@ -28,6 +28,11 @@ public class PersistentList<T> extends APersistentList<T> {
 	public static <T> PersistentList<T> create(APersistentVector<T> source) {
 		return new PersistentList<T>(source,0,source.size());	
 	}
+	
+	public static <T> PersistentList<T> wrap(APersistentVector<T> vs) {
+		return new PersistentList<T>(vs,0,vs.size());
+	}
+
 
 	@Override
 	public APersistentList<T> concat(APersistentList<T> values) {
@@ -186,6 +191,7 @@ public class PersistentList<T> extends APersistentList<T> {
 	public APersistentList<T> assocAt(int index, Object value) {
 		return create(vector.assoc(offset+index, value),offset,size);
 	}
+
 
 
 

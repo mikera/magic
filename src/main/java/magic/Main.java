@@ -23,8 +23,8 @@ public class Main {
 		}
 	}
 
-	private static EvalResult<Object> evaluate(Context c, String s) {
-		EvalResult<Object> r=magic.compiler.Compiler.compile(c,s);
+	private static EvalResult<?> evaluate(Context c, String s) {
+		EvalResult<?> r=magic.compiler.Compiler.compile(c,s);
 		return r;	
 	}
 }
