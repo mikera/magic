@@ -2,15 +2,19 @@ package magic.ast;
 
 import magic.RT;
 import magic.Type;
+import magic.Types;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
+import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
 import magic.data.APersistentVector;
 import magic.data.Maps;
+import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.data.Tuple;
 import magic.lang.Context;
+import magic.lang.Symbols;
 import magic.type.JavaType;
 
 /**
@@ -23,43 +27,46 @@ import magic.type.JavaType;
 public class Quote extends Node<Object> {
 
 	private final boolean syntaxQuote;
-	private final Object form;
-	private final APersistentMap<APersistentVector<Object>,Node<Object>> unquotes;
+	private final Node<?> form;
 
-	public Quote(Object form, boolean syntaxQuote, APersistentSet<Symbol> symbolSet, APersistentMap<APersistentVector<Object>,Node<Object>> unquotes, SourceInfo source) {
+	public Quote(Node<?> form, boolean syntaxQuote, APersistentSet<Symbol> symbolSet, APersistentMap<APersistentVector<Object>,Node<Object>> unquotes, SourceInfo source) {
 		super (symbolSet,source);
-		this.unquotes=unquotes;
 		this.syntaxQuote=syntaxQuote;
 		this.form=form;
 	}
+	
+	/**
+	 * Create a Quote AST Node from a node
+	 * @param sourceInfo
+	 * @param syntaxQuote2
+	 * @param pop
+	 * @return
+	 */
+	public static Object create(Node<?> node, boolean syntaxQuote, SourceInfo sourceInfo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	public static Quote create(Object form, boolean syntaxQuote, APersistentSet<Symbol> symbolSet) {
-		return create(form,syntaxQuote,symbolSet,null);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static Quote create(Object form, boolean syntaxQuote, APersistentSet<Symbol> symbolSet, SourceInfo source) {
-		// TODO: identify unquotes
-		return new Quote(form,syntaxQuote,symbolSet,(APersistentMap<APersistentVector<Object>, Node<Object>>) Maps.EMPTY,source);
-	}
-	
-	
 	@Override
 	public EvalResult<Object> eval(Context context, APersistentMap<Symbol, Object> bindings) {
-		if (unquotes.size()==0) {}
-			
-		return (EvalResult<Object>) EvalResult.create(context, form);
+		return form.evalQuoted(context,bindings,syntaxQuote);
 	}
 	
+	@Override
+	public EvalResult<Object> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings,
+			boolean syntaxQuote) {
+		Symbol sym=(syntaxQuote)?Symbols.SYNTAX_QUOTE:Symbols.QUOTE;
+		APersistentList<Object> r=PersistentList.of(sym,form.evalQuoted(context, bindings, syntaxQuote));
+		return new EvalResult<Object>(context,r);
+	}
+
 	public boolean isSyntaxQuote() {
 		return syntaxQuote;
 	}
 	
 	@Override
 	public Type getType() {
-		Node<Object> topLevelUnquote=unquotes.get(Tuple.EMPTY);
-		if (topLevelUnquote!=null) return topLevelUnquote.getType();
-		return JavaType.create(form.getClass());
+		return Types.FORM;
 	}
 
 	@Override
@@ -70,7 +77,6 @@ public class Quote extends Node<Object> {
 
 	@Override
 	public Node<Object> optimise() {
-		if (unquotes.size()==0) return Constant.create(form);
 		// TODO: optimise unquotes into constants?
 		return this;
 	}
@@ -79,5 +85,7 @@ public class Quote extends Node<Object> {
 	public String toString() {
 		return (syntaxQuote?"(Syntax-Quote ":"(Quote ")+RT.toString(form)+")";
 	}
+
+
 
 }

@@ -4,6 +4,8 @@ import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
+import magic.data.APersistentSet;
+import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.fn.IFn;
 import magic.lang.Context;
@@ -13,19 +15,32 @@ import magic.lang.Context;
  * 
  * @author Mike
  */
-public class Apply<T> extends Node<T> {
+public class Apply<T> extends BaseForm<T> {
 
-	private Node<IFn<T>> function;
-	private Node<?>[] args;
-	private int arity;
+	private final Node<IFn<T>> function;
+	private final Node<?>[] args;
+	private final int arity;
 
-	public Apply(Node<IFn<T>> f, Node<?>[] args, SourceInfo source) {
-		super(calcDependencies(f,args),source);
-		this.function=f;
-		this.args=args;
-		arity=args.length;
+	@SuppressWarnings("unchecked")
+	private Apply(APersistentList<Node<?>> form, SourceInfo source) {
+		super(form,calcDependencies(form),source);
+		this.function=(Node<IFn<T>>)form.head();
+		arity=form.size()-1;
+		args=new Node<?>[arity];
+		for (int i=0; i<arity; i++) {
+			args[i]=form.get(i+1);
+		}
 	}
-
+	
+	public static <T> Apply<T> create(APersistentList<Node<?>> form, SourceInfo sourceInfo) {
+		return new Apply<T>(form,sourceInfo);
+	}
+	
+	private Apply<T> create(Node<IFn<T>> newFunction, Node<?>[] newBody, SourceInfo source) {
+		APersistentList<Node<?>> form=PersistentList.wrap(newBody).include(newFunction);
+		return create(form,source);
+	}
+	
 	@Override
 	public EvalResult<T> eval(Context c,APersistentMap<Symbol, Object> bindings) {
 		EvalResult<IFn<T>> rf= function.eval(c,bindings);
@@ -38,15 +53,6 @@ public class Apply<T> extends Node<T> {
 		}
 		return EvalResult.create(r.getContext(),f.applyToArray(values));
 	}
-
-	public static <T> Apply<T> create(Node<IFn<T>> function, Node<?>... args) {
-		return new Apply<T>(function,args,null);
-	}
-
-	public static <T> Apply<T> create(Node<IFn<T>> function, APersistentList<Node<?>> tail) {
-		return create(function,tail.toArray(new Node[tail.size()]));
-	}
-	
 
 	@Override
 	public Node<T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
@@ -64,8 +70,10 @@ public class Apply<T> extends Node<T> {
 				newBody[i]=newNode;
 			} 
 		}
-		return (newFunction==function)&&(args==newBody)?this:create(newFunction,newBody);	
+		return (newFunction==function)&&(args==newBody)?this:create(newFunction,newBody,source);	
 	}
+
+
 
 	@Override
 	public Node<T> optimise() {
@@ -86,4 +94,6 @@ public class Apply<T> extends Node<T> {
 		sb.append(')');
 		return sb.toString();
 	}
+
+
 }

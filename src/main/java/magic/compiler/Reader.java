@@ -120,7 +120,7 @@ public class Reader extends BaseParser<Object> {
 		return Sequence(
 				'\'',
 				Expression(),
-				push(PersistentList.of(Symbols.QUOTE,pop()))
+				push(magic.ast.Quote.create((Node<?>)pop(),false,getSourceInfo()))
 				);
 	}
 	
@@ -128,7 +128,7 @@ public class Reader extends BaseParser<Object> {
 		return Sequence(
 				'`',
 				Expression(),
-				push(PersistentList.of(Symbols.SYNTAX_QUOTE,pop()))
+				push(magic.ast.Quote.create((Node<?>)pop(),true,getSourceInfo()))
 				);
 	}
 	

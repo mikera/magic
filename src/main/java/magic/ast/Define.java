@@ -4,6 +4,7 @@ import magic.RT;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
+import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.lang.Context;
 
@@ -17,13 +18,13 @@ import magic.lang.Context;
  *
  * @param <T>
  */
-public class Define<T> extends Node<T> {
+public class Define<T> extends BaseForm<T> {
 
 	final Symbol sym;
 	final Node<T> exp;
 
 	public Define(Symbol sym, Node<T> exp, SourceInfo source) {
-		super(exp.getDependencies(),source);
+		super(PersistentList.of(Constant.create(sym),exp),exp.getDependencies(),source);
 		this.sym=sym;
 		this.exp=exp;
 	}

@@ -63,6 +63,19 @@ public class Vector<T> extends Node<APersistentVector<T>> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
+	public EvalResult<Object> evalQuoted(Context c, APersistentMap<Symbol, Object> bindings,
+			boolean syntaxQuote) {
+		int n=exps.size();
+		if (n==0) return  EvalResult.create(c, (APersistentVector<T>)Tuple.EMPTY);
+		Object[] results=new Object[n];
+		for (int i=0; i<n; i++) {
+			results[i]=exps.get(i).evalQuoted(c,bindings,syntaxQuote);
+		}
+		return EvalResult.create(c, Vectors.wrap(results));
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
 	public Node<APersistentVector<T>> specialiseValues(APersistentMap<Symbol, Object> bindings) {
 		int nExps=exps.size();
 		APersistentVector<Node<T>> newExps=exps;
@@ -131,6 +144,9 @@ public class Vector<T> extends Node<APersistentVector<T>> {
 	public APersistentVector<Node<T>> getNodes() {
 		return exps;
 	}
+
+
+
 
 
 

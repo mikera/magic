@@ -54,4 +54,11 @@ public abstract class BaseConstant<T> extends Node<T> {
 	public Type getType() {
 		return JavaType.create(getValue());
 	}
+	
+	@Override
+	public EvalResult<Object> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings,
+			boolean syntaxQuote) {
+		return new EvalResult<Object>(context,getValue());
+	}
+
 }

@@ -126,5 +126,9 @@ public class Symbol extends APersistentObject {
 		return magic.type.Symbol.INSTANCE;
 	}
 
+	public boolean isQualified() {
+		return ns!=null;
+	}
+
 
 }

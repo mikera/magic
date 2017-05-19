@@ -34,5 +34,8 @@ public class Symbols {
 	// core functions
 	public static final Symbol PRINTLN = Symbol.create("println");
 	
+	// environment variables and bindings
+	public static final Symbol _NS_ = Symbol.create("*ns*");
+	
 	
 }

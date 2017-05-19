@@ -13,8 +13,12 @@ public class Lists {
 		return PersistentList.create(Vectors.coerce(a));
 	}
 
-	public static APersistentList coerce(APersistentVector<Object> vs) {
+	public static <T> APersistentList<T> coerce(APersistentVector<T> vs) {
 		return PersistentList.wrap(vs);
+	}
+
+	public static <T> APersistentList<T> cons(T value, APersistentList<T> rest) {
+		return rest.include(value);
 	}
 
 }

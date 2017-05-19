@@ -10,12 +10,15 @@ import magic.Type;
 import magic.Types;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
+import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
+import magic.data.APersistentVector;
 import magic.data.IPersistentVector;
 import magic.data.PersistentHashMap;
 import magic.data.Sets;
 import magic.data.Symbol;
+import magic.data.Vectors;
 import magic.lang.Context;
 import magic.lang.MagicLanguage;
  
@@ -75,13 +78,13 @@ public abstract class Node<T> extends RootNode {
 		return deps;
 	}
 	
-	protected static APersistentSet<Symbol> calcDependencies(Node<?> f, Node<?>[] args) {
+	protected static <T> APersistentSet<Symbol> calcDependencies(Node<T> f, Node<T>[] args) {
 		APersistentSet<Symbol> deps=f.getDependencies();
 		deps=deps.includeAll(calcDependencies(args));
 		return deps;
 	}
 	
-	protected static APersistentSet<Symbol> calcDependencies(Node<?>... nodes) {
+	protected static <T> APersistentSet<Symbol> calcDependencies(Node<?>... nodes) {
 		APersistentSet<Symbol> deps=Sets.emptySet();
 		for (int i=0; i<nodes.length; i++) {
 			deps=deps.includeAll(nodes[i].getDependencies());
@@ -89,13 +92,17 @@ public abstract class Node<T> extends RootNode {
 		return deps;
 	}
 	
-	protected static <T> APersistentSet<Symbol> calcDependencies(IPersistentVector<Node<T>> nodes) {
+	protected static <T> APersistentSet<Symbol> calcDependencies(APersistentVector<Node<?>> nodes) {
 		APersistentSet<Symbol> deps=Sets.emptySet();
 		int n=nodes.size();
 		for (int i=0; i<n; i++) {
 			deps=deps.includeAll(nodes.get(i).getDependencies());
 		}
 		return deps;
+	}
+	
+	protected static <T> APersistentSet<Symbol> calcDependencies(APersistentList<Node<?>> nodes) {
+		return calcDependencies(Vectors.coerce(nodes));
 	}
 	
 	/**
@@ -138,4 +145,13 @@ public abstract class Node<T> extends RootNode {
 	
 	@Override
 	public abstract String toString();
+
+	/**
+	 * Evaluates this Node in a quoted context, returning a form object
+	 * 
+	 * @param context
+	 * @param bindings
+	 * @return
+	 */
+	public abstract EvalResult<Object> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings, boolean syntaxQuote);
 }

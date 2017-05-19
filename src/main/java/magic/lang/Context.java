@@ -69,6 +69,10 @@ public class Context {
 		return getExpression(Reader.readSymbol(symbol));
 	}
 
+	public String getCurrentNamespace() {
+		return getValue(Symbols._NS_);
+	}
+
 
 
 

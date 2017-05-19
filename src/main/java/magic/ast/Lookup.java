@@ -60,4 +60,15 @@ public class Lookup<T> extends Node<T> {
 		return "(Lookup "+sym+")";
 	}
 
+	@Override
+	public EvalResult<Object> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings,
+			boolean syntaxQuote) {
+		if (syntaxQuote&&(!sym.isQualified())) {
+			String ns=context.getCurrentNamespace();
+			Symbol qualSym=Symbol.create(ns, sym.getName());
+			return new EvalResult<Object>(context,qualSym);
+		} 
+		return new EvalResult<Object>(context,sym);
+	}
+
 }

@@ -5,8 +5,11 @@ import magic.Types;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
+import magic.data.Lists;
+import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.lang.Context;
+import magic.lang.Symbols;
 
 /**
  * AST node representing a `do` block of sequential expressions
@@ -15,12 +18,12 @@ import magic.lang.Context;
  *
  * @param <T>
  */
-public class Do<T> extends Node<T> {
+public class Do<T> extends BaseForm<T> {
 	private final int nBody;
 	private final Node<?>[] body;
 	
 	public Do(Node<?>[] bodyExprs,SourceInfo source) {
-		super(calcDependencies(bodyExprs),source);
+		super(Lists.cons(Constant.create(Symbols.DO),PersistentList.wrap(bodyExprs)), calcDependencies(bodyExprs),source);
 		nBody=bodyExprs.length;
 		body=bodyExprs;
 	}
