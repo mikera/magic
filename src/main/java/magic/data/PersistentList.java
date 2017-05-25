@@ -14,41 +14,44 @@ public class PersistentList<T> extends APersistentList<T> {
 	private final int offset;
 	private final int size;
 	
-	private PersistentList(APersistentVector<T> source, int offset, int size) {
-		this.vector=source;
+	@SuppressWarnings("unchecked")
+	private PersistentList(APersistentVector<? extends T> source, int offset, int size) {
+		this.vector=(APersistentVector<T>) source;
 		this.offset=offset;
 		this.size=size;	
 	}
 
 	
-	public static <T> PersistentList<T> create(APersistentVector<T> source, int offset, int size) {
+	public static <T> PersistentList<T> create(APersistentVector<? extends T> source, int offset, int size) {
 		return new PersistentList<T>(source,offset,size);	
 	}
 	
-	public static <T> PersistentList<T> create(APersistentVector<T> source) {
+	public static <T> PersistentList<T> create(APersistentVector<? extends T> source) {
 		return new PersistentList<T>(source,0,source.size());	
 	}
 	
-	public static <T> PersistentList<T> wrap(APersistentVector<T> vs) {
+	public static <T> PersistentList<T> wrap(APersistentVector<? extends T> vs) {
 		return new PersistentList<T>(vs,0,vs.size());
 	}
 
 
 	@Override
-	public APersistentList<T> concat(APersistentList<T> values) {
+	public APersistentList<T> concat(APersistentList<? extends T> values) {
 		return create(vector.concat(values),offset,size+values.size());
 	}
 	
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public APersistentList<T> concat(IPersistentList<T> values) {
+	public APersistentList<T> concat(IPersistentList<? extends T> values) {
 		if (values instanceof APersistentList) {
 			return concat((APersistentList<T>)values);
 		}
 		return concat(coerce(values));
 	}
 
-	public static <T> APersistentList<T> coerce(IPersistentCollection<T> values) {
+	@SuppressWarnings("unchecked")
+	public static <T> APersistentList<T> coerce(IPersistentCollection<? extends T> values) {
 		if (values instanceof APersistentList) {
 			return ((APersistentList<T>)values);
 		}	
@@ -57,7 +60,7 @@ public class PersistentList<T> extends APersistentList<T> {
 
 
 	@Override
-	public APersistentList<T> concat(Collection<T> values) {
+	public APersistentList<T> concat(Collection<? extends T> values) {
 		return create(vector.concat(values),offset,size+values.size());
 	}
 
@@ -67,17 +70,17 @@ public class PersistentList<T> extends APersistentList<T> {
 	}
 
 	@Override
-	public APersistentList<T> insertAll(int index, Collection<T> values) {
+	public APersistentList<T> insertAll(int index, Collection<? extends T> values) {
 		return create(vector.insertAll(offset+index,values),offset,size+values.size());
 	}
 
 	@Override
-	public APersistentList<T> insertAll(int index, IPersistentList<T> values) {
+	public APersistentList<T> insertAll(int index, IPersistentList<? extends T> values) {
 		return create(vector.insertAll(offset+index,values),offset,size+values.size());
 	}
 
 	@Override
-	public APersistentList<T> copyFrom(int index, IPersistentList<T> values, int srcIndex, int length) {
+	public APersistentList<T> copyFrom(int index, IPersistentList<? extends T> values, int srcIndex, int length) {
 		return create(vector.copyFrom(offset+index,values,srcIndex,length),offset,size);
 	}
 
@@ -178,8 +181,8 @@ public class PersistentList<T> extends APersistentList<T> {
 
 
 	@SuppressWarnings("unchecked")
-	public static <T> PersistentList<T> of(T... vals) {
-		return create(Tuple.of(vals));
+	public static <T> PersistentList<T> of(Object... vals) {
+		return (PersistentList<T>) create(Tuple.of(vals));
 	}
 
 

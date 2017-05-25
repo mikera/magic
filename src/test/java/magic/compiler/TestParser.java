@@ -37,27 +37,25 @@ public class TestParser {
 	@Test public void testBooleans() {
 		assertTrue((Boolean)Reader.read("true").getValue());
 		assertFalse((Boolean)Reader.read("false").getValue());
-		assertTrue(RT.bool(Reader.read("true")));
-		assertFalse(RT.bool(Reader.read("false")));
 	}
 
 	
 	@Test public void testLong() {
-		assertEquals(Long.valueOf(-3),Reader.read("-3"));
-		assertEquals(Long.valueOf(3000),Reader.read("+3000"));
-		assertEquals(Long.valueOf(-21),Reader.read("-21"));
+		assertEquals(Long.valueOf(-3),Reader.read("-3").getValue());
+		assertEquals(Long.valueOf(3000),Reader.read("+3000").getValue());
+		assertEquals(Long.valueOf(-21),Reader.read("-21").getValue());
 	}
 	
 	@Test public void testChars() {
-		assertEquals(' ',Reader.read("\\space"));
-		assertEquals('\t',Reader.read("\\tab"));
-		assertEquals('\f',Reader.read("\\formfeed"));
-		assertEquals('\b',Reader.read("\\backspace"));
-		assertEquals('\n',Reader.read("\\newline"));
-		assertEquals('\r',Reader.read("\\return"));
-		assertEquals('*',Reader.read("\\u002A"));
-		assertEquals('\u03A9',Reader.read("\\u03a9"));
-		assertEquals('\uAABB',Reader.read("\\uaAbB"));
+		assertEquals(' ',Reader.read("\\space").getValue());
+		assertEquals('\t',Reader.read("\\tab").getValue());
+		assertEquals('\f',Reader.read("\\formfeed").getValue());
+		assertEquals('\b',Reader.read("\\backspace").getValue());
+		assertEquals('\n',Reader.read("\\newline").getValue());
+		assertEquals('\r',Reader.read("\\return").getValue());
+		assertEquals('*',Reader.read("\\u002A").getValue());
+		assertEquals('\u03A9',Reader.read("\\u03a9").getValue());
+		assertEquals('\uAABB',Reader.read("\\uaAbB").getValue());
 	}
 	
 	@Test public void testQualifiedSymbol() {

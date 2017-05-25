@@ -14,7 +14,6 @@ import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
 import magic.data.APersistentVector;
-import magic.data.IPersistentVector;
 import magic.data.PersistentHashMap;
 import magic.data.Sets;
 import magic.data.Symbol;
@@ -78,13 +77,14 @@ public abstract class Node<T> extends RootNode {
 		return deps;
 	}
 	
-	protected static <T> APersistentSet<Symbol> calcDependencies(Node<T> f, Node<T>[] args) {
+	protected static APersistentSet<Symbol> calcDependencies(Node<?> f, Node<?>[] args) {
 		APersistentSet<Symbol> deps=f.getDependencies();
 		deps=deps.includeAll(calcDependencies(args));
 		return deps;
 	}
 	
-	protected static <T> APersistentSet<Symbol> calcDependencies(Node<?>... nodes) {
+	@SafeVarargs
+	protected static <T> APersistentSet<Symbol> calcDependencies(Node<? extends T>... nodes) {
 		APersistentSet<Symbol> deps=Sets.emptySet();
 		for (int i=0; i<nodes.length; i++) {
 			deps=deps.includeAll(nodes[i].getDependencies());
@@ -92,7 +92,7 @@ public abstract class Node<T> extends RootNode {
 		return deps;
 	}
 	
-	protected static <T> APersistentSet<Symbol> calcDependencies(APersistentVector<Node<?>> nodes) {
+	protected static <T> APersistentSet<Symbol> calcDependencies(APersistentVector<Node<? extends T>> nodes) {
 		APersistentSet<Symbol> deps=Sets.emptySet();
 		int n=nodes.size();
 		for (int i=0; i<n; i++) {
@@ -101,7 +101,7 @@ public abstract class Node<T> extends RootNode {
 		return deps;
 	}
 	
-	protected static <T> APersistentSet<Symbol> calcDependencies(APersistentList<Node<?>> nodes) {
+	protected static <T> APersistentSet<Symbol> calcDependencies(APersistentList<Node<? extends T>> nodes) {
 		return calcDependencies(Vectors.coerce(nodes));
 	}
 	
@@ -132,7 +132,7 @@ public abstract class Node<T> extends RootNode {
 	 * @param bindings
 	 * @return
 	 */
-	public abstract Node<T> specialiseValues(APersistentMap<Symbol, Object> bindings);
+	public abstract Node<? extends T> specialiseValues(APersistentMap<Symbol, Object> bindings);
 	
 	/** 
 	 * Performs local optimisations on the node. 
@@ -141,7 +141,7 @@ public abstract class Node<T> extends RootNode {
 	 * @param bindings
 	 * @return
 	 */
-	public abstract Node<T> optimise();
+	public abstract Node<? extends T> optimise();
 	
 	@Override
 	public abstract String toString();

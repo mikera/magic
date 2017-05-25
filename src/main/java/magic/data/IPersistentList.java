@@ -15,20 +15,22 @@ public interface IPersistentList<T> extends IPersistentCollection<T>, Comparable
 	/**
 	 * Concatenates a list to this list
 	 */
-	public APersistentList<T> concat(IPersistentList<T> values);
+	public APersistentList<T> concat(IPersistentList<? extends T> values);
 
 	/**
 	 * Concatenates a values from a collection to this list
 	 */
-	public APersistentList<T> concat(Collection<T> values);
+	public APersistentList<T> concat(Collection<? extends T> values);
+	
+	public APersistentList<T> concat(APersistentList<? extends T> values);
 
 	public APersistentList<T> insert(int index, T value);
 	
-	public APersistentList<T> insertAll(int index, Collection<T> values);
+	public APersistentList<T> insertAll(int index, Collection<? extends T> values);
 
-	public APersistentList<T> insertAll(int index, IPersistentList<T> values);
+	public APersistentList<T> insertAll(int index, IPersistentList<? extends T> values);
 
-	public APersistentList<T> copyFrom(int index, IPersistentList<T> values, int srcIndex, int length);
+	public APersistentList<T> copyFrom(int index, IPersistentList<? extends T> values, int srcIndex, int length);
 	
 	@Override
 	public APersistentList<T> include(T value);
@@ -69,7 +71,5 @@ public interface IPersistentList<T> extends IPersistentCollection<T>, Comparable
 	
 
 	public T get(int i);
-
-	APersistentList<T> concat(APersistentList<T> values);
 	
 }

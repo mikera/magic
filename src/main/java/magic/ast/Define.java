@@ -21,7 +21,7 @@ import magic.lang.Context;
 public class Define<T> extends BaseForm<T> {
 
 	final Symbol sym;
-	final Node<T> exp;
+	final Node<? extends T> exp;
 
 	public Define(Symbol sym, Node<T> exp, SourceInfo source) {
 		super(PersistentList.of(Constant.create(sym),exp),exp.getDependencies(),source);
@@ -39,20 +39,20 @@ public class Define<T> extends BaseForm<T> {
 	
 	@Override
 	public EvalResult<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
-		Node<T> specExp=exp.specialiseValues(bindings);
+		Node<? extends T> specExp=exp.specialiseValues(bindings);
 		context=context.define(sym, specExp); 
 		return new EvalResult<T>(context,null); // TODO: what should def return??
 	}
 	
 	@Override
-	public Node<T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
-		Node<T> newExp=exp.specialiseValues(bindings);
+	public Node<? extends T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
+		Node<? extends T> newExp=exp.specialiseValues(bindings);
 		return (exp==newExp)?this:create(sym,newExp);
 	}
 
 	@Override
-	public Node<T> optimise() {
-		Node<T> newExp=exp.optimise();
+	public Node<? extends T> optimise() {
+		Node<? extends T> newExp=exp.optimise();
 		return (exp==newExp)?this:create(sym,newExp);
 	}
 

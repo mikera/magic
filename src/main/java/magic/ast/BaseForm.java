@@ -11,22 +11,22 @@ import magic.lang.Context;
 
 public abstract class BaseForm<T> extends Node<T> {
 
-	private APersistentList<Node<?>> form;
+	protected APersistentList<Node<? extends Object>> nodes;
 
-	public BaseForm(APersistentList<Node<?>> form, APersistentSet<Symbol> deps, SourceInfo source) {
+	public BaseForm(APersistentList<Node<? extends Object>> aPersistentList, APersistentSet<Symbol> deps, SourceInfo source) {
 		super(deps, source);
-		this.form=form;
+		this.nodes=aPersistentList;
 	}
 	
 	@Override
 	public EvalResult<Object> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings,
 			boolean syntaxQuote) {
-		int n=form.size();
+		int n=nodes.size();
 		if (n==0) return new EvalResult<Object>(context,PersistentList.EMPTY);
 		
 		Object[] rs=new Object[n];
 		for (int i=0; i<n; i++) {
-			rs[i]=form.get(i).evalQuoted(context, bindings, syntaxQuote);
+			rs[i]=nodes.get(i).evalQuoted(context, bindings, syntaxQuote);
 		}
 		PersistentList<Object> listResult=PersistentList.wrap(rs);
 		return new EvalResult<Object>(context,listResult);

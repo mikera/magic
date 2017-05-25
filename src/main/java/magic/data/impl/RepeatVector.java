@@ -64,8 +64,9 @@ public class RepeatVector<T> extends APersistentVector<T> {
 		return create(value,size-numDeleted);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public APersistentVector<T> concat(APersistentVector<T> values) {
+	public APersistentVector<T> concat(APersistentVector<? extends T> values) {
 		if (values instanceof RepeatVector<?>) {
 			RepeatVector<T> ra=(RepeatVector<T>)values;
 			if (RT.equals(ra.value, value)) {

@@ -78,7 +78,7 @@ public class Vectors<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> APersistentVector<T> createFromCollection(Collection<T> source) {
+	public static <T> APersistentVector<T> createFromCollection(Collection<? extends T> source) {
 		if (source instanceof APersistentVector<?>) {
 			return (APersistentVector<T>)source;
 		} else if (source instanceof List<?>) {
@@ -101,11 +101,12 @@ public class Vectors<T> {
 		return createFromList(list,fromIndex,toIndex);
 	}
 
-	public static <T> APersistentVector<T> createFromList(List<T> source) {
+	public static <T> APersistentVector<T> createFromList(List<? extends T> source) {
 		return createFromList(source,0,source.size());
 	}
 	
-	public static <T> APersistentVector<T> createFromList(List<T> source, int fromIndex, int toIndex) {
+	@SuppressWarnings("unchecked")
+	public static <T> APersistentVector<T> createFromList(List<? extends T> source, int fromIndex, int toIndex) {
 		int maxSize=source.size();
 		if ((fromIndex<0)||(toIndex>maxSize)) throw new IndexOutOfBoundsException();
 		int newSize=toIndex-fromIndex;
@@ -127,7 +128,7 @@ public class Vectors<T> {
 		}
 		
 		// create blocklist for larger lists
-		return PersistentVector.create(source, fromIndex, toIndex);
+		return PersistentVector.create((List<T>)source, fromIndex, toIndex);
 	}
 	
 	public static <T> APersistentVector<T> createFromList(APersistentVector<T> source, int fromIndex, int toIndex) {

@@ -80,8 +80,9 @@ public final class SubVector<T> extends APersistentVector<T>   {
 	 * Special append version for SubList 
 	 * Attempts to merge adjacent sublists
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public APersistentVector<T> concat(APersistentVector<T> values) {
+	public APersistentVector<T> concat(APersistentVector<? extends T> values) {
 		if (values instanceof SubVector<?>) {
 			SubVector<T> sl=(SubVector<T>)values;
 			return concat(sl);

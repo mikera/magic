@@ -50,7 +50,7 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static<T> PersistentHashSet<T> createFromSet(Set<T> values) {
+	public static<T> PersistentHashSet<T> createFromSet(Set<? extends T> values) {
 		PersistentHashSet<T> pm=(PersistentHashSet<T>) EMPTY;
 		if (values==null) return pm;
 		for (T ent: values) {
@@ -875,8 +875,9 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 		return key.hashCode();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public PersistentHashSet<T> includeAll(APersistentSet<T> values) {
+	public PersistentHashSet<T> includeAll(APersistentSet<? extends T> values) {
 		if (values instanceof PersistentHashSet<?>) {
 			return include((PersistentHashSet<T>)values);
 		}

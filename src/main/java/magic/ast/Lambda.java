@@ -4,13 +4,16 @@ import magic.Type;
 import magic.Types;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
+import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentVector;
+import magic.data.Lists;
 import magic.data.Symbol;
 import magic.fn.AFn;
 import magic.fn.ArityException;
 import magic.fn.IFn;
 import magic.lang.Context;
+import magic.lang.Symbols;
 import magic.type.FunctionType;
 
 /**
@@ -20,20 +23,20 @@ import magic.type.FunctionType;
  *
  * @param <T>
  */
-public class Lambda<T> extends Node<IFn<T>> {
+public class Lambda<T> extends BaseForm<IFn<T>> {
 
 	private final APersistentVector<Symbol> args;
 	private final Node<T> body;
 	private final int arity;
   
+	@SuppressWarnings("unchecked")
 	public Lambda(APersistentVector<Symbol> args, Node<T> body,SourceInfo source) {
-		super(body.getDependencies().excludeAll(args),source);
+		super((APersistentList<Node<?>>)(APersistentList<?>)Lists.of(Constant.create(Symbols.FN),Constant.create(args),body),body.getDependencies().excludeAll(args),source);
 		this.args=args;
 		this.arity=args.size();
 		this.body=body;
 	}
 	
-
 	public static <T> Lambda<T> create(APersistentVector<Symbol> args, Node<T> body) {
 		return create(args,body,null);
 	}
@@ -44,7 +47,7 @@ public class Lambda<T> extends Node<IFn<T>> {
 
 	@Override
 	public EvalResult<IFn<T>> eval(Context context,APersistentMap<Symbol, Object> bindings) {
-		Node<T> body=this.body.specialiseValues(bindings.delete(args));
+		Node<? extends T> body=this.body.specialiseValues(bindings.delete(args));
 		// System.out.println(body);
 		AFn<T> fn=new AFn<T>() {
 			@Override
@@ -66,18 +69,20 @@ public class Lambda<T> extends Node<IFn<T>> {
 		return new EvalResult<IFn<T>>(context,fn);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public Node<IFn<T>> specialiseValues(APersistentMap<Symbol, Object> bindings) {
+	public Node<? extends IFn<T>> specialiseValues(APersistentMap<Symbol, Object> bindings) {
 		bindings=bindings.delete(args); // hidden by argument bindings
-		Node<T> newBody=body.specialiseValues(bindings);
+		Node<? extends T> newBody=body.specialiseValues(bindings);
 		// System.out.println("Defining lambda as "+newBody+" with bindings "+bindings);
-		return (body==newBody)?this:create(args,newBody);
+		return (body==newBody)?this:(Lambda<T>) create(args,newBody);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public Node<IFn<T>> optimise() {
-		Node<T> newBody=body.optimise();
-		return (body==newBody)?this:create(args,newBody);
+	public Node<? extends IFn<T>> optimise() {
+		Node<? extends T> newBody=body.optimise();
+		return (body==newBody)?this:(Lambda<T>) create(args,newBody);
 	}
 
 	

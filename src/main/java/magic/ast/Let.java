@@ -1,12 +1,14 @@
 package magic.ast;
 
-import magic.RT;
 import magic.Type;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
+import magic.data.APersistentList;
 import magic.data.APersistentMap;
+import magic.data.Lists;
 import magic.data.Symbol;
 import magic.lang.Context;
+import magic.lang.Symbols;
 
 /**
  * AST `let` node capable of defining lexical bindings
@@ -15,14 +17,15 @@ import magic.lang.Context;
  *
  * @param <T>
  */
-public class Let<T> extends Node<T> {
+public class Let<T> extends BaseForm<T> {
 	private final int nLets;
 	private final Node<T> body;
 	private final Symbol[] syms;
-	private final Node<?>[] lets;
+	private final Node<? extends Object>[] lets;
 	
-	public Let(Symbol[] syms, Node<?>[] lets, Node<T> bodyExpr,SourceInfo source) {
-		super(bodyExpr.getDependencies().excludeAll(syms),source);
+	@SuppressWarnings("unchecked")
+	public Let(Symbol[] syms, Node<? extends Object>[] lets, Node<T> bodyExpr,SourceInfo source) {
+		super((APersistentList<Node<?>>)(APersistentList<?>)Lists.of(Constant.create(Symbols.FN),letVector(syms,lets),(Node<Object>)bodyExpr),bodyExpr.getDependencies().excludeAll(syms),source);
 		nLets=syms.length;
 		if (nLets!=lets.length) throw new IllegalArgumentException("Incorrect number of bindings forms for let");
 		this.syms=syms;
@@ -30,27 +33,35 @@ public class Let<T> extends Node<T> {
 		body=bodyExpr;
 	}
 
-	public static <T> Node<T> create(Node<?>[] body, SourceInfo source) {
-		return create(RT.EMPTY_SYMBOLS,RT.EMPTY_NODES,body,source);
+	@SuppressWarnings("unchecked")
+	private static Vector<Object> letVector(Symbol[] syms2, Node<? extends Object>[] lets2) {
+		int n=syms2.length;
+		if (lets2.length!=n) throw new Error("Wrong number of lets!");
+		Node<? extends Object>[] vs=new Node[n*2];
+		for (int i=0; i<n; i++) {
+			vs[i*2]=Constant.create(syms2[i]);
+			vs[i*2+1]=lets2[i];
+		}
+		return Vector.create(vs);
+	}
+
+	public static <T> Node<T> create(Node<? extends Object>[] body, SourceInfo source) {
+		return Do.create(body,source);
 	}
 	
-	public static <T> Node<T> create(Node<?>... body) {
-		return create(body,null);
-	}
-	
-	public static <T> Node<T> create(Symbol[] syms,Node<?>[] lets,Node<?>[] bodyExprs) {
+	public static <T> Node<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<?>[] bodyExprs) {
 		return create(syms,lets,Do.create(bodyExprs));
 	}
 	
-	public static <T> Node<T> create(Symbol[] syms,Node<?>[] lets,Node<?>[] bodyExprs,SourceInfo source) {
+	public static <T> Node<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<?>[] bodyExprs,SourceInfo source) {
 		return create(syms,lets,Do.create(bodyExprs),source);
 	}
 	
-	public static <T> Node<T> create(Symbol[] syms,Node<?>[] lets,Node<T> body,SourceInfo source) {
+	public static <T> Node<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<T> body,SourceInfo source) {
 		return new Let<T>(syms,lets,body,source);
 	}
 	
-	public static <T> Node<T> create(Symbol[] syms,Node<?>[] lets,Node<T> bodyExpr) {
+	public static <T> Node<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<T> bodyExpr) {
 		return create(syms,lets,bodyExpr,null);
 	}
 	
@@ -65,12 +76,12 @@ public class Let<T> extends Node<T> {
 	}
 	
 	@Override
-	public Node<T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
-		Node<?>[] newLets=lets;
+	public Node<? extends T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
+		Node<? extends Object>[] newLets=lets;
 		boolean changed=false;
 		for (int i=0; i<nLets; i++) {
-			Node<?> node=lets[i];
-			Node<?> newNode=node.specialiseValues(bindings);
+			Node<? extends Object> node=lets[i];
+			Node<? extends Object> newNode=node.specialiseValues(bindings);
 			if (node!=newNode) {
 				if (!changed) {
 					newLets=newLets.clone();
@@ -85,18 +96,18 @@ public class Let<T> extends Node<T> {
 			}
 		}
 
-		Node<T> newBody=body.specialiseValues(bindings);
+		Node<? extends T> newBody=body.specialiseValues(bindings);
 		
 		return ((body==newBody)&&(lets==newLets))?this:create(syms,newLets,newBody);
 	}
 	
 	@Override
-	public Node<T> optimise() {
-		Node<?>[] newLets=lets;
+	public Node<? extends T> optimise() {
+		Node<? extends Object>[] newLets=lets;
 		boolean changed=false;
 		for (int i=0; i<nLets; i++) {
-			Node<?> node=lets[i];
-			Node<?> newNode=node.optimise();
+			Node<? extends Object> node=lets[i];
+			Node<? extends Object> newNode=node.optimise();
 			if (node!=newNode) {
 				if (!changed) {
 					newLets=newLets.clone();
@@ -106,7 +117,7 @@ public class Let<T> extends Node<T> {
 			} 
 		}
 
-		Node<T> newBody=body.optimise();
+		Node<? extends T> newBody=body.optimise();
 		if (body.isConstant()) return body;
 		
 		return ((body==newBody)&&(lets==newLets))?this:create(syms,newLets,newBody);

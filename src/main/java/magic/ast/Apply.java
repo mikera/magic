@@ -4,7 +4,7 @@ import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
-import magic.data.APersistentSet;
+import magic.data.Lists;
 import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.fn.IFn;
@@ -17,14 +17,14 @@ import magic.lang.Context;
  */
 public class Apply<T> extends BaseForm<T> {
 
-	private final Node<IFn<T>> function;
+	private final Node<IFn<? extends T>> function;
 	private final Node<?>[] args;
 	private final int arity;
 
 	@SuppressWarnings("unchecked")
-	private Apply(APersistentList<Node<?>> form, SourceInfo source) {
+	private Apply(APersistentList<Node<? extends Object>> form, SourceInfo source) {
 		super(form,calcDependencies(form),source);
-		this.function=(Node<IFn<T>>)form.head();
+		this.function=(Node<IFn<? extends T>>)((Object)form.head());
 		arity=form.size()-1;
 		args=new Node<?>[arity];
 		for (int i=0; i<arity; i++) {
@@ -32,19 +32,19 @@ public class Apply<T> extends BaseForm<T> {
 		}
 	}
 	
-	public static <T> Apply<T> create(APersistentList<Node<?>> form, SourceInfo sourceInfo) {
+	public static <T> Apply<T> create(APersistentList<Node<? extends Object>> form, SourceInfo sourceInfo) {
 		return new Apply<T>(form,sourceInfo);
 	}
 	
-	private Apply<T> create(Node<IFn<T>> newFunction, Node<?>[] newBody, SourceInfo source) {
-		APersistentList<Node<?>> form=PersistentList.wrap(newBody).include(newFunction);
+	private Apply<T> create(Node<IFn<? extends T>> newFunction, Node<?>[] newBody, SourceInfo source) {
+		APersistentList<Node<? extends Object>> form=Lists.cons(newFunction, PersistentList.wrap(newBody));
 		return create(form,source);
 	}
 	
 	@Override
 	public EvalResult<T> eval(Context c,APersistentMap<Symbol, Object> bindings) {
-		EvalResult<IFn<T>> rf= function.eval(c,bindings);
-		IFn<T> f=rf.getValue();
+		EvalResult<IFn<? extends T>> rf= (EvalResult<IFn<? extends T>>) function.eval(c,bindings);
+		IFn<? extends T> f=rf.getValue();
 		Object[] values=new Object[arity];
 		EvalResult<?> r=rf;
 		for (int i=0; i<arity; i++) {
@@ -54,9 +54,10 @@ public class Apply<T> extends BaseForm<T> {
 		return EvalResult.create(r.getContext(),f.applyToArray(values));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Node<T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
-		Node<IFn<T>> newFunction=function.specialiseValues(bindings);
+	public Node<? extends T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
+		Node<IFn<? extends T>> newFunction=(Node<IFn<? extends T>>) function.specialiseValues(bindings);
 		boolean changed=false;
 		Node<?>[] newBody=args;
 		for (int i=0; i<arity; i++) {

@@ -29,7 +29,8 @@ public class Sets {
 		return (NullSet<T>) NullSet.INSTANCE;
 	}
 	
-	public static <T> APersistentSet<T> createFrom(Set<T> source) {
+	@SuppressWarnings("unchecked")
+	public static <T> APersistentSet<T> createFrom(Set<? extends T> source) {
 		if (source instanceof APersistentSet<?>) {
 			return create((APersistentSet<T>)source);
 		}
@@ -38,15 +39,17 @@ public class Sets {
 		return PersistentHashSet.createFromSet(source);
 	}
 	
-	public static <T> APersistentSet<T> createFrom(Iterator<T> source) {
-		return createFrom(RT.buildHashSet(source));
+	@SuppressWarnings("unchecked")
+	public static <T> APersistentSet<T> createFrom(Iterator<? extends T> source) {
+		return (APersistentSet<T>) createFrom(RT.buildHashSet(source));
 	}
 	
 	public static <T> APersistentSet<T> create(APersistentSet<T> source) {
 		return PersistentHashSet.createFromSet(source);
 	}
 	
-	public static <T> APersistentSet<T> createFrom(Collection<T> source) {
+	@SuppressWarnings("unchecked")
+	public static <T> APersistentSet<T> createFrom(Collection<? extends T> source) {
 		if (source instanceof Set<?>) {
 			return createFrom((Set<T>)source);
 		}
@@ -57,10 +60,11 @@ public class Sets {
 		return ArraySet.createFromArray(source);
 	}
 	
-	public static <T> APersistentSet<T> concat(APersistentSet<T> a, T value) {
-		if (a.contains(value)) return a;
+	@SuppressWarnings("unchecked")
+	public static <T> APersistentSet<T> concat(APersistentSet<? extends T> a, T value) {
+		if (a.contains(value)) return (APersistentSet<T>) a;
 		if (a.size()==0) return SingletonSet.create(value);
-		return PersistentHashSet.createFromSet(a).include(value);
+		return PersistentHashSet.createFromSet((APersistentSet<T>)a).include(value);
 	}
 
 	@SuppressWarnings("unchecked")

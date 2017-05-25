@@ -16,6 +16,7 @@ import magic.compiler.EvalResult;
 import magic.ast.Constant;
 import magic.ast.Node;
 import magic.compiler.Expanders;
+import magic.data.APersistentList;
 import magic.data.IPersistentObject;
 import magic.data.Symbol;
 import magic.fn.Functions;
@@ -294,6 +295,17 @@ public class RT {
 			return ((IPersistentObject)value).getType();
 		}
 		return (Type) JavaType.create(value);
+	}
+
+	public static String toString(APersistentList<?> vals, String sep) {
+		int n=vals.size();
+		if (n==0) return "";
+		StringBuilder sb=new StringBuilder(RT.toString(vals.get(0)));
+		for (int i=1; i<n; i++) {
+			sb.append(sep);
+			sb.append(RT.toString(vals.get(i)));
+		}
+		return sb.toString();
 	}
 
 }

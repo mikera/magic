@@ -21,18 +21,19 @@ import magic.type.JavaType;
  *
  * @param <T> the type of all nodes in the Vector
  */
-public class Vector<T> extends Node<APersistentVector<T>> {
+public class Vector<T> extends Node<APersistentVector<? extends T>> {
 
-	APersistentVector<Node<T>> exps;
+	APersistentVector<Node<? extends T>> exps;
 	
-	private Vector(APersistentVector<Node<T>> exps, SourceInfo source) {
+	private Vector(APersistentVector<Node<? extends T>> exps, SourceInfo source) {
 		super(calcDependencies(exps),source); 
-		this.exps=exps;
+		this.exps=(APersistentVector<Node<? extends T>>)exps;
 	}
 	
 
-	public static <T> Vector<T> create(APersistentVector<Node<T>> exps, SourceInfo source) {
-		return new Vector<T>(exps,source);
+	@SuppressWarnings("unchecked")
+	public static <T> Vector<T> create(APersistentVector<Node<?>> exps, SourceInfo source) {
+		return (Vector<T>) new Vector<Object>(exps,source);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -40,25 +41,26 @@ public class Vector<T> extends Node<APersistentVector<T>> {
 		return create((APersistentVector<Node<T>>)Vectors.createFromList(list),source);
 	}
 
-	public static <T> Vector<T> create(APersistentVector<Node<T>> exps) {
+	public static <T> Vector<T> create(APersistentVector<Node<? extends T>> exps) {
 		return create(exps,null);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> Vector<T> create(Node<T>... exps) {
+	public static <T> Vector<T> create(Node<? extends T>... exps) {
 		return create(Vectors.createFromArray(exps),null);
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public EvalResult<APersistentVector<T>> eval(Context c,APersistentMap<Symbol, Object> bindings) {
+	public EvalResult<APersistentVector<? extends T>> eval(Context c,APersistentMap<Symbol, Object> bindings) {
 		int n=exps.size();
 		if (n==0) return  EvalResult.create(c, (APersistentVector<T>)Tuple.EMPTY);
-		T[] results=(T[]) new Object[n];
+		Object[] results=new Object[n];
 		for (int i=0; i<n; i++) {
 			results[i]=exps.get(i).compute(c,bindings);
 		}
-		return EvalResult.create(c, Vectors.wrap(results));
+		APersistentVector <? extends T> r=(APersistentVector<? extends T>) Vectors.wrap(results);
+		return EvalResult.create(c, r);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -76,9 +78,9 @@ public class Vector<T> extends Node<APersistentVector<T>> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Node<APersistentVector<T>> specialiseValues(APersistentMap<Symbol, Object> bindings) {
+	public Node<APersistentVector<? extends T>> specialiseValues(APersistentMap<Symbol, Object> bindings) {
 		int nExps=exps.size();
-		APersistentVector<Node<T>> newExps=exps;
+		APersistentVector<Node<? extends T>> newExps=exps;
 		for (int i=0; i<nExps; i++) {
 			Node<?> node=exps.get(i);
 			Node<?> newNode=node.specialiseValues(bindings);
@@ -92,9 +94,9 @@ public class Vector<T> extends Node<APersistentVector<T>> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Node<APersistentVector<T>> optimise() {
+	public Node<APersistentVector<? extends T>> optimise() {
 		int nExps=exps.size();
-		APersistentVector<Node<T>> newExps=exps;
+		APersistentVector<Node<? extends T>> newExps=exps;
 		for (int i=0; i<nExps; i++) {
 			Node<?> node=exps.get(i);
 			Node<?> newNode=node.optimise();
@@ -102,11 +104,11 @@ public class Vector<T> extends Node<APersistentVector<T>> {
 				newExps=newExps.assocAt(i,(Node<T>) newNode);
 			} 
 		}
-		return (exps==newExps)?this:create(newExps);
+		return (exps==newExps)?this:(Vector<T>) create(newExps);
 	}
 
 
-	public IPersistentVector<Node<T>> getExpressions() {
+	public IPersistentVector<Node<? extends T>> getExpressions() {
 		return exps;
 	}
 	
@@ -137,11 +139,12 @@ public class Vector<T> extends Node<APersistentVector<T>> {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	public Node<T> get(int i) {
-		return exps.get(i);
+		return (Node<T>) exps.get(i);
 	}
 
-	public APersistentVector<Node<T>> getNodes() {
+	public APersistentVector<Node<? extends T>> getNodes() {
 		return exps;
 	}
 

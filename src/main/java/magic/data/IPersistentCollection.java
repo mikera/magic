@@ -16,13 +16,13 @@ public interface IPersistentCollection<T> extends Collection<T>, ISeqable<T> {
 	 * Adds all values from another collection into this collection.
 	 * Behaviour depends on the specific collection semantics, equivalent to Clojure into
 	 */
-	public APersistentCollection<T> includeAll(final Collection<T> values);
+	public APersistentCollection<T> includeAll(final Collection<? extends T> values);
 
 	/**
 	 * Adds all values from another collection into this collection.
 	 * Behaviour depends on the specific collection semantics, equivalent to Clojure into
 	 */
-	public APersistentCollection<T> includeAll(final IPersistentCollection<T> values);
+	public APersistentCollection<T> includeAll(final IPersistentCollection<? extends T> values);
 
 	// delete methods
 	
@@ -36,13 +36,13 @@ public interface IPersistentCollection<T> extends Collection<T>, ISeqable<T> {
 	 * Removes all instances of a collection of values from this collection.
 	 * Behaviour depends on the specific collection semantics.
 	 */
-	public APersistentCollection<T> excludeAll(final Collection<T> values);
+	public APersistentCollection<T> excludeAll(final Collection<? extends T> values);
 
 	/**
 	 * Removes all instances of a collection of values from this collection.
 	 * Behaviour depends on the specific collection semantics.
 	 */
-	public APersistentCollection<T> excludeAll(final IPersistentCollection<T> values);
+	public APersistentCollection<T> excludeAll(final IPersistentCollection<? extends T> values);
 
 	// query methods
 	

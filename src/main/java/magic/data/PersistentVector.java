@@ -53,11 +53,11 @@ public final class PersistentVector<T> extends APersistentVector<T> {
 	 * @return a BlockList containing the values from the list provided
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> PersistentVector<T> coerce(List<T> values) {
+	public static <T> PersistentVector<T> coerce(List<? extends T> values) {
 		if (values instanceof PersistentVector<?>) return (PersistentVector<T>) values;
 		int size=values.size();
 		if (size==0) return (PersistentVector<T>) EMPTY_BLOCKLIST;
-		return create(values,0,size);
+		return create((List<T>)values,0,size);
 	}
 	
 	/**
@@ -309,8 +309,8 @@ public final class PersistentVector<T> extends APersistentVector<T> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public PersistentVector<T> concat(APersistentVector<T> src) {
-		APersistentVector<T>a=Vectors.coerce(src);
+	public PersistentVector<T> concat(APersistentVector<? extends T> src) {
+		APersistentVector<T> a= (APersistentVector<T>) src;
 		int asize=a.size();
 		if (asize==0) return this;
 		if (size==0) return PersistentVector.coerce(a);

@@ -22,8 +22,9 @@ public class Do<T> extends BaseForm<T> {
 	private final int nBody;
 	private final Node<?>[] body;
 	
+	@SuppressWarnings("unchecked")
 	public Do(Node<?>[] bodyExprs,SourceInfo source) {
-		super(Lists.cons(Constant.create(Symbols.DO),PersistentList.wrap(bodyExprs)), calcDependencies(bodyExprs),source);
+		super(Lists.cons(Constant.create(Symbols.DO),PersistentList.wrap(bodyExprs)), calcDependencies((Node<Object>[]) bodyExprs),source);
 		nBody=bodyExprs.length;
 		body=bodyExprs;
 	}

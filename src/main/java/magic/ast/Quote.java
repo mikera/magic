@@ -11,6 +11,7 @@ import magic.data.APersistentSet;
 import magic.data.APersistentVector;
 import magic.data.Maps;
 import magic.data.PersistentList;
+import magic.data.Sets;
 import magic.data.Symbol;
 import magic.data.Tuple;
 import magic.lang.Context;
@@ -27,9 +28,9 @@ import magic.type.JavaType;
 public class Quote extends Node<Object> {
 
 	private final boolean syntaxQuote;
-	private final Node<?> form;
+	private final Node<Object> form;
 
-	public Quote(Node<?> form, boolean syntaxQuote, APersistentSet<Symbol> symbolSet, APersistentMap<APersistentVector<Object>,Node<Object>> unquotes, SourceInfo source) {
+	public Quote(Node<Object> form, boolean syntaxQuote, APersistentSet<Symbol> symbolSet, APersistentMap<APersistentVector<Object>,Node<Object>> unquotes, SourceInfo source) {
 		super (symbolSet,source);
 		this.syntaxQuote=syntaxQuote;
 		this.form=form;
@@ -42,9 +43,10 @@ public class Quote extends Node<Object> {
 	 * @param pop
 	 * @return
 	 */
-	public static Object create(Node<?> node, boolean syntaxQuote, SourceInfo sourceInfo) {
-		// TODO Auto-generated method stub
-		return null;
+	@SuppressWarnings("unchecked")
+	public static Quote create(Node<? extends Object> node, boolean syntaxQuote, SourceInfo sourceInfo) {
+		// TODO fix deps?
+		return new Quote((Node<Object>)node,syntaxQuote,Sets.emptySet(),null, sourceInfo);
 	}
 
 	@Override

@@ -10,20 +10,20 @@ public interface IPersistentVector<T> extends IPersistentCollection<T>, List<T> 
 	/**
 	 * Concatenates a collection to this list
 	 */
-	public APersistentVector<T> concat(IPersistentCollection<T> values);
+	public APersistentVector<T> concat(IPersistentCollection<? extends T> values);
 
 	/**
 	 * Concatenates a values from a collection to this list
 	 */
-	public APersistentVector<T> concat(Collection<T> values);
+	public APersistentVector<T> concat(Collection<? extends T> values);
 
 	public APersistentVector<T> insert(int index, T value);
 	
-	public APersistentVector<T> insertAll(int index, Collection<T> values);
+	public APersistentVector<T> insertAll(int index, Collection<? extends T> values);
 
-	public APersistentVector<T> insertAll(int index, APersistentVector<T> values);
+	public APersistentVector<T> insertAll(int index, APersistentVector<? extends T> values);
 
-	public APersistentVector<T> copyFrom(int index, IPersistentCollection<T> values, int srcIndex, int length);
+	public APersistentVector<T> copyFrom(int index, IPersistentCollection<? extends T> values, int srcIndex, int length);
 	
 	@Override
 	public APersistentVector<T> include(T value);

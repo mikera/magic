@@ -49,9 +49,10 @@ public final class NullSet<T> extends BasePersistentSet<T> {
 		return this;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public APersistentSet<T> includeAll(APersistentSet<T> values) {
-		return values;
+	public APersistentSet<T> includeAll(APersistentSet<? extends T> values) {
+		return (APersistentSet<T>) values;
 	}
 	
 	private Object readResolve() throws ObjectStreamException {

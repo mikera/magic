@@ -2,49 +2,52 @@ package magic.ast;
 
 import java.lang.reflect.Method;
 
-import magic.Type;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
+import magic.data.Lists;
+import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.lang.Context;
+import magic.lang.Symbols;
 
 /**
- * Node representing a Java interop invocation
+ * Node representing a Java interop invocation, of the form:
+ *    (. object methodName & args)
  * 
  * @author Mike
  *
  * @param <T>
  */
-public class Dot<T> extends Node<T> {
+public class Dot<T> extends BaseForm<T> {
 
 	// TODO: consider caching reflected methods?
 	
-	private final Node<?> instance;
+	private final Node<Object> instance;
 	private final Symbol method;
 	private final Node<?>[] args;
 	private final int nArgs;
 
-	private Dot(APersistentSet<Symbol> deps, Node<?> instance, Symbol method, Node<?>[] args,SourceInfo source) {
-		super(deps,source);
+	private Dot(APersistentSet<Symbol> deps, Node<Object> instance, Symbol method, Node<Object>[] args,SourceInfo source) {
+		super(Lists.cons((Node<Symbol>)Constant.create(Symbols.DOT), instance, (Node<Symbol>)Constant.create(method), PersistentList.of((Object[])args)), deps,source);
 		this.instance=instance;
 		this.method=method;
 		this.args=args;
 		this.nArgs=args.length;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public static <T> Dot<T> create(Node<?> instance, Symbol method, Node<?>[] args,SourceInfo source) {
+	public static <T> Dot<T> create(Node<Object> instance, Symbol method, Node<Object>[] args,SourceInfo source) {
 		APersistentSet<Symbol> deps=instance.getDependencies();
 		for (Node<?> a: args) {
 			deps=deps.includeAll(a.getDependencies());
 		}
-		return (Dot<T>)new Dot<>(deps,instance, method,args,source);
+		return new Dot<T>(deps,instance, method,args,source);
 	}
 	
-	public static <T> Dot<T> create(Node<?> instance, Symbol method, Node<?>[] args) {
-		return create(instance, method,args,null);
+	@SuppressWarnings("unchecked")
+	public static <T> Dot<T> create(Node<?> instance, Symbol method, Node<? super Object>[] args) {
+		return create((Node<Object>)instance, method,args,null);
 	}
 	
 	

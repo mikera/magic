@@ -89,7 +89,7 @@ public final class Tuple<T> extends APersistentVector<T> {
 
 	
 	@SuppressWarnings("unchecked")
-	public static <T> Tuple<T> createFrom(List<T> values, int fromIndex, int toIndex) {
+	public static <T> Tuple<T> createFrom(List<? extends T> values, int fromIndex, int toIndex) {
 		int n=toIndex-fromIndex;
 		if (n<=0) {
 			if (n==0) return (Tuple<T>) EMPTY;

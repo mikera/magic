@@ -123,7 +123,7 @@ public abstract class APersistentVector<T> extends APersistentSequence<T> implem
 	}
 
 	@Override
-	public APersistentVector<T> excludeAll(Collection<T> values) {
+	public APersistentVector<T> excludeAll(Collection<? extends T> values) {
 		APersistentVector<T> pl=this;
 		for (T t : values) { 
 			pl=pl.exclude(t);
@@ -131,14 +131,12 @@ public abstract class APersistentVector<T> extends APersistentSequence<T> implem
 		return pl;
 	} 
 
-
-
 	@Override 
-	public final APersistentVector<T> concat(IPersistentCollection<T> values) {
+	public final APersistentVector<T> concat(IPersistentCollection<? extends T> values) {
 		return concat(Vectors.coerce(values));
 	}
 
-	public APersistentVector<T> concat(APersistentVector<T> values) {
+	public APersistentVector<T> concat(APersistentVector<? extends T> values) {
 		return PersistentVector.coerce(this).concat(values);
 	}
 	
@@ -146,7 +144,7 @@ public abstract class APersistentVector<T> extends APersistentSequence<T> implem
 	public abstract APersistentVector<T> include(T value);
 	
 	@Override
-	public APersistentVector<T> concat(Collection<T> values) {
+	public APersistentVector<T> concat(Collection<? extends T> values) {
 		return Vectors.concat(this,Vectors.createFromCollection(values));
 	}
 
@@ -293,17 +291,17 @@ public abstract class APersistentVector<T> extends APersistentSequence<T> implem
 		return firstPart.include(value).concat(lastPart);
 	}
 
-	public final APersistentVector<T> insertAll(int index, IPersistentCollection<T> values) {
+	public final APersistentVector<T> insertAll(int index, IPersistentCollection<? extends T> values) {
 		return insertAll(index,Vectors.coerce(values));
 	}
 	
 	@Override
-	public APersistentVector<T> insertAll(int index, Collection<T> values) {
+	public APersistentVector<T> insertAll(int index, Collection<? extends T> values) {
 		return insertAll(index,Vectors.coerce(values));
 	}
 	
 	@Override
-	public APersistentVector<T> insertAll(int index, APersistentVector<T> values) {
+	public APersistentVector<T> insertAll(int index, APersistentVector<? extends T> values) {
 		APersistentVector<T> firstPart=subList(0,index);
 		APersistentVector<T> lastPart=subList(index,size());
 		return firstPart.concat(values).concat(lastPart);
@@ -354,7 +352,7 @@ public abstract class APersistentVector<T> extends APersistentSequence<T> implem
 	}
 	
 	@Override
-	public final APersistentVector<T> copyFrom(int dstIndex, IPersistentCollection<T> values, int srcIndex, int length) {
+	public final APersistentVector<T> copyFrom(int dstIndex, IPersistentCollection<? extends T> values, int srcIndex, int length) {
 		return copyFrom(dstIndex,Vectors.coerce(values),srcIndex,length);
 	}
 	
@@ -366,7 +364,8 @@ public abstract class APersistentVector<T> extends APersistentSequence<T> implem
 		return subList(0,dstIndex).concat(values.subList(srcIndex, srcIndex+length)).concat(subList(dstIndex+length,size));
 	}
 
-	public static <T> APersistentVector<T> coerce(List<T> a) {
+	@SuppressWarnings("unchecked")
+	public static <T> APersistentVector<T> coerce(List<? extends T> a) {
 		if (a instanceof APersistentVector<?>) return (APersistentVector<T>) a;
 		return Vectors.createFromList(a);
 	}

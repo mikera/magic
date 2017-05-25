@@ -38,7 +38,7 @@ public final class EmptyVector<T> extends APersistentVector<T> {
 	}
 	
 	@Override
-	public APersistentVector<T> excludeAll(Collection<T> values) {
+	public APersistentVector<T> excludeAll(Collection<? extends T> values) {
 		return this;
 	}
 
@@ -153,7 +153,7 @@ public final class EmptyVector<T> extends APersistentVector<T> {
 	}
 
 	@Override
-	public APersistentVector<T> insertAll(int index, Collection<T> values) {
+	public APersistentVector<T> insertAll(int index, Collection<? extends T> values) {
 		if (index!=0) throw new IndexOutOfBoundsException();
 		return Vectors.createFromCollection(values);
 	}
@@ -179,9 +179,10 @@ public final class EmptyVector<T> extends APersistentVector<T> {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public APersistentVector<T> concat(APersistentVector<T> a) {
-		return a;
+	public APersistentVector<T> concat(APersistentVector<? extends T> a) {
+		return (APersistentVector<T>) a;
 	}
 
 	@Override

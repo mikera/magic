@@ -1,5 +1,7 @@
 package magic.data;
 
+import java.util.List;
+
 public class Lists {
 
 	public static final APersistentList<?> EMPTY=PersistentList.EMPTY;
@@ -9,16 +11,52 @@ public class Lists {
 		return (APersistentList<T>) EMPTY;
 	}
 
-	public static <T> APersistentList<T> create(IPersistentCollection<T> a) {
+	public static <T> APersistentList<T> create(IPersistentCollection<? extends T> a) {
+		return PersistentList.create(Vectors.coerce(a));
+	}
+	
+	public static <T> APersistentList<T> create(APersistentCollection<? extends T> a) {
+		return PersistentList.create(Vectors.coerce(a));
+	}
+	
+	public static <T> APersistentList<T> create(APersistentVector<? extends T> a) {
+		return PersistentList.wrap(a);
+	}
+
+	
+	public static <T> APersistentList<T> create(List<? extends T> a) {
 		return PersistentList.create(Vectors.coerce(a));
 	}
 
-	public static <T> APersistentList<T> coerce(APersistentVector<T> vs) {
+	public static <T> APersistentList<T> coerce(APersistentVector<? extends T> vs) {
 		return PersistentList.wrap(vs);
 	}
 
-	public static <T> APersistentList<T> cons(T value, APersistentList<T> rest) {
-		return rest.include(value);
+	@SuppressWarnings("unchecked")
+	public static <T> APersistentList<T> cons(T value, APersistentList<? extends T> rest) {
+		APersistentList<T> r = (APersistentList<T>) rest;
+		return (APersistentList<T>) r.include(value);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> APersistentList<T> cons(T a, T b, APersistentList<? extends T> rest) {
+		return cons(a, cons(b, (APersistentList<T>) rest));
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> APersistentList<T> cons(T a, T b, T c, APersistentList<? extends T> rest) {
+		return cons(a, cons(b, cons(c, (APersistentList<T>) rest)));
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <R,T> APersistentList<R> of(T... vals) {
+		return (APersistentList<R>) wrap(vals);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> APersistentList<T> wrap(T[] vals) {
+		if (vals.length==0) return (APersistentList<T>) PersistentList.EMPTY;
+		return PersistentList.wrap(vals);
 	}
 
 }

@@ -1,5 +1,6 @@
 package magic.compiler;
 
+import magic.ast.List;
 import magic.ast.Node;
 import magic.ast.Vector;
 import magic.data.APersistentMap;
@@ -21,7 +22,7 @@ public class Compiler {
 	}
 
 	public static EvalResult<?> compile(Context c, String string) {
-		Vector<?> forms=Reader.readAll(string);
+		List<?> forms=Reader.readAll(string);
 		int n=forms.size();
 		
 		EvalResult<?> r=new EvalResult<>(c,null);

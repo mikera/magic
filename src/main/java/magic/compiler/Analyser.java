@@ -10,6 +10,7 @@ import magic.ast.Form;
 import magic.ast.If;
 import magic.ast.Lambda;
 import magic.ast.Let;
+import magic.ast.List;
 import magic.ast.Lookup;
 import magic.ast.Node;
 import magic.ast.Quote;
@@ -30,6 +31,7 @@ import magic.lang.Symbols;
 
 /**
  * Magic code analyser
+ * 
  * Responsible for converting forms into AST representations
  * 
  * @author Mike
@@ -46,6 +48,12 @@ public class Analyser {
 		return analyse(RT.INITIAL_CONTEXT,form);
 	}
 	
+	/**
+	 * Analyses a list of forms, producing an array of nodes
+	 * @param c
+	 * @param forms
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	private static <T> Node<T>[] analyseAll(Context c, APersistentList<Object> forms) {
 		int n=forms.size();
@@ -73,10 +81,7 @@ public class Analyser {
 		int n=form.size();
 		if (n==0) return (Node<T>) Constant.create(Lists.EMPTY);
 		
-		Object first=form.head();
-		if (first instanceof Symbol) return analyseSymbolApplication(c,(Symbol)first,form);
-		
-		return Apply.create(analyse(c,first),analyseAll(c,form.tail()));
+		return List.create(analyseAll(c,form));
 	}
 
 	private static <T> Node<T> analyseSymbolApplication(Context c, Symbol first, APersistentList<Object> form) {
@@ -91,9 +96,9 @@ public class Analyser {
 		if (first==Symbols.LET) return analyseLet(c,tail);
 		if (first==Symbols.DOT) return analyseDot(c,form);
 		if (first==Symbols.EXPANDER) return analyseExpander(c,form);
-		
-		
-		return Apply.create(Lookup.create(first),analyseAll(c,tail));
+		 
+		APersistentList<Node<? extends Object>> ns=Lists.cons((Node<Object>)Lookup.create(first),(APersistentList<Node<Object>>)Lists.wrap(analyseAll(c,tail)));
+		return List.create(ns,(SourceInfo)null);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -161,9 +166,9 @@ public class Analyser {
 			exps[i]=analyse(c,bindingVector.get(2*i+1));
 		}
 		
-		APersistentList<Object> bodyForms=forms.tail();
+		APersistentList<? extends Object> bodyForms=forms.tail();
 		int nBody=bodyForms.size();
-		Node<?>[] body=new Node<?>[nBody];
+		Node<? extends Object >[] body=new Node<?>[nBody];
 		for (int i=0; i<nBody; i++) {
 			body[i]=analyse(c,bodyForms.get(i));
 		}
@@ -191,12 +196,6 @@ public class Analyser {
 		Node<T> falseExp=(n>2)?analyse(c,forms.get(2)):(Node<T>) Constant.NULL;
 		return If.createIf(test,trueExp,falseExp);
 	}
-
-	@SuppressWarnings("unchecked")
-	private static <T> Node<T> analyseQuote(Context c, APersistentList<Object> form, boolean syntaxQuote) {
-		if (form.size()!=2) throw new Error("Quote expects a single form");
-		return (Node<T>) Quote.create(form.get(1),syntaxQuote,((Symbol)form.head()).symbolSet());
-	}
  
 	@SuppressWarnings("unchecked")
 	private static <T> Node<T> analyseFn(Context c, Object arglist, APersistentList<Object> tail) {
@@ -220,22 +219,6 @@ public class Analyser {
 			throw new Error("Define requires exactly one body, got: "+args);
 		}
 		return Define.create(sym,analyse(c,args.get(0)));
-	}
-
-	@SuppressWarnings("unchecked")
-	private static <T> Vector<T> analyseVector(Context c, IPersistentVector<T> form) {
-		int n=form.size();
-		Node<T>[] exs=new Node[n];
-		for (int i=0; i<n; i++) {
-			exs[i]=analyse(c,form.get(i));
-		}
-		
-		APersistentVector<Node<T>> exps=Vectors.wrap(exs);
-		return Vector.create(exps);
-	}
-
-	private static <T> Node<T> analyseSymbol(Context c, Symbol sym) {
-		return Lookup.create(sym);
 	}
 
 	/**

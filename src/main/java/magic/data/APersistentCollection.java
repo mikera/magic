@@ -93,7 +93,7 @@ public abstract class APersistentCollection<T> extends APersistentObject impleme
 		return false;
 	}
 	
-	public boolean equals(APersistentCollection<T> pm) {
+	public boolean equals(APersistentCollection<? extends T> pm) {
 		return this.containsAll(pm)&&pm.containsAll(this);
 	}
 	
@@ -146,7 +146,7 @@ public abstract class APersistentCollection<T> extends APersistentObject impleme
 	}
 	
 	@Override
-	public APersistentCollection<T> excludeAll(final IPersistentCollection<T> values) {
+	public APersistentCollection<T> excludeAll(final IPersistentCollection<? extends T> values) {
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
 			@Override
 			public boolean filter(Object value) {
@@ -157,7 +157,7 @@ public abstract class APersistentCollection<T> extends APersistentObject impleme
 	}
 
 	@Override
-	public APersistentCollection<T> excludeAll(final Collection<T> values) {
+	public APersistentCollection<T> excludeAll(final Collection<? extends T> values) {
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
 			APersistentCollection<T> col=Vectors.createFromCollection(values);
 			
@@ -184,7 +184,7 @@ public abstract class APersistentCollection<T> extends APersistentObject impleme
 	public abstract APersistentCollection<T> include(final T value);
 	
 	@Override
-	public APersistentCollection<T> includeAll(final Collection<T> values) {
+	public APersistentCollection<T> includeAll(final Collection<? extends T> values) {
 		APersistentCollection<T> ps=this;
 		for (T t: values) {
 			ps=ps.include(t);
@@ -193,7 +193,7 @@ public abstract class APersistentCollection<T> extends APersistentObject impleme
 	}
 	
 	@Override
-	public APersistentCollection<T> includeAll(final IPersistentCollection<T> values) {
+	public APersistentCollection<T> includeAll(final IPersistentCollection<? extends T> values) {
 		return includeAll((Collection<T>)values);
 	}
 	

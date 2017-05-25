@@ -1,5 +1,6 @@
 package magic.data;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -53,4 +54,6 @@ public abstract class APersistentSequence<T> extends APersistentCollection<T> im
 	 */
 	@Override
 	public abstract APersistentSequence<T> subList(int fromIndex, int toIndex);
+
+	public abstract APersistentSequence<T> insertAll(int index, Collection<? extends T> values);
 }

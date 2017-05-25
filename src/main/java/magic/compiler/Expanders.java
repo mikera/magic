@@ -21,37 +21,6 @@ public class Expanders {
 	 */
 	public static final Expander INITAL_EXPANDER = new InitialExpander();
 	
-	private static final class DefnExpander extends AListExpander {
-		@Override
-		public Node<?> expand(Context c, Form<?> form,Expander ex) {
-			int n=form.size();
-			if (n<3) throw new ExpansionException("Can't expand defn, requires at least function name and arg vector",form);
-			
-			Node<?> nameObj=ex.expand(c, Analyser.analyse(c,form.get(1)), ex);
-			Node<?> argObj=ex.expand(c, Analyser.analyse(c,form.get(2)), ex);
-			
-			APersistentList<Object> fnDef=PersistentList.of((Object)Symbols.FN,argObj).concat(form.getElements().subList(3,n));
-			Form<?> newForm=Form.create(Tuple.of(Symbols.DEF, nameObj,fnDef));
-			return ex.expand(c, newForm, ex);
-		}
-	}
-	
-	public static final Expander SPECIAL_FORM = new AListExpander() {
-
-		@Override
-		public Node<?> expand(Context c, Form<?> form, Expander ex) {
-			// TODO confirm this is correct for special form expanders?
-			return form;
-		}
-		
-	};
-
-
-	/**
-	 * An expander that expands defn forms
-	 */
-	public static final Expander DEFN = new DefnExpander();
-	
 	private static final class InitialExpander extends Expander {
 		@Override
 		@SuppressWarnings("unchecked")
@@ -87,6 +56,39 @@ public class Expanders {
 			return PersistentList.wrap(forms);
 		}
 	}
+	
+	private static final class DefnExpander extends AListExpander {
+		@Override
+		public Node<?> expand(Context c, Form<?> form,Expander ex) {
+			int n=form.size();
+			if (n<3) throw new ExpansionException("Can't expand defn, requires at least function name and arg vector",form);
+			
+			Node<?> nameObj=ex.expand(c, Analyser.analyse(c,form.get(1)), ex);
+			Node<?> argObj=ex.expand(c, Analyser.analyse(c,form.get(2)), ex);
+			
+			APersistentList<Object> fnDef=PersistentList.of((Object)Symbols.FN,argObj).concat(form.getElements().subList(3,n));
+			Form<?> newForm=Form.create(Tuple.of(Symbols.DEF, nameObj,fnDef));
+			return ex.expand(c, newForm, ex);
+		}
+	}
+	
+	public static final Expander SPECIAL_FORM = new AListExpander() {
+
+		@Override
+		public Node<?> expand(Context c, Form<?> form, Expander ex) {
+			// TODO confirm this is correct for special form expanders?
+			return form;
+		}
+		
+	};
+
+
+	/**
+	 * An expander that expands defn forms
+	 */
+	public static final Expander DEFN = new DefnExpander();
+	
+
 
 	public static final Expander DEFMACRO = new AListExpander() {
 		@Override

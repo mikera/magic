@@ -33,9 +33,13 @@ public class Symbols {
 	
 	// core functions
 	public static final Symbol PRINTLN = Symbol.create("println");
+	public static final Symbol SET = Symbol.create("set");
+	public static final Symbol HASHMAP = Symbol.create("hashmap");
+	public static final Symbol VECTOR = Symbol.create("vector");
 	
 	// environment variables and bindings
 	public static final Symbol _NS_ = Symbol.create("*ns*");
+
 	
 	
 }

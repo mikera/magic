@@ -105,6 +105,12 @@ public class Form<T> extends Node<T> {
 		return form.head();
 	}
 
+	@Override
+	public EvalResult<Object> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings,
+			boolean syntaxQuote) {
+		return new EvalResult<Object>(context,form);
+	}
+
 
 
 

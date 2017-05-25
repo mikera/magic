@@ -8,15 +8,15 @@ public interface IPersistentSet<T> extends Set<T>, Iterable<T> {
 	
 	public IPersistentSet<T> exclude(final T value);
 	
-	public IPersistentSet<T> excludeAll(final Collection<T> values);
+	public IPersistentSet<T> excludeAll(final Collection<? extends T> values);
 
-	public IPersistentSet<T> excludeAll(final APersistentCollection<T> values);
+	public IPersistentSet<T> excludeAll(final APersistentCollection<? extends T> values);
 
 	// include methods
 	
-	public IPersistentSet<T> includeAll(final Collection<T> values);
+	public IPersistentSet<T> includeAll(final Collection<? extends T> values);
 
-	public IPersistentSet<T> includeAll(final IPersistentSet<T> values);
+	public IPersistentSet<T> includeAll(final IPersistentSet<? extends T> values);
 
 	// query methods
 	
