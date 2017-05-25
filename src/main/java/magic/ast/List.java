@@ -6,6 +6,7 @@ import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
+import magic.data.IPersistentCollection;
 import magic.data.Lists;
 import magic.data.PersistentList;
 import magic.data.Symbol;
@@ -20,7 +21,12 @@ import magic.lang.Context;
  *
  * @param <T>
  */
-public class List<T> extends BaseForm<T> {
+public class List extends BaseForm<Object> {
+	/**
+	 * An empty list node with no source information
+	 */
+	public static final List EMPTY = create(Node.EMPTY_ARRAY);
+
 	private List(APersistentList<Node<? extends Object>> nodes, APersistentSet<Symbol> deps, SourceInfo source) {
 		super(nodes, deps, source);
 	}
@@ -29,24 +35,24 @@ public class List<T> extends BaseForm<T> {
 		this(nodes, calcDependencies(nodes), source);
 	}
 	
-	public static <T> Node<T> create(Node<?>[] nodes) {
+	public static List create(Node<?>[] nodes) {
 		return create((APersistentList<Node<?>>)Lists.wrap(nodes),(SourceInfo)null);
 	}
 
-	public static <T> Node<T> create(APersistentList<Node<? extends Object>> nodes,SourceInfo source) {
-		return new List<T>(nodes,source);
+	public static List create(APersistentList<Node<? extends Object>> nodes,SourceInfo source) {
+		return new List(nodes,source);
 	}
 	
-	public static <T> Node<T> create(List<? extends T> a,SourceInfo source) {
-		return create(a.nodes,source);
+	public static List create(List a,SourceInfo source) {
+		return create(a.getNodes(),source);
 	}
 	
-	public static <T> Node<T> createCons(Node<? extends Object> a,List<? extends T> b,SourceInfo source) {
+	public static List createCons(Node<?> a,List b,SourceInfo source) {
 		return create(Lists.cons(a, b.nodes),source);
 	}
 	
 	@Override
-	public Node<T> specialiseValues(APersistentMap<Symbol,Object> bindings) {
+	public Node<Object> specialiseValues(APersistentMap<Symbol,Object> bindings) {
 		APersistentList<Node<? extends Object>> newNodes=nodes;
 		int n=nodes.size();
 		for (int i=0; i<n; i++) {
@@ -55,17 +61,17 @@ public class List<T> extends BaseForm<T> {
 			if (node!=newNode) newNodes=newNodes.assocAt(i, newNode);
 		}
 		if (newNodes==nodes) return this;
-		return new List<T>(newNodes,source);
+		return new List(newNodes,source);
 	}
 
 	@Override
-	public Node<T> optimise() {
+	public Node<Object> optimise() {
 		return this;
 	}
 
 	@Override
 	public String toString() {
-		return "(List "+RT.toString(nodes," ")+")";
+		return "("+RT.toString(nodes," ")+")";
 	}
 
 	@Override
@@ -85,8 +91,13 @@ public class List<T> extends BaseForm<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Node<T> get(int i) {
-		return (Node<T>) nodes.get(i);
+	public Node<Object> get(int i) {
+		return (Node<Object>) nodes.get(i);
+	}
+
+	@SuppressWarnings("unchecked")
+	public APersistentList<Node<? extends Object>> getNodes() {
+		return nodes;
 	}
 
 }

@@ -60,5 +60,10 @@ public abstract class BaseConstant<T> extends Node<T> {
 			boolean syntaxQuote) {
 		return new EvalResult<Object>(context,getValue());
 	}
+	
+	@Override
+	public Object toForm() {
+		return getValue();
+	}
 
 }

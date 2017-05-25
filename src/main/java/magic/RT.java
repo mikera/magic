@@ -12,11 +12,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import magic.compiler.EvalResult;
 import magic.ast.Constant;
-import magic.ast.Node;
+import magic.compiler.EvalResult;
 import magic.compiler.Expanders;
-import magic.data.APersistentList;
+import magic.data.APersistentSequence;
 import magic.data.IPersistentObject;
 import magic.data.Symbol;
 import magic.fn.Functions;
@@ -34,7 +33,6 @@ public class RT {
 	public static final Context BOOTSTRAP_CONTEXT = createBootstrapContext();
 	public static final Context INITIAL_CONTEXT = createInitialContext();
 	public static final Symbol[] EMPTY_SYMBOLS = new Symbol[0];
-	public static final Node<?>[] EMPTY_NODES = new Node<?>[0];
 
 	/**
 	 * Converts an object to a boolean primitive value, according to Clojure's truthiness rules
@@ -54,11 +52,13 @@ public class RT {
 	private static Context createBootstrapContext() {
 		Context c=Context.EMPTY;
 		try {
+			c=c.define(Symbols.DEF, Constant.create(Expanders.DEF));
 			c=c.define(Symbols.DEFN, Constant.create(Expanders.DEFN));
+			c=c.define(Symbols.FN, Constant.create(Expanders.FN));
 			c=c.define(Symbols.DEFMACRO, Constant.create(Expanders.DEFMACRO));
 			c=c.define(Symbols.MACRO, Constant.create(Expanders.MACRO));
-			c=c.define(Symbols.QUOTE, Constant.create(Expanders.SPECIAL_FORM));
-			c=c.define(Symbols.SYNTAX_QUOTE, Constant.create(Expanders.SPECIAL_FORM));
+			c=c.define(Symbols.QUOTE, Constant.create(Expanders.QUOTE));
+			c=c.define(Symbols.SYNTAX_QUOTE, Constant.create(Expanders.QUOTE));
 			c=c.define(Symbols.PRINTLN, Constant.create(Functions.PRINTLN)); 
 		} catch (Throwable t) {
 			t.printStackTrace(System.err);
@@ -297,7 +297,7 @@ public class RT {
 		return (Type) JavaType.create(value);
 	}
 
-	public static String toString(APersistentList<?> vals, String sep) {
+	public static String toString(APersistentSequence<?> vals, String sep) {
 		int n=vals.size();
 		if (n==0) return "";
 		StringBuilder sb=new StringBuilder(RT.toString(vals.get(0)));

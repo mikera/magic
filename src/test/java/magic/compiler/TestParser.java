@@ -1,12 +1,14 @@
 package magic.compiler;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import magic.RT;
-import magic.compiler.Reader;
-import magic.data.IPersistentList;
+import magic.ast.List;
 import magic.data.IPersistentVector;
 import magic.data.Keyword;
 import magic.data.Maps;
@@ -59,7 +61,7 @@ public class TestParser {
 	}
 	
 	@Test public void testQualifiedSymbol() {
-		assertEquals(Symbol.create("foo","bar"),Reader.read("foo/bar"));
+		assertEquals(Symbol.create("foo","bar"),Reader.read("foo/bar").getValue());
 		assertEquals("foo",Reader.readSymbol("foo//").getNamespace());
 		assertEquals(Symbol.create("foo","/"),Reader.read("foo//"));
 	}
@@ -79,14 +81,13 @@ public class TestParser {
 		assertEquals("foo",exps.get(2));
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test public void testList() {
 		Object c=Reader.read("(-3 -1.0 \"foo\")");
-		IPersistentList<Object> exps=(IPersistentList<Object>) c;
+		List exps=(List) c;
 		assertEquals(3,exps.size());
-		assertEquals(Long.valueOf(-3),exps.get(0));
-		assertEquals(Double.valueOf(-1.0),exps.get(1));
-		assertEquals("foo",exps.get(2));
+		assertEquals(Long.valueOf(-3),exps.get(0).getValue());
+		assertEquals(Double.valueOf(-1.0),exps.get(1).getValue());
+		assertEquals("foo",exps.get(2).getValue());
 	}
 	
 	@Test public void testSet() {

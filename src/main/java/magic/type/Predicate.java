@@ -14,14 +14,14 @@ import magic.fn.IFn1;
  */
 public class Predicate extends Type {
 
-	private IFn1<Boolean> pred;
+	private IFn1<?,Boolean> pred;
 	
 	@SuppressWarnings("unchecked")
-	public Predicate(IFn1<?> fn) {
-		this.pred=(IFn1<Boolean>) fn;
+	public Predicate(IFn1<?,?> fn) {
+		this.pred=(IFn1<?,Boolean>) fn;
 	}
 
-	public Type create(IFn1<?> fn) {
+	public Type create(IFn1<?,?> fn) {
 		Type rt=fn.getReturnType();
 		if (rt.cannotBeFalsey()) return Anything.INSTANCE;
 		if (rt.cannotBeTruthy()) return Nothing.INSTANCE;

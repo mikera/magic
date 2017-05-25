@@ -10,6 +10,8 @@ import magic.RT;
 import magic.Type;
 import magic.data.impl.ListIndexSeq;
 import magic.data.impl.SubVector;
+import magic.fn.AFn1;
+import magic.fn.IFn1;
 
 /**
  * Abstract base class for persistent lists
@@ -349,6 +351,17 @@ public abstract class APersistentVector<T> extends APersistentSequence<T> implem
 			if (!RT.equals(get(i),pl.get(i))) return false;
 		}
 		return true;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <R> APersistentVector<R> map(IFn1<? super T, ? extends R> f) {
+		int n=size();
+		R[] results=(R[]) new Object[n];
+		for (int i =0; i<n; i++) {
+			results[i]=f.apply(get(i));
+		}
+		return Tuple.wrap(results);
 	}
 	
 	@Override

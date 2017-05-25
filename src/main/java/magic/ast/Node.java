@@ -30,6 +30,8 @@ import magic.lang.MagicLanguage;
 @NodeInfo(language = "Magic", description = "The abstract base node for all expressions")
 public abstract class Node<T> extends RootNode {
 
+	public static final Node<?>[] EMPTY_ARRAY = new Node[0];
+	
 	protected APersistentSet<Symbol> deps;
 	protected SourceInfo source;
 
@@ -142,6 +144,12 @@ public abstract class Node<T> extends RootNode {
 	 * @return
 	 */
 	public abstract Node<? extends T> optimise();
+	
+	/** 
+	 * Converts this AST node to a form data representation
+	 * @return
+	 */
+	public abstract Object toForm();
 	
 	@Override
 	public abstract String toString();

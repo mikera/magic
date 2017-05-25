@@ -3,6 +3,9 @@ package magic.data;
 import java.util.Collection;
 import java.util.List;
 
+import magic.fn.AFn1;
+import magic.fn.IFn1;
+
 /**
  * Abstract base type for sequence objects indexed by integers
  * @author Mike
@@ -44,6 +47,8 @@ public abstract class APersistentSequence<T> extends APersistentCollection<T> im
 		}
 		return false;
 	}
+	
+	public abstract <R> APersistentSequence<R> map(IFn1<? super T, ? extends R> f);
 	
 	@Override
 	public abstract T get(int i);

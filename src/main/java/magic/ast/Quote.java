@@ -9,14 +9,12 @@ import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
 import magic.data.APersistentVector;
-import magic.data.Maps;
+import magic.data.Lists;
 import magic.data.PersistentList;
 import magic.data.Sets;
 import magic.data.Symbol;
-import magic.data.Tuple;
 import magic.lang.Context;
 import magic.lang.Symbols;
-import magic.type.JavaType;
 
 /**
  * AST node representing a quoted form
@@ -85,7 +83,12 @@ public class Quote extends Node<Object> {
 	
 	@Override
 	public String toString() {
-		return (syntaxQuote?"(Syntax-Quote ":"(Quote ")+RT.toString(form)+")";
+		return (syntaxQuote?"(syntax-quote ":"(quote ")+RT.toString(form)+")";
+	}
+
+	@Override
+	public Object toForm() {
+		return Lists.of(syntaxQuote?Symbols.SYNTAX_QUOTE:Symbols.QUOTE, form.toForm());
 	}
 
 

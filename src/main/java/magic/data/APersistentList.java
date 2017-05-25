@@ -5,7 +5,9 @@ import java.util.ListIterator;
 
 import magic.Errors;
 import magic.RT;
+import magic.ast.Node;
 import magic.fn.AFn1;
+import magic.fn.IFn1;
 
 /**
  * Abstract base class for persistent lists
@@ -105,8 +107,9 @@ public abstract class APersistentList<T> extends APersistentSequence<T> implemen
 		return sb.toString();
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
-	public <R> APersistentList<R> map(AFn1<T, R> f) {
+	public <R> APersistentList<R> map(IFn1<? super T, ? extends R> f) {
 		int n=size();
 		R[] results=(R[]) new Object[n];
 		for (int i =0; i<n; i++) {
@@ -117,4 +120,6 @@ public abstract class APersistentList<T> extends APersistentSequence<T> implemen
 	
 	@Override
 	public abstract APersistentList<T> subList(int fromIndex, int toIndex);
+
+
 }

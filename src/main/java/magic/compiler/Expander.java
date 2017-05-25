@@ -2,9 +2,11 @@ package magic.compiler;
 
 import magic.ast.Node;
 import magic.data.APersistentList;
+import magic.data.APersistentSequence;
 import magic.fn.AFn;
 import magic.fn.AFn1;
 import magic.fn.ArityException;
+import magic.fn.IFn1;
 import magic.fn.IFn3;
 import magic.lang.Context;
 
@@ -27,14 +29,12 @@ public abstract class Expander extends AFn<Object> implements IFn3<Object> {
 	
 	public abstract Node<?> expand(Context c, Node<?> form, Expander ex);
 
-	public APersistentList<Node<?>> expandAll(Context c, APersistentList<Node<?>> forms,Expander ex) {
-		return forms.map(new AFn1<Node<?>,Node<?>>(){
-
+	public APersistentSequence<Node<?>> expandAll(Context c, APersistentSequence<Node<?>> forms,Expander ex) {
+		return forms.map(new IFn1<Node<?>,Node<?>>(){
 			@Override
 			public Node<?> apply(Object a) {
 				return expand(c,(Node<?>) a,ex);
 			}
-			
 		});
 	}
 

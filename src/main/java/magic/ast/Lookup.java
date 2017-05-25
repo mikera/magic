@@ -61,7 +61,13 @@ public class Lookup<T> extends Node<T> {
 
 	@Override
 	public String toString() {
-		return "(Lookup "+sym+")";
+		// return "(Lookup "+sym+")";
+		return sym.toString();
+	}
+	
+	@Override
+	public Symbol toForm() {
+		return sym;
 	}
 
 	@Override

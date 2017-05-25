@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import magic.ast.Apply;
 import magic.ast.Constant;
+import magic.data.Lists;
 import magic.fn.IFn2;
 
 public class TestExpression {
@@ -27,7 +28,8 @@ public class TestExpression {
 			}	
 		};
 		
-		Apply<Integer> app=Apply.create(Constant.create(f),Constant.create(1),Constant.create(2));
+		@SuppressWarnings("unchecked")
+		Apply<Integer> app=Apply.create(Lists.of(Constant.create(f),Constant.create(1),Constant.create(2)),null);
 		assertEquals((Integer)3,app.compute(ec));
 	}
 }

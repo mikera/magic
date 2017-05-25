@@ -750,7 +750,7 @@ public final class PersistentHashMap<K,V> extends APersistentMap<K,V> {
 		// toString() consistent with java.util.AbstractMap
 		@Override
 		public String toString() {
-			return String.valueOf(key)+'='+String.valueOf(value);
+			return String.valueOf(key)+' '+String.valueOf(value);
 		}
 	}
 	

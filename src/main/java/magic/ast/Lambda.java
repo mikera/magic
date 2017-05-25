@@ -44,6 +44,13 @@ public class Lambda<T> extends BaseForm<IFn<T>> {
 	public static <T> Lambda<T> create(APersistentVector<Symbol> args, Node<T> body,SourceInfo source) {
 		return new Lambda<T>(args,body,source);
 	}
+	
+
+	@SuppressWarnings("unchecked")
+	public static <T> Lambda<T> create(Vector<Symbol> args, APersistentList<Node<?>> body, SourceInfo source) {
+		APersistentVector<Symbol> alist=(APersistentVector<Symbol>) args.toForm();
+		return create(alist,Do.create(body,source),source);
+	}
 
 	@Override
 	public EvalResult<IFn<T>> eval(Context context,APersistentMap<Symbol, Object> bindings) {
@@ -102,6 +109,7 @@ public class Lambda<T> extends BaseForm<IFn<T>> {
 	
 	@Override
 	public String toString() {
-		return "(Lambda "+args+" "+body+")";
+		return "(fn "+args+" "+body+")";
 	}
+
 }

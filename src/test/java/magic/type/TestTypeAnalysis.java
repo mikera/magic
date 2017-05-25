@@ -2,6 +2,7 @@ package magic.type;
 
 import static org.junit.Assert.assertEquals;
 
+import magic.RT;
 import magic.Type;
 
 import org.junit.Test;
@@ -16,7 +17,7 @@ import magic.data.Symbol;
 
 public class TestTypeAnalysis {
 	private Class<?>  analyseClass(Node<?> form) {
-		Node<?> node=Analyser.analyse(form);
+		Node<?> node=Analyser.expand(RT.BOOTSTRAP_CONTEXT, form);
 		Type type=node.getType();
 		return type.getJavaClass();
 	}

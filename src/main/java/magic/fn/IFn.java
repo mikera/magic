@@ -16,7 +16,7 @@ public interface IFn<R> {
 		return throwArity(0);
 	}
 	
-	public  default R apply(Object o) {
+	public default R apply(Object o) {
 		return throwArity(1);
 	}
 	

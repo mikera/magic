@@ -4,10 +4,13 @@ import magic.RT;
 import magic.Type;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
+import magic.data.APersistentList;
 import magic.data.APersistentMap;
+import magic.data.Lists;
 import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.lang.Context;
+import magic.lang.Symbols;
 
 /**
  * AST node representing a condition `if` expression.
@@ -51,7 +54,6 @@ public class If<T> extends Node<T> {
 			return (EvalResult<T>) trueExp.eval(context, bindings);
 		} else {
 			return (EvalResult<T>) falseExp.eval(context, bindings);
-			
 		}
 	}
 	
@@ -98,5 +100,10 @@ public class If<T> extends Node<T> {
 			EvalResult<Object> f=falseExp.evalQuoted(r.getContext(), bindings, syntaxQuote);
 			return new EvalResult<Object>(f.getContext(),PersistentList.of(r.getValue(),t.getValue(),f.getValue()));
 		}
+	}
+	
+	@Override
+	public APersistentList<Object> toForm() {
+		return Lists.of(Symbols.IF, test.toForm(), trueExp.toForm(), falseExp.toForm());
 	}
 }

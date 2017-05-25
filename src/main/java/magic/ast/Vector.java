@@ -2,9 +2,11 @@ package magic.ast;
 
 import java.util.List;
 
+import magic.RT;
 import magic.Type;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
+import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentVector;
 import magic.data.IPersistentVector;
@@ -31,14 +33,17 @@ public class Vector<T> extends Node<APersistentVector<? extends T>> {
 	}
 	
 
-	@SuppressWarnings("unchecked")
-	public static <T> Vector<T> create(APersistentVector<Node<?>> exps, SourceInfo source) {
-		return (Vector<T>) new Vector<Object>(exps,source);
+	public static <T> Vector<T> create(APersistentVector<Node<? extends T>> exps, SourceInfo source) {
+		return (Vector<T>) new Vector<T>(exps,source);
 	}
 	
+	public static <T> Vector<T> create(List<Node<? extends T>> list, SourceInfo source) {
+		return create(Vectors.createFromList(list),source);
+	}	
+
 	@SuppressWarnings("unchecked")
-	public static <T> Vector<T> create(List<?> list, SourceInfo source) {
-		return create((APersistentVector<Node<T>>)Vectors.createFromList(list),source);
+	public static <T> Vector<T> create(magic.ast.List list, SourceInfo sourceInfo) {
+		return (Vector<T>) create(list.getNodes(),sourceInfo);
 	}
 
 	public static <T> Vector<T> create(APersistentVector<Node<? extends T>> exps) {
@@ -123,21 +128,15 @@ public class Vector<T> extends Node<APersistentVector<? extends T>> {
 	
 	@Override
 	public String toString() {
-		StringBuilder sb=new StringBuilder("(Vector");
-		int n=exps.size();
-		for (int i=0; i<n; i++) {
-			sb.append(' ');
-			sb.append(exps.get(i).toString());
-		}
-		sb.append(')');
+		StringBuilder sb=new StringBuilder("[");
+		sb.append(RT.toString(exps, " "));
+		sb.append(']');
 		return sb.toString();
 	}
-
 
 	public int size() {
 		return exps.size();
 	}
-
 
 	@SuppressWarnings("unchecked")
 	public Node<T> get(int i) {
@@ -147,6 +146,13 @@ public class Vector<T> extends Node<APersistentVector<? extends T>> {
 	public APersistentVector<Node<? extends T>> getNodes() {
 		return exps;
 	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public APersistentVector<? extends T> toForm() {
+		return ((APersistentVector)exps).map(Nodes.TO_FORM);
+	}
+
 
 
 
