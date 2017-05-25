@@ -56,6 +56,11 @@ public class Constant<T> extends BaseConstant<T> {
 	}
 	
 	@Override
+	public Object toForm() {
+		return value;
+	}
+	
+	@Override
 	public String toString() {
 		return RT.print(value);
 	}

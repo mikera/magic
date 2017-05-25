@@ -19,7 +19,6 @@ import org.parboiled.support.StringVar;
 import org.parboiled.support.Var;
 
 import magic.ast.Constant;
-import magic.ast.Lookup;
 import magic.ast.Node;
 import magic.data.Lists;
 import magic.data.Symbol;
@@ -50,6 +49,15 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 		return Sequence(
 				Optional(WhiteSpace()),
 				Expression(),
+				Optional(WhiteSpace()),
+				EOI
+				);
+	}
+	
+	public Rule SymbolInput() {
+		return Sequence(
+				Optional(WhiteSpace()),
+				Symbol(),
 				Optional(WhiteSpace()),
 				EOI
 				);
@@ -185,7 +193,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 				"#{",
 				ExpressionList(),
 				'}',
-				push(magic.ast.List.createCons(Lookup.create(Symbols.SET),popNodeList(),getSourceInfo()))
+				push(magic.ast.List.createCons(Constant.create(Symbols.SET),popNodeList(),getSourceInfo()))
 				);
 	}
 	
@@ -194,7 +202,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 				"{",
 				ExpressionList(),
 				'}',
-				push(magic.ast.List.createCons(Lookup.create(Symbols.HASHMAP),popNodeList(),getSourceInfo()))
+				push(magic.ast.List.createCons(Constant.create(Symbols.HASHMAP),popNodeList(),getSourceInfo()))
 				);
 	}
 	
@@ -289,7 +297,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 				UnqualifiedSymbol(),
 				push(magic.ast.Constant.create(Symbol.createWithNamespace(
 						popSymbol().getName(),
-						popSymbol().getNamespace()),getSourceInfo())));
+						popSymbol().getName()),getSourceInfo())));
 	}
 
     public Rule UnqualifiedSymbol() {
@@ -392,7 +400,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 	private static Reader parser = Parboiled.createParser(Reader.class);
 	private static final ReportingParseRunner<magic.ast.List> inputParseRunner=new ReportingParseRunner<>(parser.Input());
 	private static final ReportingParseRunner<Node<?>> expressionParseRunner=new ReportingParseRunner<>(parser.ExpressionInput());
-	private static final ReportingParseRunner<magic.ast.Constant<Symbol>> symbolParseRunner=new ReportingParseRunner<>(parser.Symbol());
+	private static final ReportingParseRunner<magic.ast.Constant<Symbol>> symbolParseRunner=new ReportingParseRunner<>(parser.SymbolInput());
 	
 	private static <T> void checkErrors(ParsingResult<T> result) {
 		if (result.hasErrors()) {

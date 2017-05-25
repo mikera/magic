@@ -60,13 +60,18 @@ public class TestParser {
 		assertEquals('\uAABB',Reader.read("\\uaAbB").getValue());
 	}
 	
+	@Test public void testReadSymbol() {
+		assertEquals(Symbol.create("foo","bar"),Reader.readSymbol("foo/bar"));
+	}
+	
 	@Test public void testQualifiedSymbol() {
-		assertEquals(Symbol.create("foo","bar"),Reader.read("foo/bar").getValue());
+		Symbol sym= (Symbol)Reader.read("foo/bar").getValue();
+		assertEquals(Symbol.create("foo","bar"),sym);
 		assertEquals("foo",Reader.readSymbol("foo//").getNamespace());
 		assertEquals(Symbol.create("foo","/"),Reader.read("foo//"));
 	}
 	
-	@Test public void testUnQualifiedSymbol() {
+	@Test public void testUnqualifiedSymbol() {
 		assertEquals(Symbol.create("foo"),Reader.read("foo"));
 		assertEquals(Symbol.create("/"),Reader.read("/"));
 	}
