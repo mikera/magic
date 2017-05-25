@@ -63,7 +63,7 @@ public class TestNodesParam {
 		Object v=node.compute(c);
 		assertNotNull(deps);
 		assertNull(node.getSourceInfo());
-		// System.out.println(node + " = " +v +" : "+type);
+		// System.out.println(node + " = " +RT.toString(v) +" : "+type);
 		assertTrue(type.checkInstance(v));
 	}
 }

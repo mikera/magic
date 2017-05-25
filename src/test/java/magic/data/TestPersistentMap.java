@@ -97,7 +97,7 @@ public class TestPersistentMap {
 		APersistentMap<Integer,String> pm=PersistentHashMap.create(1,"Hello");
 		pm=pm.assoc(2,"World");
 		assertEquals(PersistentHashMap.create(hm).toString(),pm.toString());
-		assertEquals("{1=Hello, 2=World}",pm.toString());
+		assertEquals("{1 Hello, 2 World}",pm.toString());
 	}
 	
 	@Test public void testChanges() {

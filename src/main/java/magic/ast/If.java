@@ -86,7 +86,7 @@ public class If<T> extends Node<T> {
 
 	@Override
 	public String toString() {
-		return "(If "+test+" "+trueExp+" " +falseExp+")";
+		return "(if "+test+" "+trueExp+" " +falseExp+")";
 	}
 
 	@Override

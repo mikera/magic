@@ -5,6 +5,7 @@ import magic.ast.Constant;
 import magic.ast.Define;
 import magic.ast.Lambda;
 import magic.ast.List;
+import magic.ast.Lookup;
 import magic.ast.Node;
 import magic.ast.Quote;
 import magic.ast.Vector;
@@ -33,6 +34,12 @@ public class Expanders {
 				return vectorExpand(c,(Vector<?>)form,ex);
 			}
 
+			if (form instanceof Constant) {
+				Object v=form.getValue();
+				if (v instanceof Symbol) {
+					return Lookup.create((Symbol)v);
+				}
+			}
 			return form;
 		}
 

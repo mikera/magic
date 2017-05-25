@@ -90,7 +90,7 @@ public class Do<T> extends BaseForm<T> {
 	@Override
 	public Type getType() {
 		if (nBody==0) return Types.NULL;
-		return nodes.get(nBody-1).getType();
+		return body.get(nBody-1).getType();
 	}
 	
 	@Override

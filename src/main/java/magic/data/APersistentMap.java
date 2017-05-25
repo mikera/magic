@@ -198,7 +198,7 @@ public abstract class APersistentMap<K,V> extends APersistentObject implements I
 			} else {
 				sb.append(", ");
 			}
-			sb.append(ent.toString());
+			sb.append(ent.getKey()+" "+ent.getValue());
 		}
 		sb.append('}');
 		return sb.toString();

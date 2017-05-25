@@ -91,7 +91,7 @@ public class Dot<T> extends BaseForm<T> {
 
 	@Override 
 	public String toString() {
-		StringBuilder sb=new StringBuilder ("(Dot ");
+		StringBuilder sb=new StringBuilder ("(. ");
 		sb.append(instance);
 		sb.append(' ');
 		sb.append(method);
