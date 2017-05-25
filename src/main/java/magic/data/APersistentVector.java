@@ -10,7 +10,6 @@ import magic.RT;
 import magic.Type;
 import magic.data.impl.ListIndexSeq;
 import magic.data.impl.SubVector;
-import magic.fn.AFn1;
 import magic.fn.IFn1;
 
 /**

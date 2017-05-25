@@ -5,8 +5,6 @@ import java.util.ListIterator;
 
 import magic.Errors;
 import magic.RT;
-import magic.ast.Node;
-import magic.fn.AFn1;
 import magic.fn.IFn1;
 
 /**

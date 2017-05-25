@@ -1,10 +1,8 @@
 package magic.compiler;
 
 import magic.ast.Node;
-import magic.data.APersistentList;
 import magic.data.APersistentSequence;
 import magic.fn.AFn;
-import magic.fn.AFn1;
 import magic.fn.ArityException;
 import magic.fn.IFn1;
 import magic.fn.IFn3;

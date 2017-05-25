@@ -6,7 +6,6 @@ import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
-import magic.data.IPersistentCollection;
 import magic.data.Lists;
 import magic.data.PersistentList;
 import magic.data.Symbol;
@@ -95,7 +94,6 @@ public class List extends BaseForm<Object> {
 		return (Node<Object>) nodes.get(i);
 	}
 
-	@SuppressWarnings("unchecked")
 	public APersistentList<Node<? extends Object>> getNodes() {
 		return nodes;
 	}

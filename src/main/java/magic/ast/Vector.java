@@ -6,7 +6,6 @@ import magic.RT;
 import magic.Type;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
-import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentVector;
 import magic.data.IPersistentVector;

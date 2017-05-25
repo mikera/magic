@@ -5,11 +5,9 @@ import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
-import magic.data.Lists;
 import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.lang.Context;
-import magic.lang.Symbols;
 
 public abstract class BaseForm<T> extends Node<T> {
 

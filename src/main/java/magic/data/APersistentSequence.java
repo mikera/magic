@@ -3,7 +3,6 @@ package magic.data;
 import java.util.Collection;
 import java.util.List;
 
-import magic.fn.AFn1;
 import magic.fn.IFn1;
 
 /**
