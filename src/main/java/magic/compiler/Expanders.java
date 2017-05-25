@@ -3,6 +3,7 @@ package magic.compiler;
 import magic.ast.Apply;
 import magic.ast.Constant;
 import magic.ast.Define;
+import magic.ast.Do;
 import magic.ast.Lambda;
 import magic.ast.List;
 import magic.ast.Lookup;
@@ -60,7 +61,7 @@ public class Expanders {
 				Object h=head.getValue();
 				if (h instanceof Symbol) {
 					Slot<Object> slot=c.getSlot((Symbol)h);
-					if (slot.isExpander(c)) {
+					if ((slot!=null)&&slot.isExpander(c)) {
 						Expander e=(Expander) slot.getValue(c);
 						return e.expand(c, form, ex);
 					}
@@ -101,6 +102,26 @@ public class Expanders {
 			
 			SourceInfo si=form.getSourceInfo();
 			return Define.create(name, exp, si);
+		}
+	}
+	
+	/**
+	 * An expander that expands do forms
+	 */
+	public static final Expander DO = new DoExpander();
+
+	private static final class DoExpander extends AListExpander {
+		@Override
+		public Node<?> expand(Context c, List form,Expander ex) {
+			int n=form.size();
+			if (n<1) throw new ExpansionException("Can't expand do, requires at least a do symbol",form);
+			
+			SourceInfo si=form.getSourceInfo();
+			APersistentList<Node<?>> body=form.getNodes().subList(1,n);
+			
+			body=(APersistentList<Node<?>>) ex.expandAll(c, body, ex);
+			
+			return Do.create(body, si);
 		}
 	}
 	
@@ -147,14 +168,14 @@ public class Expanders {
 			int n=form.size();
 			if (n<2) throw new ExpansionException("Can't expand fn, requires at least an arg vector",form);
 			
-			Node<?> argObj=ex.expand(c, Analyser.analyse(c,form.get(1)), ex);
+			Node<?> argObj=form.get(1);
 			if (!(argObj instanceof Vector)) {
-				throw new AnalyserException("Can't expand fn: requires a vector of arguments: ",form);
+				throw new AnalyserException("Can't expand fn: requires a vector of arguments in but got "+argObj, form);
 			}
 			
 			SourceInfo si=form.getSourceInfo();
 			// expand the body
-			APersistentList<Node<?>> body=(APersistentList<Node<?>>) ex.expandAll(c, form.getNodes().subList(1,n),ex);
+			APersistentList<Node<?>> body=(APersistentList<Node<?>>) ex.expandAll(c, form.getNodes().subList(2,n),ex);
 			
 			return Lambda.create((Vector<Symbol>)argObj, body,si);
 		}

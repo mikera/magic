@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import magic.RT;
 import magic.Type;
 import magic.ast.Constant;
 import magic.ast.Do;
@@ -20,6 +21,7 @@ import magic.ast.Let;
 import magic.ast.Lookup;
 import magic.ast.Node;
 import magic.ast.Vector;
+import magic.compiler.Analyser;
 import magic.data.APersistentSet;
 import magic.data.Keyword;
 import magic.data.Symbol;
@@ -65,5 +67,17 @@ public class TestNodesParam {
 		assertNull(node.getSourceInfo());
 		// System.out.println(node + " = " +RT.toString(v) +" : "+type);
 		assertTrue(type.checkInstance(v));
+	}
+	
+	@Test 
+	public void testRoundTrip() {
+		Context c=RT.BOOTSTRAP_CONTEXT;
+		Node<?> node1=Analyser.expand(c,Analyser.analyse(c,node.toForm())).optimise();
+		Object form1=node1.toForm();
+		Node<?> node2=Analyser.expand(c,Analyser.analyse(c,form1)).optimise();
+		
+		assertEquals(form1,node2.toForm());
+		assertEquals(node1.getClass(),node2.getClass());
+		assertEquals(RT.toString(node1),RT.toString(node2));
 	}
 }

@@ -25,7 +25,7 @@ public class Let<T> extends BaseForm<T> {
 	
 	@SuppressWarnings("unchecked")
 	public Let(Symbol[] syms, Node<? extends Object>[] lets, Node<T> bodyExpr,SourceInfo source) {
-		super((APersistentList<Node<?>>)(APersistentList<?>)Lists.of(Constant.create(Symbols.FN),letVector(syms,lets),(Node<Object>)bodyExpr),bodyExpr.getDependencies().excludeAll(syms),source);
+		super((APersistentList<Node<?>>)(APersistentList<?>)Lists.of(Constant.create(Symbols.LET),letVector(syms,lets),(Node<Object>)bodyExpr),bodyExpr.getDependencies().excludeAll(syms),source);
 		nLets=syms.length;
 		if (nLets!=lets.length) throw new IllegalArgumentException("Incorrect number of bindings forms for let");
 		this.syms=syms;
