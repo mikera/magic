@@ -6,9 +6,11 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import magic.ast.Vector;
 import org.junit.Test;
 
 import magic.ast.List;
+import magic.ast.Node;
 import magic.data.IPersistentVector;
 import magic.data.Keyword;
 import magic.data.Maps;
@@ -61,7 +63,9 @@ public class TestParser {
 	}
 	
 	@Test public void testReadSymbol() {
+		assertEquals(Symbol.create("foo"),Reader.readSymbol(" foo"));
 		assertEquals(Symbol.create("foo","bar"),Reader.readSymbol("foo/bar"));
+		assertEquals(Symbol.create("foo","bar"),Reader.readSymbol(" foo/bar "));
 	}
 	
 	@Test public void testQualifiedSymbol() {
@@ -76,8 +80,15 @@ public class TestParser {
 		assertEquals(Symbol.create("/"),Reader.read("/"));
 	}
 	
+	@Test public void testeEmptyVector() {
+		Node<?> ev=Reader.read("[]");
+		assertEquals(Vector.class,ev.getClass());
+		assertEquals(0,((Vector<?>)ev).size());
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Test public void testVector() {
+		Reader.read("[1]");
 		Object c=Reader.read("[-3 -1.0 \"foo\"]");
 		IPersistentVector<Object> exps=(IPersistentVector<Object>) c;
 		assertEquals(3,exps.size());
@@ -101,8 +112,8 @@ public class TestParser {
 	}
 	
 	@Test public void testSetDuplicates() {
-		Object c=Reader.read("#{foo foo}");
-		assertEquals(Sets.of(Symbol.create("foo")),c);
+		Node<?> c=Reader.read("#{foo foo}");
+		assertEquals(Sets.of(Symbol.create("foo")),c.getValue());
 	}
 	
 	@Test public void testMap() {

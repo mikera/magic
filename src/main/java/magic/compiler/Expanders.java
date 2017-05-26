@@ -5,6 +5,7 @@ import magic.ast.Constant;
 import magic.ast.Define;
 import magic.ast.Do;
 import magic.ast.Lambda;
+import magic.ast.Let;
 import magic.ast.List;
 import magic.ast.Lookup;
 import magic.ast.Node;
@@ -170,7 +171,7 @@ public class Expanders {
 			
 			Node<?> argObj=form.get(1);
 			if (!(argObj instanceof Vector)) {
-				throw new AnalyserException("Can't expand fn: requires a vector of arguments in but got "+argObj, form);
+				throw new AnalyserException("Can't expand fn: requires a vector of arguments but got "+argObj, form);
 			}
 			
 			SourceInfo si=form.getSourceInfo();
@@ -178,6 +179,33 @@ public class Expanders {
 			APersistentList<Node<?>> body=(APersistentList<Node<?>>) ex.expandAll(c, form.getNodes().subList(2,n),ex);
 			
 			return Lambda.create((Vector<Symbol>)argObj, body,si);
+		}
+	}
+	
+	
+	/**
+	 * An expander that expands let forms
+	 */
+	public static final Expander LET = new LetExpander();
+
+	private static final class LetExpander extends AListExpander {
+		@SuppressWarnings("unchecked")
+		@Override
+		public Node<?> expand(Context c, List form,Expander ex) {
+			int n=form.size();
+			if (n<2) throw new ExpansionException("Can't expand let, requires at least an bindings vector",form);
+
+			SourceInfo si=form.getSourceInfo();
+			
+			Node<?> argObj=form.get(1);
+			if (!(argObj instanceof Vector)) {
+				throw new AnalyserException("Can't expand let: requires a vector of bindings but got "+argObj, form);
+			}
+			
+			// expand the body
+			APersistentList<Node<?>> body=(APersistentList<Node<?>>) ex.expandAll(c, form.getNodes().subList(2,n),ex);
+			
+			return Let.create((Vector<Object>)argObj, body,si);
 		}
 	}
 

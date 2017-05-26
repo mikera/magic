@@ -15,7 +15,6 @@ public class Compiler {
 	@SuppressWarnings("unchecked")
 	public static <T> EvalResult<T> compile(Context context, Node<T> node) {
 		node=Analyser.expand(context, node);
-		node=Analyser.analyse(context, node);
 		return node.eval(context,(APersistentMap<Symbol, Object>) Maps.EMPTY);
 	}
 

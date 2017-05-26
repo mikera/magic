@@ -88,9 +88,10 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 			@SuppressWarnings("unchecked")
 			@Override
 			public boolean run(Context<Object> context) {
-				Object o=pop();
+				Node<Object> o=(Node<Object>) pop();
+				if (o==null) throw new Error ("Null????");
 				// System.out.println(o);
-				expVar.get().add((Node<Object>) o);
+				expVar.get().add( o);
 				return true;
 			}
 		};
@@ -142,19 +143,21 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 				);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Rule Unquote() {
 		return Sequence(
 				'~',
 				Expression(),
-				push(magic.ast.List.createCons(Constant.create(Symbols.UNQUOTE),popNodeList(),getSourceInfo()))
+				push(magic.ast.List.create(Lists.of(Constant.create(Symbols.UNQUOTE),pop()),getSourceInfo()))
 				);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Rule UnquoteSplice() {
 		return Sequence(
 				"~@",
 				Expression(),
-				push(magic.ast.List.createCons(Constant.create(Symbols.UNQUOTE_SPLICING),popNodeList(),getSourceInfo()))
+				push(magic.ast.List.create(Lists.of(Constant.create(Symbols.UNQUOTE_SPLICING),pop()),getSourceInfo()))
 				);
 	}
 	
@@ -297,7 +300,8 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 				UnqualifiedSymbol(),
 				push(magic.ast.Constant.create(Symbol.createWithNamespace(
 						popSymbol().getName(),
-						popSymbol().getName()),getSourceInfo())));
+						popSymbol().getName()),getSourceInfo()))
+				);
 	}
 
     public Rule UnqualifiedSymbol() {
@@ -408,8 +412,10 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 			StringBuilder sb=new StringBuilder();
 			for (ParseError error: errors) {
 				InputBuffer ib=error.getInputBuffer();
-				sb.append("Parse error at "+ib.getPosition(error.getStartIndex())+": "+ error.getErrorMessage());
-				sb.append("\n");
+				int start=error.getStartIndex();
+				int end=error.getEndIndex();
+				sb.append("Parse error at "+ib.getPosition(error.getStartIndex())+": "+ib.extract(start, end)+" ERR: "+ error.getErrorMessage());
+//				sb.append("Parse error at "+ib.getPosition(0)+": "+ib.extract(start, end)+" ERR: "+ error.getErrorMessage());
 			}
 			throw new Error(sb.toString());
 		}

@@ -44,6 +44,23 @@ public class Let<T> extends BaseForm<T> {
 		}
 		return Vector.create(vs);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> Let<T> create(Vector<? extends Object> bindings, APersistentList<Node<?>> body, SourceInfo si) {
+		int nb=bindings.size();
+		if ((nb&1)!=0) throw new Error("Let requires an even number of forms in binding vector");
+		int n=nb/2;
+		
+		Symbol [] syms=new Symbol[n];
+		Node<? extends Object> [] lets=new Node[n];
+		for (int i=0; i<n; i++) {
+			syms[i]=(Symbol)bindings.get(i*2).getValue();
+			lets[i]=bindings.get(i*2+1);
+		}
+		Node<Object> bodyExpr=(body.size()==1)?(Node<Object>)body.get(0):Do.create(body,null);
+		return (Let<T>) create(syms,lets,bodyExpr,si);
+	}
+
 
 	public static <T> Node<T> create(Node<? extends Object>[] body, SourceInfo source) {
 		return Do.create(body,source);
@@ -145,6 +162,7 @@ public class Let<T> extends BaseForm<T> {
 		sb.append(')');
 		return sb.toString();
 	}
+
 
 
 
