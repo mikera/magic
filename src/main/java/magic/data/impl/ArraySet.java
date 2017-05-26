@@ -8,6 +8,7 @@ import java.util.Set;
 import magic.RT;
 import magic.data.APersistentSet;
 import magic.data.ISeq;
+import magic.data.Vectors;
 
 /**
  * Array based immutable set implementation
@@ -127,8 +128,8 @@ public final class ArraySet<T> extends APersistentSet<T> {
 
 	@Override
 	public ISeq<T> seq() {
-		// TODO Auto-generated method stub
-		return null;
+		// TODO fix this
+		return Vectors.coerce(this).seq();
 	}
 
 

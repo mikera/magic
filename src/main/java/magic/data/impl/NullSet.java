@@ -12,7 +12,7 @@ public final class NullSet<T> extends BasePersistentSet<T> {
 	private static final long serialVersionUID = -6170277533575154354L;
 	
 	@SuppressWarnings("rawtypes")
-	public static NullSet<?> INSTANCE=new NullSet();
+	public static final NullSet<?> INSTANCE=new NullSet();
 	
 	private NullSet() {
 		

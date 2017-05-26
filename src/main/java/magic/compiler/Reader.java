@@ -87,10 +87,15 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 			@SuppressWarnings("unchecked")
 			@Override
 			public boolean run(Context<Object> context) {
-				Node<Object> o=(Node<Object>) pop();
-				// if (o==null) throw new Error ("Null????");
+				try {
+					Node<Object> o=(Node<Object>) pop();
+					if (o==null) throw new Error ("Null????");
+					expVar.get().add(o);
+				} catch (Throwable t) {
+					t.printStackTrace(System.err);
+				}
+				// 
 				// System.out.println(o);
-				expVar.get().add( o);
 				return true;
 			}
 		};
@@ -222,7 +227,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 	public Rule NilLiteral() {
 		return Sequence(
 				"nil",
-				push(null));
+				push(Constant.create(null)));
 	}
 	
 	public Rule CharLiteral() {

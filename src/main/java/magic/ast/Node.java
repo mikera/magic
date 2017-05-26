@@ -1,10 +1,7 @@
 package magic.ast;
-import com.oracle.truffle.api.TruffleLanguage;
-import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.nodes.RootNode;
-import com.oracle.truffle.api.source.SourceSection;
 
 import magic.Type;
 import magic.Types;
@@ -18,6 +15,7 @@ import magic.data.PersistentHashMap;
 import magic.data.Sets;
 import magic.data.Symbol;
 import magic.data.Vectors;
+import magic.data.impl.NullSet;
 import magic.lang.Context;
 import magic.lang.MagicLanguage;
  
@@ -32,18 +30,14 @@ public abstract class Node<T> extends RootNode {
 
 	public static final Node<?>[] EMPTY_ARRAY = new Node[0];
 	
-	protected APersistentSet<Symbol> deps;
-	protected SourceInfo source;
+	protected final APersistentSet<Symbol> deps;
+	protected final SourceInfo source;
 
 	public Node(APersistentSet<Symbol> deps, SourceInfo source) {
-		this(MagicLanguage.class,null,null);
+		super(MagicLanguage.class,null,null);
 		this.deps=deps;
 		this.source=source;
-	}
-	
-	public Node(Class<? extends TruffleLanguage<?>> language, SourceSection sourceSection,
-			FrameDescriptor frameDescriptor) {
-		super(language, sourceSection, frameDescriptor);
+		if (deps==null) throw new Error("Null deps!!");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -75,7 +69,7 @@ public abstract class Node<T> extends RootNode {
 		return false;
 	}
 	
-	public APersistentSet<Symbol> getDependencies() {
+	public final APersistentSet<Symbol> getDependencies() {
 		return deps;
 	}
 	
@@ -94,11 +88,14 @@ public abstract class Node<T> extends RootNode {
 		return deps;
 	}
 	
+	@SuppressWarnings("unchecked")
 	protected static <T> APersistentSet<Symbol> calcDependencies(APersistentVector<Node<? extends T>> nodes) {
-		APersistentSet<Symbol> deps=Sets.emptySet();
+		APersistentSet<Symbol> deps=(APersistentSet<Symbol>) NullSet.INSTANCE;
 		int n=nodes.size();
 		for (int i=0; i<n; i++) {
-			deps=deps.includeAll(nodes.get(i).getDependencies());
+			Node<?> node=nodes.get(i);
+			APersistentSet<Symbol> newDeps=node.getDependencies();
+			deps=deps.includeAll(newDeps);
 		}
 		return deps;
 	}

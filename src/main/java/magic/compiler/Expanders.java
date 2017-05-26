@@ -19,10 +19,21 @@ import magic.lang.Context;
 import magic.lang.Slot;
 import magic.lang.Symbols;
 
+/**
+ * A standard set of expanders used to transform raw AST nodes into compilable AST
+ * 
+ * These expanders are available in the RT.BOOTSTRAP_CONTEXT, and represent the basic special forms
+ * and constructs necessary to bootstrap the Magic environment.
+ * 
+ * @author Mike
+ */
 public class Expanders {
 
 	/**
-	 * An expander that simply expands the form and continues to analyse using the same initial expander
+	 * The initial expander.
+	 * 
+	 * This expander expands sub forms using other expanders where appropriate,
+	 * and continues to expand using the same initial expander
 	 */
 	public static final Expander INITAL_EXPANDER = new DefaultExpander();
 	
@@ -141,7 +152,7 @@ public class Expanders {
 			if (!(nameObj.isConstant()&&nameObj.getValue() instanceof Symbol)) {
 				throw new ExpansionException("Can't expand defn: requires a symbolic function name in: ",form);
 			}
-			Node<?> argObj=ex.expand(c, Analyser.analyse(c,form.get(2)), ex);
+			Node<?> argObj=ex.expand(c, form.get(2), ex);
 			
 			SourceInfo si=form.getSourceInfo();
 			// get the body. Don't expand yet: fn does this
@@ -231,7 +242,10 @@ public class Expanders {
 		}
 	}
 
-	public static final Expander DEFMACRO = new AListExpander() {
+	
+	public static final Expander DEFMACRO = new DefMacroExpander();
+	
+	private static final class DefMacroExpander extends AListExpander {
 		@Override
 		public Node<?> expand(Context c,List form,Expander ex) {
 			int n=form.size();
@@ -257,7 +271,15 @@ public class Expanders {
 		}
 	};
 
-	public static final Expander MACRO = new AListExpander() {
+	/**
+	 * Expander for `macro` forms. Creates a new expander with the sematics of a Clojure macro, i.e. 
+	 * works as a transformation of source data objects.
+	 * 
+	 * TODO: Conform if this means losing some of the benefits of types?
+	 */
+	public static final Expander MACRO = new MacroExpander();
+		
+	private static final class MacroExpander extends AListExpander{
 		@SuppressWarnings("unchecked")
 		@Override
 		public Node<?> expand(Context c, List form,Expander ex) {
@@ -274,7 +296,7 @@ public class Expanders {
 			
 			Lambda<Object> macroFn= Lambda.create((Vector<Symbol>)argObj, body,si);
 			IFn<Object> fn=(IFn<Object>) macroFn.compute(c);
-			MacroExpander me= MacroExpander.create(fn);
+			magic.compiler.MacroExpander me= magic.compiler.MacroExpander.create(fn);
 			return Constant.create(me);
 		}
 	};
