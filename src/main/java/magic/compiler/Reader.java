@@ -2,7 +2,6 @@ package magic.compiler;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.parboiled.Action;
 import org.parboiled.BaseParser;
@@ -89,7 +88,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 			@Override
 			public boolean run(Context<Object> context) {
 				Node<Object> o=(Node<Object>) pop();
-				if (o==null) throw new Error ("Null????");
+				// if (o==null) throw new Error ("Null????");
 				// System.out.println(o);
 				expVar.get().add( o);
 				return true;
@@ -102,13 +101,13 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 		return Sequence(
 				Optional(WhiteSpace()),
 				FirstOf(Sequence(
-						 Expression(),
-						 AddAction(expVar),
-						 ZeroOrMore(Sequence(WhiteSpace(),
-								 			 Expression(),
-								 		  	 AddAction(expVar))),
-						 Optional(WhiteSpace())),
-						 EMPTY
+							Expression(),
+							AddAction(expVar),
+							ZeroOrMore(Sequence(WhiteSpace(),
+								            	Expression(),
+								            	AddAction(expVar))),
+							Optional(WhiteSpace())),
+						EMPTY
 						),
 				push(magic.ast.List.create(Lists.create(expVar.get()),getSourceInfo()))
 				);
@@ -408,7 +407,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 	
 	private static <T> void checkErrors(ParsingResult<T> result) {
 		if (result.hasErrors()) {
-			List<ParseError> errors=result.parseErrors;
+			java.util.List<ParseError> errors=result.parseErrors;
 			StringBuilder sb=new StringBuilder();
 			for (ParseError error: errors) {
 				InputBuffer ib=error.getInputBuffer();
@@ -416,6 +415,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 				int end=error.getEndIndex();
 				sb.append("Parse error at "+ib.getPosition(error.getStartIndex())+": "+ib.extract(start, end)+" ERR: "+ error.getErrorMessage());
 //				sb.append("Parse error at "+ib.getPosition(0)+": "+ib.extract(start, end)+" ERR: "+ error.getErrorMessage());
+//				sb.append(result.parseTreeRoot);
 			}
 			throw new Error(sb.toString());
 		}
@@ -471,7 +471,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 	}
 
 	public static void main(String[] args) {
-		Object result = read("[1 2 3]");
+		Object result = read("[1 2 foo]");
 		
 		System.out.println(result);
 	}

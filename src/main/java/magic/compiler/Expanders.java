@@ -99,7 +99,7 @@ public class Expanders {
 			}
 			Symbol name=(Symbol)nameObj.getValue();
 			
-			Node<?> exp=ex.expand(c, Analyser.analyse(c,form.get(2)), ex);
+			Node<?> exp=ex.expand(c, form.get(2), ex);
 			
 			SourceInfo si=form.getSourceInfo();
 			return Define.create(name, exp, si);
@@ -241,7 +241,7 @@ public class Expanders {
 			if (!(nameObj.isConstant()&&nameObj.getValue() instanceof Symbol)) {
 				throw new AnalyserException("Can't expand defn: requires a symbolic function name in: ",form);
 			}
-			Node<?> argObj=ex.expand(c, Analyser.analyse(c,form.get(2)), ex);
+			Node<?> argObj=ex.expand(c, form.get(2), ex);
 			
 			SourceInfo si=form.getSourceInfo();
 			// get the body. Don't expand yet: fn does this
@@ -264,13 +264,13 @@ public class Expanders {
 			int n=form.size();
 			if (n<3) throw new ExpansionException("Can't expand macro, requires at least an arg vector and body",form);
 			
-			Node<?> argObj=ex.expand(c, Analyser.analyse(c,form.get(1)), ex);
+			Node<?> argObj=ex.expand(c, form.get(1), ex);
 			if (!(argObj instanceof Vector)) {
 				throw new AnalyserException("Can't expand macro: requires a vector of arguments: ",form);
 			}
 			
 			SourceInfo si=form.getSourceInfo();
-			APersistentList<Node<?>> body=(APersistentList<Node<?>>) ex.expandAll(c, form.getNodes().subList(1,n),ex);
+			APersistentList<Node<?>> body=(APersistentList<Node<?>>) ex.expandAll(c, form.getNodes().subList(2,n),ex);
 			
 			Lambda<Object> macroFn= Lambda.create((Vector<Symbol>)argObj, body,si);
 			IFn<Object> fn=(IFn<Object>) macroFn.compute(c);
