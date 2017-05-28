@@ -42,6 +42,11 @@ public class Context {
 	public <T> Context define(Symbol sym, Node<T> exp) {
 		return create(mappings.assoc(sym,Slot.create(exp)));
 	}
+	
+	public <T> Context define(String sym, Node<T> exp) {
+		Symbol s=Reader.readSymbol(sym);
+		return create(mappings.assoc(s,Slot.create(exp)));
+	}
 
 	private static Context create(PersistentHashMap<Symbol, Slot<?>> mappings) {
 		return new Context(mappings);

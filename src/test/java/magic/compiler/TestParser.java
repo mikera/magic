@@ -31,7 +31,7 @@ public class TestParser {
 	}
 	
 	@Test public void testNil() {
-		assertNull(Reader.read("nil"));
+		assertNull(Reader.read("nil").getValue());
 	}
 	
 	@Test public void testKeywords() {
@@ -72,12 +72,12 @@ public class TestParser {
 		Symbol sym= (Symbol)Reader.read("foo/bar").getValue();
 		assertEquals(Symbol.create("foo","bar"),sym);
 		assertEquals("foo",Reader.readSymbol("foo//").getNamespace());
-		assertEquals(Symbol.create("foo","/"),Reader.read("foo//"));
+		assertEquals(Symbol.create("foo","/"),Reader.read("foo//").getValue());
 	}
 	
 	@Test public void testUnqualifiedSymbol() {
-		assertEquals(Symbol.create("foo"),Reader.read("foo"));
-		assertEquals(Symbol.create("/"),Reader.read("/"));
+		assertEquals(Symbol.create("foo"),Reader.read("foo").getValue());
+		assertEquals(Symbol.create("/"),Reader.read("/").getValue());
 	}
 	
 	@Test public void testeEmptyVector() {

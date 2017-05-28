@@ -16,6 +16,10 @@ import magic.data.APersistentVector;
 import magic.data.Symbol;
 
 public class TestTypeAnalysis {
+	private <T> Node<T> compile(String s) {
+		return Analyser.expand(RT.INITIAL_CONTEXT, Reader.read(s));
+	}
+	
 	private Class<?>  analyseClass(Node<?> form) {
 		Node<?> node=Analyser.expand(RT.BOOTSTRAP_CONTEXT, form);
 		Type type=node.getType();
@@ -34,14 +38,14 @@ public class TestTypeAnalysis {
 	}
 	
 	@Test public void testDoTypes() {
-		Node<?> emptyDo=Analyser.analyse(Reader.read("(do)"));
+		Node<?> emptyDo=Reader.read("(do)");
 		assertEquals(Types.NULL,emptyDo.getType());
 		
 		assertEquals(String.class,analyseClass(Reader.read("(do [1 a] 2 \"foo\")")));
 	}
 	
 	@Test public void testLetTypes() {
-		Node<?> emptyLet=Analyser.analyse(Reader.read("(let [a 3])"));
+		Node<?> emptyLet=compile("(let [a 3])");
 		//System.out.println(emptyLet);
 		assertEquals(Types.NULL,emptyLet.getType());
 		
@@ -49,9 +53,10 @@ public class TestTypeAnalysis {
 	}
 	
 	@Test public void testLambdaTypes() {
-		Node<?> fnExpr=Analyser.analyse(Reader.read("(fn [a b] 3)"));
+		Node<?> fnExpr=compile("(fn [a b] 3)");
 		//System.out.println(fnExpr);
-		FunctionType fType=(FunctionType) fnExpr.getType();
+		Type type=fnExpr.getType();
+		FunctionType fType=(FunctionType)type; 
 		assertEquals(Long.class,fType.getReturnType().getJavaClass());
 	
 	}

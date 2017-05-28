@@ -21,9 +21,9 @@ import magic.lang.UnresolvedException;
 
 public class TestAnalyse {
 
-	@SuppressWarnings("unchecked")
 	public <T> Node<T> analyse(String t) {
-		return (Node<T>) Analyser.analyse(Reader.read(t));
+		Node<?> node= Reader.read(t);
+		return Analyser.expand(RT.INITIAL_CONTEXT,node);
 	}
 	
 	@Test 
@@ -99,12 +99,12 @@ public class TestAnalyse {
 	public void testDeps() {
 		Symbol foo=Symbol.create("foo");
 		Symbol bar=Symbol.create("bar");
-		assertEquals(Sets.of(foo),Analyser.analyse(Reader.read("foo")).getDependencies());
-		assertEquals(Sets.of(foo,bar),Analyser.analyse(Reader.read("[foo bar]")).getDependencies());
-		assertEquals(Sets.of(),Analyser.analyse(Reader.read("(fn [bar] bar)")).getDependencies());
-		assertEquals(Sets.of(foo),Analyser.analyse(Reader.read("(fn [bar] foo)")).getDependencies());
+		assertEquals(Sets.of(foo),analyse("foo").getDependencies());
+		assertEquals(Sets.of(foo,bar),analyse("[foo bar]").getDependencies());
+		assertEquals(Sets.of(),analyse("(fn [bar] bar)").getDependencies());
+		assertEquals(Sets.of(foo),analyse("(fn [bar] foo)").getDependencies());
 
-		assertEquals(Sets.of(Symbols.QUOTE),Analyser.analyse(Reader.read("'(foo bar)")).getDependencies());
+		assertEquals(Sets.of(Symbols.QUOTE),analyse("'(foo bar)").getDependencies());
 	}
 	
 	@Test 
@@ -130,7 +130,7 @@ public class TestAnalyse {
 	public void testLambda() {
 		Node<?> e=analyse("(fn [a] a)");
 		assertEquals(Lambda.class,e.getClass());
-		Context c=Context.createWith("identity",e);
+		Context c=RT.INITIAL_CONTEXT.define("identity",e);
 		Node<?> app=Analyser.analyse(c,Reader.read("(identity 2)"));
 		assertEquals(Long.valueOf(2),app.compute(c));
 

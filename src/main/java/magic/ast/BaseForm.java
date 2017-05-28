@@ -9,6 +9,13 @@ import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.lang.Context;
 
+/**
+ * Abstract base class for regular forms stored as lists.
+ * 
+ * @author Mike
+ *
+ * @param <T>
+ */
 public abstract class BaseForm<T> extends Node<T> {
 
 	protected APersistentList<Node<? extends Object>> nodes;

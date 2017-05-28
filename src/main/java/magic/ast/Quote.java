@@ -27,6 +27,9 @@ public class Quote extends Node<Object> {
 
 	private final boolean syntaxQuote;
 	private final Node<Object> form;
+	
+	private static final APersistentSet<Symbol> QUOTE_SET=Sets.of(Symbols.QUOTE);
+	private static final APersistentSet<Symbol> SYNTAX_QUOTE_SET=Sets.of(Symbols.SYNTAX_QUOTE);
 
 	public Quote(Node<Object> form, boolean syntaxQuote, APersistentSet<Symbol> symbolSet, APersistentMap<APersistentVector<Object>,Node<Object>> unquotes, SourceInfo source) {
 		super (symbolSet,source);
@@ -44,7 +47,8 @@ public class Quote extends Node<Object> {
 	@SuppressWarnings("unchecked")
 	public static Quote create(Node<? extends Object> node, boolean syntaxQuote, SourceInfo sourceInfo) {
 		// TODO fix deps?
-		return new Quote((Node<Object>)node,syntaxQuote,Sets.emptySet(),null, sourceInfo);
+		APersistentSet<Symbol> syms=(syntaxQuote)?SYNTAX_QUOTE_SET:QUOTE_SET;
+		return new Quote((Node<Object>)node,syntaxQuote,syms,null, sourceInfo);
 	}
 
 	@Override
