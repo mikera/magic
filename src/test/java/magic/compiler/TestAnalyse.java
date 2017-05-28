@@ -131,7 +131,7 @@ public class TestAnalyse {
 		Node<?> e=analyse("(fn [a] a)");
 		assertEquals(Lambda.class,e.getClass());
 		Context c=RT.INITIAL_CONTEXT.define("identity",e);
-		Node<?> app=Analyser.analyse(c,Reader.read("(identity 2)"));
+		Node<?> app=analyse("(identity 2)");
 		assertEquals(Long.valueOf(2),app.compute(c));
 
 	}

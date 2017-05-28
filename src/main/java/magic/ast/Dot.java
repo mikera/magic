@@ -24,12 +24,12 @@ public class Dot<T> extends BaseForm<T> {
 
 	// TODO: consider caching reflected methods?
 	
-	private final Node<Object> instance;
+	private final Node<?> instance;
 	private final Symbol method;
 	private final Node<?>[] args;
 	private final int nArgs;
 
-	private Dot(APersistentSet<Symbol> deps, Node<Object> instance, Symbol method, Node<Object>[] args,SourceInfo source) {
+	private Dot(APersistentSet<Symbol> deps, Node<?> instance, Symbol method, Node<?>[] args,SourceInfo source) {
 		super(Lists.cons((Node<Symbol>)Constant.create(Symbols.DOT), instance, (Node<Symbol>)Constant.create(method), PersistentList.of((Object[])args)), deps,source);
 		this.instance=instance;
 		this.method=method;
@@ -37,7 +37,7 @@ public class Dot<T> extends BaseForm<T> {
 		this.nArgs=args.length;
 	}
 	
-	public static <T> Dot<T> create(Node<Object> instance, Symbol method, Node<Object>[] args,SourceInfo source) {
+	public static <T> Dot<T> create(Node<?> instance, Symbol method, Node<?>[] args,SourceInfo source) {
 		APersistentSet<Symbol> deps=instance.getDependencies();
 		for (Node<?> a: args) {
 			deps=deps.includeAll(a.getDependencies());

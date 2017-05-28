@@ -62,6 +62,12 @@ public class List extends BaseForm<Object> {
 		if (newNodes==nodes) return this;
 		return new List(newNodes,source);
 	}
+	
+	@Override
+	public EvalResult<Object> eval(Context context, APersistentMap<Symbol, Object> bindings) {
+		if (size()==0) return new EvalResult<Object>(context,Lists.EMPTY);
+		throw new UnsupportedOperationException("Cannot compile node of type: "+this.getClass());
+	}
 
 	@Override
 	public Node<Object> optimise() {

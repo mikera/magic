@@ -57,6 +57,7 @@ public class RT {
 			c=c.define(Symbols.FN, Constant.create(Expanders.FN));
 			c=c.define(Symbols.LET, Constant.create(Expanders.LET));
 			c=c.define(Symbols.DO, Constant.create(Expanders.DO));
+			c=c.define(Symbols.DOT, Constant.create(Expanders.DOT));
 			c=c.define(Symbols.IF, Constant.create(Expanders.IF));
 			c=c.define(Symbols.DEFMACRO, Constant.create(Expanders.DEFMACRO));
 			c=c.define(Symbols.MACRO, Constant.create(Expanders.MACRO));

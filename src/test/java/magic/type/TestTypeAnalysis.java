@@ -12,7 +12,9 @@ import magic.ast.Constant;
 import magic.ast.Node;
 import magic.compiler.Analyser;
 import magic.compiler.Reader;
+import magic.data.APersistentMap;
 import magic.data.APersistentVector;
+import magic.data.Maps;
 import magic.data.Symbol;
 
 public class TestTypeAnalysis {
@@ -26,11 +28,12 @@ public class TestTypeAnalysis {
 		return type.getJavaClass();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test public void testConstantTypes() {
 		assertEquals(Types.NULL,Analyser.analyse(null).getType());
 		assertEquals(Double.class,analyseClass(Constant.create(1.0)));
 		assertEquals(String.class,analyseClass(Constant.create("foo")));
-		assertEquals(Symbol.class,analyseClass(Reader.read("'foo")));
+		assertEquals(Symbol.class,compile("'foo").eval(RT.INITIAL_CONTEXT,(APersistentMap<Symbol, Object>) Maps.EMPTY).getValue().getClass());
 	}
 	
 	@Test public void testDataTypes() {
@@ -38,7 +41,7 @@ public class TestTypeAnalysis {
 	}
 	
 	@Test public void testDoTypes() {
-		Node<?> emptyDo=Reader.read("(do)");
+		Node<?> emptyDo=compile("(do)");
 		assertEquals(Types.NULL,emptyDo.getType());
 		
 		assertEquals(String.class,analyseClass(Reader.read("(do [1 a] 2 \"foo\")")));
