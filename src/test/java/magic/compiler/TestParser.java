@@ -20,14 +20,14 @@ import magic.data.Symbol;
 public class TestParser {
 
 	@Test public void testString() {
-		Object c=Reader.read("\"foo\"");
-		assertEquals("foo",c);
+		Node<?> c=Reader.read("\"foo\"");
+		assertEquals("foo",c.getValue());
 	}
 	
 	@Test public void testDouble() {
-		assertEquals(Double.valueOf(-3.0),Reader.read("-3.0"));
-		assertEquals(Double.valueOf(.3e10),Reader.read(".3e10"));
-		assertEquals(Double.valueOf(-.3e10),Reader.read("-0.3e10"));
+		assertEquals(Double.valueOf(-3.0),Reader.read("-3.0").getValue());
+		assertEquals(Double.valueOf(.3e10),Reader.read(".3e10").getValue());
+		assertEquals(Double.valueOf(-.3e10),Reader.read("-0.3e10").getValue());
 	}
 	
 	@Test public void testNil() {
@@ -35,7 +35,7 @@ public class TestParser {
 	}
 	
 	@Test public void testKeywords() {
-		assertEquals(Keyword.class,Reader.read(":foo").getClass());
+		assertEquals(Keyword.class,Reader.read(":foo").getValue().getClass());
 	}
 	
 	@Test public void testBooleans() {
@@ -89,8 +89,8 @@ public class TestParser {
 	@SuppressWarnings("unchecked")
 	@Test public void testVector() {
 		Reader.read("[1]");
-		Object c=Reader.read("[-3 -1.0 \"foo\"]");
-		IPersistentVector<Object> exps=(IPersistentVector<Object>) c;
+		Node<?> c=Reader.read("[-3 -1.0 \"foo\"]");
+		IPersistentVector<Object> exps=(IPersistentVector<Object>) c.toForm();
 		assertEquals(3,exps.size());
 		assertEquals(Long.valueOf(-3),exps.get(0));
 		assertEquals(Double.valueOf(-1.0),exps.get(1));
@@ -108,7 +108,7 @@ public class TestParser {
 	
 	@Test public void testSet() {
 		assertEquals(Sets.of(3L),Reader.read("#{3}"));
-		assertEquals(Sets.of(1L,2L,3L),Reader.read("#{1,3,2,3,1}"));
+		assertEquals(Sets.of(1L,2L,3L),Reader.read("#{1,3,2,3,1}").getValue());
 	}
 	
 	@Test public void testSetDuplicates() {
@@ -122,9 +122,9 @@ public class TestParser {
 	}
 	
 	@Test public void testQuote() {
-		assertEquals(Reader.read("(quote foo/bar)"),Reader.read("'foo/bar"));
-		assertEquals(Reader.read("(unquote (quote foo))"),Reader.read("~'foo"));
-		assertEquals(Reader.read("(unquote (syntax-quote foo))"),Reader.read("~`foo"));
+		assertEquals(Reader.read("(quote foo/bar)").toForm(),Reader.read("'foo/bar").toForm());
+		assertEquals(Reader.read("(unquote (quote foo))").toForm(),Reader.read("~'foo").toForm());
+		assertEquals(Reader.read("(unquote (syntax-quote foo))").toForm(),Reader.read("~`foo").toForm());
 	}
 	
 	@Test public void testExtraInputFail() {

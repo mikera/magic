@@ -20,11 +20,11 @@ import magic.lang.Symbols;
  * @param <T>
  */
 public class If<T> extends Node<T> {
-	private final Node<Object> test; 
+	private final Node<?> test; 
 	private final Node<? extends T> trueExp; 
 	private final Node<? extends T> falseExp; 
 	
-	private If(Node<Object> test, Node<? extends T> trueExp, Node<? extends T> falseExp, SourceInfo source) {
+	private If(Node<?> test, Node<? extends T> trueExp, Node<? extends T> falseExp, SourceInfo source) {
 		super(test.getDependencies().includeAll(trueExp.getDependencies()).includeAll(falseExp.getDependencies()),source);
 		this.test=test;
 		this.trueExp=trueExp;
@@ -32,15 +32,15 @@ public class If<T> extends Node<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> Node<T> createIf(Node<Object> test, Node<T> trueExp) {
+	public static <T> Node<T> createIf(Node<?> test, Node<? extends T> trueExp) {
 		return createIf(test,trueExp, (Node<T>)Constant.NULL,null);
 	}
 	
-	public static <T> Node<T> createIf(Node<Object> test, Node<? extends T> trueExp, Node<? extends T> falseExp) {
+	public static <T> Node<T> createIf(Node<?> test, Node<? extends T> trueExp, Node<? extends T> falseExp) {
 		return createIf(test,trueExp,falseExp,null);
 	}
 	
-	public static <T> Node<T> createIf(Node<Object> test, Node<? extends T> trueExp, Node<? extends T> falseExp, SourceInfo source) {
+	public static <T> Node<T> createIf(Node<?> test, Node<? extends T> trueExp, Node<? extends T> falseExp, SourceInfo source) {
 		return new If<T>(test,trueExp,falseExp,source);
 	}
 

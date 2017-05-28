@@ -406,9 +406,6 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 	}
 	
 	private static Reader parser = Parboiled.createParser(Reader.class);
-	private static final ReportingParseRunner<magic.ast.List> inputParseRunner=new ReportingParseRunner<>(parser.Input());
-	private static final ReportingParseRunner<Node<?>> expressionParseRunner=new ReportingParseRunner<>(parser.ExpressionInput());
-	private static final ReportingParseRunner<magic.ast.Constant<Symbol>> symbolParseRunner=new ReportingParseRunner<>(parser.SymbolInput());
 	
 	private static <T> void checkErrors(ParsingResult<T> result) {
 		if (result.hasErrors()) {
@@ -418,7 +415,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 				InputBuffer ib=error.getInputBuffer();
 				int start=error.getStartIndex();
 				int end=error.getEndIndex();
-				sb.append("Parse error at "+ib.getPosition(error.getStartIndex())+": "+ib.extract(start, end)+" ERR: "+ error.getErrorMessage());
+				sb.append("Parse error at "+ib.getPosition(error.getStartIndex())+": "+ib.extract(start, end)+" ERR: "+ error.getErrorMessage()+ "IB:"+ib.extractLine(1));
 //				sb.append("Parse error at "+ib.getPosition(0)+": "+ib.extract(start, end)+" ERR: "+ error.getErrorMessage());
 //				sb.append(result.parseTreeRoot);
 			}
@@ -433,7 +430,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 	 * @return
 	 */
 	public static Node<?> read(String source) {
-		ParsingResult<Node<?>> result = expressionParseRunner.run(source);
+		ParsingResult<Node<?>> result = new ReportingParseRunner<Node<?>>(parser.ExpressionInput()).run(source);
 		checkErrors(result);
 		return result.resultValue;
 	}
@@ -444,7 +441,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 	 * @return
 	 */
 	public static magic.ast.List readAll(String source) {
-		ParsingResult<magic.ast.List> result = inputParseRunner.run(source);
+		ParsingResult<magic.ast.List> result = new ReportingParseRunner<magic.ast.List>(parser.Input()).run(source);
 		checkErrors(result);
 		return result.resultValue;
 	}
@@ -455,7 +452,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 	 * @return
 	 */
 	public static Symbol readSymbol(String source) {
-		ParsingResult<magic.ast.Constant<magic.data.Symbol>> result = symbolParseRunner.run(source);
+		ParsingResult<magic.ast.Constant<magic.data.Symbol>> result = new ReportingParseRunner<magic.ast.Constant<magic.data.Symbol>>(parser.SymbolInput()).run(source);
 		checkErrors(result);
 		return result.resultValue.getValue();
 	}
