@@ -36,9 +36,10 @@ public class JavaType<T> extends Type {
 		return new JavaType<T>((Class<T>) val.getClass());
 	}
 	
-	public static <T> JavaType<T> create(Class<T> c) {
+	@SuppressWarnings("unchecked")
+	public static <T> JavaType<T> create(Class<?> c) {
 		if (c==null) throw new NullPointerException("Null Class not allowed for JavaType");
-		return new JavaType<T>(c);
+		return new JavaType<T>((Class<T>) c);
 	}
 	
 	@Override

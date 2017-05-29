@@ -4,16 +4,15 @@ import java.util.List;
 
 import magic.RT;
 import magic.Type;
+import magic.Types;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.APersistentVector;
-import magic.data.IPersistentVector;
 import magic.data.Symbol;
 import magic.data.Tuple;
 import magic.data.Vectors;
 import magic.lang.Context;
-import magic.type.JavaType;
 
 /**
  * AST node class representing a vector construction literal.
@@ -24,15 +23,11 @@ import magic.type.JavaType;
  */
 public class Vector<T> extends BaseDataStructure<APersistentVector<? extends T>> {
 
-	APersistentVector<Node<? extends T>> exps;
-	
-	private Vector(APersistentVector<Node<? extends T>> exps, SourceInfo source) {
-		super(calcDependencies(exps),source); 
-		this.exps=(APersistentVector<Node<? extends T>>)exps;
+	private Vector(APersistentVector<Node<?>> exps, SourceInfo source) {
+		super((APersistentVector<Node<?>>)exps,calcDependencies(exps),source); 
 	}
-	
 
-	public static <T> Vector<T> create(APersistentVector<Node<? extends T>> exps, SourceInfo source) {
+	public static <T> Vector<T> create(APersistentVector<Node<?>> exps, SourceInfo source) {
 		return (Vector<T>) new Vector<T>(exps,source);
 	}
 	
@@ -84,7 +79,7 @@ public class Vector<T> extends BaseDataStructure<APersistentVector<? extends T>>
 	@Override
 	public Node<APersistentVector<? extends T>> specialiseValues(APersistentMap<Symbol, Object> bindings) {
 		int nExps=exps.size();
-		APersistentVector<Node<? extends T>> newExps=exps;
+		APersistentVector<Node<?>> newExps=exps;
 		for (int i=0; i<nExps; i++) {
 			Node<?> node=exps.get(i);
 			Node<?> newNode=node.specialiseValues(bindings);
@@ -93,14 +88,14 @@ public class Vector<T> extends BaseDataStructure<APersistentVector<? extends T>>
 				newExps=newExps.assocAt(i,(Node<T>) newNode);
 			} 
 		}
-		return (exps==newExps)?this:create(newExps);
+		return (exps==newExps)?this:(Vector<T>) create(newExps);
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public Node<APersistentVector<? extends T>> optimise() {
 		int nExps=exps.size();
-		APersistentVector<Node<? extends T>> newExps=exps;
+		APersistentVector<Node<?>> newExps=exps;
 		for (int i=0; i<nExps; i++) {
 			Node<?> node=exps.get(i);
 			Node<?> newNode=node.optimise();
@@ -110,11 +105,6 @@ public class Vector<T> extends BaseDataStructure<APersistentVector<? extends T>>
 		}
 		return (exps==newExps)?this:(Vector<T>) create(newExps);
 	}
-
-
-	public IPersistentVector<Node<? extends T>> getExpressions() {
-		return exps;
-	}
 	
 	/**
 	 * Gets the Type of this vector expression
@@ -122,7 +112,7 @@ public class Vector<T> extends BaseDataStructure<APersistentVector<? extends T>>
 	@Override
 	public Type getType() {
 		//TODO: include length info in type?
-		return JavaType.create(APersistentVector.class);
+		return Types.VECTOR;
 	}
 	
 	@Override
@@ -142,7 +132,7 @@ public class Vector<T> extends BaseDataStructure<APersistentVector<? extends T>>
 		return (Node<T>) exps.get(i);
 	}
 
-	public APersistentVector<Node<? extends T>> getNodes() {
+	public APersistentVector<Node<?>> getNodes() {
 		return exps;
 	}
 
