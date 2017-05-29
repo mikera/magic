@@ -64,6 +64,10 @@ public class RT {
 			c=c.define(Symbols.QUOTE, Constant.create(Expanders.QUOTE));
 			c=c.define(Symbols.SYNTAX_QUOTE, Constant.create(Expanders.QUOTE));
 			c=c.define(Symbols.PRINTLN, Constant.create(Functions.PRINTLN)); 
+			
+			c=c.define(Symbols.VECTOR, Constant.create(Expanders.VECTOR)); 
+			c=c.define(Symbols.SET, Constant.create(Expanders.SET)); 
+			// c=c.define(Symbols.HASHMAP, Constant.create(Expanders.HASHMAP)); 
 		} catch (Throwable t) {
 			t.printStackTrace(System.err);
 		}

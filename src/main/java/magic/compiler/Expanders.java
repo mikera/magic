@@ -12,10 +12,13 @@ import magic.ast.List;
 import magic.ast.Lookup;
 import magic.ast.Node;
 import magic.ast.Quote;
+import magic.ast.Set;
 import magic.ast.Vector;
 import magic.data.APersistentList;
+import magic.data.APersistentVector;
 import magic.data.Lists;
 import magic.data.Symbol;
+import magic.data.Vectors;
 import magic.fn.IFn;
 import magic.lang.Context;
 import magic.lang.Slot;
@@ -249,6 +252,47 @@ public class Expanders {
 			return Let.create((Vector<Object>)argObj, body,si);
 		}
 	}
+	
+	/**
+	 * An expander that expands vector forms
+	 */
+	public static final Expander VECTOR = new VectorExpander();
+
+	private static final class VectorExpander extends AListExpander {
+		@Override
+		public Node<?> expand(Context c, List form,Expander ex) {
+			int n=form.size();
+			if (n<1) throw new ExpansionException("Can't expand vector!",form);
+
+			SourceInfo si=form.getSourceInfo();
+			APersistentList<Node<?>> body=form.getNodes().subList(1,n);
+			
+			APersistentVector<Node<?>> bodyVec=Vectors.coerce(ex.expandAll(c, body, ex));
+
+			return Vector.create(bodyVec,si);
+		}
+	}
+	
+	/**
+	 * An expander that expands set forms
+	 */
+	public static final Expander SET = new SetExpander();
+
+	private static final class SetExpander extends AListExpander {
+		@Override
+		public Node<?> expand(Context c, List form,Expander ex) {
+			int n=form.size();
+			if (n<1) throw new ExpansionException("Can't expand set!",form);
+
+			SourceInfo si=form.getSourceInfo();
+			APersistentList<Node<?>> body=form.getNodes().subList(1,n);
+			
+			APersistentVector<Node<?>> bodyVec=Vectors.coerce(ex.expandAll(c, body, ex));
+			
+			return Set.create(bodyVec,si);
+		}
+	}
+
 
 	/**
 	 * An expander that expands quoted forms

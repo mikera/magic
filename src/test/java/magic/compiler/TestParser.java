@@ -9,6 +9,7 @@ import static org.junit.Assert.fail;
 import magic.ast.Vector;
 import org.junit.Test;
 
+import magic.RT;
 import magic.ast.List;
 import magic.ast.Node;
 import magic.data.IPersistentVector;
@@ -107,8 +108,10 @@ public class TestParser {
 	}
 	
 	@Test public void testSet() {
-		assertEquals(Sets.of(3L),Reader.read("#{3}"));
-		assertEquals(Sets.of(1L,2L,3L),Reader.read("#{1,3,2,3,1}").getValue());
+		Object s1= Compiler.compile(RT.INITIAL_CONTEXT,"#{3}").getValue();
+		assertEquals(Sets.of(3L),s1);
+		Object s2= Compiler.compile(RT.INITIAL_CONTEXT,"#{1,3,2,3,1}").getValue();
+		assertEquals(Sets.of(1L,2L,3L),s2);
 	}
 	
 	@Test public void testSetDuplicates() {
