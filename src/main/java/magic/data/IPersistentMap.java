@@ -16,9 +16,19 @@ public interface IPersistentMap<K,V> extends Map<K,V>, IPersistentObject, ISeqab
 
 	public IPersistentMap<K,V> dissoc(K key);
 	
-	public IPersistentMap<K,V> delete(Collection<K> key);
+	/**
+	 * Deletes the specified keys from the map
+	 * @param key
+	 * @return
+	 */
+	public IPersistentMap<K,V> delete(Collection<K> keys);
 
-	public IPersistentMap<K,V> delete(IPersistentSet<K> key);
+	/**
+	 * Deletes the specified keys from the map
+	 * @param key
+	 * @return
+	 */
+	public IPersistentMap<K,V> delete(IPersistentSet<K> keys);
 	
 	// query methods
 	

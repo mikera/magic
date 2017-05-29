@@ -192,6 +192,7 @@ public class PersistentList<T> extends APersistentList<T> {
 
 	@Override
 	public APersistentList<T> assocAt(int index, Object value) {
+		if ((index<0)||(index>=size)) throw new IndexOutOfBoundsException("Index: "+index);
 		return create(vector.assoc(offset+index, value),offset,size);
 	}
 

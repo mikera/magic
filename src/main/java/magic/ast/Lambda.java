@@ -55,7 +55,7 @@ public class Lambda<T> extends BaseForm<IFn<T>> {
 	@Override
 	public EvalResult<IFn<T>> eval(Context context,APersistentMap<Symbol, Object> bindings) {
 		Node<? extends T> body=this.body.specialiseValues(bindings.delete(args));
-		// System.out.println(body);
+		System.out.println(body);
 		AFn<T> fn=new AFn<T>() {
 			@Override
 			public T applyToArray(Object... a) {
