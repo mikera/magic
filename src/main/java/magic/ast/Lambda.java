@@ -54,14 +54,18 @@ public class Lambda<T> extends BaseForm<IFn<T>> {
 
 	@Override
 	public EvalResult<IFn<T>> eval(Context context,APersistentMap<Symbol, Object> bindings) {
-		Node<? extends T> body=this.body.specialiseValues(bindings.delete(args));
-		System.out.println(body);
+		final APersistentMap<Symbol, Object> capturedBindings=bindings.delete(args);
+		// capture variables defined in the current lexical scope
+		Node<? extends T> body=this.body.specialiseValues(capturedBindings);
+		
+		// System.out.println(body);
 		AFn<T> fn=new AFn<T>() {
 			@Override
 			public T applyToArray(Object... a) {
 				if (a.length!=arity) throw new ArityException(arity,a.length);
 				Context c=context;
-				APersistentMap<Symbol, Object> bnds=bindings;
+				APersistentMap<Symbol, Object> bnds=capturedBindings;
+				// add function arguments to the lexical bindings
 				for (int i=0; i<arity; i++) {
 					bnds=bnds.assoc(args.get(i), a[i]);
 				}

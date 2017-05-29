@@ -22,7 +22,7 @@ import magic.type.JavaType;
  *
  * @param <T> the type of all nodes in the Vector
  */
-public class Vector<T> extends Node<APersistentVector<? extends T>> {
+public class Vector<T> extends BaseDataStructure<APersistentVector<? extends T>> {
 
 	APersistentVector<Node<? extends T>> exps;
 	
