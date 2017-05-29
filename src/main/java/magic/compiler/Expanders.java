@@ -5,6 +5,7 @@ import magic.ast.Constant;
 import magic.ast.Define;
 import magic.ast.Do;
 import magic.ast.Dot;
+import magic.ast.HashMap;
 import magic.ast.If;
 import magic.ast.Lambda;
 import magic.ast.Let;
@@ -226,6 +227,31 @@ public class Expanders {
 		}
 	}
 	
+	/**
+	 * An expander that expands expander forms
+	 */
+	public static final Expander EXPANDER = new ExpanderExpander();
+
+	private static final class ExpanderExpander extends AListExpander {
+		@SuppressWarnings("unchecked")
+		@Override
+		public Lambda<?> expand(Context c, List form,Expander ex) {
+			int n=form.size();
+			if (n<2) throw new ExpansionException("Can't expand fn, requires at least an arg vector",form);
+			
+			Node<?> argObj=form.get(1);
+			if (!(argObj instanceof Vector)) {
+				throw new AnalyserException("Can't expand fn: requires a vector of arguments but got "+argObj, form);
+			}
+			
+			SourceInfo si=form.getSourceInfo();
+			// expand the body
+			APersistentList<Node<?>> body=(APersistentList<Node<?>>) ex.expandAll(c, form.getNodes().subList(2,n),ex);
+			
+			return Lambda.create((Vector<Symbol>)argObj, body,si);
+		}
+	}
+	
 	
 	/**
 	 * An expander that expands let forms
@@ -290,6 +316,26 @@ public class Expanders {
 			APersistentVector<Node<?>> bodyVec=Vectors.coerce(ex.expandAll(c, body, ex));
 			
 			return Set.create(bodyVec,si);
+		}
+	}
+	
+	/**
+	 * An expander that expands hashmap forms
+	 */
+	public static final Expander HASHMAP = new HashMapExpander();
+
+	private static final class HashMapExpander extends AListExpander {
+		@Override
+		public Node<?> expand(Context c, List form,Expander ex) {
+			int n=form.size();
+			if (n<1) throw new ExpansionException("Can't expand map!",form);
+
+			SourceInfo si=form.getSourceInfo();
+			APersistentList<Node<?>> body=form.getNodes().subList(1,n);
+			
+			APersistentVector<Node<?>> bodyVec=Vectors.coerce(ex.expandAll(c, body, ex));
+			
+			return HashMap.create(bodyVec,si);
 		}
 	}
 

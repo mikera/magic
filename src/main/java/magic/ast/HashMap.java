@@ -9,12 +9,10 @@ import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
-import magic.data.APersistentSet;
 import magic.data.APersistentVector;
 import magic.data.Lists;
-import magic.data.Sets;
+import magic.data.Maps;
 import magic.data.Symbol;
-import magic.data.Tuple;
 import magic.data.Vectors;
 import magic.lang.Context;
 import magic.lang.Symbols;
@@ -26,44 +24,39 @@ import magic.lang.Symbols;
  *
  * @param <T> the type of all nodes in the Vector
  */
-public class Set<T> extends BaseDataStructure<APersistentSet<? extends T>> {
+public class HashMap<K,V> extends BaseDataStructure<APersistentMap<? extends K,? extends V>> {
 
-	private Set(APersistentVector<Node<?>> exps, SourceInfo source) {
+	private HashMap(APersistentVector<Node<?>> exps, SourceInfo source) {
 		super((APersistentVector<Node<?>>)exps,calcDependencies(exps),source); 
 	}
 
-	public static <T> Set<T> create(APersistentVector<Node<?>> exps, SourceInfo source) {
-		return (Set<T>) new Set<T>(exps,source);
+	public static <K,V> HashMap<K,V> create(APersistentVector<Node<?>> exps, SourceInfo source) {
+		return (HashMap<K,V>) new HashMap<K,V>(exps,source);
 	}
 	
-	public static <T> Set<T> create(List<Node<? extends T>> list, SourceInfo source) {
+	public static <K,V> HashMap<K,V> create(List<Node<?>> list, SourceInfo source) {
 		return create(Vectors.createFromList(list),source);
 	}	
 
 	@SuppressWarnings("unchecked")
-	public static <T> Set<T> create(magic.ast.List list, SourceInfo sourceInfo) {
-		return (Set<T>) create(list.getNodes(),sourceInfo);
+	public static <K,V> HashMap<K,V> create(magic.ast.List list, SourceInfo sourceInfo) {
+		return (HashMap<K,V>) create(list.getNodes(),sourceInfo);
 	}
 
-	public static <T> Set<T> create(APersistentVector<Node<? extends T>> exps) {
+	public static <K,V> HashMap<K,V> create(APersistentVector<Node<?>> exps) {
 		return create(exps,null);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> Set<T> create(Node<? extends T>... exps) {
-		return create(Vectors.createFromArray(exps),null);
-	}
-	
-	@SuppressWarnings("unchecked")
 	@Override
-	public EvalResult<APersistentSet<? extends T>> eval(Context c,APersistentMap<Symbol, Object> bindings) {
+	public EvalResult<APersistentMap<? extends K, ? extends V>> eval(Context c,APersistentMap<Symbol, Object> bindings) {
 		int n=exps.size();
-		if (n==0) return  EvalResult.create(c, (APersistentSet<T>)Sets.emptySet());
+		if (n==0) return  EvalResult.create(c, (APersistentMap<K,V>)Maps.EMPTY);
 		Object[] results=new Object[n];
 		for (int i=0; i<n; i++) {
 			results[i]=exps.get(i).compute(c,bindings);
 		}
-		APersistentSet <? extends T> r=(APersistentSet<? extends T>)Sets.createFrom(results);
+		APersistentMap<K,V> r=(APersistentMap<K, V>) Maps.createFromFlattenedArray(results);
 		return EvalResult.create(c, r);
 	}
 	
@@ -72,17 +65,17 @@ public class Set<T> extends BaseDataStructure<APersistentSet<? extends T>> {
 	public EvalResult<Object> evalQuoted(Context c, APersistentMap<Symbol, Object> bindings,
 			boolean syntaxQuote) {
 		int n=exps.size();
-		if (n==0) return  EvalResult.create(c, (APersistentVector<T>)Tuple.EMPTY);
+		if (n==0) return  EvalResult.create(c, (APersistentMap<K,V>)Maps.EMPTY);
 		Object[] results=new Object[n];
 		for (int i=0; i<n; i++) {
 			results[i]=exps.get(i).evalQuoted(c,bindings,syntaxQuote);
 		}
-		return EvalResult.create(c, Vectors.wrap(results));
+		return EvalResult.create(c, Maps.createFromFlattenedArray(results));
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Node<APersistentSet<? extends T>> specialiseValues(APersistentMap<Symbol, Object> bindings) {
+	public Node<APersistentMap<? extends K, ? extends V>> specialiseValues(APersistentMap<Symbol, Object> bindings) {
 		int nExps=exps.size();
 		APersistentVector<Node<?>> newExps=exps;
 		for (int i=0; i<nExps; i++) {
@@ -90,15 +83,15 @@ public class Set<T> extends BaseDataStructure<APersistentSet<? extends T>> {
 			Node<?> newNode=node.specialiseValues(bindings);
 			if (node!=newNode) {
 				// System.out.println("Specialising "+node+ " to "+newNode);
-				newExps=newExps.assocAt(i,(Node<T>) newNode);
+				newExps=newExps.assocAt(i, newNode);
 			} 
 		}
-		return (exps==newExps)?this:(Set<T>) create(newExps,getSourceInfo());
+		return (exps==newExps)?this:(HashMap<K,V>) create(newExps,getSourceInfo());
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Node<APersistentSet<? extends T>> optimise() {
+	public Node<APersistentMap<? extends K, ? extends V>> optimise() {
 		int nExps=exps.size();
 		APersistentVector<Node<?>> newExps=exps;
 		boolean constant=true;
@@ -106,18 +99,18 @@ public class Set<T> extends BaseDataStructure<APersistentSet<? extends T>> {
 			Node<?> node=exps.get(i);
 			Node<?> newNode=node.optimise();
 			if (node!=newNode) {
-				newExps=newExps.assocAt(i,(Node<T>) newNode);
+				newExps=newExps.assocAt(i,newNode);
 			} 
 			if (!node.isConstant()) constant=false;
 		}
 		
-		// can optimise to a constant set
+		// can optimise to a constant hashmap
 		if (constant) {
-			APersistentVector<T> vals=newExps.map(n->((Node<T>)n).getValue());
-			return Constant.create(Sets.createFrom(vals), deps);
+			APersistentVector<Object> vals=newExps.map(n->((Node<?>)n).getValue());
+			return Constant.create(Maps.createFromFlattenedPairs(vals), deps);
 		}
 		
-		return (exps==newExps)?this:(Set<T>) create(newExps,getSourceInfo());
+		return (exps==newExps)?this:(HashMap<K,V>) create(newExps,getSourceInfo());
 	}
 	
 	/**
@@ -140,9 +133,8 @@ public class Set<T> extends BaseDataStructure<APersistentSet<? extends T>> {
 		return exps.size();
 	}
 
-	@SuppressWarnings("unchecked")
-	public Node<T> get(int i) {
-		return (Node<T>) exps.get(i);
+	public Node<?> get(int i) {
+		return exps.get(i);
 	}
 
 	public APersistentVector<Node<?>> getNodes() {
@@ -152,7 +144,7 @@ public class Set<T> extends BaseDataStructure<APersistentSet<? extends T>> {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public APersistentList<?> toForm() {
-		return Lists.cons(Symbols.SET, Lists.create(((APersistentVector)exps).map(Nodes.TO_FORM)));
+		return Lists.cons(Symbols.HASHMAP, Lists.create(((APersistentVector)exps).map(Nodes.TO_FORM)));
 	}
 
 }

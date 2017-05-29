@@ -115,12 +115,12 @@ public class TestParser {
 	}
 	
 	@Test public void testSetDuplicates() {
-		Node<?> c=Reader.read("#{foo foo}");
-		assertEquals(Sets.of(Symbol.create("foo")),c.getValue());
+		Object s2= Compiler.compile(RT.INITIAL_CONTEXT,"#{'foo 'foo}").getValue();
+		assertEquals(Sets.of(Symbol.create("foo")),s2);
 	}
 	
 	@Test public void testMap() {
-		Object c=Reader.read("{1 2}");
+		Object c= Compiler.compile(RT.INITIAL_CONTEXT,"{1 2}").getValue();
 		assertEquals(Maps.create(1L, 2L),c);
 	}
 	

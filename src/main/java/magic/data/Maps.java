@@ -27,13 +27,24 @@ public class Maps {
 		return PersistentHashMap.create(values);
 	}
 	
-	public static <T> APersistentMap<T,T> createFromFlattenedPairs(List<T> values) {
+	@SuppressWarnings("unchecked")
+	public static <K,V> APersistentMap<? extends K, ? extends V> createFromFlattenedPairs(List<?> values) {
 		int n=values.size();
 		if ((n&1)!=0) throw new Error("Map construction requires an even number of terms");
-		@SuppressWarnings("unchecked")
-		APersistentMap<T,T> m=(APersistentMap<T, T>) PersistentHashMap.EMPTY;
+		APersistentMap<K,V> m=(APersistentMap<K, V>) PersistentHashMap.EMPTY;
 		for (int i=0; i<n; i+=2) {
-			m=m.assoc(values.get(i), values.get(i+1));
+			m=m.assoc((K)values.get(i), (V)values.get(i+1));
+		}
+		return m;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <K,V> APersistentMap<? extends K, ? extends V> createFromFlattenedArray(Object[] values) {
+		int n=values.length;
+		if ((n&1)!=0) throw new Error("Map construction requires an even number of terms");
+		APersistentMap<K,V> m=(APersistentMap<K, V>) PersistentHashMap.EMPTY;
+		for (int i=0; i<n; i+=2) {
+			m=m.assoc((K)values[i], (V)values[i+1]);
 		}
 		return m;
 	}
