@@ -139,6 +139,17 @@ public class TestCompiler {
 		assertEquals((Long)2L,c2.getValue("c"));
 	}
 	
+	@Test public void testUnquote() {
+		Context c=RT.INITIAL_CONTEXT;
+		// TODO: make work with quoted form?
+		EvalResult<?> r=Compiler.compile(c, 
+				  "(def a 2)"
+				+ "(def b [1 ~a])");
+		Context c2=r.getContext();
+		
+		assertEquals(Tuple.of(1L,2L),c2.getValue("b"));
+	}
+	
 	@Test public void testDependencyUpdate() {
 		Context c=RT.INITIAL_CONTEXT;
 		

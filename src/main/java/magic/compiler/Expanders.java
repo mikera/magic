@@ -392,6 +392,7 @@ public class Expanders {
 			Node<?> unquotedNode=form.get(1);
 			SourceInfo si=form.getSourceInfo();
 			
+			// TODO: is this right?
 			Node<?> node=Constant.create(Compiler.compile(c, unquotedNode).getValue(),si);
 			return node;
 		}
