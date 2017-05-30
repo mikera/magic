@@ -63,9 +63,9 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 	}
 	
     public Rule WhiteSpace() {
-        return FirstOf(
-        		OneOrMore(WhiteSpaceCharacter()),
-        		Sequence(';',OneOrMore(NoneOf("\n")),'\n',Optional(WhiteSpace())));
+        return OneOrMore(FirstOf(
+        		WhiteSpaceCharacter(),
+        		Sequence(';',OneOrMore(NoneOf("\n")),'\n')));
     }
     
     public Rule WhiteSpaceCharacter() {
