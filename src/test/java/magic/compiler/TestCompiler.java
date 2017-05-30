@@ -125,6 +125,19 @@ public class TestCompiler {
 		assertEquals((Long)2L,c2.getValue("b"));
 	}
 	
+	@Test public void testDependencyUpdate() {
+		Context c=RT.INITIAL_CONTEXT;
+		
+		EvalResult<?> r=Compiler.compile(c, 
+				  "(def a 1)"
+				+ "(defn f [c] a)"
+				+ "(def a 2)"
+				+ "(def b (f 3))");
+		Context c2=r.getContext();
+		
+		assertEquals((Long)2L,c2.getValue("b"));
+	}
+	
 	@Test public void testDependencies() {
 		Context c=RT.INITIAL_CONTEXT;
 		

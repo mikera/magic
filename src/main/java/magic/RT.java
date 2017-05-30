@@ -47,6 +47,7 @@ public class RT {
 	
 	/**
 	 * Sets up the initial Magic context for language bootstrap
+	 * This is what is required to load magic.core
 	 * @return
 	 */
 	private static Context createBootstrapContext() {

@@ -65,4 +65,12 @@ public class Slot<T> {
 	public APersistentSet<Symbol> getDependencies() {
 		return expression.getDependencies();
 	}
+
+	/**
+	 * Invalidates the slot, returning a new slot with no cached values
+	 * @return
+	 */
+	public Slot<T> invalidate() {
+		return create(expression);
+	}
 }

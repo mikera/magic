@@ -70,12 +70,9 @@ public class Context {
 				newDependants=newDependants.assoc(rsym, newDependants.get(rsym).exclude(sym));
 			}
 		}
-		
-		Slot<T> newSlot=Slot.create(exp);
-		PersistentHashMap<Symbol, Slot<?>> newMappings=mappings.assoc(sym,newSlot);
-		
+				
 		// include new dependencies
-		APersistentSet<Symbol> dependencies=newSlot.getDependencies();
+		APersistentSet<Symbol> dependencies=exp.getDependencies();
 		for (Symbol nsym: dependencies) {
 			APersistentSet<Symbol> t=newDependants.get(nsym);
 			if (t==null) {
@@ -86,9 +83,37 @@ public class Context {
 			newDependants=newDependants.assoc(nsym, t);
 		}
 		
+		// create the new Slot
+		Slot<T> newSlot=Slot.create(exp);
+		PersistentHashMap<Symbol, Slot<?>> newMappings=mappings.assoc(sym,newSlot);
+
+		APersistentSet<Symbol> allDependants=calcTransitiveDependants(sym,newDependants);
+		if (allDependants.size()>0) {
+			for (Symbol s: allDependants) {
+				Slot<?> slot=getSlot(s);
+				if (slot!=null) newMappings=newMappings.assoc(s, slot.invalidate());
+			}
+		}
+		
 		return new Context(newMappings,newDependants);
 	}
 	
+	private static APersistentSet<Symbol> calcTransitiveDependants(Symbol sym, PersistentHashMap<Symbol, APersistentSet<Symbol>> dependants) {
+		return calcTransitiveDependants(sym,dependants,Sets.emptySet());
+	}
+	
+	private static APersistentSet<Symbol> calcTransitiveDependants(Symbol sym, PersistentHashMap<Symbol, APersistentSet<Symbol>> dependants, APersistentSet<Symbol> found) {
+		APersistentSet<Symbol> syms=dependants.get(sym);
+		if (syms==null) return found;
+		for (Symbol s :syms) {
+			if (!found.contains(s)) {
+				found=found.include(s);
+				found=calcTransitiveDependants(s,dependants,found);
+			}
+		}
+		return found;
+	}
+
 	/**
 	 * Gets the dependencies for a given symbol in this context
 	 * @param sym
