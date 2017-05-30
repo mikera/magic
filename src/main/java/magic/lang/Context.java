@@ -38,17 +38,27 @@ public class Context {
 		return slot.getValue(this);
 	}
 	
-	public <T> Node<T> getExpression(Symbol sym) {
-		Slot<T> slot=getSlot(sym); 
-		if (slot==null) throw new IllegalArgumentException("Symbol not defined: "+sym);
-		return slot.getNode();
-	}
-	
 	public <T> T getValue(String sym) {
 		return getValue(Reader.readSymbol(sym));
 	}
 	
-	// TODO: need to attach source?
+	/**
+	 * Defines a symbol in the current context
+	 * @param sym String containing the symbol to define
+	 * @param exp A Node definition
+	 * @return
+	 */
+	public <T> Context define(String sym, Node<T> exp) {
+		Symbol s=Reader.readSymbol(sym);
+		return define(s,exp);
+	}
+	
+	/**
+	 * Defines a symbol in the current context
+	 * @param sym Symbol to define
+	 * @param exp A Node definition
+	 * @return
+	 */
 	public <T> Context define(Symbol sym, Node<T> exp) {
 		PersistentHashMap<Symbol,APersistentSet<Symbol>> newDependants=dependants;
 		
@@ -79,27 +89,43 @@ public class Context {
 		return new Context(newMappings,newDependants);
 	}
 	
+	/**
+	 * Gets the dependencies for a given symbol in this context
+	 * @param sym
+	 * @return
+	 */
 	public APersistentSet<Symbol> getDependencies(String sym) {
 		return getDependencies(Reader.readSymbol(sym));
 	}
 	
+	/**
+	 * Gets the dependants for a given symbol in this context
+	 * @param sym
+	 * @return
+	 */
 	public APersistentSet<Symbol> getDependants(String sym) {
 		return getDependants(Reader.readSymbol(sym));
 	}
 	
+	/**
+	 * Gets the dependencies for a given symbol in this context
+	 * @param sym
+	 * @return
+	 */
 	public APersistentSet<Symbol> getDependencies(Symbol sym) {
 		return getSlot(sym).getDependencies();
 	}
 	
+	/**
+	 * Gets the dependants for a given symbol in this context
+	 * @param sym
+	 * @return
+	 */
 	public APersistentSet<Symbol> getDependants(Symbol sym) {
 		APersistentSet<Symbol> ds=dependants.get(sym);
 		return (ds==null)?Sets.emptySet():ds;
 	}
-	
-	public <T> Context define(String sym, Node<T> exp) {
-		Symbol s=Reader.readSymbol(sym);
-		return define(s,exp);
-	}
+
 	
 	public static <T> Context createWith(Symbol sym,Node<T> e) {
 		return EMPTY.define(sym, e);
@@ -119,9 +145,26 @@ public class Context {
 		return (Slot<T>) mappings.get(sym);
 	}
 
+	/**
+	 * Gets the Node in this context associated with a given symbol name
+	 * @param symbol
+	 * @return
+	 */
 	public Node<?> getNode(String symbol) {
-		return getExpression(Reader.readSymbol(symbol));
+		return getNode(Reader.readSymbol(symbol));
 	}
+	
+	/**
+	 * Gets the Node in this context associated with a given symbol name
+	 * @param symbol
+	 * @return
+	 */
+	public <T> Node<T> getNode(Symbol sym) {
+		Slot<T> slot=getSlot(sym); 
+		if (slot==null) throw new IllegalArgumentException("Symbol not defined: "+sym);
+		return slot.getNode();
+	}
+	
 
 	public String getCurrentNamespace() {
 		return getValue(Symbols._NS_);
