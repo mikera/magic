@@ -2,5 +2,5 @@
 ;; Magic core namespace
 ;;
 
-(defmacro comment [a]
+(defmacro comment [a] 
   nil)

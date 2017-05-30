@@ -130,11 +130,11 @@ public class TestCompiler {
 		Context c=RT.INITIAL_CONTEXT;
 		
 		EvalResult<?> r=Compiler.compile(c, 
-				  "(defn f [c] d) "
-				+ "(def foo bar) "
-				+ "(def a 1) "
-				+ "(def b a) "
-			    + "(defn f [c] b) ");
+				  "(defn f [c] d)"
+				+ "(def foo bar)"
+				+ "(def a 1)"
+				+ "(def b a)"
+			    + "(defn f [c] b)");
 		Context c2=r.getContext();
 		
 		assertEquals(Sets.of(),c2.getDependencies("a"));

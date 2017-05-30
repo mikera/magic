@@ -65,7 +65,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
     public Rule WhiteSpace() {
         return OneOrMore(FirstOf(
         		WhiteSpaceCharacter(),
-        		Sequence("#_",Optional(WhiteSpace()),Expression()),
+        		Sequence("#_",Optional(WhiteSpace()),Expression(),drop()), // remember to drop expression from value stack!
         		Sequence(';',OneOrMore(NoneOf("\n")),'\n')));
     }
     
@@ -82,6 +82,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 				);
 	}
 	
+	// Delimited expressions don't need separating whitespace after them
 	public Rule DelimitedExpression() {
 		return FirstOf(
 				DataStructure(),
@@ -117,19 +118,22 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 		};
 	}
 	
+	/**
+	 * Rule for an expression list, containing zero or more expressions and optional whitespace
+	 * @return
+	 */
 	public Rule ExpressionList() {
 		Var<ArrayList<Node<Object>>> expVar=new Var<>(new ArrayList<>());
 		return Sequence(
 				Optional(WhiteSpace()),
-				FirstOf(Sequence(
+				ZeroOrMore(Sequence(
+							FirstOf(Sequence(DelimitedExpression(),Optional(WhiteSpace())),
+									Sequence(UndelimitedExpression(),WhiteSpace())),
+							AddAction(expVar)
+						  )),
+				Optional(Sequence( // final expression without whitespace
 							Expression(),
-							AddAction(expVar),
-							ZeroOrMore(Sequence(WhiteSpace(),
-								            	Expression(),
-								            	AddAction(expVar))),
-							Optional(WhiteSpace())),
-						EMPTY
-						),
+							AddAction(expVar))),
 				push(magic.ast.List.create(Lists.create(expVar.get()),getSourceInfo()))
 				);
 	}
