@@ -25,36 +25,37 @@ import magic.type.FunctionType;
  */
 public class Lambda<T> extends BaseForm<IFn<T>> {
 
-	private final APersistentVector<Symbol> args;
+	private final APersistentVector<Symbol> params;
 	private final Node<T> body;
 	private final int arity;
   
 	@SuppressWarnings("unchecked")
-	public Lambda(APersistentVector<Symbol> args, Node<T> body,SourceInfo source) {
-		super((APersistentList<Node<?>>)(APersistentList<?>)Lists.of(Constant.create(Symbols.FN),Constant.create(args),body),body.getDependencies().excludeAll(args),source);
-		this.args=args;
-		this.arity=args.size();
+	public Lambda(APersistentVector<Symbol> params, Node<T> body,SourceInfo source) {
+		super((APersistentList<Node<?>>)(APersistentList<?>)Lists.of(Constant.create(Symbols.FN),Constant.create(params),body),body.getDependencies().excludeAll(params),source);
+		this.params=params;
+		this.arity=params.size();
 		this.body=body;
 	}
 	
-	public static <T> Lambda<T> create(APersistentVector<Symbol> args, Node<T> body) {
-		return create(args,body,null);
+	
+	public static <T> Lambda<T> create(APersistentVector<Symbol> params, Node<T> body) {
+		return create(params,body,null);
 	}
 	
-	public static <T> Lambda<T> create(APersistentVector<Symbol> args, Node<T> body,SourceInfo source) {
-		return new Lambda<T>(args,body,source);
+	public static <T> Lambda<T> create(APersistentVector<Symbol> params, Node<T> body,SourceInfo source) {
+		return new Lambda<T>(params,body,source);
 	}
 	
 
 	@SuppressWarnings("unchecked")
-	public static <T> Lambda<T> create(Vector<Symbol> args, APersistentList<Node<?>> body, SourceInfo source) {
-		APersistentVector<Symbol> alist=(APersistentVector<Symbol>) args.toForm();
+	public static <T> Lambda<T> create(Vector<Symbol> params, APersistentList<Node<?>> body, SourceInfo source) {
+		APersistentVector<Symbol> alist=(APersistentVector<Symbol>) params.toForm();
 		return create(alist,Do.create(body,source),source);
 	}
 
 	@Override
 	public EvalResult<IFn<T>> eval(Context context,APersistentMap<Symbol, Object> bindings) {
-		final APersistentMap<Symbol, Object> capturedBindings=bindings.delete(args);
+		final APersistentMap<Symbol, Object> capturedBindings=bindings.delete(params);
 		// capture variables defined in the current lexical scope
 		Node<? extends T> body=this.body.specialiseValues(capturedBindings);
 		
@@ -67,7 +68,7 @@ public class Lambda<T> extends BaseForm<IFn<T>> {
 				APersistentMap<Symbol, Object> bnds=capturedBindings;
 				// add function arguments to the lexical bindings
 				for (int i=0; i<arity; i++) {
-					bnds=bnds.assoc(args.get(i), a[i]);
+					bnds=bnds.assoc(params.get(i), a[i]);
 				}
 				return body.compute(c,bnds);
 			}	
@@ -83,17 +84,17 @@ public class Lambda<T> extends BaseForm<IFn<T>> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Node<? extends IFn<T>> specialiseValues(APersistentMap<Symbol, Object> bindings) {
-		bindings=bindings.delete(args); // hidden by argument bindings
+		bindings=bindings.delete(params); // hidden by argument bindings
 		Node<? extends T> newBody=body.specialiseValues(bindings);
 		// System.out.println("Defining lambda as "+newBody+" with bindings "+bindings);
-		return (body==newBody)?this:(Lambda<T>) create(args,newBody);
+		return (body==newBody)?this:(Lambda<T>) create(params,newBody,getSourceInfo());
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public Node<? extends IFn<T>> optimise() {
 		Node<? extends T> newBody=body.optimise();
-		return (body==newBody)?this:(Lambda<T>) create(args,newBody);
+		return (body==newBody)?this:(Lambda<T>) create(params,newBody,getSourceInfo());
 	}
 
 	
@@ -113,7 +114,7 @@ public class Lambda<T> extends BaseForm<IFn<T>> {
 	
 	@Override
 	public String toString() {
-		return "(fn "+args+" "+body+")";
+		return "(fn "+params+" "+body+")";
 	}
 
 }

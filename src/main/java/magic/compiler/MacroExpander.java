@@ -22,7 +22,7 @@ public class MacroExpander extends AListExpander {
 	}
 
 	@Override
-	public Node<?> expand(Context c, List form, Expander ex) {
+	public Node<?> expand(Context c, List form, AExpander ex) {
 		int n=form.size()-1;
 		Object[] arr=new Object[n];
 		for (int i=0; i<n; i++) {
@@ -30,7 +30,9 @@ public class MacroExpander extends AListExpander {
 		}
 		
 		Object expandedForm=fn.applyToArray(arr);
-		return Analyser.analyse(expandedForm);
+		Node<?> analysedNode=Analyser.analyse(expandedForm);
+		Node<?> result=ex.expand(c, analysedNode,ex);
+		return result;
 	}
 
 

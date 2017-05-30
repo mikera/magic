@@ -1,5 +1,6 @@
 package magic;
 
+import magic.compiler.AExpander;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
 import magic.data.APersistentVector;
@@ -27,6 +28,7 @@ public class Types {
 	public static final JavaType<APersistentVector<?>> VECTOR = JavaType.create(APersistentVector.class);
 	public static final JavaType<APersistentSet<?>> SET = JavaType.create(APersistentSet.class);
 	public static final JavaType<APersistentMap<?,?>> MAP = JavaType.create(APersistentMap.class);
+	public static final JavaType<AExpander> EXPANDER = JavaType.create(AExpander.class);;
 	
 	public static Type intersect(Type a, Type b) {
 		if (a==null) return b;

@@ -50,8 +50,14 @@ public class Lookup<T> extends Node<T> {
 		return this;
 	}
 	
+	@Override
 	public Symbol getSymbol() {
 		return sym;
+	}
+	
+	@Override
+	public boolean isSymbol() {
+		return true;
 	}
 	
 	@Override

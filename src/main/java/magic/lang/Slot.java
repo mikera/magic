@@ -1,7 +1,7 @@
 package magic.lang;
 
 import magic.ast.Node;
-import magic.compiler.Expander;
+import magic.compiler.AExpander;
 import magic.data.APersistentSet;
 import magic.data.Symbol;
 
@@ -59,6 +59,6 @@ public class Slot<T> {
 	}
 
 	public boolean isExpander(Context c) {
-		return getValue(c) instanceof Expander;
+		return getValue(c) instanceof AExpander;
 	}
 }

@@ -5,6 +5,7 @@ import magic.ast.Constant;
 import magic.ast.Define;
 import magic.ast.Do;
 import magic.ast.Dot;
+import magic.ast.Expander;
 import magic.ast.HashMap;
 import magic.ast.If;
 import magic.ast.Lambda;
@@ -41,11 +42,11 @@ public class Expanders {
 	 * This expander expands sub forms using other expanders where appropriate,
 	 * and continues to expand using the same initial expander
 	 */
-	public static final Expander INITAL_EXPANDER = new DefaultExpander();
+	public static final AExpander INITAL_EXPANDER = new DefaultExpander();
 	
-	private static final class DefaultExpander extends Expander {
+	private static final class DefaultExpander extends AExpander {
 		@Override
-		public Node<?> expand(Context c, Node<?> form,Expander ex) {
+		public Node<?> expand(Context c, Node<?> form,AExpander ex) {
 			if (form instanceof List) {
 				return listExpand(c,(List)form,ex);
 			}
@@ -62,7 +63,7 @@ public class Expanders {
 			return form;
 		}
 
-		private Node<?> vectorExpand(Context c, Vector<?> form, Expander ex) {
+		private Node<?> vectorExpand(Context c, Vector<?> form, AExpander ex) {
 			int n=form.size();
 			Node<?>[] forms=new Node[n];
 			for (int i=0; i<n; i++) {
@@ -71,7 +72,7 @@ public class Expanders {
 			return Vector.create(Lists.wrap(forms),form.getSourceInfo());
 		}
 
-		private Node<?> listExpand(Context c, List form, Expander ex) {
+		private Node<?> listExpand(Context c, List form, AExpander ex) {
 			int n=form.size();
 			if (n==0) return List.EMPTY;
 			Node<?> head=form.get(0);
@@ -80,7 +81,7 @@ public class Expanders {
 				if (h instanceof Symbol) {
 					Slot<Object> slot=c.getSlot((Symbol)h);
 					if ((slot!=null)&&slot.isExpander(c)) {
-						Expander e=(Expander) slot.getValue(c);
+						AExpander e=(AExpander) slot.getValue(c);
 						return e.expand(c, form, ex);
 					}
 				}
@@ -89,7 +90,7 @@ public class Expanders {
 			return applicationExpand(c,form,ex);
 		}
 		
-		private Node<?> applicationExpand(Context c, List form, Expander ex) {
+		private Node<?> applicationExpand(Context c, List form, AExpander ex) {
 			int n=form.size();
 			Node<?>[] forms=new Node[n];
 			for (int i=0; i<n; i++) {
@@ -102,11 +103,11 @@ public class Expanders {
 	/**
 	 * An expander that expands def forms
 	 */
-	public static final Expander DEF = new DefExpander();
+	public static final AExpander DEF = new DefExpander();
 
 	private static final class DefExpander extends AListExpander {
 		@Override
-		public Node<?> expand(Context c, List form,Expander ex) {
+		public Node<?> expand(Context c, List form,AExpander ex) {
 			int n=form.size();
 			if (n!=3) throw new ExpansionException("Can't expand def, requires a symbolic name and expression",form);
 			
@@ -126,11 +127,11 @@ public class Expanders {
 	/**
 	 * An expander that expands do forms
 	 */
-	public static final Expander DO = new DoExpander();
+	public static final AExpander DO = new DoExpander();
 
 	private static final class DoExpander extends AListExpander {
 		@Override
-		public Node<?> expand(Context c, List form,Expander ex) {
+		public Node<?> expand(Context c, List form,AExpander ex) {
 			int n=form.size();
 			if (n<1) throw new ExpansionException("Can't expand do, requires at least a do symbol",form);
 			
@@ -146,11 +147,11 @@ public class Expanders {
 	/**
 	 * An expander that expands dot forms
 	 */
-	public static final Expander DOT = new DotExpander();
+	public static final AExpander DOT = new DotExpander();
 
 	private static final class DotExpander extends AListExpander {
 		@Override
-		public Node<?> expand(Context c, List form,Expander ex) {
+		public Node<?> expand(Context c, List form,AExpander ex) {
 			int n=form.size();
 			if (n<3) throw new ExpansionException("Can't expand dot, requires at least a intance and method name",form);
 			
@@ -174,11 +175,11 @@ public class Expanders {
 	/**
 	 * An expander that expands defn forms
 	 */
-	public static final Expander DEFN = new DefnExpander();
+	public static final AExpander DEFN = new DefnExpander();
 
 	private static final class DefnExpander extends AListExpander {
 		@Override
-		public Node<?> expand(Context c, List form,Expander ex) {
+		public Node<?> expand(Context c, List form,AExpander ex) {
 			int n=form.size();
 			if (n<3) throw new ExpansionException("Can't expand defn, requires at least function name and arg vector",form);
 			
@@ -205,12 +206,12 @@ public class Expanders {
 	/**
 	 * An expander that expands fn forms
 	 */
-	public static final Expander FN = new FnExpander();
+	public static final AExpander FN = new FnExpander();
 
 	private static final class FnExpander extends AListExpander {
 		@SuppressWarnings("unchecked")
 		@Override
-		public Lambda<?> expand(Context c, List form,Expander ex) {
+		public Lambda<?> expand(Context c, List form,AExpander ex) {
 			int n=form.size();
 			if (n<2) throw new ExpansionException("Can't expand fn, requires at least an arg vector",form);
 			
@@ -230,25 +231,40 @@ public class Expanders {
 	/**
 	 * An expander that expands expander forms
 	 */
-	public static final Expander EXPANDER = new ExpanderExpander();
+	public static final AExpander EXPANDER = new ExpanderExpander();
 
 	private static final class ExpanderExpander extends AListExpander {
 		@SuppressWarnings("unchecked")
 		@Override
-		public Lambda<?> expand(Context c, List form,Expander ex) {
+		public Expander expand(Context c, List form,AExpander ex) {
 			int n=form.size();
-			if (n<2) throw new ExpansionException("Can't expand fn, requires at least an arg vector",form);
+			if (n<2) throw new ExpansionException("Can't expand expander, requires at least an arg vector",form);
 			
 			Node<?> argObj=form.get(1);
 			if (!(argObj instanceof Vector)) {
-				throw new AnalyserException("Can't expand fn: requires a vector of arguments but got "+argObj, form);
+				throw new AnalyserException("Can't expand expander: requires a vector of arguments but got: "+argObj, form);
+			}
+			Vector<?> aov=(Vector<?>)argObj;
+			if (aov.size()!=2) {
+				throw new AnalyserException("Can't expand expander: must have two parameters for binding (continuation expander and expander params) but got: "+argObj, form);
+			}
+			
+			Node<?> exObj=aov.get(0);
+			if (!exObj.isSymbol()) {
+				throw new AnalyserException("Can't expand expander: first parameter must be a symbol to bind to continuation expander but got: "+exObj, form);
+			}
+			Symbol exSym=exObj.getSymbol();
+
+			Node<?> paramObj=aov.get(1);
+			if (!(paramObj instanceof Vector)) {
+				throw new AnalyserException("Can't expand expander: second parameter must be a vector of expander parameters but got: "+paramObj, form);
 			}
 			
 			SourceInfo si=form.getSourceInfo();
 			// expand the body
 			APersistentList<Node<?>> body=(APersistentList<Node<?>>) ex.expandAll(c, form.getNodes().subList(2,n),ex);
 			
-			return Lambda.create((Vector<Symbol>)argObj, body,si);
+			return Expander.create(exSym,(Vector<Symbol>)paramObj, body,si);
 		}
 	}
 	
@@ -256,12 +272,12 @@ public class Expanders {
 	/**
 	 * An expander that expands let forms
 	 */
-	public static final Expander LET = new LetExpander();
+	public static final AExpander LET = new LetExpander();
 
 	private static final class LetExpander extends AListExpander {
 		@SuppressWarnings("unchecked")
 		@Override
-		public Node<?> expand(Context c, List form,Expander ex) {
+		public Node<?> expand(Context c, List form,AExpander ex) {
 			int n=form.size();
 			if (n<2) throw new ExpansionException("Can't expand let, requires at least an bindings vector",form);
 
@@ -282,11 +298,11 @@ public class Expanders {
 	/**
 	 * An expander that expands vector forms
 	 */
-	public static final Expander VECTOR = new VectorExpander();
+	public static final AExpander VECTOR = new VectorExpander();
 
 	private static final class VectorExpander extends AListExpander {
 		@Override
-		public Node<?> expand(Context c, List form,Expander ex) {
+		public Node<?> expand(Context c, List form,AExpander ex) {
 			int n=form.size();
 			if (n<1) throw new ExpansionException("Can't expand vector!",form);
 
@@ -302,11 +318,11 @@ public class Expanders {
 	/**
 	 * An expander that expands set forms
 	 */
-	public static final Expander SET = new SetExpander();
+	public static final AExpander SET = new SetExpander();
 
 	private static final class SetExpander extends AListExpander {
 		@Override
-		public Node<?> expand(Context c, List form,Expander ex) {
+		public Node<?> expand(Context c, List form,AExpander ex) {
 			int n=form.size();
 			if (n<1) throw new ExpansionException("Can't expand set!",form);
 
@@ -322,11 +338,11 @@ public class Expanders {
 	/**
 	 * An expander that expands hashmap forms
 	 */
-	public static final Expander HASHMAP = new HashMapExpander();
+	public static final AExpander HASHMAP = new HashMapExpander();
 
 	private static final class HashMapExpander extends AListExpander {
 		@Override
-		public Node<?> expand(Context c, List form,Expander ex) {
+		public Node<?> expand(Context c, List form,AExpander ex) {
 			int n=form.size();
 			if (n<1) throw new ExpansionException("Can't expand map!",form);
 
@@ -343,11 +359,11 @@ public class Expanders {
 	/**
 	 * An expander that expands quoted forms
 	 */
-	public static final Expander QUOTE = new QuoteExpander();
+	public static final AExpander QUOTE = new QuoteExpander();
 
 	private static final class QuoteExpander extends AListExpander {
 		@Override
-		public Quote expand(Context c, List form,Expander ex) {
+		public Quote expand(Context c, List form,AExpander ex) {
 			int n=form.size();
 			if (n!=2) throw new ExpansionException("Can't expand quote, requires a form",form);
 			
@@ -363,11 +379,11 @@ public class Expanders {
 	}
 
 	
-	public static final Expander DEFMACRO = new DefMacroExpander();
+	public static final AExpander DEFMACRO = new DefMacroExpander();
 	
 	private static final class DefMacroExpander extends AListExpander {
 		@Override
-		public Node<?> expand(Context c,List form,Expander ex) {
+		public Node<?> expand(Context c,List form,AExpander ex) {
 			int n=form.size();
 			if (n<3) throw new ExpansionException("Can't expand defmacro, requires at least macro name and arg vector",form);
 			
@@ -400,7 +416,7 @@ public class Expanders {
 	private static final class IfExpander extends AListExpander{
 
 		@Override
-		public Node<?> expand(Context c, List form, Expander ex) {
+		public Node<?> expand(Context c, List form, AExpander ex) {
 			int n=form.size();
 			SourceInfo si=form.getSourceInfo();
 			if ((n<3)||(n>4)) throw new ExpansionException("Can't expand if, reqires a condition, a true expression and optional false expression",form);
@@ -417,12 +433,12 @@ public class Expanders {
 	 * 
 	 * TODO: Conform if this means losing some of the benefits of types?
 	 */
-	public static final Expander MACRO = new MacroExpander();
+	public static final AExpander MACRO = new MacroExpander();
 		
 	private static final class MacroExpander extends AListExpander{
 		@SuppressWarnings("unchecked")
 		@Override
-		public Node<?> expand(Context c, List form,Expander ex) {
+		public Node<?> expand(Context c, List form,AExpander ex) {
 			int n=form.size();
 			if (n<3) throw new ExpansionException("Can't expand macro, requires at least an arg vector and body",form);
 			
@@ -437,7 +453,7 @@ public class Expanders {
 			Lambda<Object> macroFn= Lambda.create((Vector<Symbol>)argObj, body,si);
 			IFn<Object> fn=(IFn<Object>) macroFn.compute(c);
 			magic.compiler.MacroExpander me= magic.compiler.MacroExpander.create(fn);
-			return Constant.create(me);
+			return Constant.create(me,si);
 		}
 	};
 }

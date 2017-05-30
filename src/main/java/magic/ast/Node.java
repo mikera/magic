@@ -61,12 +61,32 @@ public abstract class Node<T> extends RootNode {
 		throw new UnsupportedOperationException("Can't execute a Magic node without a context");
 	}
 	
+	/**
+	 * Returns the value of this Node. Throws an error if the node does not have a constant valuee.
+	 * @return
+	 */
 	public T getValue() {
 		throw new UnsupportedOperationException("Cannot use getValue() on a non-constant expression");
 	}
 	
+	/**
+	 * Returns true if this node is provably a constant value
+	 * @return
+	 */
 	public boolean isConstant() {
 		return false;
+	}
+	
+	/**
+	 * Returns true if this node is provably a constant Symbol
+	 * @return
+	 */
+	public boolean isSymbol() {
+		return isConstant()&&(getValue() instanceof Symbol);
+	}
+	
+	public Symbol getSymbol() {
+		return (Symbol)getValue();
 	}
 	
 	public final APersistentSet<Symbol> getDependencies() {
@@ -159,4 +179,5 @@ public abstract class Node<T> extends RootNode {
 	 * @return
 	 */
 	public abstract EvalResult<Object> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings, boolean syntaxQuote);
+
 }

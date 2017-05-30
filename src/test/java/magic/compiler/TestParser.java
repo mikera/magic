@@ -17,6 +17,7 @@ import magic.data.Keyword;
 import magic.data.Maps;
 import magic.data.Sets;
 import magic.data.Symbol;
+import magic.lang.Symbols;
 
 public class TestParser {
 
@@ -67,6 +68,7 @@ public class TestParser {
 		assertEquals(Symbol.create("foo"),Reader.readSymbol(" foo"));
 		assertEquals(Symbol.create("foo","bar"),Reader.readSymbol("foo/bar"));
 		assertEquals(Symbol.create("foo","bar"),Reader.readSymbol(" foo/bar "));
+		assertEquals(Symbols.UNDERSCORE,Reader.readSymbol("_"));
 	}
 	
 	@Test public void testQualifiedSymbol() {

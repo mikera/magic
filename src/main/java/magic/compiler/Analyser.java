@@ -83,7 +83,7 @@ public class Analyser {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> Node<T> expand(Context context, Node<?> node) {
-		Expander ex=Expanders.INITAL_EXPANDER;
+		AExpander ex=Expanders.INITAL_EXPANDER;
 		return (Node<T>) ex.expand(context, node, ex);
 	}
 
