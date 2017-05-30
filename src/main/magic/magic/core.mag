@@ -1,0 +1,6 @@
+;;
+;; Magic core namespace
+;;
+
+(defmacro comment [a]
+  nil)
