@@ -377,6 +377,25 @@ public class Expanders {
 			return newForm;
 		}
 	}
+	
+	/**
+	 * An expander that expands unquote forms
+	 */
+	public static final AExpander UNQUOTE = new UnquoteExpander();
+
+	private static final class UnquoteExpander extends AListExpander {
+		@Override
+		public Node<?> expand(Context c, List form,AExpander ex) {
+			int n=form.size();
+			if (n!=2) throw new ExpansionException("Can't expand unquote, requires a form with one expression",form);
+			
+			Node<?> unquotedNode=form.get(1);
+			SourceInfo si=form.getSourceInfo();
+			
+			Node<?> node=Constant.create(Compiler.compile(c, unquotedNode).getValue(),si);
+			return node;
+		}
+	}
 
 	
 	public static final AExpander DEFMACRO = new DefMacroExpander();

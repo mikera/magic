@@ -125,6 +125,20 @@ public class TestCompiler {
 		assertEquals((Long)2L,c2.getValue("b"));
 	}
 	
+	@Test public void testBaseUnquote() {
+		Context c=RT.INITIAL_CONTEXT;
+		
+		EvalResult<?> r=Compiler.compile(c, 
+				  "(def a 1)"
+				+ "(def b ~a)"
+				+ "(def a 2)"
+				+ "(def c ~a)");
+		Context c2=r.getContext();
+		
+		assertEquals((Long)1L,c2.getValue("b"));
+		assertEquals((Long)2L,c2.getValue("c"));
+	}
+	
 	@Test public void testDependencyUpdate() {
 		Context c=RT.INITIAL_CONTEXT;
 		
