@@ -129,10 +129,11 @@ public class TestCompiler {
 		Context c=RT.INITIAL_CONTEXT;
 		
 		EvalResult<?> r=Compiler.compile(c, 
-				  "(def a 1)"
+				  "(defn g [c] (f c))"  
+				+ "(def a 1)"
 				+ "(defn f [c] a)"
 				+ "(def a 2)"
-				+ "(def b (f 3))");
+				+ "(def b (g 3))");
 		Context c2=r.getContext();
 		
 		assertEquals((Long)2L,c2.getValue("b"));
