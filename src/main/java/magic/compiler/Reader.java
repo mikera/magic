@@ -77,11 +77,24 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 	
 	public Rule Expression() {
 		return FirstOf(
+				DelimitedExpression(),
+				UndelimitedExpression()
+				);
+	}
+	
+	public Rule DelimitedExpression() {
+		return FirstOf(
 				DataStructure(),
+				Quoted(DelimitedExpression())
+				);
+	}
+	
+	public Rule UndelimitedExpression() {
+		return FirstOf(
 				Constant(),
 				Keyword(),
 				Symbol(),
-				Quoted(Expression())
+				Quoted(UndelimitedExpression())
 				);
 	}
 
