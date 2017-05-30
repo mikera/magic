@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import magic.RT;
+import magic.data.Sets;
 import magic.data.Symbol;
 import magic.data.Tuple;
 import magic.lang.Context;
@@ -123,5 +124,24 @@ public class TestCompiler {
 		
 		assertNull(c2.getSlot(Symbol.create("a")));
 		assertEquals((Long)2L,c2.getValue("b"));
+	}
+	
+	@Test public void testDependencies() {
+		Context c=RT.INITIAL_CONTEXT;
+		
+		EvalResult<?> r=Compiler.compile(c, 
+				  "(defn f [c] d) "
+				+ "(def foo bar) "
+				+ "(def a 1) "
+				+ "(def b a) "
+			    + "(defn f [c] b) ");
+		Context c2=r.getContext();
+		
+		assertEquals(Sets.of(),c2.getDependencies("a"));
+		assertEquals(Sets.of(Symbol.create("b")),c2.getDependants("a"));
+		assertEquals(Sets.of(Symbol.create("a")),c2.getDependencies("b"));
+		assertEquals(Sets.of(Symbol.create("f")),c2.getDependants("b"));
+		assertEquals(Sets.of(Symbol.create("b")),c2.getDependencies("f")); // TODO: should include fn??
+		assertEquals(Sets.of(),c2.getDependants("f"));
 	}
 }

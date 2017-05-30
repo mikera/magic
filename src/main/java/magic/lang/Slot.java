@@ -49,7 +49,7 @@ public class Slot<T> {
 		return value;
 	}
 	
-	public Node<T> getExpression() {
+	public Node<T> getNode() {
 		return expression;
 	}
 
@@ -60,5 +60,9 @@ public class Slot<T> {
 
 	public boolean isExpander(Context c) {
 		return getValue(c) instanceof AExpander;
+	}
+
+	public APersistentSet<Symbol> getDependencies() {
+		return expression.getDependencies();
 	}
 }
