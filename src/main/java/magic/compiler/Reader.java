@@ -81,7 +81,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 				Constant(),
 				Keyword(),
 				Symbol(),
-				QuotedExpression()
+				Quoted(Expression())
 				);
 	}
 
@@ -123,47 +123,47 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 	
 	// QUOTING and UNQUOTING
 	
-	public Rule QuotedExpression() {
+	public Rule Quoted(Rule r) {
 		return FirstOf(
-				Quote(),
-				SyntaxQuote(),
-				Unquote(), 
-				UnquoteSplice()
+				Quote(r),
+				SyntaxQuote(r),
+				Unquote(r), 
+				UnquoteSplice(r)
 				);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Rule Quote() {
+	public Rule Quote(Rule r) {
 		return Sequence(
 				'\'',
-				Expression(),
+				r,
 				push(magic.ast.List.create(Lists.of(Constant.create(Symbols.QUOTE),pop()),getSourceInfo()))
 				);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Rule SyntaxQuote() {
+	public Rule SyntaxQuote(Rule r) {
 		return Sequence(
 				'`',
-				Expression(),
+				r,
 				push(magic.ast.List.create(Lists.of(Constant.create(Symbols.SYNTAX_QUOTE),pop()),getSourceInfo()))
 				);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Rule Unquote() {
+	public Rule Unquote(Rule r) {
 		return Sequence(
 				'~',
-				Expression(),
+				r,
 				push(magic.ast.List.create(Lists.of(Constant.create(Symbols.UNQUOTE),pop()),getSourceInfo()))
 				);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Rule UnquoteSplice() {
+	public Rule UnquoteSplice(Rule r) {
 		return Sequence(
 				"~@",
-				Expression(),
+				r,
 				push(magic.ast.List.create(Lists.of(Constant.create(Symbols.UNQUOTE_SPLICING),pop()),getSourceInfo()))
 				);
 	}
