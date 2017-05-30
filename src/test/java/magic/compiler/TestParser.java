@@ -17,6 +17,7 @@ import magic.data.Keyword;
 import magic.data.Maps;
 import magic.data.Sets;
 import magic.data.Symbol;
+import magic.data.Tuple;
 import magic.lang.Symbols;
 
 public class TestParser {
@@ -87,6 +88,11 @@ public class TestParser {
 		Node<?> ev=Reader.read("[]");
 		assertEquals(Vector.class,ev.getClass());
 		assertEquals(0,((Vector<?>)ev).size());
+	}
+	
+	@Test public void testeIgnoreForm() {
+		Node<?> ev=Reader.read("[1 #_2 3]");
+		assertEquals(Tuple.of(1L,3L),ev.toForm());
 	}
 	
 	@SuppressWarnings("unchecked")
