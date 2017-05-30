@@ -7,7 +7,6 @@ import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
 import magic.data.Lists;
-import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.lang.Context;
 import magic.lang.Symbols;
@@ -20,7 +19,7 @@ import magic.lang.Symbols;
  *
  * @param <T>
  */
-public class Dot<T> extends BaseForm<T> {
+public class Invoke<T> extends BaseForm<T> {
 
 	// TODO: consider caching reflected methods?
 	
@@ -29,24 +28,29 @@ public class Dot<T> extends BaseForm<T> {
 	private final Node<?>[] args;
 	private final int nArgs;
 
-	private Dot(APersistentSet<Symbol> deps, Node<?> instance, Symbol method, Node<?>[] args,SourceInfo source) {
-		super(Lists.cons((Node<Symbol>)Constant.create(Symbols.DOT), instance, (Node<Symbol>)Constant.create(method), PersistentList.of((Object[])args)), deps,source);
+	@SuppressWarnings("unchecked")
+	private Invoke(APersistentSet<Symbol> deps, Node<?> instance, Symbol method, Node<?>[] args,SourceInfo source) {
+		super(Lists.of(
+				(Node<Symbol>)Constant.create(Symbols.DOT), instance, 
+				List.createCons(Constant.create(method),List.create(args),null)  
+				)
+				, deps,source);
 		this.instance=instance;
 		this.method=method;
 		this.args=args;
 		this.nArgs=args.length;
 	}
 	
-	public static <T> Dot<T> create(Node<?> instance, Symbol method, Node<?>[] args,SourceInfo source) {
+	public static <T> Invoke<T> create(Node<?> instance, Symbol method, Node<?>[] args,SourceInfo source) {
 		APersistentSet<Symbol> deps=instance.getDependencies();
 		for (Node<?> a: args) {
 			deps=deps.includeAll(a.getDependencies());
 		}
-		return new Dot<T>(deps,instance, method,args,source);
+		return new Invoke<T>(deps,instance, method,args,source);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> Dot<T> create(Node<?> instance, Symbol method, Node<? super Object>[] args) {
+	public static <T> Invoke<T> create(Node<?> instance, Symbol method, Node<? super Object>[] args) {
 		return create((Node<Object>)instance, method,args,null);
 	}
 	
@@ -93,13 +97,13 @@ public class Dot<T> extends BaseForm<T> {
 	public String toString() {
 		StringBuilder sb=new StringBuilder ("(. ");
 		sb.append(instance);
-		sb.append(' ');
+		sb.append(" (");
 		sb.append(method);
 		for (Node<?> a : args) {
 			sb.append(' ');
 			sb.append(a);
 		}
-		sb.append(')');
+		sb.append("))");
 		return sb.toString();
 	}
 

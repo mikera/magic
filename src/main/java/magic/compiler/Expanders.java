@@ -4,7 +4,7 @@ import magic.ast.Apply;
 import magic.ast.Constant;
 import magic.ast.Define;
 import magic.ast.Do;
-import magic.ast.Dot;
+import magic.ast.Invoke;
 import magic.ast.Expander;
 import magic.ast.HashMap;
 import magic.ast.If;
@@ -152,23 +152,31 @@ public class Expanders {
 	private static final class DotExpander extends AListExpander {
 		@Override
 		public Node<?> expand(Context c, List form,AExpander ex) {
-			int n=form.size();
-			if (n<3) throw new ExpansionException("Can't expand dot, requires at least a intance and method name",form);
+			int fn=form.size();
+			if (fn!=3) throw new ExpansionException("Can't expand dot, requires an instance and method call or member symbol",form);
 			
 			SourceInfo si=form.getSourceInfo();
-			APersistentList<Node<?>> args=form.getNodes().subList(3,n);
 			
 			Node<?> inst=ex.expand(c, form.get(1), ex);
 			
-			Node<?> nameObj=form.get(2);
-			if (!(nameObj.isConstant()&&nameObj.getValue() instanceof Symbol)) {
-				throw new ExpansionException("Can't expand dot: requires a symbolic method name in: ",form);
+			Node<?> op = form.get(2);
+			
+			if (op instanceof List) {
+				List call=(List)op;
+				int n=call.size();
+				Node<?> nameObj=call.get(0);
+				if (!(nameObj.isConstant()&&nameObj.getValue() instanceof Symbol)) {
+					throw new ExpansionException("Can't expand dot: requires a symbolic method name in: ",form);
+				}
+				Symbol method=(Symbol)nameObj.getValue();
+				
+				APersistentList<Node<?>> args=call.getNodes().subList(1,n);
+				APersistentList<Node<?>> argsExpanded=(APersistentList<Node<?>>) ex.expandAll(c, args, ex);
+				
+				return Invoke.create(inst,method,argsExpanded.toArray(new Node<?>[n-1]), si);
+			} else {
+				throw new ExpansionException("Can't expand dot, currently only method calls supported, got: "+op.getClass(),form);
 			}
-			Symbol method=(Symbol)nameObj.getValue();
-			
-			APersistentList<Node<?>> argsExpanded=(APersistentList<Node<?>>) ex.expandAll(c, args, ex);
-			
-			return Dot.create(inst,method,argsExpanded.toArray(new Node<?>[n-3]), si);
 		}
 	}
 	

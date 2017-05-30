@@ -14,7 +14,7 @@ public class TestInterop {
 		Context c=RT.INITIAL_CONTEXT;
 		
 		EvalResult<?> r=Compiler.compile(c, 
-				"(def len (. \"foo\" length))");
+				"(def len (. \"foo\" (length)))");
 		Context c2=r.getContext();
 		//System.out.println(c2.getExpression("f"));
 		Object res=c2.getValue("len");

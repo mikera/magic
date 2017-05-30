@@ -14,7 +14,7 @@ import magic.RT;
 import magic.Type;
 import magic.ast.Constant;
 import magic.ast.Do;
-import magic.ast.Dot;
+import magic.ast.Invoke;
 import magic.ast.If;
 import magic.ast.Lambda;
 import magic.ast.Let;
@@ -47,7 +47,7 @@ public class TestNodesParam {
 		Let.create(new Symbol[]{Symbol.create("a")},new Constant[]{Constant.create(3.0)},Lookup.create("a")),
 		Lambda.create(Vectors.of(Symbol.create("a")), Constant.create(Keyword.create("foo"))),
 		If.createIf(Constant.create(true), Constant.create(1), Constant.create("foo")),
-		Dot.create(Constant.create("bar"), Symbol.create("length"), new Node[0])
+		Invoke.create(Constant.create("bar"), Symbol.create("length"), new Node[0])
 		
 	};
 	

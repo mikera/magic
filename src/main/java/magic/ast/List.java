@@ -38,7 +38,7 @@ public class List extends BaseForm<Object> {
 		return create((APersistentList<Node<?>>)Lists.wrap(nodes),(SourceInfo)null);
 	}
 
-	public static List create(APersistentList<Node<? extends Object>> nodes,SourceInfo source) {
+	public static List create(APersistentList<Node<?>> nodes,SourceInfo source) {
 		return new List(nodes,source);
 	}
 	
@@ -47,7 +47,7 @@ public class List extends BaseForm<Object> {
 	}
 	
 	public static List createCons(Node<?> a,List b,SourceInfo source) {
-		return create(Lists.cons(a, b.nodes),source);
+		return create((APersistentList<Node<? extends Object>>) Lists.cons(a, b.nodes),source);
 	}
 	
 	@Override
