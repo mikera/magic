@@ -128,7 +128,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 				Optional(WhiteSpace()),
 				ZeroOrMore(Sequence(
 							FirstOf(Sequence(DelimitedExpression(),Optional(WhiteSpace())),
-									Sequence(UndelimitedExpression(),WhiteSpace())),
+									Sequence(UndelimitedExpression(),FirstOf(WhiteSpace(),Test(AnyOf("([{"))))),
 							AddAction(expVar)
 						  )),
 				Optional(Sequence( // final expression without whitespace

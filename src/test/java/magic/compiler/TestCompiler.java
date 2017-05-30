@@ -77,10 +77,10 @@ public class TestCompiler {
 		
 		//System.out.println("<START>");
 		EvalResult<?> r=Compiler.compile(c, 
-				"(def a 1) " +
-				"(def b 2) " +
-				"(let [a 3, c 5] " +
-				"   (def f (fn [c] [a b c]))) "+
+				"(def a 1)" +
+				"(def b 2)" +
+				"(let[a 3, c 5] " +
+				"   (def f (fn [c][a b c]))) "+
 				"(def r (f 7))");
 		Context c2=r.getContext();
 		//System.out.println(c2.getExpression("f"));
@@ -93,9 +93,8 @@ public class TestCompiler {
 		Context c=RT.INITIAL_CONTEXT;
 		
 		EvalResult<?> r=Compiler.compile(c, 
-				"(defn f [a] 2) " +
-				"(def r (f 7))" +
-				"\n");
+				"(defn f [a] 2)" +
+				"(def r (f 7))");
 		Context c2=r.getContext();
 		// System.out.println(c2.getExpression("f"));
 		Object res=c2.getValue("r");
@@ -107,8 +106,8 @@ public class TestCompiler {
 		Context c=RT.INITIAL_CONTEXT;
 		
 		EvalResult<?> r=Compiler.compile(c, 
-				"(def a 1) " +
-				"(def b 2) " +
+				"(def a 1)" +
+				"(def b 2)" +
 				"a");
 		Context c2=r.getContext();
 		assertEquals((Long)1L,c2.getValue("a"));
