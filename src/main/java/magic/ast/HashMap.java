@@ -107,7 +107,7 @@ public class HashMap<K,V> extends BaseDataStructure<APersistentMap<? extends K,?
 		// can optimise to a constant hashmap
 		if (constant) {
 			APersistentVector<Object> vals=newExps.map(n->((Node<?>)n).getValue());
-			return Constant.create(Maps.createFromFlattenedPairs(vals), deps);
+			return Constant.create((APersistentMap<K, V>)Maps.createFromFlattenedPairs(vals), deps);
 		}
 		
 		return (exps==newExps)?this:(HashMap<K,V>) create(newExps,getSourceInfo());
