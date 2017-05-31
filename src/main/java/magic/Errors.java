@@ -1,5 +1,10 @@
 package magic;
 
+/**
+ * Static class for constructing error messages
+ * @author Mike
+ *
+ */
 public class Errors {
 
 	public static String negativeRange() {
@@ -11,7 +16,6 @@ public class Errors {
 	}
 
 	public static String indexOutOfBounds(int i) {
-		// TODO Auto-generated method stub
 		return "Index out of bounds: "+i;
 	}
 
