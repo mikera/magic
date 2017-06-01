@@ -60,6 +60,7 @@ public class Invoke<T> extends BaseForm<T> {
 	public EvalResult<T> eval(Context c, APersistentMap<Symbol, Object> bindings) {
 		EvalResult<Object> r= (EvalResult<Object>) instance.eval(c, bindings);
 		Object o=r.getValue();
+		
 		Class<?> klass=o.getClass();
 		Object[] argVals=new Object[nArgs];
 		Class<?>[] argClasses=new Class<?>[nArgs];
@@ -85,11 +86,13 @@ public class Invoke<T> extends BaseForm<T> {
 
 	@Override
 	public Node<T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
+		// TODO
 		return this;
 	}
 
 	@Override
 	public Node<T> optimise() {
+		// TODO
 		return this;
 	}
 
@@ -97,13 +100,13 @@ public class Invoke<T> extends BaseForm<T> {
 	public String toString() {
 		StringBuilder sb=new StringBuilder ("(. ");
 		sb.append(instance);
-		sb.append(" (");
+		sb.append(" ");
 		sb.append(method);
 		for (Node<?> a : args) {
 			sb.append(' ');
 			sb.append(a);
 		}
-		sb.append("))");
+		sb.append(")");
 		return sb.toString();
 	}
 
