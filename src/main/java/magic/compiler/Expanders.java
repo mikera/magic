@@ -160,6 +160,8 @@ public class Expanders {
 			Node<?> inst=ex.expand(c, form.get(1), ex);
 			
 			Node<?> op = form.get(2);
+			// make the method call into a list if it is flattened
+			if (!(op instanceof List)) op=List.create(form.getNodes().subList(2, fn),null);
 			
 			if (op instanceof List) {
 				List call=(List)op;

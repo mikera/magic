@@ -22,4 +22,14 @@ public class TestInterop {
 		assertEquals((Integer)3,res);
 	}
 	
+	@Test public void testInstanceCall2() {
+		Context c=RT.INITIAL_CONTEXT;
+		
+		EvalResult<?> r=Compiler.compile(c, 
+				"(def len (. \"foo\" length))");
+		Context c2=r.getContext();
+		Object res=c2.getValue("len");
+		assertEquals((Integer)3,res);
+	}
+	
 }
