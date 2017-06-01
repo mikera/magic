@@ -342,7 +342,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 	}
 
 	public Rule InitialSymbolCharacter() {
-		return FirstOf(Alphabet(),AnyOf("*!_?$%&=<>"));
+		return FirstOf(Alphabet(),AnyOf(".*+!-_?$%&=<>"));
 	}
 	
 	public Rule FollowingSymbolCharacter() {

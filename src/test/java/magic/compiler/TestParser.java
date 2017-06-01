@@ -67,6 +67,8 @@ public class TestParser {
 	
 	@Test public void testReadSymbol() {
 		assertEquals(Symbol.create("foo"),Reader.readSymbol(" foo"));
+		assertEquals(Symbol.create("+"),Reader.readSymbol("+"));
+		assertEquals(Symbol.create("a.b"),Reader.readSymbol("a.b"));
 		assertEquals(Symbol.create("foo","bar"),Reader.readSymbol("foo/bar"));
 		assertEquals(Symbol.create("foo","bar"),Reader.readSymbol(" foo/bar "));
 		assertEquals(Symbols.UNDERSCORE,Reader.readSymbol("_"));
