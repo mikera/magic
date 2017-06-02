@@ -16,11 +16,12 @@ public class Compiler {
 	public static <T> EvalResult<T> compile(Context context, Node<? super T> node) {
 		node=Analyser.expand(context, node);
 		node=(Node<T>) node.optimise();
-		return (EvalResult<T>) node.eval(context,(APersistentMap<Symbol, Object>) Maps.EMPTY);
+		EvalResult<T> result=(EvalResult<T>) node.eval(context,(APersistentMap<Symbol, Object>) Maps.EMPTY);
+		return result;
 	}
 
 	/**
-	 * Compile code into the given context.
+	 * Compiles and evaluates code in the given context.
 	 * @param c
 	 * @param string
 	 * @return
