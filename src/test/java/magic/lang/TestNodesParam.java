@@ -12,20 +12,13 @@ import org.junit.runners.Parameterized.Parameters;
 
 import magic.RT;
 import magic.Type;
-import magic.ast.Constant;
-import magic.ast.Do;
-import magic.ast.Invoke;
-import magic.ast.If;
-import magic.ast.Lambda;
-import magic.ast.Let;
-import magic.ast.Lookup;
-import magic.ast.Node;
-import magic.ast.Vector;
+import magic.ast.*;
 import magic.compiler.Analyser;
 import magic.data.APersistentSet;
 import magic.data.Keyword;
 import magic.data.Symbol;
 import magic.data.Vectors;
+import magic.fn.IFn0;
 
 @RunWith(Parameterized.class)
 public class TestNodesParam {
@@ -43,6 +36,11 @@ public class TestNodesParam {
 		Constant.create(1),
 		Constant.create(null),
 		Vector.create(Constant.create(1)),
+		DeferredConstant.create(new IFn0<String>() {
+			@Override
+			public String apply() {
+				return "Hello";
+			}}),
 		Do.create(Constant.create("foo")),
 		Let.create(new Symbol[]{Symbol.create("a")},new Constant[]{Constant.create(3.0)},Lookup.create("a")),
 		Lambda.create(Vectors.of(Symbol.create("a")), Constant.create(Keyword.create("foo"))),
