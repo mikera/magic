@@ -319,4 +319,23 @@ public class RT {
 		return sb.toString();
 	}
 
+	/**
+	 * Compiles and evaluates code in the initial context
+	 * @param code
+	 * @return an EvalResult containing the resulting value and a possible updated context
+	 */
+	public static EvalResult<?> compile(String code) {
+		return compile(INITIAL_CONTEXT,code);
+	}
+	
+	/**
+	 * Compiles and evaluates code in the initial context
+	 * @param code
+	 * @return an EvalResult containing the resulting value and a possible updated context
+	 */
+	public static EvalResult<?> compile(Context c,String code) {
+		return magic.compiler.Compiler.compile(c, code);
+	}
+
+
 }

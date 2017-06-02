@@ -32,4 +32,9 @@ public class TestInterop {
 		assertEquals((Integer)3,res);
 	}
 	
+	@Test public void testInteropForms() {
+		assertEquals((Integer)3,RT.compile("(. \"foo\" length)").getValue());
+		assertEquals((Integer)3,RT.compile("(.length \"foo\")").getValue());
+	}
+	
 }

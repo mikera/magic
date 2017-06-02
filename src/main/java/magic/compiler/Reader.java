@@ -331,13 +331,14 @@ public class Reader extends BaseParser<Node<? extends Object>> {
     public Rule UnqualifiedSymbol() {
 		return Sequence(
 				FirstOf(
-						'/', // allowed on its own as a symbol
-						'.', // dot special form
 						Sequence(InitialSymbolCharacter(),
 								 ZeroOrMore(FollowingSymbolCharacter())),
 				        Sequence(AnyOf(".+-"),
 				        		 NonNumericSymbolCharacter(),
-				        		 ZeroOrMore(FollowingSymbolCharacter())) ),
+				        		 ZeroOrMore(FollowingSymbolCharacter())), 
+						'/', // allowed on its own as a symbol
+						'.' // dot special form
+				        ),
 				push(magic.ast.Constant.create(Symbol.create(match()),getSourceInfo())));
 	}
 

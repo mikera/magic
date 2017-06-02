@@ -57,10 +57,14 @@ public class Expanders {
 			if (form instanceof Constant) {
 				Object v=form.getValue();
 				if (v instanceof Symbol) {
-					return Lookup.create((Symbol)v);
+					return symbolExpand((Symbol)v);
 				}
 			}
 			return form;
+		}
+		
+		private Node<?> symbolExpand(Symbol sym) {
+			return Lookup.create(sym);
 		}
 
 		private Node<?> vectorExpand(Context c, Vector<?> form, AExpander ex) {
@@ -76,13 +80,29 @@ public class Expanders {
 			int n=form.size();
 			if (n==0) return List.EMPTY;
 			Node<?> head=form.get(0);
+			
 			if (head.isConstant()) {
 				Object h=head.getValue();
 				if (h instanceof Symbol) {
-					Slot<Object> slot=c.getSlot((Symbol)h);
+					Symbol sym=(Symbol)h;
+					Slot<Object> slot=c.getSlot(sym);
+					// handle nested expander
 					if ((slot!=null)&&slot.isExpander(c)) {
 						AExpander e=(AExpander) slot.getValue(c);
 						return e.expand(c, form, ex);
+					}
+					
+					// handle .someMethod forms
+					if((!sym.isQualified())&&sym.getName().startsWith(".")) {
+						String memberName=sym.getName().substring(1);
+						Symbol memberSym=Symbol.create(memberName);
+						SourceInfo si=head.getSourceInfo();
+						List newForm= List.createCons(
+										Constant.create(Symbols.DOT,si), 
+										form.get(1), 
+										Constant.create(memberSym,si),
+										form.subList(2,n),form.getSourceInfo());
+						return ex.expand(c, newForm, ex);						
 					}
 				}
 			}

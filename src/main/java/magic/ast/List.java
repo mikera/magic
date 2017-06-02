@@ -46,9 +46,18 @@ public class List extends BaseForm<Object> {
 		return create(a.getNodes(),source);
 	}
 	
-	public static List createCons(Node<?> a,List b,SourceInfo source) {
-		return create((APersistentList<Node<? extends Object>>) Lists.cons(a, b.nodes),source);
+	public static List createCons(Node<?> a,List rest,SourceInfo source) {
+		return create((APersistentList<Node<? extends Object>>) Lists.cons(a, rest.nodes),source);
 	}
+	
+	public static List createCons(Node<?> a,Node<?> b,List rest,SourceInfo source) {
+		return create((APersistentList<Node<? extends Object>>) Lists.cons(a, b,rest.nodes),source);
+	}
+
+	public static List createCons(Node<?> a,Node<?> b,Node<?> c,List rest,SourceInfo source) {
+		return create((APersistentList<Node<? extends Object>>) Lists.cons(a, b,c, rest.nodes),source);
+	}
+
 	
 	@Override
 	public Node<Object> specialiseValues(APersistentMap<Symbol,Object> bindings) {
@@ -102,6 +111,10 @@ public class List extends BaseForm<Object> {
 
 	public APersistentList<Node<? extends Object>> getNodes() {
 		return nodes;
+	}
+
+	public List subList(int start, int end) {
+		return List.create(nodes.subList(start, end),getSourceInfo());
 	}
 
 }
