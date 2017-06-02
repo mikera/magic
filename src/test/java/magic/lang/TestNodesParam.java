@@ -72,9 +72,9 @@ public class TestNodesParam {
 	@Test 
 	public void testRoundTrip() {
 		Context c=RT.BOOTSTRAP_CONTEXT;
-		Node<?> node1=Analyser.expand(c,Analyser.analyse(c,node.toForm())).optimise();
+		Node<?> node1=Analyser.expand(c,Analyser.analyse(node.toForm())).optimise();
 		Object form1=node1.toForm();
-		Node<?> node2=Analyser.expand(c,Analyser.analyse(c,form1)).optimise();
+		Node<?> node2=Analyser.expand(c,Analyser.analyse(form1)).optimise();
 		
 		assertEquals(form1,node2.toForm());
 		assertEquals(node1.getClass(),node2.getClass());

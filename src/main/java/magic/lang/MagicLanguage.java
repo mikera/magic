@@ -8,7 +8,6 @@ import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.api.source.SourceSection;
 
-import magic.compiler.Analyser;
 import magic.compiler.Reader;
 
 public class MagicLanguage extends TruffleLanguage<MagicContext> {
@@ -17,9 +16,7 @@ public class MagicLanguage extends TruffleLanguage<MagicContext> {
 	
 	public static final MagicLanguage INSTANCE = new MagicLanguage();
 
-	private static final Context INITIAL_CONTEXT = Context.EMPTY;
-
-    /**
+	/**
      * No instances allowed apart from the {@link #INSTANCE singleton instance}.
      */
 	private MagicLanguage() {
@@ -40,9 +37,8 @@ public class MagicLanguage extends TruffleLanguage<MagicContext> {
 	@Override
 	protected CallTarget parse(ParsingRequest request) throws Exception {
 		Source source=request.getSource();
-		Object form=Reader.read(source.getReader());
-		magic.ast.Node<?> ex= Analyser.analyse(INITIAL_CONTEXT,form);
-		return Truffle.getRuntime().createCallTarget(ex);
+		magic.ast.Node<?> form=Reader.read(source.getReader());
+		return Truffle.getRuntime().createCallTarget(form);
 	}
 	
 	@Override
