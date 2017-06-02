@@ -1,4 +1,6 @@
 package magic.ast;
+import org.objectweb.asm.commons.GeneratorAdapter;
+
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.nodes.RootNode;
@@ -61,6 +63,15 @@ public abstract class Node<T> extends RootNode {
 		throw new UnsupportedOperationException("Can't execute a Magic node without a context");
 	}
 	
+	/**
+	 * 
+	 * @param c
+	 * @param bindings
+	 */
+	public void emit(Context c,APersistentMap<Symbol,Object> bindings, GeneratorAdapter gen) {
+		throw new UnsupportedOperationException("Can't emit code for node of type: "+this.getClass());
+	}
+
 	/**
 	 * Returns the value of this Node. Throws an error if the node does not have a constant valuee.
 	 * @return
