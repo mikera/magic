@@ -12,7 +12,7 @@ import magic.fn.IFn0;
 import magic.lang.Context;
 
 /**
- * AST node representing a constant value, which is computed an a dererred basis when it is first requested
+ * AST node representing a constant value, which is computed an a deferred basis when it is first requested
  * 
  * May still have symbolic dependencies, e.g. when it is constructed from expansion and optimisation of another form/node
  * 
