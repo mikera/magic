@@ -9,8 +9,6 @@ import magic.data.APersistentSet;
 import magic.data.Sets;
 import magic.data.Symbol;
 import magic.lang.Context;
-import magic.type.Null;
-import magic.type.Value;
 
 /**
  * AST node representing a constant value.
@@ -30,7 +28,7 @@ public class Constant<T> extends BaseConstant<T> {
 	public Constant(T value, APersistentSet<Symbol> deps, SourceInfo source) {
 		super((deps==null)?Sets.emptySet():deps,source);
 		this.value=value;
-		this.type=(value==null)?Null.INSTANCE:Value.create(value);
+		this.type=RT.inferType(value);
 	}
 	
 	@Override

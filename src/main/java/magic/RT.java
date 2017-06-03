@@ -21,7 +21,7 @@ import magic.data.Symbol;
 import magic.fn.Functions;
 import magic.lang.Context;
 import magic.lang.Symbols;
-import magic.type.JavaType;
+import magic.type.Value;
 
 /**
  * Static class to support the Magic runtime
@@ -296,6 +296,11 @@ public class RT {
 		return (Class<T>) c;
 	}
 
+	/**
+	 * Infers the default type of a value.
+	 * @param value
+	 * @return
+	 */
 	public static Type inferType(Object value) {
 		if (value==null) return Types.NULL;
 		// TODO: function type inference
@@ -305,16 +310,22 @@ public class RT {
 		if (value instanceof IPersistentObject) {
 			return ((IPersistentObject)value).getType();
 		}
-		return (Type) JavaType.create(value);
+		return (Type) Value.create(value);
 	}
 
-	public static String toString(APersistentSequence<?> vals, String sep) {
-		int n=vals.size();
+	/**
+	 * Converts a sequence of values to a string, using the provided separator
+	 * @param values
+	 * @param sep
+	 * @return
+	 */
+	public static String toString(APersistentSequence<?> values, String separator) {
+		int n=values.size();
 		if (n==0) return "";
-		StringBuilder sb=new StringBuilder(RT.toString(vals.get(0)));
+		StringBuilder sb=new StringBuilder(RT.toString(values.get(0)));
 		for (int i=1; i<n; i++) {
-			sb.append(sep);
-			sb.append(RT.toString(vals.get(i)));
+			sb.append(separator);
+			sb.append(RT.print(values.get(i)));
 		}
 		return sb.toString();
 	}
@@ -322,7 +333,7 @@ public class RT {
 	/**
 	 * Compiles and evaluates code in the initial context
 	 * @param code
-	 * @return an EvalResult containing the resulting value and a possible updated context
+	 * @return an EvalResult containing the resulting value and a (possibly) updated context
 	 */
 	public static EvalResult<?> compile(String code) {
 		return compile(INITIAL_CONTEXT,code);
@@ -331,7 +342,7 @@ public class RT {
 	/**
 	 * Compiles and evaluates code in the initial context
 	 * @param code
-	 * @return an EvalResult containing the resulting value and a possible updated context
+	 * @return an EvalResult containing the resulting value and a (possibly) updated context
 	 */
 	public static EvalResult<?> compile(Context c,String code) {
 		return magic.compiler.Compiler.compile(c, code);
