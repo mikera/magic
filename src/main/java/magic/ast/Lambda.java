@@ -11,7 +11,6 @@ import magic.data.Lists;
 import magic.data.Symbol;
 import magic.fn.AFn;
 import magic.fn.ArityException;
-import magic.fn.IFn;
 import magic.lang.Context;
 import magic.lang.Symbols;
 import magic.type.FunctionType;
@@ -23,7 +22,7 @@ import magic.type.FunctionType;
  *
  * @param <T>
  */
-public class Lambda<T> extends BaseForm<IFn<T>> {
+public class Lambda<T> extends BaseForm<AFn<T>> {
 
 	private final APersistentVector<Symbol> params;
 	private final Node<T> body;
@@ -54,7 +53,7 @@ public class Lambda<T> extends BaseForm<IFn<T>> {
 	}
 
 	@Override
-	public EvalResult<IFn<T>> eval(Context context,APersistentMap<Symbol, Object> bindings) {
+	public EvalResult<AFn<T>> eval(Context context,APersistentMap<Symbol, Object> bindings) {
 		final APersistentMap<Symbol, Object> capturedBindings=bindings.delete(params);
 		// capture variables defined in the current lexical scope
 		Node<? extends T> body=this.body.specialiseValues(capturedBindings);
@@ -78,12 +77,12 @@ public class Lambda<T> extends BaseForm<IFn<T>> {
 				return body.getType();
 			}
 		};
-		return new EvalResult<IFn<T>>(context,fn);
+		return new EvalResult<AFn<T>>(context,fn);
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Node<? extends IFn<T>> specialiseValues(APersistentMap<Symbol, Object> bindings) {
+	public Node<? extends AFn<T>> specialiseValues(APersistentMap<Symbol, Object> bindings) {
 		bindings=bindings.delete(params); // hidden by argument bindings
 		Node<? extends T> newBody=body.specialiseValues(bindings);
 		// System.out.println("Defining lambda as "+newBody+" with bindings "+bindings);
@@ -92,7 +91,7 @@ public class Lambda<T> extends BaseForm<IFn<T>> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Node<? extends IFn<T>> optimise() {
+	public Node<? extends AFn<T>> optimise() {
 		Node<? extends T> newBody=body.optimise();
 		return (body==newBody)?this:(Lambda<T>) create(params,newBody,getSourceInfo());
 	}
