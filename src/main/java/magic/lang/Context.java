@@ -8,7 +8,7 @@ import magic.data.Sets;
 import magic.data.Symbol;
 
 /**
- * Class representing an Execution context.
+ * Class representing an execution context.
  * 
  * Manages a Map of Symbol->Slot
  * @author Mike

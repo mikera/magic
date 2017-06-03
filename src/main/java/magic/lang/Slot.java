@@ -9,11 +9,12 @@ import magic.data.Symbol;
  * Represents a "slot" in a magic Context.
  * 
  * A slot features:
- * - An Expression
+ * - An expression stored as a Node
  * - A lazily computed value
  * 
  * @author Mike
  *
+ * @param T the Java type of the expression
  */
 public class Slot<T> {
 	public final Node<T> expression;

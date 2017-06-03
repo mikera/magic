@@ -3,7 +3,8 @@ package magic.lang;
 import magic.data.Symbol;
 
 /**
- * Utility class defining builtin magic symbols
+ * Utility class defining built-in Magic symbols
+ * 
  * @author Mike
  *
  */

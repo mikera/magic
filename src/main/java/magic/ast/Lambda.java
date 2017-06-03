@@ -20,7 +20,7 @@ import magic.type.FunctionType;
  * 
  * @author Mike
  *
- * @param <T>
+ * @param <T> The return type of the lambda function
  */
 public class Lambda<T> extends BaseForm<AFn<T>> {
 
