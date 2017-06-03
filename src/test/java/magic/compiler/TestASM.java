@@ -36,20 +36,31 @@ public class TestASM {
 			FieldVisitor fv=cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "FOO", "Ljava/lang/String;", null, new String("foo"));
 			fv.visitEnd();
 		}
+
+		{	// public final field
+			// note that initial value is ignored for non-static fields
+			FieldVisitor fv=cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL, "bar", "Ljava/lang/String;", null, null);
+			fv.visitEnd();
+		}
 		
 		{	// no-arg constructor
 				Method m = Method.getMethod("void <init> ()");
 				GeneratorAdapter mg = new GeneratorAdapter(Opcodes.ACC_PUBLIC, m, null, null, cw);
 				mg.loadThis();
 				mg.invokeConstructor(Type.getType(Object.class), m);
+	
+				// set a field
+				mg.loadThis();
+				mg.push("bar");
+				mg.putField(Type.getType("magic/Test"), "bar", Type.getType(String.class));
+				
 				mg.returnValue();
 				mg.endMethod();
 		}
-
 		cw.visitEnd();
 
+		// Create the class
 		byte[] bcode = cw.toByteArray();
-
 		Class<?> klass = cl.define(bcode);
 
 		assertNotNull(klass);
@@ -71,5 +82,12 @@ public class TestASM {
 			throw new Error(t);
 		}
 		assertEquals("foo",s);
+		
+		try {
+			s=(String) klass.getField("bar").get(o);
+		} catch (Throwable t) {
+			throw new Error(t);
+		}
+		assertEquals("bar",s);
 	}
 }
