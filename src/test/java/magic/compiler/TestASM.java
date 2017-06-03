@@ -1,10 +1,11 @@
 package magic.compiler;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.objectweb.asm.ClassWriter.COMPUTE_FRAMES;
 
 import org.junit.Test;
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
@@ -31,6 +32,10 @@ public class TestASM {
 				new String[] {} // interfaces
 		);
 
+		{	// static field
+			FieldVisitor fv=cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "FOO", "Ljava/lang/String;", null, new String("foo"));
+			fv.visitEnd();
+		}
 		
 		{	// no-arg constructor
 				Method m = Method.getMethod("void <init> ()");
@@ -58,5 +63,13 @@ public class TestASM {
 			throw new Error(e);
 		}
 		assertNotNull(o);
+		
+		String s;
+		try {
+			s=(String) klass.getField("FOO").get(null);
+		} catch (Throwable t) {
+			throw new Error(t);
+		}
+		assertEquals("foo",s);
 	}
 }
