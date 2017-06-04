@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.regex.Pattern;
 
 import magic.ast.Constant;
 import magic.compiler.EvalResult;
@@ -329,6 +330,18 @@ public class RT {
 		}
 		return sb.toString();
 	}
+	
+
+	public static String toString(Object[] things, String separator) {
+		int n=things.length;
+		if (n==0) return "";
+		StringBuilder sb=new StringBuilder(RT.toString(things[0]));
+		for (int i=1; i<n; i++) {
+			sb.append(separator);
+			sb.append(RT.print(things[i]));
+		}
+		return sb.toString();
+	}
 
 	/**
 	 * Compiles and evaluates code in the initial context
@@ -347,6 +360,27 @@ public class RT {
 	public static EvalResult<?> compile(Context c,String code) {
 		return magic.compiler.Compiler.compile(c, code);
 	}
+
+	private static final String identifierPattern="\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
+	private static final Pattern classNameRegex=Pattern.compile(identifierPattern + "(\\." + identifierPattern + ")*");
+	
+	/** 
+	 * Returns true if a String could be a valid Java class name
+	 * @param s
+	 * @return
+	 */
+	public static boolean maybeClassName(String s) {
+		return classNameRegex.matcher(s).matches();
+	}
+
+	public static Class<?> classForName(String name) {
+		try {
+			return Class.forName(name,false,RT.class.getClassLoader());
+		} catch (ClassNotFoundException e) {
+			return null;
+		}
+	}
+
 
 
 }

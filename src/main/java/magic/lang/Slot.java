@@ -38,13 +38,13 @@ public class Slot<T> {
 	}
 	
 	private T tryCompute(Context c) {
-		APersistentSet<Symbol> deps=expression.getDependencies();
-		if (!deps.isEmpty()) {
-			// check slots exist
-			for (Symbol s:deps) {
-				if (c.getSlot(s)==null) throw new UnresolvedException(s);
-			}
-		}
+//		APersistentSet<Symbol> deps=expression.getDependencies();
+//		if (!deps.isEmpty()) {
+//			// check slots exist
+//			for (Symbol s:deps) {
+//				if (c.getSlot(s)==null) throw new UnresolvedException(s);
+//			}
+//		}
 		value=expression.compute(c);
 		computed=true;
 		return value;

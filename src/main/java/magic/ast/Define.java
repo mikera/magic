@@ -9,7 +9,7 @@ import magic.data.Symbol;
 import magic.lang.Context;
 
 /**
- * AST node representing a definitions
+ * AST node representing the action of defining a symbol in the current context
  * 
  * Currently the only valid way to make changes to the context, which occurs due to evaluation of
  * Def nodes during the compilation phase.

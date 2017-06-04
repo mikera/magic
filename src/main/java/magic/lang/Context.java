@@ -34,7 +34,7 @@ public class Context {
 	
 	public <T> T getValue(Symbol sym) {
 		Slot<T> slot=getSlot(sym); 
-		if (slot==null) throw new IllegalArgumentException("Symbol not defined: "+sym);
+		if (slot==null) throw new UnresolvedException(sym);
 		return slot.getValue(this);
 	}
 	

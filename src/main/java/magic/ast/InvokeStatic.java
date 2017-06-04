@@ -2,6 +2,7 @@ package magic.ast;
 
 import java.lang.reflect.Method;
 
+import magic.RT;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
@@ -72,7 +73,7 @@ public class InvokeStatic<T> extends BaseForm<T> {
 		try {
 			m = klass.getMethod(method.getName(), argClasses);
 		} catch (Throwable e) {
-			throw new Error("Unable to identify static method "+method+" on class "+klass+" with argument classes "+argClasses,e);
+			throw new Error("Unable to identify static method "+method+" on class "+klass+" with argument classes ["+RT.toString(argClasses, ",")+"]",e);
 		}
 		
 		try {

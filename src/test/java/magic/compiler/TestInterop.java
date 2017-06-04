@@ -1,6 +1,6 @@
 package magic.compiler;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -30,6 +30,24 @@ public class TestInterop {
 		Context c2=r.getContext();
 		Object res=c2.getValue("len");
 		assertEquals((Integer)3,res);
+	}
+	
+	@Test public void testStaticCall() {
+		@SuppressWarnings("unused")
+		Context c=RT.INITIAL_CONTEXT;
+		
+		try {
+			assertNotNull(RT.class.getMethod("toString", Object.class));
+		} catch (Throwable t) {
+			fail("Exception getting method");
+		}
+		
+// TODO: fix identification of method via parameter types
+//		EvalResult<?> r=Compiler.compile(c, 
+//				"(def s (. magic.RT toString 1))");
+//		Context c2=r.getContext();
+//		Object res=c2.getValue("s");
+//		assertEquals("1",res);
 	}
 	
 	@Test public void testInteropForms() {
