@@ -150,6 +150,19 @@ public class TestCompiler {
 		assertEquals(Tuple.of(1L,2L),c2.getValue("b"));
 	}
 	
+// TODO: think about dependencies on special forms
+//	@Test public void testOverwriteSpecialForm() {
+//		Context c=RT.INITIAL_CONTEXT;
+//		
+//		EvalResult<?> r=Compiler.compile(c, 
+//				  "(def a (do 2))"  
+//				+ "(def do (fn [a] 3))"
+//				+ "(def b a)");
+//		Context c2=r.getContext();
+//		
+//		assertEquals((Long)3L,c2.getValue("b"));
+//	}
+	
 	@Test public void testDependencyUpdate() {
 		Context c=RT.INITIAL_CONTEXT;
 		
