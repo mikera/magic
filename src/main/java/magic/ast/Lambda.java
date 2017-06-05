@@ -67,7 +67,8 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 				APersistentMap<Symbol, Object> bnds=capturedBindings;
 				// add function arguments to the lexical bindings
 				for (int i=0; i<arity; i++) {
-					bnds=bnds.assoc(params.get(i), a[i]);
+					Symbol param=params.get(i);
+					bnds=bnds.assoc(param, a[i]);
 				}
 				return body.compute(c,bnds);
 			}	

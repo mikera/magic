@@ -39,7 +39,7 @@ public class Let<T> extends BaseForm<T> {
 		if (lets2.length!=n) throw new Error("Wrong number of lets!");
 		Node<? extends Object>[] vs=new Node[n*2];
 		for (int i=0; i<n; i++) {
-			vs[i*2]=Constant.create(syms2[i]);
+			vs[i*2]=Lookup.create(syms2[i]);
 			vs[i*2+1]=lets2[i];
 		}
 		return Vector.create(vs);
@@ -54,7 +54,7 @@ public class Let<T> extends BaseForm<T> {
 		Symbol [] syms=new Symbol[n];
 		Node<? extends Object> [] lets=new Node[n];
 		for (int i=0; i<n; i++) {
-			syms[i]=(Symbol)bindings.get(i*2).getValue();
+			syms[i]=bindings.get(i*2).getSymbol();
 			lets[i]=bindings.get(i*2+1);
 		}
 		Node<Object> bodyExpr=(body.size()==1)?(Node<Object>)body.get(0):Do.create(body,null);
@@ -109,7 +109,7 @@ public class Let<T> extends BaseForm<T> {
 			if (newNode.isConstant()) {
 				bindings=bindings.assoc(syms[i],newNode.getValue());
 			} else {
-		        bindings=bindings.dissoc(syms[i]); // binding no longer visible, must be calcyulated
+		        bindings=bindings.dissoc(syms[i]); // binding no longer visible, must be calculated
 			}
 		}
 

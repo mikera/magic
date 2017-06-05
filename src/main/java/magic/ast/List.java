@@ -1,6 +1,7 @@
 package magic.ast;
 
 import magic.RT;
+import magic.compiler.Analyser;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
@@ -8,8 +9,10 @@ import magic.data.APersistentMap;
 import magic.data.APersistentSet;
 import magic.data.Lists;
 import magic.data.PersistentList;
+import magic.data.Sets;
 import magic.data.Symbol;
 import magic.lang.Context;
+import magic.lang.Symbols;
 
 /**
  * AST node representing a list
@@ -31,11 +34,16 @@ public class List extends BaseForm<Object> {
 	}
 	
 	private List(APersistentList<Node<? extends Object>> nodes, SourceInfo source) {
-		this(nodes, calcDependencies(nodes), source);
+		//this(nodes, calcDependencies(nodes), source);
+		this(nodes, Sets.emptySet(), source);
 	}
 	
+	public static List create(Node<?>[] nodes, SourceInfo sourceInfo) {
+		return create((APersistentList<Node<?>>)Lists.wrap(nodes),sourceInfo);
+	}
+
 	public static List create(Node<?>[] nodes) {
-		return create((APersistentList<Node<?>>)Lists.wrap(nodes),(SourceInfo)null);
+		return create(nodes,(SourceInfo)null);
 	}
 
 	public static List create(APersistentList<Node<?>> nodes,SourceInfo source) {
@@ -77,6 +85,19 @@ public class List extends BaseForm<Object> {
 		if (size()==0) return new EvalResult<Object>(context,Lists.EMPTY);
 		throw new UnsupportedOperationException("Cannot compile node of type: "+this.getClass());
 	}
+	
+	@Override
+	public Node<?> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings, boolean syntaxQuote) {
+		if ((size()==2)) {
+			Node<?> h=get(0);
+			if (h.isSymbol()&&(h.getSymbol().equals(Symbols.UNQUOTE))) {
+				Node<?> ex=get(1);
+				Object form=ex.compute(context, bindings);
+				return Analyser.analyse(form);
+			}
+		};
+		return this;
+	}
 
 	@Override
 	public Node<Object> optimise() {
@@ -86,18 +107,6 @@ public class List extends BaseForm<Object> {
 	@Override
 	public String toString() {
 		return "("+RT.toString(nodes," ")+")";
-	}
-
-	@Override
-	public EvalResult<Object> evalQuoted(Context context, APersistentMap<Symbol,Object> bindings, boolean syntaxQuote) {
-		int n=nodes.size();
-		Object[] vs=new Object[n];
-		for (int i=0; i<n; i++) {
-			EvalResult<Object> r=nodes.get(i).evalQuoted(context, bindings, syntaxQuote);
-			vs[i]=r.getValue();
-			context=r.getContext();
-		}
-		return new EvalResult<Object>(context,PersistentList.wrap(vs));
 	}
 	
 	public int size() {

@@ -62,15 +62,19 @@ public class HashMap<K,V> extends BaseDataStructure<APersistentMap<? extends K,?
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public EvalResult<Object> evalQuoted(Context c, APersistentMap<Symbol, Object> bindings,
+	public Node<?> evalQuoted(Context c, APersistentMap<Symbol, Object> bindings,
 			boolean syntaxQuote) {
-		int n=exps.size();
-		if (n==0) return  EvalResult.create(c, (APersistentMap<K,V>)Maps.EMPTY);
-		Object[] results=new Object[n];
-		for (int i=0; i<n; i++) {
-			results[i]=exps.get(i).evalQuoted(c,bindings,syntaxQuote);
+		int nExps=exps.size();
+		APersistentVector<Node<?>> newExps=exps;
+		for (int i=0; i<nExps; i++) {
+			Node<?> node=exps.get(i);
+			Node<?> newNode=node.evalQuoted(c,bindings,syntaxQuote);
+			if (node!=newNode) {
+				// System.out.println("Specialising "+node+ " to "+newNode);
+				newExps=newExps.assocAt(i, newNode);
+			} 
 		}
-		return EvalResult.create(c, Maps.createFromFlattenedArray(results));
+		return (exps==newExps)?this:(HashMap<K,V>) create(newExps,getSourceInfo());
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -39,8 +39,11 @@ public class Define<T> extends BaseForm<T> {
 	
 	@Override
 	public EvalResult<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
-		Node<? extends T> specExp=exp.specialiseValues(bindings);
-		context=context.define(sym, specExp); 
+		// use evalQuoted to expand any unquotes... TODO is this a good idea?
+		Node<?> theExp=exp;
+		theExp=theExp.evalQuoted(context,bindings,true);
+		theExp=theExp.specialiseValues(bindings);
+		context=context.define(sym, theExp); 
 		return new EvalResult<T>(context,null); // TODO: what should def return??
 	}
 	

@@ -56,9 +56,9 @@ public abstract class BaseConstant<T> extends Node<T> {
 	}
 	
 	@Override
-	public EvalResult<Object> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings,
+	public Node<?> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings,
 			boolean syntaxQuote) {
-		return new EvalResult<Object>(context,getValue());
+		return this;
 	}
 	
 	@Override

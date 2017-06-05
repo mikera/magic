@@ -22,7 +22,7 @@ public class Slot<T> {
 	private T value=null;
 	private volatile boolean computed=false;
 	
-	public Slot(Node<T> e) {
+	private Slot(Node<T> e) {
 		this.expression=e;
 	}
 	
@@ -37,6 +37,7 @@ public class Slot<T> {
 		return value;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private T tryCompute(Context c) {
 //		APersistentSet<Symbol> deps=expression.getDependencies();
 //		if (!deps.isEmpty()) {
@@ -45,7 +46,8 @@ public class Slot<T> {
 //				if (c.getSlot(s)==null) throw new UnresolvedException(s);
 //			}
 //		}
-		value=expression.compute(c);
+		Node<?> compiledNode=magic.compiler.Compiler.compileNode(c, expression);
+		value=(T) compiledNode.compute(c);
 		computed=true;
 		return value;
 	}

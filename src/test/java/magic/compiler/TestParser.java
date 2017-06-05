@@ -75,15 +75,15 @@ public class TestParser {
 	}
 	
 	@Test public void testQualifiedSymbol() {
-		Symbol sym= (Symbol)Reader.read("foo/bar").getValue();
+		Symbol sym= Reader.read("foo/bar").getSymbol();
 		assertEquals(Symbol.create("foo","bar"),sym);
 		assertEquals("foo",Reader.readSymbol("foo//").getNamespace());
-		assertEquals(Symbol.create("foo","/"),Reader.read("foo//").getValue());
+		assertEquals(Symbol.create("foo","/"),Reader.read("foo//").getSymbol());
 	}
 	
 	@Test public void testUnqualifiedSymbol() {
-		assertEquals(Symbol.create("foo"),Reader.read("foo").getValue());
-		assertEquals(Symbol.create("/"),Reader.read("/").getValue());
+		assertEquals(Symbol.create("foo"),Reader.read("foo").getSymbol());
+		assertEquals(Symbol.create("/"),Reader.read("/").getSymbol());
 	}
 	
 	@Test public void testeEmptyVector() {
@@ -125,6 +125,11 @@ public class TestParser {
 	}
 	
 	@Test public void testSetDuplicates() {
+		Object s2= Compiler.compile(RT.INITIAL_CONTEXT,"#{:foo :foo}").getValue();
+		assertEquals(Sets.of(Keyword.create("foo")),s2);
+	}
+	
+	@Test public void testSetDuplicates2() {
 		Object s2= Compiler.compile(RT.INITIAL_CONTEXT,"#{'foo 'foo}").getValue();
 		assertEquals(Sets.of(Symbol.create("foo")),s2);
 	}

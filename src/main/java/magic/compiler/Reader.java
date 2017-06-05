@@ -300,10 +300,9 @@ public class Reader extends BaseParser<Node<? extends Object>> {
      * Pops a symbol stored in a Constant off the stack.
      * @return
      */
-    @SuppressWarnings("unchecked")
 	protected Symbol popSymbol() {
     	Node<?> p=pop();
-    	Symbol sym=(magic.data.Symbol)(((magic.ast.Constant<Object>)p).getValue());
+    	Symbol sym=p.getSymbol();
     	return sym;
     }
     
@@ -322,7 +321,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 				UnqualifiedSymbol(),
 				'/',
 				UnqualifiedSymbol(),
-				push(magic.ast.Constant.create(Symbol.createWithNamespace(
+				push(magic.ast.Lookup.create(Symbol.createWithNamespace(
 						popSymbol().getName(),
 						popSymbol().getName()),getSourceInfo()))
 				);
@@ -339,7 +338,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 						'/', // allowed on its own as a symbol
 						'.' // dot special form
 				        ),
-				push(magic.ast.Constant.create(Symbol.create(match()),getSourceInfo())));
+				push(magic.ast.Lookup.create(Symbol.create(match()),getSourceInfo())));
 	}
 
 	public Rule InitialSymbolCharacter() {
@@ -473,9 +472,9 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 	 * @return
 	 */
 	public static Symbol readSymbol(String source) {
-		ParsingResult<magic.ast.Constant<magic.data.Symbol>> result = new ReportingParseRunner<magic.ast.Constant<magic.data.Symbol>>(parser.SymbolInput()).run(source);
+		ParsingResult<Node<?>> result = new ReportingParseRunner<Node<?>>(parser.SymbolInput()).run(source);
 		checkErrors(result);
-		return result.resultValue.getValue();
+		return result.resultValue.getSymbol();
 	}
 	
 	/**

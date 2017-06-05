@@ -53,15 +53,17 @@ public class Quote extends Node<Object> {
 
 	@Override
 	public EvalResult<Object> eval(Context context, APersistentMap<Symbol, Object> bindings) {
-		return form.evalQuoted(context,bindings,syntaxQuote);
+		// call evalQuoted on form
+		// expects a Node back, with unquotes expanded, so we need to translate this into a form Object 
+		return new EvalResult<Object>(context,form.evalQuoted(context,bindings,syntaxQuote).toForm());
 	}
 	
 	@Override
-	public EvalResult<Object> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings,
+	public Node<?> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings,
 			boolean syntaxQuote) {
 		Symbol sym=(syntaxQuote)?Symbols.SYNTAX_QUOTE:Symbols.QUOTE;
-		APersistentList<Object> r=PersistentList.of(sym,form.evalQuoted(context, bindings, syntaxQuote));
-		return new EvalResult<Object>(context,r);
+		APersistentList<Node<?>> r=PersistentList.of(Lookup.create(sym),form.evalQuoted(context, bindings, syntaxQuote));
+		return List.create(r, getSourceInfo());
 	}
 
 	public boolean isSyntaxQuote() {

@@ -157,7 +157,10 @@ public abstract class Node<T> extends RootNode {
 	}
 
 	/** 
-	 * Specialises a node with a set of bindings
+	 * Specialises a node with a set of bindings.
+	 * 
+	 * Should be context aware... i.e. only specialising nodes that genuinely reference the lexical
+	 * context.
 	 * 
 	 * @param bindings
 	 * @return
@@ -183,12 +186,12 @@ public abstract class Node<T> extends RootNode {
 	public abstract String toString();
 
 	/**
-	 * Evaluates this Node in a quoted context, returning a form object
+	 * Evaluates this Node in a quoted context, returning a Node object
 	 * 
 	 * @param context
 	 * @param bindings
 	 * @return
 	 */
-	public abstract EvalResult<Object> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings, boolean syntaxQuote);
+	public abstract Node<?> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings, boolean syntaxQuote);
 
 }

@@ -19,16 +19,21 @@ import magic.lang.Symbols;
  *
  * @param <T>
  */
-public class If<T> extends Node<T> {
+public class If<T> extends BaseForm<T> {
 	private final Node<?> test; 
 	private final Node<? extends T> trueExp; 
 	private final Node<? extends T> falseExp; 
 	
+	@SuppressWarnings("unchecked")
+	private If(APersistentList<Node<? extends Object>> nodes, SourceInfo source) {
+		super(nodes, calcDependencies(nodes) ,source);
+		this.test=nodes.get(1);
+		this.trueExp=(Node<? extends T>) nodes.get(2);
+		this.falseExp=(Node<? extends T>) nodes.get(3);
+	}
+	
 	private If(Node<?> test, Node<? extends T> trueExp, Node<? extends T> falseExp, SourceInfo source) {
-		super(test.getDependencies().includeAll(trueExp.getDependencies()).includeAll(falseExp.getDependencies()),source);
-		this.test=test;
-		this.trueExp=trueExp;
-		this.falseExp=falseExp;
+		this(Lists.of(Lookup.create(Symbols.IF),test,trueExp,falseExp),source);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -87,19 +92,6 @@ public class If<T> extends Node<T> {
 	@Override
 	public String toString() {
 		return "(if "+test+" "+trueExp+" " +falseExp+")";
-	}
-
-	@Override
-	public EvalResult<Object> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings,
-			boolean syntaxQuote) {
-		EvalResult<Object> r=test.evalQuoted(context, bindings, syntaxQuote);
-		EvalResult<Object> t=trueExp.evalQuoted(r.getContext(), bindings, syntaxQuote);
-		if (falseExp==null) {
-			return new EvalResult<Object>(t.getContext(),PersistentList.of(r.getValue(),t.getValue()));
-		} else {
-			EvalResult<Object> f=falseExp.evalQuoted(r.getContext(), bindings, syntaxQuote);
-			return new EvalResult<Object>(f.getContext(),PersistentList.of(r.getValue(),t.getValue(),f.getValue()));
-		}
 	}
 	
 	@Override

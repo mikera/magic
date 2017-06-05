@@ -69,15 +69,15 @@ public class Set<T> extends BaseDataStructure<APersistentSet<? extends T>> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public EvalResult<Object> evalQuoted(Context c, APersistentMap<Symbol, Object> bindings,
+	public Node<?> evalQuoted(Context c, APersistentMap<Symbol, Object> bindings,
 			boolean syntaxQuote) {
 		int n=exps.size();
-		if (n==0) return  EvalResult.create(c, (APersistentVector<T>)Tuple.EMPTY);
-		Object[] results=new Object[n];
+		if (n==0) return  Constant.create((APersistentVector<T>)Tuple.EMPTY);
+		Node<?>[] results=new Node[n];
 		for (int i=0; i<n; i++) {
 			results[i]=exps.get(i).evalQuoted(c,bindings,syntaxQuote);
 		}
-		return EvalResult.create(c, Vectors.wrap(results));
+		return create(Vectors.wrap(results),getSourceInfo());
 	}
 	
 	@SuppressWarnings("unchecked")

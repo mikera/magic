@@ -56,7 +56,7 @@ public class Context {
 	/**
 	 * Defines a symbol in the current context
 	 * @param sym Symbol to define
-	 * @param exp A Node definition
+	 * @param exp A Node definition for the raw, unexpanded code
 	 * @return
 	 */
 	public <T> Context define(Symbol sym, Node<T> exp) {
@@ -71,8 +71,11 @@ public class Context {
 			}
 		}
 				
+		// create the new Slot
+		Slot<T> newSlot=Slot.create(exp);
+		
 		// include new dependencies
-		APersistentSet<Symbol> dependencies=exp.getDependencies();
+		APersistentSet<Symbol> dependencies=newSlot.getDependencies();
 		for (Symbol nsym: dependencies) {
 			APersistentSet<Symbol> t=newDependants.get(nsym);
 			if (t==null) {
@@ -83,10 +86,9 @@ public class Context {
 			newDependants=newDependants.assoc(nsym, t);
 		}
 		
-		// create the new Slot
-		Slot<T> newSlot=Slot.create(exp);
 		PersistentHashMap<Symbol, Slot<?>> newMappings=mappings.assoc(sym,newSlot);
 
+		// invalidate transitive dependants
 		APersistentSet<Symbol> allDependants=calcTransitiveDependants(sym,newDependants);
 		if (allDependants.size()>0) {
 			for (Symbol s: allDependants) {

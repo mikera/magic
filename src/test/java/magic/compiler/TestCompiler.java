@@ -83,7 +83,7 @@ public class TestCompiler {
 				"   (def f (fn [c][a b c]))) "+
 				"(def r (f 7))");
 		Context c2=r.getContext();
-		//System.out.println(c2.getExpression("f"));
+		//System.out.println(c2.getNode("f"));
 		Object res=c2.getValue("r");
 		//System.out.println("<END>");
 		assertEquals(Tuple.of(3L,2L,7L),res);
@@ -135,6 +135,7 @@ public class TestCompiler {
 				+ "(def c ~a)");
 		Context c2=r.getContext();
 		
+		// System.out.println(c2.getNode("b"));
 		assertEquals((Long)1L,c2.getValue("b"));
 		assertEquals((Long)2L,c2.getValue("c"));
 	}
