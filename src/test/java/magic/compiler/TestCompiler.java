@@ -5,10 +5,13 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import magic.RT;
+import magic.ast.Node;
 import magic.data.Sets;
 import magic.data.Symbol;
 import magic.data.Tuple;
 import magic.lang.Context;
+import magic.lang.Slot;
+import magic.lang.UnresolvedException;
 
 public class TestCompiler {
 
@@ -164,16 +167,51 @@ public class TestCompiler {
 //		assertEquals((Long)3L,c2.getValue("b"));
 //	}
 	
+	@SuppressWarnings("unused")
 	@Test public void testDependencyUpdate() {
 		Context c=RT.INITIAL_CONTEXT;
 		
-		EvalResult<?> r=Compiler.compile(c, 
+		Context c1=Compiler.compile(c, 
 				  "(defn g [c] (f c))"  
-				+ "(def a 1)"
-				+ "(defn f [c] a)"
+				+ "(def a 1)").getContext();
+		
+		Object ogSlot=c1.getSlot("g");
+		Object og;
+		try {
+			og=c1.getValue("g");
+			// fail("Should not be able to compute g at this point!"); // TODO: what happens here?
+		} catch (UnresolvedException e) {
+			assertEquals(e.getSymbol(),Symbol.create("f"));
+		}
+		
+		{ // check dependency exists
+			Node<?> g=c1.getNode("g");
+			assertTrue(g.getDependencies().contains(Symbol.create("f")));
+			assertTrue(c1.getDependencies(Symbol.create("g")).contains(Symbol.create("f")));
+			assertTrue(c1.getDependants(Symbol.create("f")).contains(Symbol.create("g")));
+		}
+
+		EvalResult<?> r=Compiler.compile(c1, 
+				  "(defn f [c] a)"
 				+ "(def a 2)"
 				+ "(def b (g 3))");
 		Context c2=r.getContext();
+		
+		// check correct dependencies exists
+		Slot<?> fSlot=c2.getSlot("f");
+		Slot<?> gSlot=c2.getSlot("g");
+		Node<?> g=c2.getNode("g");
+		assertTrue(g.getDependencies().contains(Symbol.create("f")));
+		Node<?> f=c2.getNode("f");
+		assertTrue(f.getDependencies().contains(Symbol.create("a")));
+		assertTrue(c2.getDependants("a").contains(Symbol.create("f")));
+		assertTrue(c2.calcDependants(Symbol.create("a")).contains(Symbol.create("b")));
+		Slot<?> aSlot=c2.getSlot("a");
+		Slot<?> bSlot=c2.getSlot("b");
+		assertEquals(fSlot.getDependencies(),f.getDependencies());
+		Object fVal=fSlot.getValue();
+		assertNotNull(fVal);
+		Object bVal=c2.getValue("b");
 		
 		assertEquals((Long)2L,c2.getValue("b"));
 	}
@@ -188,6 +226,8 @@ public class TestCompiler {
 				+ "(def b a)"
 			    + "(defn f [c] b)");
 		Context c2=r.getContext();
+		Node<?> f=c2.getNode("f");
+		assertEquals(Sets.of(Symbol.create("b")),f.getDependencies());
 		
 		assertEquals(Sets.of(),c2.getDependencies("a"));
 		assertEquals(Sets.of(Symbol.create("b")),c2.getDependants("a"));

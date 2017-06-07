@@ -8,7 +8,6 @@ import magic.data.APersistentList;
 import magic.data.APersistentSequence;
 import magic.data.APersistentVector;
 import magic.data.Lists;
-import magic.lang.Context;
 
 /**
  * Magic code analyser
@@ -69,18 +68,6 @@ public class Analyser {
 		if (n==0) return (Node<T>) Constant.create(Lists.EMPTY);
 		
 		return (Node<T>) Vector.create(analyseAll(form));
-	}
-
-	/**
-	 * Expands a form in a given context
-	 * @param context
-	 * @param form
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> Node<T> expand(Context context, Node<?> node) {
-		AExpander ex=Expanders.INITAL_EXPANDER;
-		return (Node<T>) ex.expand(context, node, ex);
 	}
 
 

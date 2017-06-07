@@ -9,7 +9,6 @@ import magic.ast.Constant;
 import magic.ast.Node;
 import magic.ast.Lambda;
 import magic.ast.Lookup;
-import magic.compiler.Analyser;
 import magic.compiler.Reader;
 import magic.data.PersistentList;
 import magic.data.Sets;
@@ -23,7 +22,7 @@ public class TestAnalyse {
 
 	public <T> Node<T> analyse(String t) {
 		Node<?> node= Reader.read(t);
-		return Analyser.expand(RT.INITIAL_CONTEXT,node);
+		return Compiler.expand(RT.INITIAL_CONTEXT,node);
 	}
 	
 	@Test 
@@ -84,7 +83,7 @@ public class TestAnalyse {
 		try {
 			e.compute(c);
 			fail("Should not be able to lookup with inifinite recursion");
-		} catch (StackOverflowError t) {
+		} catch (Throwable t) {
 			// OK
 		}
 	}

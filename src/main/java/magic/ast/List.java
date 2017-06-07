@@ -8,7 +8,6 @@ import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
 import magic.data.Lists;
-import magic.data.PersistentList;
 import magic.data.Sets;
 import magic.data.Symbol;
 import magic.lang.Context;
@@ -33,11 +32,6 @@ public class List extends BaseForm<Object> {
 		super(nodes, deps, source);
 	}
 	
-	private List(APersistentList<Node<? extends Object>> nodes, SourceInfo source) {
-		//this(nodes, calcDependencies(nodes), source);
-		this(nodes, Sets.emptySet(), source);
-	}
-	
 	public static List create(Node<?>[] nodes, SourceInfo sourceInfo) {
 		return create((APersistentList<Node<?>>)Lists.wrap(nodes),sourceInfo);
 	}
@@ -47,7 +41,9 @@ public class List extends BaseForm<Object> {
 	}
 
 	public static List create(APersistentList<Node<?>> nodes,SourceInfo source) {
-		return new List(nodes,source);
+		// get deps from first element in list of present
+		APersistentSet<Symbol> deps=(nodes.size()==0)?Sets.emptySet():nodes.get(0).getDependencies();
+		return new List(nodes,deps,source);
 	}
 	
 	public static List create(List a,SourceInfo source) {
@@ -77,7 +73,7 @@ public class List extends BaseForm<Object> {
 			if (node!=newNode) newNodes=newNodes.assocAt(i, newNode);
 		}
 		if (newNodes==nodes) return this;
-		return new List(newNodes,source);
+		return create(newNodes,source);
 	}
 	
 	@Override

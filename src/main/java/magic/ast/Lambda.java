@@ -29,7 +29,7 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 	private final int arity;
   
 	@SuppressWarnings("unchecked")
-	public Lambda(APersistentVector<Symbol> params, Node<T> body,SourceInfo source) {
+	private Lambda(APersistentVector<Symbol> params, Node<T> body,SourceInfo source) {
 		super((APersistentList<Node<?>>)(APersistentList<?>)Lists.of(Constant.create(Symbols.FN),Constant.create(params),body),body.getDependencies().excludeAll(params),source);
 		this.params=params;
 		this.arity=params.size();
@@ -52,10 +52,14 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 		return create(alist,Do.create(body,source),source);
 	}
 
+	/**
+	 * Computes the function object represented by this lambda. Specialises to the provided context and bindings
+	 * 
+	 */
 	@Override
 	public EvalResult<AFn<T>> eval(Context context,APersistentMap<Symbol, Object> bindings) {
 		final APersistentMap<Symbol, Object> capturedBindings=bindings.delete(params);
-		// capture variables defined in the current lexical scope
+		// capture variables defined in the current scope
 		Node<? extends T> body=this.body.specialiseValues(capturedBindings);
 		
 		// System.out.println(body);
@@ -76,6 +80,11 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 			@Override
 			public Type getReturnType() {
 				return body.getType();
+			}
+			
+			@Override
+			public String toString() {
+				return super.toString()+":"+Lambda.this.toString();
 			}
 		};
 		return new EvalResult<AFn<T>>(context,fn);

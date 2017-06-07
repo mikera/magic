@@ -7,6 +7,7 @@ import magic.data.APersistentMap;
 import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.lang.Context;
+import magic.lang.Symbols;
 
 /**
  * AST node representing the action of defining a symbol in the current context
@@ -24,7 +25,7 @@ public class Define<T> extends BaseForm<T> {
 	final Node<? extends T> exp;
 
 	public Define(Symbol sym, Node<T> exp, SourceInfo source) {
-		super(PersistentList.of(Constant.create(sym),exp),exp.getDependencies(),source);
+		super(PersistentList.of(Constant.create(sym),exp),exp.getDependencies().include(Symbols.DEF).exclude(sym),source);
 		this.sym=sym;
 		this.exp=exp;
 	}
@@ -39,11 +40,11 @@ public class Define<T> extends BaseForm<T> {
 	
 	@Override
 	public EvalResult<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
-		// use evalQuoted to expand any unquotes... TODO is this a good idea?
 		Node<?> theExp=exp;
-		theExp=theExp.evalQuoted(context,bindings,true);
-		theExp=theExp.specialiseValues(bindings);
-		context=context.define(sym, theExp); 
+		// use evalQuoted to expand any unquotes... TODO is this a good idea?
+		//theExp=theExp.evalQuoted(context,bindings,true);
+		// theExp=theExp.specialiseValues(bindings);
+		context=context.define(sym, theExp, bindings); 
 		return new EvalResult<T>(context,null); // TODO: what should def return??
 	}
 	
@@ -61,6 +62,6 @@ public class Define<T> extends BaseForm<T> {
 
 	@Override
 	public String toString() {
-		return "(Def "+sym+" "+RT.toString(exp)+")";
+		return "(def "+sym+" "+RT.toString(exp)+")";
 	}
 }

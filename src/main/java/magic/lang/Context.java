@@ -2,7 +2,9 @@ package magic.lang;
 
 import magic.ast.Node;
 import magic.compiler.Reader;
+import magic.data.APersistentMap;
 import magic.data.APersistentSet;
+import magic.data.Maps;
 import magic.data.PersistentHashMap;
 import magic.data.Sets;
 import magic.data.Symbol;
@@ -32,12 +34,26 @@ public class Context {
 		this.dependants=deps;
 	}
 	
+	/**
+	 * Gets the value from the Slot associated with the given symbol in this context.
+	 * May throw an Exception if the dependencies of the defined symbol are not available.
+	 * @param sym
+	 * @return
+	 * @throws UnresolvedException if the symbol or one of it's dependencies is not defined.
+	 */
 	public <T> T getValue(Symbol sym) {
 		Slot<T> slot=getSlot(sym); 
 		if (slot==null) throw new UnresolvedException(sym);
-		return slot.getValue(this);
+		return slot.getValue();
 	}
 	
+	/**
+	 * Gets the value from the Slot associated with the symbol of the given name in this context.
+	 * May throw an Exception if the dependencies of the defined symbol are not available.
+	 * @param sym A string identifying a Symbol
+	 * @return
+	 * @throws UnresolvedException if the symbol or one of it's dependencies is not defined.
+	 */
 	public <T> T getValue(String sym) {
 		return getValue(Reader.readSymbol(sym));
 	}
@@ -53,13 +69,23 @@ public class Context {
 		return define(s,exp);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public <T> Context define(Symbol sym, Node<T> exp) {
+		return define(sym,exp,(APersistentMap<Symbol, Object>)Maps.EMPTY);
+    }
+	 
 	/**
-	 * Defines a symbol in the current context
+	 * Defines a symbol in this context.
+	 * 
+	 * Causes an update to all dependencies as necessary, but does *not* evaluate dependencies.
+	 * This enables contexts to be incrementally constructed without all dependencies yet available.
+	 * 
 	 * @param sym Symbol to define
 	 * @param exp A Node definition for the raw, unexpanded code
+	 * @param bindings Captured lexical bindings at the moment of definition
 	 * @return
 	 */
-	public <T> Context define(Symbol sym, Node<T> exp) {
+	public <T> Context define(Symbol sym, Node<T> exp, APersistentMap<Symbol, Object> bindings) {
 		PersistentHashMap<Symbol,APersistentSet<Symbol>> newDependants=dependants;
 		
 		// remove old dependencies
@@ -71,8 +97,8 @@ public class Context {
 			}
 		}
 				
-		// create the new Slot
-		Slot<T> newSlot=Slot.create(exp);
+		// create the new Slot with this as the defining context
+		Slot<T> newSlot=Slot.create(exp,this,bindings);
 		
 		// include new dependencies
 		APersistentSet<Symbol> dependencies=newSlot.getDependencies();
@@ -86,18 +112,26 @@ public class Context {
 			newDependants=newDependants.assoc(nsym, t);
 		}
 		
+		// construct new Context with consistent dependencies
 		PersistentHashMap<Symbol, Slot<?>> newMappings=mappings.assoc(sym,newSlot);
-
-		// invalidate transitive dependants
+		Context c=new Context(newMappings,newDependants);
+		
+		// invalidate slots for transitive dependants if they exist
+		// TODO: figure out what happens if dependency graph is affected?
 		APersistentSet<Symbol> allDependants=calcTransitiveDependants(sym,newDependants);
+		PersistentHashMap<Symbol, Slot<?>> updatedMappings=newMappings;
 		if (allDependants.size()>0) {
 			for (Symbol s: allDependants) {
-				Slot<?> slot=getSlot(s);
-				if (slot!=null) newMappings=newMappings.assoc(s, slot.invalidate());
+				Slot<?> slot=c.getSlot(s); // should not be null since it must have been defined in order to have an entry in the dependants graph?
+				updatedMappings=updatedMappings.assoc(s, slot.invalidate(c));
 			}
 		}
 		
-		return new Context(newMappings,newDependants);
+		return (updatedMappings==newMappings)?c:new Context(updatedMappings,newDependants);
+	}
+	
+	public APersistentSet<Symbol> calcDependants(Symbol sym) {
+		return calcTransitiveDependants(sym,dependants);
 	}
 	
 	private static APersistentSet<Symbol> calcTransitiveDependants(Symbol sym, PersistentHashMap<Symbol, APersistentSet<Symbol>> dependants) {
@@ -171,6 +205,15 @@ public class Context {
 	public <T> Slot<T> getSlot(Symbol sym) {
 		return (Slot<T>) mappings.get(sym);
 	}
+	
+	/**
+	 * Gets a slot from the context. Returns null if the slot does not exist
+	 * @param sym
+	 * @return
+	 */
+	public Slot<?> getSlot(String symName) {
+		return getSlot(Reader.readSymbol(symName));
+	}
 
 	/**
 	 * Gets the Node in this context associated with a given symbol name
@@ -196,6 +239,7 @@ public class Context {
 	public String getCurrentNamespace() {
 		return getValue(Symbols._NS_);
 	}
+
 
 
 

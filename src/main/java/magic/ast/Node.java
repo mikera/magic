@@ -49,7 +49,7 @@ public abstract class Node<T> extends RootNode {
 
 	/**
 	 * Computes the value of an expression  node in the given context
-	 * Discards and effects on the context
+	 * Discards any effects on the context
 	 * @param c
 	 * @param bindings
 	 * @return

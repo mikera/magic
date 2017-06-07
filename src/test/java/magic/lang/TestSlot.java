@@ -18,6 +18,6 @@ public class TestSlot {
 		assertEquals(Long.valueOf(1),c.getValue(sym));
 		
 		Slot<?> s=c.getSlot(sym);
-		assertEquals(Long.valueOf(1),s.getValue(c));
+		assertEquals(Long.valueOf(1),s.getValue());
 	}
 }

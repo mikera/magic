@@ -7,7 +7,6 @@ import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.Lists;
-import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.lang.Context;
 import magic.lang.Symbols;
@@ -32,6 +31,7 @@ public class If<T> extends BaseForm<T> {
 		this.falseExp=(Node<? extends T>) nodes.get(3);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private If(Node<?> test, Node<? extends T> trueExp, Node<? extends T> falseExp, SourceInfo source) {
 		this(Lists.of(Lookup.create(Symbols.IF),test,trueExp,falseExp),source);
 	}

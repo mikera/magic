@@ -11,6 +11,7 @@ import magic.Types;
 import magic.ast.Constant;
 import magic.ast.Node;
 import magic.compiler.Analyser;
+import magic.compiler.Compiler;
 import magic.compiler.Reader;
 import magic.data.APersistentMap;
 import magic.data.APersistentVector;
@@ -19,11 +20,11 @@ import magic.data.Symbol;
 
 public class TestTypeAnalysis {
 	private <T> Node<T> compile(String s) {
-		return Analyser.expand(RT.INITIAL_CONTEXT, Reader.read(s));
+		return Compiler.expand(RT.INITIAL_CONTEXT, Reader.read(s));
 	}
 	
 	private Class<?>  analyseClass(Node<?> form) {
-		Node<?> node=Analyser.expand(RT.BOOTSTRAP_CONTEXT, form);
+		Node<?> node=Compiler.expand(RT.BOOTSTRAP_CONTEXT, form);
 		Type type=node.getType();
 		return type.getJavaClass();
 	}

@@ -2,7 +2,10 @@ package magic.lang;
 
 import magic.ast.Node;
 import magic.compiler.AExpander;
+import magic.compiler.EvalResult;
+import magic.data.APersistentMap;
 import magic.data.APersistentSet;
+import magic.data.Maps;
 import magic.data.Symbol;
 
 /**
@@ -17,28 +20,34 @@ import magic.data.Symbol;
  * @param T the Java type of the expression
  */
 public class Slot<T> {
-	public final Node<T> expression;
+	private final Node<T> expression;
+	private final APersistentMap<Symbol, Object> bindings;
+	private final Context context;
 	
 	private T value=null;
 	private volatile boolean computed=false;
+	private final Node<T> compiledExp;
 	
-	private Slot(Node<T> e) {
+	private Slot(Node<T> e, Context context, APersistentMap<Symbol, Object> bindings) {
 		this.expression=e;
+		this.context=context;
+		this.bindings=bindings;
+		compiledExp=magic.compiler.Compiler.compileNode(context,expression);
+
 	}
 	
-	public T getValue(Context c) {
+	public T getValue() {
 		if (computed==false) {
 			synchronized (this) {
 				if (computed==false) {
-					return tryCompute(c);
+					return tryCompute();
 				}
 			}
 		}
 		return value;
 	}
 	
-	@SuppressWarnings("unchecked")
-	private T tryCompute(Context c) {
+	private T tryCompute() {
 //		APersistentSet<Symbol> deps=expression.getDependencies();
 //		if (!deps.isEmpty()) {
 //			// check slots exist
@@ -46,34 +55,50 @@ public class Slot<T> {
 //				if (c.getSlot(s)==null) throw new UnresolvedException(s);
 //			}
 //		}
-		Node<?> compiledNode=magic.compiler.Compiler.compileNode(c, expression);
-		value=(T) compiledNode.compute(c);
+		EvalResult<T> result=compiledExp.eval(context, bindings);
+		value=result.getValue();
 		computed=true;
 		return value;
 	}
 	
+	/**
+	 * Gets the compiled Node associated with this Slot
+	 * This Node may have unresolved dependencies.
+	 * @return
+	 */
 	public Node<T> getNode() {
-		return expression;
+		return compiledExp;
 	}
 
 
-	public static <T> Slot<T> create(Node<T> exp) {
-		return new Slot<T>(exp);
+	@SuppressWarnings("unchecked")
+	public static <T> Slot<T> create(Node<T> exp,Context context) {
+		return create(exp,context,(APersistentMap<Symbol, Object>)Maps.EMPTY);
 	}
 
-	public boolean isExpander(Context c) {
-		return getValue(c) instanceof AExpander;
+	public static <T> Slot<T> create(Node<T> exp, Context context,APersistentMap<Symbol, Object> bindings) {
+		return new Slot<T>(exp,context,bindings);
+	}
+
+	public boolean isExpander() {
+		return getValue() instanceof AExpander;
 	}
 
 	public APersistentSet<Symbol> getDependencies() {
-		return expression.getDependencies();
+		return getNode().getDependencies();
 	}
 
 	/**
-	 * Invalidates the slot, returning a new slot with no cached values
+	 * Invalidates the slot, returning a new slot with no cached values assocaited with the given defining context
 	 * @return
 	 */
-	public Slot<T> invalidate() {
-		return create(expression);
+	public Slot<T> invalidate(Context c) {
+		return create(expression,c,bindings);
 	}
+	
+	@Override 
+	public String toString() {
+		return "<Slot exp="+expression+(computed?(" val="+value):"")+">";
+	}
+
 }

@@ -14,6 +14,7 @@ import magic.RT;
 import magic.Type;
 import magic.ast.*;
 import magic.compiler.Analyser;
+import magic.compiler.Compiler;
 import magic.data.APersistentSet;
 import magic.data.Keyword;
 import magic.data.Symbol;
@@ -70,9 +71,9 @@ public class TestNodesParam {
 	@Test 
 	public void testRoundTrip() {
 		Context c=RT.BOOTSTRAP_CONTEXT;
-		Node<?> node1=Analyser.expand(c,Analyser.analyse(node.toForm())).optimise();
+		Node<?> node1=Compiler.expand(c,Analyser.analyse(node.toForm())).optimise();
 		Object form1=node1.toForm();
-		Node<?> node2=Analyser.expand(c,Analyser.analyse(form1)).optimise();
+		Node<?> node2=Compiler.expand(c,Analyser.analyse(form1)).optimise();
 		
 		assertEquals(form1,node2.toForm());
 		assertEquals(node1.getClass(),node2.getClass());
