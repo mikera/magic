@@ -23,6 +23,17 @@ public class TestCoreFns {
 		Object v=exec("(def a '[1 2 3]) "
 				    + "(vec a)");
 		assertEquals(Tuple.of(1L,2L,3L),v);
+	}
+	
+	@Test public void testStr() {
+		assertEquals(":foo",exec("(str :foo)"));
+		assertEquals("1",exec("(str 1)"));
+	}
+	
+	@Test public void testInstanceOf() {
+		assertTrue(RT.bool(exec("(instance? java.lang.String (str :foo))")));
+		assertTrue(RT.bool(exec("(instance? java.lang.Long 1)")));
+		assertFalse(RT.bool(exec("(instance? java.lang.Long nil)")));
 		
 	}
 

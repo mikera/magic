@@ -1,6 +1,7 @@
 package magic.compiler;
 
 import magic.RT;
+import magic.Type;
 import magic.ast.Apply;
 import magic.ast.Constant;
 import magic.ast.Define;
@@ -10,6 +11,7 @@ import magic.ast.InvokeStatic;
 import magic.ast.Expander;
 import magic.ast.HashMap;
 import magic.ast.If;
+import magic.ast.InstanceOf;
 import magic.ast.Lambda;
 import magic.ast.Let;
 import magic.ast.List;
@@ -512,6 +514,27 @@ public class Expanders {
 			Node<?> falseExp = (n == 4) ? ex.expand(c, form.get(3), ex) : Constant.create(null, si);
 			return If.createIf(test, trueExp, falseExp, si);
 		}
+	}
+	
+	public static final Object INSTANCEOF = new InstanceOfExpander();
+
+	private static final class InstanceOfExpander extends AListExpander {
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public Node<?> expand(Context c, List form, AExpander ex) {
+			int n = form.size();
+			SourceInfo si = form.getSourceInfo();
+			if (n != 3) {
+				throw new ExpansionException("Can't expand instance?: requires a type and a value", form);
+			}
+			
+			Node<?> typeNode=ex.expand(c, form.get(1), ex);
+			Node<?> expNode=ex.expand(c, form.get(2), ex);
+			
+			return InstanceOf.create((Node<Type>) typeNode, expNode, si);
+		}
+		
 	}
 
 	/**

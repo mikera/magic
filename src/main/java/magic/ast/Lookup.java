@@ -2,10 +2,15 @@ package magic.ast;
 
 import magic.compiler.Reader;
 import magic.compiler.SourceInfo;
+import magic.RT;
+import magic.Type;
 import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
 import magic.data.Symbol;
 import magic.lang.Context;
+import magic.lang.Slot;
+import magic.lang.UnresolvedException;
+import magic.type.JavaType;
 
 /**
  * Expression node for looking up a symbol in a context
@@ -33,8 +38,16 @@ public class Lookup<T> extends Node<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public EvalResult<T> eval(Context c,APersistentMap<Symbol, Object> bindings) {
-		T val = (bindings.containsKey(sym))?(T)bindings.get(sym):c.getValue(sym);
-		return new EvalResult<T>(c,val);
+		if (bindings.containsKey(sym)) return new EvalResult<T>(c,(T) bindings.get(sym));
+		Slot<T> slot=c.getSlot(sym);
+		if (slot!=null) return new EvalResult<T>(c,slot.getValue());
+		
+		Class<?> cls=RT.classForSymbol(sym);
+		if (cls!=null) {
+			Type type=JavaType.create(cls);
+			return new EvalResult<T>(c,(T) type);
+		}
+		throw new UnresolvedException(sym);
 	}
 
 	public static <T> Lookup<T> create(String sym) {

@@ -89,7 +89,9 @@ public class RT {
 			c=c.define(Symbols.VECTOR, Constant.create(Expanders.VECTOR)); 
 			c=c.define(Symbols.SET, Constant.create(Expanders.SET)); 
 			c=c.define(Symbols.HASHMAP, Constant.create(Expanders.HASHMAP)); 
-			
+					
+			c=c.define(Symbols.INSTANCE_Q, Constant.create(Expanders.INSTANCEOF)); 
+ 
 			c=c.define(Symbols._NS_, Constant.create(null)); 
 
 		} catch (Throwable t) {
@@ -407,13 +409,24 @@ public class RT {
 	}
 
 
-
+	/**
+	 * Gets the class for a given name, or null if not found
+	 * @param name
+	 * @return
+	 */
 	public static Class<?> classForName(String name) {
 		try {
 			return Class.forName(name,false,RT.class.getClassLoader());
 		} catch (ClassNotFoundException e) {
 			return null;
 		}
+	}
+
+	public static Class<?> classForSymbol(Symbol sym) {
+		if (sym.isQualified()) return null;
+		String name=sym.getName();
+		if (!maybeClassName(name)) return null;
+		return classForName(name);
 	}
 
 

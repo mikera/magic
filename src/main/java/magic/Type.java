@@ -145,4 +145,8 @@ public abstract class Type {
 	public Type getReturnType() {
 		return null;
 	}
+
+	public boolean isDisjoint(Type type) {
+		return intersection(type).equals(Types.NOTHING);
+	}
 }

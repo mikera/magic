@@ -37,6 +37,12 @@ public class Symbols {
 	public static final Symbol SET = Symbol.create("set");
 	public static final Symbol HASHMAP = Symbol.create("hashmap");
 	public static final Symbol VECTOR = Symbol.create("vector");
+	public static final Symbol LIST = Symbol.create("list");
+	
+	// types and casting
+	public static final Symbol INSTANCE_Q = Symbol.create("instance?");
+	public static final Symbol CAST = Symbol.create("cast");
+
 	
 	// environment variables and bindings
 	public static final Symbol _NS_ = Symbol.create("*ns*");

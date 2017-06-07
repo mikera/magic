@@ -6,3 +6,7 @@
 
 (defn vec [a] 
   (. magic.RT vec a))
+
+(defn str [a] 
+  (. magic.RT toString a))
+
