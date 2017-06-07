@@ -175,11 +175,12 @@ public class TestCompiler {
 				  "(defn g [c] (f c))"  
 				+ "(def a 1)").getContext();
 		
-		Object ogSlot=c1.getSlot("g");
+		Slot<?> ogSlot=c1.getSlot("g");
+		assertFalse(ogSlot.isComputed());
 		Object og;
 		try {
 			og=c1.getValue("g");
-			// fail("Should not be able to compute g at this point!"); // TODO: what happens here?
+			fail("Should not be able to compute g at this point!"); // TODO: what happens here?
 		} catch (UnresolvedException e) {
 			assertEquals(e.getSymbol(),Symbol.create("f"));
 		}

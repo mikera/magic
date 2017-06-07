@@ -49,11 +49,14 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 	@SuppressWarnings("unchecked")
 	public static <T> Lambda<T> create(Vector<Symbol> params, APersistentList<Node<?>> body, SourceInfo source) {
 		APersistentVector<Symbol> alist=(APersistentVector<Symbol>) params.toForm();
-		return create(alist,Do.create(body,source),source);
+		Node<T> bodyExpr=(body.size()==1)?(Node<T>) body.get(0):Do.create(body,source);
+		return create(alist,bodyExpr,source);
 	}
 
 	/**
-	 * Computes the function object represented by this lambda. Specialises to the provided context and bindings
+	 * Computes the function object represented by this lambda. 
+	 * 
+	 * Specialises the body expression according to the provided context and bindings
 	 * 
 	 */
 	@Override

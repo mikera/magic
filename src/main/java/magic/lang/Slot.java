@@ -83,6 +83,10 @@ public class Slot<T> {
 	public boolean isExpander() {
 		return getValue() instanceof AExpander;
 	}
+	
+	public boolean isComputed() {
+		return computed;
+	}
 
 	public APersistentSet<Symbol> getDependencies() {
 		return getNode().getDependencies();
