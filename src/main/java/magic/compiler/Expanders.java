@@ -126,11 +126,11 @@ public class Expanders {
 		public Node<?> expand(Context c, List form, AExpander ex) {
 			int n = form.size();
 			if (n != 3)
-				throw new ExpansionException("Can't expand def, requires a symbolic name and expression", form);
+				throw new ExpansionException("Can't expand def, requires at least a symbolic name and expression", form);
 
 			Node<?> nameObj = form.get(1);
 			if (!nameObj.isSymbol()) {
-				throw new AnalyserException("Can't expand def: requires a symbolic name in: ", form);
+				throw new AnalyserException("Can't expand def: requires a symbol as name but got: "+nameObj, form);
 			}
 			Symbol name = nameObj.getSymbol();
 
@@ -192,7 +192,7 @@ public class Expanders {
 			int n = call.size();
 			Node<?> nameObj = call.get(0);
 			if (!nameObj.isSymbol()) {
-				throw new ExpansionException("Can't expand dot: requires a symbolic method name in: ", form);
+				throw new ExpansionException("Can't expand dot: requires a symbolic method name", form);
 			}
 			Symbol method = nameObj.getSymbol();
 
@@ -230,7 +230,7 @@ public class Expanders {
 			
 			Node<?> nameObj = form.get(1);
 			if (!nameObj.isSymbol()) {
-				throw new ExpansionException("Can't expand defn: requires a symbolic function name in: ", form);
+				throw new ExpansionException("Can't expand defn: requires a symbolic function name", form);
 			}
 			Node<?> argObj = ex.expand(c, form.get(2), ex);
 
@@ -338,7 +338,7 @@ public class Expanders {
 		public Node<?> expand(Context c, List form, AExpander ex) {
 			int n = form.size();
 			if (n < 2)
-				throw new ExpansionException("Can't expand let, requires at least an bindings vector", form);
+				throw new ExpansionException("Can't expand let, requires at least a binding vector", form);
 
 			SourceInfo si = form.getSourceInfo();
 
@@ -365,7 +365,7 @@ public class Expanders {
 		public Node<?> expand(Context c, List form, AExpander ex) {
 			int n = form.size();
 			if (n < 1)
-				throw new ExpansionException("Can't expand vector!", form);
+				throw new ExpansionException("Can't expand vector! No form present??", form);
 
 			SourceInfo si = form.getSourceInfo();
 			APersistentList<Node<?>> body = form.getNodes().subList(1, n);
@@ -386,7 +386,7 @@ public class Expanders {
 		public Node<?> expand(Context c, List form, AExpander ex) {
 			int n = form.size();
 			if (n < 1)
-				throw new ExpansionException("Can't expand set!", form);
+				throw new ExpansionException("Can't expand set! No form present??", form);
 
 			SourceInfo si = form.getSourceInfo();
 			APersistentList<Node<?>> body = form.getNodes().subList(1, n);
@@ -407,7 +407,7 @@ public class Expanders {
 		public Node<?> expand(Context c, List form, AExpander ex) {
 			int n = form.size();
 			if (n < 1)
-				throw new ExpansionException("Can't expand map!", form);
+				throw new ExpansionException("Can't expand map! No form present??", form);
 
 			SourceInfo si = form.getSourceInfo();
 			APersistentList<Node<?>> body = form.getNodes().subList(1, n);
@@ -506,7 +506,7 @@ public class Expanders {
 			SourceInfo si = form.getSourceInfo();
 			if ((n < 3) || (n > 4))
 				throw new ExpansionException(
-						"Can't expand if, reqires a condition, a true expression and optional false expression", form);
+						"Can't expand if: requires a condition, a true expression and optional false expression", form);
 			Node<?> test = ex.expand(c, form.get(1), ex);
 			Node<?> trueExp = ex.expand(c, form.get(2), ex);
 			Node<?> falseExp = (n == 4) ? ex.expand(c, form.get(3), ex) : Constant.create(null, si);
@@ -528,7 +528,7 @@ public class Expanders {
 		public Node<?> expand(Context c, List form, AExpander ex) {
 			int n = form.size();
 			if (n < 3)
-				throw new ExpansionException("Can't expand macro, requires at least an arg vector and body", form);
+				throw new ExpansionException("Can't expand macro: requires at least an arg vector and body", form);
 
 			Node<?> argObj = ex.expand(c, form.get(1), ex);
 			if (!(argObj instanceof Vector)) {

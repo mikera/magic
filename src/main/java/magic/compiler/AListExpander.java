@@ -9,7 +9,7 @@ public abstract class AListExpander extends AExpander {
 	@Override
 	public final Node<?> expand(Context c, Node<?> form, AExpander ex) {
 		if (form instanceof List) return expand(c,(List)form,ex);
-		throw new ExpansionException("Expansion failed, expecting a list but got: "+form,form);
+		throw new ExpansionException("Expansion failed, expecting a List but got type: "+form.getClass().getName(),form);
 	}
 	
 	/**

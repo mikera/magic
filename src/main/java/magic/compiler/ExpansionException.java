@@ -18,7 +18,7 @@ public class ExpansionException extends Error {
 	
 	@Override
 	public String toString() {
-		return getMessage()+ " while expanding: "+form;
+		return getMessage()+ "\nWhile expanding: "+form;
 	}
 
 }
