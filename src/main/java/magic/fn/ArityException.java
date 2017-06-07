@@ -12,6 +12,6 @@ public class ArityException extends RuntimeException {
 	}
 	
 	public ArityException(int expected , int arity) {
-		this("Expected arity "+expected+" but called with: "+arity);
+		this("Expected arity "+expected+" but called with "+arity+ " argument");
 	}
 }

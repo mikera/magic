@@ -47,7 +47,7 @@ public class Compiler {
 		try {
 			result=(EvalResult<T>) node.eval(context,bindings);
 		} catch (Throwable t) {
-			throw new Error("Error evaluating node:" + node,t);
+			throw new Error("Error evaluating node: " + node +" : "+t.getMessage(),t);
 		}
 		return result;
 	}
