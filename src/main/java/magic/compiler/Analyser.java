@@ -2,12 +2,14 @@ package magic.compiler;
 
 import magic.ast.Constant;
 import magic.ast.List;
+import magic.ast.Lookup;
 import magic.ast.Node;
 import magic.ast.Vector;
 import magic.data.APersistentList;
 import magic.data.APersistentSequence;
 import magic.data.APersistentVector;
 import magic.data.Lists;
+import magic.data.Symbol;
 
 /**
  * Magic code analyser
@@ -50,6 +52,8 @@ public class Analyser {
 		//if (form instanceof APersistentSet) return analyseSet(c,(APersistentSet<Object>)form);
 		//if (form instanceof APersistentMap) return analyseMap(c,(APersistentMap<Object,Object>)form);
 
+		if (form instanceof Symbol) return Lookup.create((Symbol)form);
+		
 		// fall through handles constant literals, keywords etc
 		return (Node<T>) Constant.create(form);
 	}

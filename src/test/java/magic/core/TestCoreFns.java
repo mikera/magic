@@ -55,8 +55,14 @@ public class TestCoreFns {
 		Object o2=Boolean.FALSE;
 		assertFalse(RT.bool(o2));
 		assertFalse(RT.bool(o));
-		
 	}
+	
+//	@Test public void testWhen() {
+//		assertEquals("foo",exec("(when true (str 'foo))"));
+//		assertNull(exec("(when false (str 'foo))"));
+//
+//		
+//	}
 
 
 
