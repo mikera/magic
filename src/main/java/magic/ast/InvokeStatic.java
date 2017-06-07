@@ -3,6 +3,7 @@ package magic.ast;
 import java.lang.reflect.Method;
 
 import magic.RT;
+import magic.Reflector;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
@@ -69,15 +70,11 @@ public class InvokeStatic<T> extends BaseForm<T> {
 			argVals[i]=arg;
 			argClasses[i]=arg.getClass();
 		}
-		Method m;
-		try {
-			m = klass.getMethod(method.getName(), argClasses);
-		} catch (Throwable e) {
-			throw new Error("Unable to identify static method "+method+" on class "+klass+" with argument classes ["+RT.toString(argClasses, ",")+"]",e);
-		}
+		Method m = Reflector.getDeclaredMethod(klass,method.getName(), argClasses);
 		
 		try {
-			return new EvalResult<T>(c,(T) m.invoke(null, argVals));
+			Object result=m.invoke(null, argVals);
+			return new EvalResult<T>(c,(T)result );
 		} catch (Throwable t) {
 			throw new Error("Reflected method invocation failed",t);
 		}

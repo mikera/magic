@@ -6,3 +6,6 @@
 
 (defn vec [a] 
   (. magic.RT vec a))
+
+(defn list [a] 
+  (. magic.RT list a))

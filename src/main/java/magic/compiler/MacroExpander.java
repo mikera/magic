@@ -26,7 +26,7 @@ public class MacroExpander extends AListExpander {
 		int n=form.size()-1;
 		Object[] arr=new Object[n];
 		for (int i=0; i<n; i++) {
-			arr[i]=form.get(i+1).compute(c);
+			arr[i]=form.get(i+1).toForm();
 		}
 		
 		Object expandedForm=fn.applyToArray(arr);

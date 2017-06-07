@@ -17,9 +17,11 @@ import java.util.regex.Pattern;
 import magic.ast.Constant;
 import magic.compiler.EvalResult;
 import magic.compiler.Expanders;
+import magic.data.APersistentList;
 import magic.data.APersistentSequence;
 import magic.data.APersistentVector;
 import magic.data.IPersistentObject;
+import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.data.Vectors;
 import magic.fn.Functions;
@@ -147,6 +149,10 @@ public class RT {
 		return Vectors.coerce(o);
 	}
 	
+	public static APersistentList<?> list(Object o) {
+		return PersistentList.wrap(Vectors.coerce(o));
+	}
+	
 	/**
 	 * Creates a HashSet containing the values from the given iterator. Removes duplicates.
 	 * @param iterator
@@ -245,6 +251,7 @@ public class RT {
 	public static String toString(Object o) {
 		if (o==null) return "nil";
 		if (o instanceof String) return "\""+(String)o+"\"";
+		if (o instanceof Class<?>) return ((Class<?>)o).getCanonicalName();
 		Class<?> klass=o.getClass();
 		if (klass.isArray()) {
 			return arrayToString(o);
