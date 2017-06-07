@@ -479,7 +479,7 @@ public class Expanders {
 
 			SourceInfo si = form.getSourceInfo();
 			// get the body. Don't expand yet: fn does this
-			APersistentList<Node<?>> body = form.getNodes().subList(2, n);
+			APersistentList<Node<?>> body = form.getNodes().subList(3, n);
 
 			// create the (fn [...] ...) form
 			APersistentList<Node<?>> fnList = Lists.cons(Constant.create(Symbols.MACRO), argObj, body);
