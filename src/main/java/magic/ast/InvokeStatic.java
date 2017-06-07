@@ -67,7 +67,7 @@ public class InvokeStatic<T> extends BaseForm<T> {
 			r=(EvalResult<Object>) args[i].eval(c, bindings);
 			Object arg=r.getValue();
 			argVals[i]=arg;
-			argClasses[i]=arg.getClass();
+			argClasses[i]=(arg==null)?Object.class:arg.getClass();
 		}
 		Method m = Reflector.getDeclaredMethod(klass,method.getName(), argClasses);
 		

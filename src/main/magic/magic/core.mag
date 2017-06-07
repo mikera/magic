@@ -10,3 +10,12 @@
 (defn str [a] 
   (. magic.RT toString a))
 
+(defn boolean [a] 
+  (. magic.RT boolObject a))
+
+(defn identity [a] 
+  a)
+
+(defmacro when [a b] 
+  `(if ~a ~b nil))
+

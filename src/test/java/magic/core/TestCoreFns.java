@@ -28,6 +28,7 @@ public class TestCoreFns {
 	@Test public void testStr() {
 		assertEquals(":foo",exec("(str :foo)"));
 		assertEquals("1",exec("(str 1)"));
+		assertEquals("[1 2]",exec("(str [1 2])"));
 	}
 	
 	@Test public void testInstanceOf() {
@@ -36,6 +37,27 @@ public class TestCoreFns {
 		assertFalse(RT.bool(exec("(instance? java.lang.Long nil)")));
 		
 	}
+	
+	@Test public void testIdentity() {
+		assertEquals((Long)1L,exec("(identity 1)"));
+		assertNull(exec("(identity nil)"));
+		assertEquals("foo",exec("(identity (str 'foo))"));
+		
+	}
+	
+	@Test public void testBoolean() {
+		assertTrue(RT.bool(exec("(boolean 1)")));
+		assertTrue(RT.bool(exec("(boolean :foo)")));
+		assertTrue(RT.bool(exec("(boolean true)")));
+		assertEquals(Boolean.FALSE,exec("(boolean nil)"));
+		assertFalse(RT.bool(false));
+		Object o=exec("(boolean false)");
+		Object o2=Boolean.FALSE;
+		assertFalse(RT.bool(o2));
+		assertFalse(RT.bool(o));
+		
+	}
+
 
 
 }
