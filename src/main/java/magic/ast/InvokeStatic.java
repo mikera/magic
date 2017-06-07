@@ -2,7 +2,6 @@ package magic.ast;
 
 import java.lang.reflect.Method;
 
-import magic.RT;
 import magic.Reflector;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
