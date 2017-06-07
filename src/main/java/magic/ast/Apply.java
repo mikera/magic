@@ -41,10 +41,15 @@ public class Apply<T> extends BaseForm<T> {
 		return create(form,source);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public EvalResult<T> eval(Context c,APersistentMap<Symbol, Object> bindings) {
-		EvalResult<IFn<? extends T>> rf= (EvalResult<IFn<? extends T>>) function.eval(c,bindings);
-		IFn<? extends T> f=rf.getValue();
+		EvalResult<?> rf= (EvalResult<?>) function.eval(c,bindings);
+		Object rfo=rf.getValue();
+		if (!(rfo instanceof IFn)) {
+			throw new Error("Function expected in "+this+" but got "+rfo.getClass());
+		}
+		IFn<? extends T> f=(IFn<? extends T>) rfo;
 		Object[] values=new Object[arity];
 		EvalResult<?> r=rf;
 		for (int i=0; i<arity; i++) {

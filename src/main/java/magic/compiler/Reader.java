@@ -18,6 +18,7 @@ import org.parboiled.support.StringVar;
 import org.parboiled.support.Var;
 
 import magic.ast.Constant;
+import magic.ast.Lookup;
 import magic.ast.Node;
 import magic.data.Lists;
 import magic.data.Symbol;
@@ -154,7 +155,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 		return Sequence(
 				'\'',
 				r,
-				push(magic.ast.List.create(Lists.of(Constant.create(Symbols.QUOTE),pop()),getSourceInfo()))
+				push(magic.ast.List.create(Lists.of(Lookup.create(Symbols.QUOTE),pop()),getSourceInfo()))
 				);
 	}
 	
@@ -163,7 +164,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 		return Sequence(
 				'`',
 				r,
-				push(magic.ast.List.create(Lists.of(Constant.create(Symbols.SYNTAX_QUOTE),pop()),getSourceInfo()))
+				push(magic.ast.List.create(Lists.of(Lookup.create(Symbols.SYNTAX_QUOTE),pop()),getSourceInfo()))
 				);
 	}
 	
@@ -172,7 +173,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 		return Sequence(
 				'~',
 				r,
-				push(magic.ast.List.create(Lists.of(Constant.create(Symbols.UNQUOTE),pop()),getSourceInfo()))
+				push(magic.ast.List.create(Lists.of(Lookup.create(Symbols.UNQUOTE),pop()),getSourceInfo()))
 				);
 	}
 	
@@ -181,7 +182,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 		return Sequence(
 				"~@",
 				r,
-				push(magic.ast.List.create(Lists.of(Constant.create(Symbols.UNQUOTE_SPLICING),pop()),getSourceInfo()))
+				push(magic.ast.List.create(Lists.of(Lookup.create(Symbols.UNQUOTE_SPLICING),pop()),getSourceInfo()))
 				);
 	}
 	
@@ -220,7 +221,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 				"#{",
 				ExpressionList(),
 				'}',
-				push(magic.ast.List.createCons(Constant.create(Symbols.SET),popNodeList(),getSourceInfo()))
+				push(magic.ast.List.createCons(Lookup.create(Symbols.SET),popNodeList(),getSourceInfo()))
 				);
 	}
 	
@@ -229,7 +230,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 				"{",
 				ExpressionList(),
 				'}',
-				push(magic.ast.List.createCons(Constant.create(Symbols.HASHMAP),popNodeList(),getSourceInfo()))
+				push(magic.ast.List.createCons(Lookup.create(Symbols.HASHMAP),popNodeList(),getSourceInfo()))
 				);
 	}
 	

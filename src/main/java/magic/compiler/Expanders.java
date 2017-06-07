@@ -97,8 +97,8 @@ public class Expanders {
 					String memberName = sym.getName().substring(1);
 					Symbol memberSym = Symbol.create(memberName);
 					SourceInfo si = head.getSourceInfo();
-					List newForm = List.createCons(Constant.create(Symbols.DOT, si), form.get(1),
-							Constant.create(memberSym, si), form.subList(2, n), form.getSourceInfo());
+					List newForm = List.createCons(Lookup.create(Symbols.DOT, si), form.get(1),
+							Lookup.create(memberSym, si), form.subList(2, n), form.getSourceInfo());
 					return ex.expand(c, newForm, ex);
 				}
 			}
@@ -238,11 +238,11 @@ public class Expanders {
 			APersistentList<Node<?>> body = form.getNodes().subList(3, n);
 
 			// create the (fn [...] ...) form
-			APersistentList<Node<?>> fnList = Lists.cons(Constant.create(Symbols.FN), argObj, body);
+			APersistentList<Node<?>> fnList = Lists.cons(Lookup.create(Symbols.FN), argObj, body);
 			List fnDef = List.create(fnList, si);
 
 			@SuppressWarnings("unchecked")
-			List newForm = List.create(Lists.of(Constant.create(Symbols.DEF), nameObj, fnDef), si);
+			List newForm = List.create(Lists.of(Lookup.create(Symbols.DEF), nameObj, fnDef), si);
 			return ex.expand(c, newForm, ex);
 		}
 	}
@@ -430,7 +430,8 @@ public class Expanders {
 				throw new ExpansionException("Can't expand quote, requires a form", form);
 
 			Node<?> qsym = form.get(0);
-			boolean syntaxQuote = qsym.getValue().equals(Symbols.SYNTAX_QUOTE);
+			if (!qsym.isSymbol()) throw new ExpansionException("Quote expansion expecting a symbol?",form);
+			boolean syntaxQuote = qsym.getSymbol().equals(Symbols.SYNTAX_QUOTE);
 			Node<?> quotedNode = form.get(1);
 
 			SourceInfo si = form.getSourceInfo();
@@ -482,11 +483,11 @@ public class Expanders {
 			APersistentList<Node<?>> body = form.getNodes().subList(3, n);
 
 			// create the (fn [...] ...) form
-			APersistentList<Node<?>> fnList = Lists.cons(Constant.create(Symbols.MACRO), argObj, body);
+			APersistentList<Node<?>> fnList = Lists.cons(Lookup.create(Symbols.MACRO), argObj, body);
 			List fnDef = List.create(fnList, si);
 
 			@SuppressWarnings("unchecked")
-			List newForm = List.create(Lists.of(Constant.create(Symbols.DEF), nameObj, fnDef), si);
+			List newForm = List.create(Lists.of(Lookup.create(Symbols.DEF), nameObj, fnDef), si);
 			return ex.expand(c, newForm, ex);
 		}
 	};
