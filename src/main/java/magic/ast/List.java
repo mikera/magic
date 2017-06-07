@@ -92,6 +92,7 @@ public class List extends BaseForm<Object> {
 				return Analyser.analyse(form);
 			}
 		};
+		// TODO: shouldn't we be recursively evalQuoting?
 		return this;
 	}
 

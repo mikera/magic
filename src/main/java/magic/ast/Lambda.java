@@ -26,8 +26,6 @@ import magic.type.FunctionType;
  */
 public class Lambda<T> extends BaseForm<AFn<T>> {
 
-
-
 	private final APersistentVector<Symbol> params;
 	private final Node<T> body;
 	private final int arity;
@@ -39,7 +37,6 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 		this.arity=params.size();
 		this.body=body;
 	}
-	
 	
 	public static <T> Lambda<T> create(APersistentVector<Symbol> params, Node<T> body) {
 		return create(params,body,null);
