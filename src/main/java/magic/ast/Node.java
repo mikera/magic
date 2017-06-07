@@ -94,7 +94,6 @@ public abstract class Node<T> extends RootNode {
 	 */
 	public boolean isSymbol() {
 		return false;
-		// return isConstant()&&(getValue() instanceof Symbol);
 	}
 	
 	public Symbol getSymbol() {

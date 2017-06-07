@@ -201,6 +201,8 @@ public class TestCompiler {
 		// check correct dependencies exists
 		Slot<?> fSlot=c2.getSlot("f");
 		Slot<?> gSlot=c2.getSlot("g");
+		assertFalse(gSlot.isComputed());
+		
 		Node<?> g=c2.getNode("g");
 		assertTrue(g.getDependencies().contains(Symbol.create("f")));
 		Node<?> f=c2.getNode("f");

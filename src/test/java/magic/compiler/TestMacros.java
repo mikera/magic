@@ -1,12 +1,14 @@
 package magic.compiler;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 import magic.RT;
 import magic.data.Tuple;
 import magic.lang.Context;
+import magic.lang.Symbols;
 
 public class TestMacros {
 
@@ -22,6 +24,13 @@ public class TestMacros {
 //		//System.out.println("<END>");
 //		assertEquals(Tuple.of(1L,2L,3L),res);
 //	}
+	
+	
+	@Test public void testBootStrapTypes() {
+		Context c=RT.BOOTSTRAP_CONTEXT;
+		assertTrue(c.getSlot(Symbols.DEFMACRO).isExpander());
+	}
+	
 	
 	@Test public void testMacro() {
 		Context c=RT.INITIAL_CONTEXT;

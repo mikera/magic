@@ -30,7 +30,7 @@ public class Expander extends BaseForm<AExpander> {
   
 	@SuppressWarnings("unchecked")
 	public Expander(Symbol exSym, APersistentVector<Symbol> args, Node<?> body,SourceInfo source) {
-		super((APersistentList<Node<?>>)(APersistentList<?>)Lists.of(Constant.create(Symbols.FN),Constant.create(args),body),body.getDependencies().excludeAll(args),source);
+		super((APersistentList<Node<?>>)(APersistentList<?>)Lists.of(Lookup.create(Symbols.EXPANDER),Constant.create(args),body),body.getDependencies().excludeAll(args),source);
 		this.exSym=exSym;
 		this.args=args;
 		this.body=body;
@@ -108,7 +108,7 @@ public class Expander extends BaseForm<AExpander> {
 	
 	@Override
 	public String toString() {
-		return "(fn "+args+" "+body+")";
+		return "(expander "+args+" "+body+")";
 	}
 
 }

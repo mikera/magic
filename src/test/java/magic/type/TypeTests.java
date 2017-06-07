@@ -13,6 +13,11 @@ import org.junit.Test;
 
 import magic.RT;
 import magic.Type;
+import magic.Types;
+import magic.compiler.AExpander;
+import magic.compiler.Expanders;
+import magic.lang.Context;
+import magic.lang.Symbols;
 
 public class TypeTests {
 
@@ -31,7 +36,11 @@ public class TypeTests {
 	}
 
 	
-
+	@Test public void testExpanderType() {
+		assertTrue(Types.EXPANDER.checkInstance(Expanders.DO));
+		assertTrue(Types.EXPANDER.contains(Value.create(Expanders.DEFN)));
+		assertTrue(Types.EXPANDER.contains(JavaType.create(AExpander.class)));
+	}
 	
 	@Test public void testIntersectionOverlap() {
 		Type i1=Intersection.create(Not.create(JavaType.create(Integer.class)),Something.INSTANCE);
@@ -64,9 +73,7 @@ public class TypeTests {
 //		assertEquals(Integer.class,Type.parse("java.lang.Integer").getJavaClass());
 //		assertEquals(Number.class,Type.parse("(U Integer java.lang.Long)").getJavaClass());
 	}
-	
 
-	
 	@Test public void testBooleans() {
 //		assertTrue(Constant.TRUE.getType().canBeTruthy());
 //		assertTrue(Constant.FALSE.getType().canBeFalsey());

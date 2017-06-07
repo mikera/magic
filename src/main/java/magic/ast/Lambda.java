@@ -6,8 +6,10 @@ import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
+import magic.data.APersistentSet;
 import magic.data.APersistentVector;
 import magic.data.Lists;
+import magic.data.Maps;
 import magic.data.Symbol;
 import magic.fn.AFn;
 import magic.fn.ArityException;
@@ -59,9 +61,20 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 	 * Specialises the body expression according to the provided context and bindings
 	 * 
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public EvalResult<AFn<T>> eval(Context context,APersistentMap<Symbol, Object> bindings) {
-		final APersistentMap<Symbol, Object> capturedBindings=bindings.delete(params);
+		APersistentSet<Symbol> deps=getDependencies(); // free deps
+		APersistentMap<Symbol, Object> depVals=(APersistentMap<Symbol, Object>) Maps.EMPTY;
+		for (Symbol dep: deps) {
+			if (bindings.containsKey(dep)) {
+				depVals=depVals.assoc(dep, bindings.get(dep));
+			} else {
+				depVals=depVals.assoc(dep, context.getValue(dep));
+			}
+		}
+		
+		final APersistentMap<Symbol, Object> capturedBindings=depVals;
 		// capture variables defined in the current scope
 		Node<? extends T> body=this.body.specialiseValues(capturedBindings);
 		
@@ -70,14 +83,14 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 			@Override
 			public T applyToArray(Object... a) {
 				if (a.length!=arity) throw new ArityException(arity,a.length);
-				Context c=context;
+				// Context c=context;
 				APersistentMap<Symbol, Object> bnds=capturedBindings;
 				// add function arguments to the lexical bindings
 				for (int i=0; i<arity; i++) {
 					Symbol param=params.get(i);
 					bnds=bnds.assoc(param, a[i]);
 				}
-				return body.compute(c,bnds);
+				return body.compute(null,bnds); // shouldn't do any context lookup?
 			}	
 			
 			@Override

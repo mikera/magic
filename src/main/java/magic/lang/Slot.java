@@ -1,7 +1,8 @@
 package magic.lang;
 
+import magic.Type;
+import magic.Types;
 import magic.ast.Node;
-import magic.compiler.AExpander;
 import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
@@ -81,7 +82,11 @@ public class Slot<T> {
 	}
 
 	public boolean isExpander() {
-		return getValue() instanceof AExpander;
+		return Types.EXPANDER.contains(getType());
+	}
+	
+	public Type getType() {
+		return getNode().getType();
 	}
 	
 	public boolean isComputed() {

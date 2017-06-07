@@ -1,5 +1,7 @@
 package magic.compiler;
 
+import magic.Type;
+import magic.Types;
 import magic.ast.Node;
 import magic.data.APersistentSequence;
 import magic.fn.AFn;
@@ -54,5 +56,9 @@ public abstract class AExpander extends AFn<Node<?>> implements IFn3<Node<?>> {
 		});
 	}
 
+	@Override
+	public Type getType() {
+		return Types.EXPANDER;
+	}
 
 }
