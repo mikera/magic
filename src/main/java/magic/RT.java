@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -93,7 +94,7 @@ public class RT {
 			r=(EvalResult<?>) magic.compiler.Compiler.compile(c, RT.getResourceAsString("magic/core.mag"));
 		} catch (Throwable t) {
 			t.printStackTrace(System.err);
-			throw new Error(t);
+			throw new magic.Error("Failed to initialise Magic environment",t);
 		}
 		return r.getContext();
 	}
@@ -222,11 +223,27 @@ public class RT {
 	public static int hashCombine(int hash1, int hash2) {
 		return (hash1)+(Integer.rotateLeft(hash2, 13));
 	}
-
+ 
 	public static String toString(Object o) {
 		if (o==null) return "nil";
 		if (o instanceof String) return "\""+(String)o+"\"";
+		Class<?> klass=o.getClass();
+		if (klass.isArray()) {
+			return arrayToString(o);
+		}
 		return o.toString();
+	}
+	
+	public static String arrayToString(Object o) {
+		StringBuilder sb=new StringBuilder("[");
+		int n=Array.getLength(o);
+		for (int i=0; i<n; i++) {
+			Object item=Array.get(o, i);
+			sb.append(RT.toString(item));
+			if (i<(n-1)) sb.append(", ");
+		}
+		sb.append(']');
+		return sb.toString();
 	}
 	
 	public static URL getResourceURL(String filename) {
@@ -284,7 +301,7 @@ public class RT {
 		        if (reader!=null) reader.close();
 		    }   
 		} catch (Throwable t) {
-			throw new Error(t);
+			throw new magic.Error("Failed to read String from stream: "+stream.toString(),t);
 		}
 	}
 	

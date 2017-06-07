@@ -1,6 +1,8 @@
 package magic.compiler;
 
-public class AnalyserException extends CompilerException {
+import magic.Error;
+
+public class AnalyserException extends Error {
 
 	private static final long serialVersionUID = 5766500154253913151L;
 	private Object form;
@@ -16,7 +18,8 @@ public class AnalyserException extends CompilerException {
 	
 	@Override
 	public String toString() {
-		return getMessage()+ " while analysing: "+form;
+		return getMessage()+ "\n"
+			+"while analysing: "+form;
 	}
 
 }

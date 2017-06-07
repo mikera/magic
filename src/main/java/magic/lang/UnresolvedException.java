@@ -1,15 +1,15 @@
 package magic.lang;
 
-import magic.compiler.CompilerException;
+import magic.Error;
 import magic.data.Symbol;
 
-public class UnresolvedException extends CompilerException {
+public class UnresolvedException extends Error {
 	private static final long serialVersionUID = -4696891540039509483L;
 
 	private Symbol sym;
 
 	public UnresolvedException(Symbol sym) {
-		super("Can't resolve symbol in current context: "+sym);
+		super("Unable to resolve symbol '"+sym+"'");
 		this.sym=sym;
 	}
 	

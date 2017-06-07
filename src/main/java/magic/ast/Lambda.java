@@ -26,6 +26,8 @@ import magic.type.FunctionType;
  */
 public class Lambda<T> extends BaseForm<AFn<T>> {
 
+
+
 	private final APersistentVector<Symbol> params;
 	private final Node<T> body;
 	private final int arity;
@@ -46,7 +48,6 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 	public static <T> Lambda<T> create(APersistentVector<Symbol> params, Node<T> body,SourceInfo source) {
 		return new Lambda<T>(params,body,source);
 	}
-	
 
 	@SuppressWarnings("unchecked")
 	public static <T> Lambda<T> create(Vector<Symbol> params, APersistentList<Node<?>> body, SourceInfo source) {
@@ -79,31 +80,41 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 		Node<? extends T> body=this.body.specialiseValues(capturedBindings);
 		
 		// System.out.println(body);
-		AFn<T> fn=new AFn<T>() {
-			@Override
-			public T applyToArray(Object... a) {
-				if (a.length!=arity) throw new ArityException(arity,a.length);
-				// Context c=context;
-				APersistentMap<Symbol, Object> bnds=capturedBindings;
-				// add function arguments to the lexical bindings
-				for (int i=0; i<arity; i++) {
-					Symbol param=params.get(i);
-					bnds=bnds.assoc(param, a[i]);
-				}
-				return body.compute(null,bnds); // shouldn't do any context lookup?
-			}	
-			
-			@Override
-			public Type getReturnType() {
-				return body.getType();
-			}
-			
-			@Override
-			public String toString() {
-				return super.toString()+":"+Lambda.this.toString();
-			}
-		};
+		AFn<T> fn=new LambdaFn(body,capturedBindings);
 		return new EvalResult<AFn<T>>(context,fn);
+	}
+	
+	private final class LambdaFn extends AFn<T> {
+		private final APersistentMap<Symbol, Object> capturedBindings;
+		private Node<? extends T> body;
+
+		private LambdaFn(Node<? extends T> body,APersistentMap<Symbol, Object> capturedBindings) {
+			this.capturedBindings = capturedBindings;
+			this.body=body;
+		}
+
+		@Override
+		public T applyToArray(Object... a) {
+			if (a.length!=arity) throw new ArityException(arity,a.length);
+			// Context c=context;
+			APersistentMap<Symbol, Object> bnds=capturedBindings;
+			// add function arguments to the lexical bindings
+			for (int i=0; i<arity; i++) {
+				Symbol param=params.get(i);
+				bnds=bnds.assoc(param, a[i]);
+			}
+			return body.compute(null,bnds); // shouldn't do any context lookup?
+		}
+
+		@Override
+		public Type getReturnType() {
+			return body.getType();
+		}
+
+		@Override
+		public String toString() {
+			return super.toString()+":"+Lambda.this.toString();
+		}
 	}
 	
 	@SuppressWarnings("unchecked")

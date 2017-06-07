@@ -36,18 +36,19 @@ public class Compiler {
 		return compile(context,node,(APersistentMap<Symbol, Object>) Maps.EMPTY);
 		
 	}
-	
+	 
 	/**
 	 * Compiles and evaluates a node in the given context. Performs expansion using the default expander
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> EvalResult<T> compile(Context context, Node<? super T> node, APersistentMap<Symbol, Object> bindings) {
-		node=compileNode(context,node);
+		Node<? super T> compiledNode=compileNode(context,node);
 		EvalResult<T> result;
 		try {
-			result=(EvalResult<T>) node.eval(context,bindings);
+			result=(EvalResult<T>) compiledNode.eval(context,bindings);
 		} catch (Throwable t) {
-			throw new Error("Error evaluating node: " + node +" : "+t.getMessage(),t);
+			throw new Error(t.getMessage()+"\n"+
+		              "while evaluating: " + node,t); 
 		}
 		return result;
 	}

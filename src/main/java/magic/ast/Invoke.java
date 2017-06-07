@@ -2,6 +2,7 @@ package magic.ast;
 
 import java.lang.reflect.Method;
 
+import magic.RT;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
@@ -70,11 +71,12 @@ public class Invoke<T> extends BaseForm<T> {
 			argVals[i]=arg;
 			argClasses[i]=arg.getClass();
 		}
+		
 		Method m;
 		try {
 			m = klass.getMethod(method.getName(), argClasses);
 		} catch (Throwable e) {
-			throw new Error("Unable to identify method "+method+" on object of class "+klass+" with argument classes "+argClasses,e);
+			throw new Error("Unable to identify method '"+method+"' in object of class '"+klass.getName()+"' with argument classes: "+RT.print(argClasses),e);
 		}
 		
 		try {
