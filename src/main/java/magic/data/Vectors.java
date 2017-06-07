@@ -1,5 +1,6 @@
 package magic.data;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -166,5 +167,25 @@ public class Vectors<T> {
 	public static <T> APersistentVector<T> coerce(Collection<T> a) {
 		if (a instanceof APersistentVector<?>) return (APersistentVector<T>)a;
 		return Vectors.createFromCollection(a);
+	}
+
+	public static APersistentVector<?> coerce(Object o) {
+		if (o==null) return Tuple.EMPTY;
+		if (o instanceof APersistentCollection) {
+			return coerce((APersistentCollection<?>)o); 
+		} else if (o instanceof Collection) {
+			return coerce((Collection<?>) o);
+		}
+		Class<?> klass=o.getClass();
+		if (klass.isArray()) {
+			int n=Array.getLength(o);
+			Object[] arr=new Object[n];
+			for (int i=0; i<n; i++) {
+				Object item=Array.get(o, i);
+				arr[i]=item;
+			}
+			return Tuple.wrap(arr);
+		}
+		throw new magic.Error("Can't convert to vector with class: "+klass.getName());
 	}
 }

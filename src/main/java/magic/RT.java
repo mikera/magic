@@ -18,8 +18,10 @@ import magic.ast.Constant;
 import magic.compiler.EvalResult;
 import magic.compiler.Expanders;
 import magic.data.APersistentSequence;
+import magic.data.APersistentVector;
 import magic.data.IPersistentObject;
 import magic.data.Symbol;
+import magic.data.Vectors;
 import magic.fn.Functions;
 import magic.lang.Context;
 import magic.lang.Symbols;
@@ -31,6 +33,18 @@ import magic.type.Value;
  * @author Mike
  */
 public class RT {
+	
+	private static final String identifierPattern="\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
+	private static final Pattern classNameRegex=Pattern.compile(identifierPattern + "(\\." + identifierPattern + ")*");
+	
+	/** 
+	 * Returns true if a String could be a valid Java class name
+	 * @param s
+	 * @return
+	 */
+	public static boolean maybeClassName(String s) {
+		return classNameRegex.matcher(s).matches();
+	}
 
 	public static final Context BOOTSTRAP_CONTEXT = createBootstrapContext();
 	public static final Context INITIAL_CONTEXT = createInitialContext();
@@ -127,6 +141,10 @@ public class RT {
 		if (t==null) return -1;
 		if (t2==null) return 1;
 		return ((Comparable<? super T>)t).compareTo(t2);
+	}
+	
+	public static APersistentVector<?> vec(Object o) {
+		return Vectors.coerce(o);
 	}
 	
 	/**
@@ -381,17 +399,7 @@ public class RT {
 		return magic.compiler.Compiler.compile(c, code);
 	}
 
-	private static final String identifierPattern="\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
-	private static final Pattern classNameRegex=Pattern.compile(identifierPattern + "(\\." + identifierPattern + ")*");
-	
-	/** 
-	 * Returns true if a String could be a valid Java class name
-	 * @param s
-	 * @return
-	 */
-	public static boolean maybeClassName(String s) {
-		return classNameRegex.matcher(s).matches();
-	}
+
 
 	public static Class<?> classForName(String name) {
 		try {

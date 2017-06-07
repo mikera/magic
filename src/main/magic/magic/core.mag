@@ -3,3 +3,6 @@
 ;;
 
 (defmacro comment [_] nil)
+
+(defn vec [a] 
+  (. magic.RT vec a))
