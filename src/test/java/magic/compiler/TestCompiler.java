@@ -1,6 +1,11 @@
 package magic.compiler;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -9,6 +14,7 @@ import magic.ast.Node;
 import magic.data.Sets;
 import magic.data.Symbol;
 import magic.data.Tuple;
+import magic.fn.AFn;
 import magic.lang.Context;
 import magic.lang.Slot;
 import magic.lang.UnresolvedException;
@@ -184,6 +190,7 @@ public class TestCompiler {
 		} catch (UnresolvedException e) {
 			assertEquals(e.getSymbol(),Symbol.create("f"));
 		}
+		assertFalse(ogSlot.isComputed());
 		
 		{ // check dependency exists
 			Node<?> g=c1.getNode("g");
@@ -199,9 +206,10 @@ public class TestCompiler {
 		Context c2=r.getContext();
 		
 		// check correct dependencies exists
+		Slot<?> aSlot=c2.getSlot("a");
+		Slot<?> bSlot=c2.getSlot("b");
 		Slot<?> fSlot=c2.getSlot("f");
 		Slot<?> gSlot=c2.getSlot("g");
-		assertFalse(gSlot.isComputed());
 		
 		Node<?> g=c2.getNode("g");
 		assertTrue(g.getDependencies().contains(Symbol.create("f")));
@@ -209,12 +217,23 @@ public class TestCompiler {
 		assertTrue(f.getDependencies().contains(Symbol.create("a")));
 		assertTrue(c2.getDependants("a").contains(Symbol.create("f")));
 		assertTrue(c2.calcDependants(Symbol.create("a")).contains(Symbol.create("b")));
-		Slot<?> aSlot=c2.getSlot("a");
-		Slot<?> bSlot=c2.getSlot("b");
 		assertEquals(fSlot.getDependencies(),f.getDependencies());
+		
+		// compute b, should transitively compute g and f
+		assertFalse(aSlot.isComputed());
+		assertFalse(bSlot.isComputed());
+		assertFalse(fSlot.isComputed());
+		assertFalse(gSlot.isComputed());
+		Object bVal=c2.getValue("b");
+		assertTrue(bSlot.isComputed());
+		assertTrue(gSlot.isComputed());
+		assertTrue(fSlot.isComputed());
+		assertTrue(aSlot.isComputed());
+		
 		Object fVal=fSlot.getValue();
 		assertNotNull(fVal);
-		Object bVal=c2.getValue("b");
+		assertEquals((Long)2L,((AFn<?>)fVal).applyToArray(4L));
+		
 		
 		assertEquals((Long)2L,c2.getValue("b"));
 	}

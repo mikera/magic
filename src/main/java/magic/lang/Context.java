@@ -22,7 +22,7 @@ public class Context {
 			(PersistentHashMap<Symbol, Slot<?>>) PersistentHashMap.EMPTY,
 			(PersistentHashMap<Symbol,APersistentSet<Symbol>>)PersistentHashMap.EMPTY);
 
-	private final PersistentHashMap<Symbol,Slot<?>> mappings;
+	private PersistentHashMap<Symbol,Slot<?>> mappings;
 	
 	/**
 	 * The dependencies for each slot
@@ -117,17 +117,17 @@ public class Context {
 		Context c=new Context(newMappings,newDependants);
 		
 		// invalidate slots for transitive dependants if they exist
+		// note we need to mutate mappings in place because circular reference is required
 		// TODO: figure out what happens if dependency graph is affected?
 		APersistentSet<Symbol> allDependants=calcTransitiveDependants(sym,newDependants);
-		PersistentHashMap<Symbol, Slot<?>> updatedMappings=newMappings;
 		if (allDependants.size()>0) {
 			for (Symbol s: allDependants) {
 				Slot<?> slot=c.getSlot(s); // should not be null since it must have been defined in order to have an entry in the dependants graph?
-				updatedMappings=updatedMappings.assoc(s, slot.invalidate(c));
+				c.mappings=c.mappings.assoc(s, slot.invalidate(c));
 			}
 		}
 		
-		return (updatedMappings==newMappings)?c:new Context(updatedMappings,newDependants);
+		return c;
 	}
 	
 	public APersistentSet<Symbol> calcDependants(Symbol sym) {

@@ -21,19 +21,19 @@ import magic.data.Symbol;
  * @param T the Java type of the expression
  */
 public class Slot<T> {
-	private final Node<T> expression;
+	private final Node<T> rawExpression;
 	private final APersistentMap<Symbol, Object> bindings;
 	private final Context context;
 	
 	private T value=null;
 	private volatile boolean computed=false;
-	private final Node<T> compiledExp;
+	private final Node<T> compiledExpression;
 	
 	private Slot(Node<T> e, Context context, APersistentMap<Symbol, Object> bindings) {
-		this.expression=e;
+		this.rawExpression=e;
 		this.context=context;
 		this.bindings=bindings;
-		compiledExp=magic.compiler.Compiler.compileNode(context,expression);
+		compiledExpression=(Node<T>) magic.compiler.Compiler.compileNode(context,rawExpression);
 
 	}
 	
@@ -56,7 +56,7 @@ public class Slot<T> {
 //				if (c.getSlot(s)==null) throw new UnresolvedException(s);
 //			}
 //		}
-		EvalResult<T> result=compiledExp.eval(context, bindings);
+		EvalResult<T> result=compiledExpression.eval(context,bindings);
 		value=result.getValue();
 		computed=true;
 		return value;
@@ -68,7 +68,7 @@ public class Slot<T> {
 	 * @return
 	 */
 	public Node<T> getNode() {
-		return compiledExp;
+		return compiledExpression;
 	}
 
 
@@ -102,12 +102,12 @@ public class Slot<T> {
 	 * @return
 	 */
 	public Slot<T> invalidate(Context c) {
-		return create(expression,c,bindings);
+		return create(rawExpression,c,bindings);
 	}
 	
 	@Override 
 	public String toString() {
-		return "<Slot exp="+expression+(computed?(" val="+value):"")+">";
+		return "<Slot exp="+rawExpression+(computed?(" val="+value):"")+">";
 	}
 
 }

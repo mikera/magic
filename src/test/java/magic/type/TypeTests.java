@@ -16,8 +16,6 @@ import magic.Type;
 import magic.Types;
 import magic.compiler.AExpander;
 import magic.compiler.Expanders;
-import magic.lang.Context;
-import magic.lang.Symbols;
 
 public class TypeTests {
 

@@ -224,9 +224,10 @@ public class Expanders {
 		@Override
 		public Node<?> expand(Context c, List form, AExpander ex) {
 			int n = form.size();
-			if (n < 3)
+			if (n < 3) {
 				throw new ExpansionException("Can't expand defn, requires at least function name and arg vector", form);
-
+			}
+			
 			Node<?> nameObj = form.get(1);
 			if (!nameObj.isSymbol()) {
 				throw new ExpansionException("Can't expand defn: requires a symbolic function name in: ", form);
