@@ -65,10 +65,9 @@ public class TestAnalyse {
 	@Test public void testUnquote() {
 		EvalResult<?> r=RT.compile("(def a 1) (def v '[~a 2])");
 		Context c2=r.getContext();
-		// TODO: fix this!
 		Object v=c2.getValue("v");
 		assertNotNull(v);
-		// assertEquals(Tuple.of(1L,2L),v);
+		assertEquals(Tuple.of(1L,2L),v);
 	}
 	
 	@Test 
