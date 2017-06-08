@@ -75,7 +75,7 @@ public abstract class Node<T> extends RootNode {
 	}
 
 	/**
-	 * Returns the value of this Node. Throws an error if the node does not have a constant valuee.
+	 * Returns the value of this Node. Throws an error if the node does not have a constant value.
 	 * @return
 	 */
 	public T getValue() {
