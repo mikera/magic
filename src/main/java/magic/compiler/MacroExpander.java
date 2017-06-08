@@ -6,7 +6,7 @@ import magic.fn.IFn;
 import magic.lang.Context;
 
 /**
- * Expander class that wraps a function used to expand forms
+ * Expander class that wraps a function used to expand forms as a macro
  * @author Mike
  *
  */
@@ -34,7 +34,4 @@ public class MacroExpander extends AListExpander {
 		Node<?> result=ex.expand(c, analysedNode,ex);
 		return result;
 	}
-
-
-
 }
