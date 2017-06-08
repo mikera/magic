@@ -14,6 +14,7 @@ import magic.data.Lists;
 import magic.data.Maps;
 import magic.data.Symbol;
 import magic.data.Vectors;
+import magic.fn.IFn1;
 import magic.lang.Context;
 import magic.lang.Symbols;
 
@@ -77,20 +78,16 @@ public class HashMap<K,V> extends BaseDataStructure<APersistentMap<? extends K,?
 		return (exps==newExps)?this:(HashMap<K,V>) create(newExps,getSourceInfo());
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public Node<APersistentMap<? extends K, ? extends V>> specialiseValues(APersistentMap<Symbol, Object> bindings) {
-		int nExps=exps.size();
-		APersistentVector<Node<?>> newExps=exps;
-		for (int i=0; i<nExps; i++) {
-			Node<?> node=exps.get(i);
-			Node<?> newNode=node.specialiseValues(bindings);
-			if (node!=newNode) {
-				// System.out.println("Specialising "+node+ " to "+newNode);
-				newExps=newExps.assocAt(i, newNode);
-			} 
-		}
-		return (exps==newExps)?this:(HashMap<K,V>) create(newExps,getSourceInfo());
+		return mapChildren(NodeFunctions.specialiseValues(bindings));
+	}
+	
+	@Override
+	public Node<APersistentMap<? extends K, ? extends V>> mapChildren(IFn1<Node<?>, Node<?>> fn) {
+		APersistentVector<Node<?>> newNodes=NodeFunctions.mapAll(exps,fn);
+		if (newNodes==exps) return this;
+		return create(newNodes,source);
 	}
 	
 	@SuppressWarnings("unchecked")
