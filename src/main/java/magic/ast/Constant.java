@@ -8,7 +8,6 @@ import magic.data.APersistentMap;
 import magic.data.APersistentSet;
 import magic.data.Sets;
 import magic.data.Symbol;
-import magic.fn.IFn1;
 import magic.lang.Context;
 
 /**
@@ -72,11 +71,6 @@ public class Constant<T> extends BaseConstant<T> {
 		return type;
 	}
 
-	@Override
-	public Constant<T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
-		// No child nodes
-		return this;
-	}
 
 
 

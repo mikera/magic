@@ -5,6 +5,13 @@ import magic.data.APersistentSet;
 import magic.data.APersistentVector;
 import magic.data.Symbol;
 
+/**
+ * Abstract base class for data structure construction nodes (lists, sets, vectors etc.)
+ * 
+ * @author Mike
+ *
+ * @param <T>
+ */
 public abstract class BaseDataStructure<T> extends Node<T> {
 	/**
 	 * Sub-expressions that represent data in this data structure

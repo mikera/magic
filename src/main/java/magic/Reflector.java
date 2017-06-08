@@ -7,6 +7,13 @@ import magic.data.Tuple;
 
 public class Reflector {
 
+	/**
+	 * Gets a declared static methods for a given class
+	 * @param klass
+	 * @param method
+	 * @param argClasses
+	 * @return
+	 */
 	public static Method getDeclaredMethod(Class<?> klass, String method, Class<?>[] argClasses) {
 		try {
 			return klass.getDeclaredMethod(method, argClasses);
@@ -27,6 +34,25 @@ public class Reflector {
 		throw new Error("Unable to identify static method '"+method+"' on class "+klass.getName()+" with argument classes ["+RT.toString(argClasses, ",")+"]");
 
 	}
+	
+	/**
+	 * Gets a method for a given class
+	 * @param klass
+	 * @param method
+	 * @param argClasses
+	 * @return
+	 */	
+	public static Method getMethod(Object instance, String method, Class<?>[] argClasses) {
+		Class<?> klass=instance.getClass();
+		Method m;
+		try {
+			m = klass.getMethod(method, argClasses);
+		} catch (Throwable e) {
+			throw new Error("Unable to identify method '"+method+"' in object of class '"+klass.getName()+"' with argument classes: ["+RT.toString(argClasses, ",")+"]",e);
+		}
+		return m;
+	}
+
 
 	private static boolean isAssignable(Class<?>[] paramTypes, Class<?>[] argClasses) {
 		int n=paramTypes.length;

@@ -6,6 +6,7 @@ import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
 import magic.data.Symbol;
+import magic.fn.IFn1;
 import magic.lang.Context;
 import magic.type.JavaType;
 
@@ -44,6 +45,12 @@ public abstract class BaseConstant<T> extends Node<T> {
 	
 	@Override
 	public Node<T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
+		return this;
+	}
+	
+	@Override
+	public BaseConstant<T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
+		// No child nodes
 		return this;
 	}
 	

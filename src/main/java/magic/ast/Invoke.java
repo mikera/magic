@@ -2,7 +2,7 @@ package magic.ast;
 
 import java.lang.reflect.Method;
 
-import magic.RT;
+import magic.Reflector;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
@@ -62,7 +62,6 @@ public class Invoke<T> extends BaseForm<T> {
 		EvalResult<Object> r= (EvalResult<Object>) instance.eval(c, bindings);
 		Object o=r.getValue();
 		
-		Class<?> klass=o.getClass();
 		Object[] argVals=new Object[nArgs];
 		Class<?>[] argClasses=new Class<?>[nArgs];
 		for (int i=0; i<nArgs; i++) {
@@ -72,13 +71,8 @@ public class Invoke<T> extends BaseForm<T> {
 			argClasses[i]=arg.getClass();
 		}
 		
-		Method m;
-		try {
-			m = klass.getMethod(method.getName(), argClasses);
-		} catch (Throwable e) {
-			throw new Error("Unable to identify method '"+method+"' in object of class '"+klass.getName()+"' with argument classes: "+RT.print(argClasses),e);
-		}
-		
+		Method m=Reflector.getMethod(o,method.getName(), argClasses);
+	
 		try {
 			return new EvalResult<T>(c,(T) m.invoke(o, argVals));
 		} catch (Throwable t) {
