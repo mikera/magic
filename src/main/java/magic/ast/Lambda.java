@@ -13,6 +13,7 @@ import magic.data.Maps;
 import magic.data.Symbol;
 import magic.fn.AFn;
 import magic.fn.ArityException;
+import magic.fn.IFn1;
 import magic.lang.Context;
 import magic.lang.Symbols;
 import magic.type.FunctionType;
@@ -114,22 +115,23 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public Node<? extends AFn<T>> specialiseValues(APersistentMap<Symbol, Object> bindings) {
 		bindings=bindings.delete(params); // hidden by argument bindings
-		Node<? extends T> newBody=body.specialiseValues(bindings);
-		// System.out.println("Defining lambda as "+newBody+" with bindings "+bindings);
-		return (body==newBody)?this:(Lambda<T>) create(params,newBody,getSourceInfo());
+		return mapChildren(NodeFunctions.specialiseValues(bindings));
+	}
+	
+	@Override
+	public Node<? extends AFn<T>> optimise() {
+		return mapChildren(NodeFunctions.optimise());
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Node<? extends AFn<T>> optimise() {
-		Node<? extends T> newBody=body.optimise();
+	public Node<? extends AFn<T>> mapChildren(IFn1<Node<?>, Node<?>> fn) {
+		Node<? extends T> newBody=(Node<? extends T>) fn.apply(body);
 		return (body==newBody)?this:(Lambda<T>) create(params,newBody,getSourceInfo());
 	}
-
 	
 	/**
 	 * Returns the type of this `lambda` expression, i.e. the a function type returning the type of the body
