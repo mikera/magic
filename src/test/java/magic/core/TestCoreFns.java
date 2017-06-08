@@ -59,8 +59,8 @@ public class TestCoreFns {
 	
 	@Test public void testNilQ() {
 		assertTrue(RT.bool(exec("(nil? nil)")));
-		assertTrue(RT.bool(exec("(nil? 1)")));
-		assertTrue(RT.bool(exec("(nil? [])")));
+		assertFalse(RT.bool(exec("(nil? 1)")));
+		assertFalse(RT.bool(exec("(nil? [])")));
 	}
 	
 	@Test public void testVectorQ() {
@@ -72,7 +72,7 @@ public class TestCoreFns {
 	@Test public void testIdentical() {
 		assertTrue(RT.bool(exec("(identical? nil nil)")));
 		assertTrue(RT.bool(exec("(let [a 1] (identical? a a))")));
-		// assertEquals(Boolean.FALSE,exec("(identical? 1 2)")); // TODO: why is this broken?
+		assertEquals(Boolean.FALSE,exec("(identical? 1 2)")); // TODO: why is this broken?
 	}
 	
 //	@Test public void testWhen() {

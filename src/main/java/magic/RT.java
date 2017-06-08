@@ -153,8 +153,8 @@ public class RT {
 	 * @param b
 	 * @return
 	 */
-	public static final boolean identical(Object a, Object b) {
-		System.out.println(a+" "+b);
+	public static final Boolean identical(Object a, Object b) {
+		// System.out.println(a+" "+b);
 		return a==b;
 	}
 	
