@@ -1,6 +1,7 @@
 package magic;
 
 import magic.compiler.AExpander;
+import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
 import magic.data.APersistentVector;
@@ -26,6 +27,7 @@ public class Types {
 	public static final Type PREDICATE = FunctionType.create(BOOLEAN, ANYTHING);
 	public static final Type FORM = JavaType.OBJECT;
 	public static final JavaType<APersistentVector<?>> VECTOR = JavaType.create(APersistentVector.class);
+	public static final JavaType<APersistentVector<?>> LIST = JavaType.create(APersistentList.class);
 	public static final JavaType<APersistentSet<?>> SET = JavaType.create(APersistentSet.class);
 	public static final JavaType<APersistentMap<?,?>> MAP = JavaType.create(APersistentMap.class);
 	public static final JavaType<AExpander> EXPANDER = JavaType.create(AExpander.class);;

@@ -14,6 +14,7 @@ import magic.ast.If;
 import magic.ast.InstanceOf;
 import magic.ast.Lambda;
 import magic.ast.Let;
+import magic.ast.List;
 import magic.ast.ListForm;
 import magic.ast.Lookup;
 import magic.ast.Node;
@@ -375,6 +376,27 @@ public class Expanders {
 			APersistentVector<Node<?>> bodyVec = Vectors.coerce(ex.expandAll(c, body, ex));
 
 			return Vector.create(bodyVec, si);
+		}
+	}
+	
+	/**
+	 * An expander that expands list forms
+	 */
+	public static final AExpander LIST = new ListExpander();
+
+	private static final class ListExpander extends AListExpander {
+		@Override
+		public Node<?> expand(Context c, ListForm form, AExpander ex) {
+			int n = form.size();
+			if (n < 1)
+				throw new ExpansionException("Can't expand list! No form present??", form);
+
+			SourceInfo si = form.getSourceInfo();
+			APersistentList<Node<?>> body = form.getNodes().subList(1, n);
+
+			APersistentVector<Node<?>> bodyVec = Vectors.coerce(ex.expandAll(c, body, ex));
+
+			return List.create(bodyVec, si);
 		}
 	}
 

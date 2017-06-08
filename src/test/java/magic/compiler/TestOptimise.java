@@ -27,6 +27,7 @@ public class TestOptimise {
 		assertTrue(compile("[]").isConstant());
 		assertTrue(compile("1").isConstant());
 		assertTrue(compile("[1 2 3]").isConstant());
+		assertTrue(compile("(list 1 2)").isConstant());
 		assertTrue(compile(":foo").isConstant());
 		// assertTrue(compile("'foo").isConstant()); // TODO sanity check this
 	}
