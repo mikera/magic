@@ -56,6 +56,13 @@ public class NodeFunctions {
 		return newNodes;
 	}
 
+	/**
+	 * Maps a function across all nodes in a vector
+	 * Guarantees to return the same vector if no nodes are changed
+	 * @param nodes
+	 * @param fn
+	 * @return
+	 */
 	public static APersistentVector<Node<?>> mapAll(APersistentVector<Node<?>> exps, IFn1<Node<?>, Node<?>> fn) {
 		int nExps=exps.size();
 		APersistentVector<Node<?>> newExps=exps;

@@ -8,6 +8,7 @@ import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.Lists;
 import magic.data.Symbol;
+import magic.fn.IFn1;
 import magic.lang.Context;
 import magic.lang.Symbols;
 
@@ -37,15 +38,15 @@ public class If<T> extends BaseForm<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> Node<T> createIf(Node<?> test, Node<? extends T> trueExp) {
+	public static <T> If<T> createIf(Node<?> test, Node<? extends T> trueExp) {
 		return createIf(test,trueExp, (Node<T>)Constant.NULL,null);
 	}
 	
-	public static <T> Node<T> createIf(Node<?> test, Node<? extends T> trueExp, Node<? extends T> falseExp) {
+	public static <T> If<T> createIf(Node<?> test, Node<? extends T> trueExp, Node<? extends T> falseExp) {
 		return createIf(test,trueExp,falseExp,null);
 	}
 	
-	public static <T> Node<T> createIf(Node<?> test, Node<? extends T> trueExp, Node<? extends T> falseExp, SourceInfo source) {
+	public static <T> If<T> createIf(Node<?> test, Node<? extends T> trueExp, Node<? extends T> falseExp, SourceInfo source) {
 		return new If<T>(test,trueExp,falseExp,source);
 	}
 
@@ -67,26 +68,31 @@ public class If<T> extends BaseForm<T> {
 		return trueExp.getType().union(falseExp.getType());
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public Node<? extends T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
-		Node<Object> newTest=(Node<Object>) test.specialiseValues(bindings);
-		Node<? extends T> newTrue=trueExp.specialiseValues(bindings);
-		Node<? extends T> newFalse=falseExp.specialiseValues(bindings);
-		return ((newTest==test)&&(newTrue==trueExp)&&(newFalse==falseExp))?this:createIf(newTest,newTrue,newFalse);
+		return mapChildren(NodeFunctions.specialiseValues(bindings));
+	}
+	
+	@Override
+	public Node<? extends T> optimise() {
+		If<T> newIf=mapChildren(NodeFunctions.optimise());
+		return newIf.optimiseLocal();
+	}
+	
+	public Node<? extends T> optimiseLocal() {
+		Type testType=(test.isConstant())?RT.inferType(test.getValue()):test.getType();
+		if (testType.cannotBeFalsey()) return trueExp;
+		if (testType.cannotBeTruthy()) return falseExp;
+		return this;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Node<? extends T> optimise() {
-		Node<Object> newTest=(Node<Object>) test.optimise();
-		Node<? extends T> newTrue=trueExp.optimise();
-		Node<? extends T> newFalse=falseExp.optimise();
-		if (newTest.isConstant()) {
-			// TODO: type check for possible truthiness / falsiness
-			return RT.bool(newTest.getValue())?newTrue:newFalse;
-		}
-		return ((newTest==test)&&(newTrue==trueExp)&&(newFalse==falseExp))?this:createIf(newTest,newTrue,newFalse);
+	public If<T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
+		Node<Object> newTest=(Node<Object>) fn.apply(test);
+		Node<? extends T> newTrue=(Node<? extends T>) fn.apply(trueExp);
+		Node<? extends T> newFalse=(Node<? extends T>) fn.apply(falseExp);
+		return ((newTest==test)&&(newTrue==trueExp)&&(newFalse==falseExp))?this:createIf(newTest,newTrue,newFalse,getSourceInfo());
 	}
 
 	@Override
