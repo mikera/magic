@@ -134,11 +134,8 @@ public class Vector<T> extends BaseDataStructure<APersistentVector<? extends T>>
 		return exps;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public APersistentVector<? super T> toForm() {
-		return ((APersistentVector)exps).map(NodeFunctions.TO_FORM);
+		return exps.map(NodeFunctions.TO_FORM);
 	}
-
-
 }
