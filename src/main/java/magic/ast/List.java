@@ -133,10 +133,9 @@ public class List<T> extends BaseDataStructure<APersistentList<? extends T>> {
 		return exps;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public APersistentList<? super T> toForm() {
-		return Lists.cons(Symbols.LIST, Lists.coerce((APersistentVector)exps).map(NodeFunctions.TO_FORM));
+		return Lists.cons(Symbols.LIST, Lists.coerce(exps.map(NodeFunctions.TO_FORM)));
 	}
 
 
