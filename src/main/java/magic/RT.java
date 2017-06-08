@@ -151,10 +151,9 @@ public class RT {
 	 * 
 	 * @param a
 	 * @param b
-	 * @return
+	 * @return Boolean.FALSE or BOOLEAN.TRUE
 	 */
 	public static final Boolean identical(Object a, Object b) {
-		// System.out.println(a+" "+b);
 		return a==b;
 	}
 	
@@ -174,10 +173,20 @@ public class RT {
 		return ((Comparable<? super T>)t).compareTo(t2);
 	}
 	
+	/**
+	 * Coerces any sequential object to a vector
+	 * @param o
+	 * @return
+	 */
 	public static APersistentVector<?> vec(Object o) {
 		return Vectors.coerce(o);
 	}
 	
+	/**
+	 * Coerces any sequential object to a list
+	 * @param o
+	 * @return
+	 */
 	public static APersistentList<?> list(Object o) {
 		return PersistentList.wrap(Vectors.coerce(o));
 	}
