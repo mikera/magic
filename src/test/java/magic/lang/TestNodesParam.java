@@ -46,7 +46,7 @@ public class TestNodesParam {
 		Let.create(new Symbol[]{Symbol.create("a")},new Constant[]{Constant.create(3.0)},Lookup.create("a")),
 		Lambda.create(Vectors.of(Symbol.create("a")), Constant.create(Keyword.create("foo"))),
 		If.createIf(Constant.create(true), Constant.create(1), Constant.create("foo")),
-		Invoke.create(Constant.create("bar"), Symbol.create("length"), new Node[0])
+		InvokeReflective.create(Constant.create("bar"), Symbol.create("length"), new Node[0])
 		
 	};
 	

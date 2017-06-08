@@ -13,14 +13,14 @@ import magic.lang.Context;
 import magic.lang.Symbols;
 
 /**
- * Node representing a Java interop invocation, of the form:
+ * Node representing a Java reflective interop invocation, of the form:
  *    (. object methodName & args)
  * 
  * @author Mike
  *
  * @param <T>
  */
-public class Invoke<T> extends BaseForm<T> {
+public class InvokeReflective<T> extends BaseForm<T> {
 
 	// TODO: consider caching reflected methods?
 	
@@ -30,7 +30,7 @@ public class Invoke<T> extends BaseForm<T> {
 	private final int nArgs;
 
 	@SuppressWarnings("unchecked")
-	private Invoke(APersistentSet<Symbol> deps, Node<?> instance, Symbol method, Node<?>[] args,SourceInfo source) {
+	private InvokeReflective(APersistentSet<Symbol> deps, Node<?> instance, Symbol method, Node<?>[] args,SourceInfo source) {
 		super(Lists.of(
 				(Node<Symbol>)Constant.create(Symbols.DOT), instance, 
 				ListForm.createCons(Constant.create(method),ListForm.create(args),null)  
@@ -42,16 +42,16 @@ public class Invoke<T> extends BaseForm<T> {
 		this.nArgs=args.length;
 	}
 	
-	public static <T> Invoke<T> create(Node<?> instance, Symbol method, Node<?>[] args,SourceInfo source) {
+	public static <T> InvokeReflective<T> create(Node<?> instance, Symbol method, Node<?>[] args,SourceInfo source) {
 		APersistentSet<Symbol> deps=instance.getDependencies();
 		for (Node<?> a: args) {
 			deps=deps.includeAll(a.getDependencies());
 		}
-		return new Invoke<T>(deps,instance, method,args,source);
+		return new InvokeReflective<T>(deps,instance, method,args,source);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> Invoke<T> create(Node<?> instance, Symbol method, Node<? super Object>[] args) {
+	public static <T> InvokeReflective<T> create(Node<?> instance, Symbol method, Node<? super Object>[] args) {
 		return create((Node<Object>)instance, method,args,null);
 	}
 	

@@ -6,8 +6,8 @@ import magic.ast.Apply;
 import magic.ast.Constant;
 import magic.ast.Define;
 import magic.ast.Do;
-import magic.ast.Invoke;
-import magic.ast.InvokeStatic;
+import magic.ast.InvokeReflective;
+import magic.ast.InvokeStaticReflective;
 import magic.ast.Expander;
 import magic.ast.HashMap;
 import magic.ast.If;
@@ -209,12 +209,12 @@ public class Expanders {
 				if ((!s.isQualified()) && RT.maybeClassName(name)) {
 					Class<?> cl = RT.classForName(name);
 					if (cl != null) {
-						return InvokeStatic.create(cl, method, argsExpanded.toArray(new Node<?>[n - 1]), si);
+						return InvokeStaticReflective.create(cl, method, argsExpanded.toArray(new Node<?>[n - 1]), si);
 					}
 				}
 			}
 
-			return Invoke.create(inst, method, argsExpanded.toArray(new Node<?>[n - 1]), si);
+			return InvokeReflective.create(inst, method, argsExpanded.toArray(new Node<?>[n - 1]), si);
 		}
 	}
 
