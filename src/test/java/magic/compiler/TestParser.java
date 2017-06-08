@@ -10,7 +10,7 @@ import magic.ast.Vector;
 import org.junit.Test;
 
 import magic.RT;
-import magic.ast.List;
+import magic.ast.ListForm;
 import magic.ast.Node;
 import magic.data.IPersistentVector;
 import magic.data.Keyword;
@@ -110,7 +110,7 @@ public class TestParser {
 	
 	@Test public void testList() {
 		Object c=Reader.read("(-3 -1.0 \"foo\")");
-		List exps=(List) c;
+		ListForm exps=(ListForm) c;
 		assertEquals(3,exps.size());
 		assertEquals(Long.valueOf(-3),exps.get(0).getValue());
 		assertEquals(Double.valueOf(-1.0),exps.get(1).getValue());
