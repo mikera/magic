@@ -19,11 +19,12 @@ import magic.lang.Context;
 import magic.lang.Symbols;
 
 /**
- * AST node class representing a vector construction literal.
+ * AST node class representing a hashmap construction literal.
  * 
  * @author Mike
  *
- * @param <T> the type of all nodes in the Vector
+ * @param <K> the type of all keys in the hashmap
+ * @param <V> the type of all values in the hashmap
  */
 public class HashMap<K,V> extends BaseDataStructure<APersistentMap<? extends K,? extends V>> {
 
@@ -124,7 +125,7 @@ public class HashMap<K,V> extends BaseDataStructure<APersistentMap<? extends K,?
 	
 	@Override
 	public String toString() {
-		StringBuilder sb=new StringBuilder("#{");
+		StringBuilder sb=new StringBuilder("{");
 		sb.append(RT.toString(exps, " "));
 		sb.append('}');
 		return sb.toString();
@@ -142,10 +143,9 @@ public class HashMap<K,V> extends BaseDataStructure<APersistentMap<? extends K,?
 		return exps;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public APersistentList<?> toForm() {
-		return Lists.cons(Symbols.HASHMAP, Lists.create(((APersistentVector)exps).map(NodeFunctions.TO_FORM)));
+		return Lists.cons(Symbols.HASHMAP, Lists.create(exps.map(NodeFunctions.TO_FORM)));
 	}
 
 }
