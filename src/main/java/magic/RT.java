@@ -466,6 +466,16 @@ public class RT {
 		return classForName(name);
 	}
 
+	/**
+	 * Gets the value associated with a Symbol in the given context.
+	 * 
+	 * Handles:
+	 * - Lookup of values from slots in this context
+	 * - Lookup of class names
+	 * @param c
+	 * @param sym
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T resolve(Context c, Symbol sym) {
 		Slot<T> slot=c.getSlot(sym);

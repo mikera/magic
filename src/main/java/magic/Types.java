@@ -37,4 +37,10 @@ public class Types {
 		if (b==null) return a;
 		return a.intersection(b);
 	}
+	
+	public static Type union(Type a, Type b) {
+		if (a==null) return b;
+		if (b==null) return a;
+		return a.union(b);
+	}
 }
