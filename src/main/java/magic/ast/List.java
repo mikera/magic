@@ -10,6 +10,7 @@ import magic.data.APersistentSet;
 import magic.data.Lists;
 import magic.data.Sets;
 import magic.data.Symbol;
+import magic.fn.IFn1;
 import magic.lang.Context;
 import magic.lang.Symbols;
 
@@ -62,16 +63,21 @@ public class List extends BaseForm<Object> {
 		return create((APersistentList<Node<? extends Object>>) Lists.cons(a, b,c, rest.nodes),source);
 	}
 
-	
 	@Override
 	public Node<Object> specialiseValues(APersistentMap<Symbol,Object> bindings) {
-		APersistentList<Node<? extends Object>> newNodes=nodes;
-		int n=nodes.size();
-		for (int i=0; i<n; i++) {
-			Node<?> node=nodes.get(i);
-			Node<?> newNode=node.specialiseValues(bindings);
-			if (node!=newNode) newNodes=newNodes.assocAt(i, newNode);
-		}
+		return mapChildren(NodeFunctions.specialiseValues(bindings));
+	}
+	
+
+	@Override
+	public Node<Object> optimise() {
+		if (size()==0) return Constant.create(Lists.EMPTY);
+		return mapChildren(NodeFunctions.optimise());
+	}
+	
+	@Override
+	public Node<Object> mapChildren(IFn1<Node<?>, Node<?>> fn) {
+		APersistentList<Node<? extends Object>> newNodes=NodeFunctions.mapAll(nodes,fn);
 		if (newNodes==nodes) return this;
 		return create(newNodes,source);
 	}
@@ -96,10 +102,6 @@ public class List extends BaseForm<Object> {
 		return this;
 	}
 
-	@Override
-	public Node<Object> optimise() {
-		return this;
-	}
 
 	@Override
 	public String toString() {
