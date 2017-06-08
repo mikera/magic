@@ -12,6 +12,7 @@ import magic.data.APersistentMap;
 import magic.data.APersistentVector;
 import magic.data.Lists;
 import magic.data.Symbol;
+import magic.fn.IFn1;
 import magic.lang.Context;
 import magic.lang.Symbols;
 
@@ -81,20 +82,22 @@ public class Expander extends BaseForm<AExpander> {
 		return new EvalResult<AExpander>(context,fn);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public Node<? extends AExpander> specialiseValues(APersistentMap<Symbol, Object> bindings) {
 		bindings=bindings.delete(args); // hidden by parameter bindings
 		bindings=bindings.dissoc(exSym); // hidden by expander binding
-		Node<? extends AExpander> newBody=(Node<? extends AExpander>) body.specialiseValues(bindings);
-		// System.out.println("Defining lambda as "+newBody+" with bindings "+bindings);
-		return (body==newBody)?this:(Expander) create(exSym,args,newBody,getSourceInfo());
+		return mapChildren(NodeFunctions.specialiseValues(bindings));
+	}
+	
+	@Override
+	public Node<? extends AExpander> optimise() {
+		return mapChildren(NodeFunctions.optimise());
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Node<? extends AExpander> optimise() {
-		Node<? extends AExpander> newBody=(Node<? extends AExpander>) body.optimise();
+	public Node<? extends AExpander> mapChildren(IFn1<Node<?>, Node<?>> fn) {
+		Node<? extends AExpander> newBody=(Node<? extends AExpander>) fn.apply(body);
 		return (body==newBody)?this:(Expander) create(exSym,args,newBody,getSourceInfo());
 	}
 
