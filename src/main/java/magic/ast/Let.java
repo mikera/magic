@@ -1,12 +1,14 @@
 package magic.ast;
 
 import magic.Type;
+import magic.compiler.AExpander;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.Lists;
 import magic.data.Symbol;
+import magic.fn.IFn1;
 import magic.lang.Context;
 import magic.lang.Symbols;
 
@@ -70,15 +72,15 @@ public class Let<T> extends BaseForm<T> {
 		return create(syms,lets,Do.create(bodyExprs));
 	}
 	
-	public static <T> Node<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<?>[] bodyExprs,SourceInfo source) {
+	public static <T> Let<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<?>[] bodyExprs,SourceInfo source) {
 		return create(syms,lets,Do.create(bodyExprs),source);
 	}
 	
-	public static <T> Node<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<T> body,SourceInfo source) {
+	public static <T> Let<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<T> body,SourceInfo source) {
 		return new Let<T>(syms,lets,body,source);
 	}
 	
-	public static <T> Node<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<T> bodyExpr) {
+	public static <T> Let<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<T> bodyExpr) {
 		return create(syms,lets,bodyExpr,null);
 	}
 	
@@ -114,17 +116,28 @@ public class Let<T> extends BaseForm<T> {
 		}
 
 		Node<? extends T> newBody=body.specialiseValues(bindings);
-		
 		return ((body==newBody)&&(lets==newLets))?this:create(syms,newLets,newBody);
 	}
 	
 	@Override
 	public Node<? extends T> optimise() {
+		Let<T> newLet=mapChildren(NodeFunctions.optimise());
+		return newLet.optimiseLocal();
+	}
+	
+	private Node<? extends T> optimiseLocal() {
+		if (lets.length==0) return body;
+		return this;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Let<T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
 		Node<? extends Object>[] newLets=lets;
 		boolean changed=false;
 		for (int i=0; i<nLets; i++) {
 			Node<? extends Object> node=lets[i];
-			Node<? extends Object> newNode=node.optimise();
+			Node<? extends Object> newNode=fn.apply(node);
 			if (node!=newNode) {
 				if (!changed) {
 					newLets=newLets.clone();
@@ -133,11 +146,9 @@ public class Let<T> extends BaseForm<T> {
 				newLets[i]=newNode;
 			} 
 		}
-
-		Node<? extends T> newBody=body.optimise();
-		if (body.isConstant()) return body;
 		
-		return ((body==newBody)&&(lets==newLets))?this:create(syms,newLets,newBody);
+		Node<? extends AExpander> newBody=(Node<? extends AExpander>) fn.apply(body);
+		return ((body==newBody)&&(lets==newLets))?this:(Let<T>) create(syms,lets,newBody,getSourceInfo());
 	}
 	
 	/**
