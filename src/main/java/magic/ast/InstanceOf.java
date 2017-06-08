@@ -7,6 +7,7 @@ import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.Lists;
 import magic.data.Symbol;
+import magic.fn.IFn1;
 import magic.lang.Context;
 import magic.lang.Symbols;
 
@@ -27,16 +28,31 @@ public class InstanceOf extends BaseForm<Boolean> {
 	
 	
 	@Override
-	public InstanceOf specialiseValues(APersistentMap<Symbol,Object> bindings) {
-		// TODO Auto-generated method stub
-		return this;
+	public Node<Boolean> specialiseValues(APersistentMap<Symbol,Object> bindings) {
+		return mapTree(node -> ((Node<?>) node).specialiseValues(bindings));
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T> InstanceOf mapTree(IFn1<Node<?>,Node<?>> fn) {
+		Node<?> newExp=fn.apply(exp);
+		Node<Type> newType=(Node<Type>) fn.apply(typeExpr);
+		if ((newExp==exp)&&(newType==typeExpr)) return this;
+		return create(newType,newExp,getSourceInfo());
 	}
 
 	@Override
 	public Node<Boolean> optimise() {
-		//Type eType=exp.getType();
-		//if (type.contains(eType)) return Constant.create(true,getSourceInfo());
-		//if (type.isDisjoint(eType)) return Constant.create(false,getSourceInfo());
+		InstanceOf opt=mapTree(node -> ((Node<?>) node).optimise());
+		return opt.optimiseLocal();
+	}
+	
+	private Node<Boolean> optimiseLocal() {
+		if (typeExpr.isConstant()) {
+			Type type=typeExpr.getValue();
+			Type eType=exp.getType();
+			if (type.contains(eType)) return Constant.create(true,getSourceInfo());
+			if (type.isDisjoint(eType)) return Constant.create(false,getSourceInfo());
+		}
 		return this;
 	}
 	
