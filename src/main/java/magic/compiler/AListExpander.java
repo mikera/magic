@@ -1,6 +1,6 @@
 package magic.compiler;
 
-import magic.ast.List;
+import magic.ast.ListForm;
 import magic.ast.Node;
 import magic.lang.Context;
 
@@ -8,7 +8,7 @@ public abstract class AListExpander extends AExpander {
 
 	@Override
 	public final Node<?> expand(Context c, Node<?> form, AExpander ex) {
-		if (form instanceof List) return expand(c,(List)form,ex);
+		if (form instanceof ListForm) return expand(c,(ListForm)form,ex);
 		throw new ExpansionException("Expansion failed, expecting a List but got type: "+form.getClass().getName(),form);
 	}
 	
@@ -20,6 +20,6 @@ public abstract class AListExpander extends AExpander {
 	 * @param ex The continuation expander. Should normally be used to expand resulting nodes from this expander, unless special sematrics are required.
 	 * @return
 	 */
-	public abstract Node<?> expand(Context c, List form, AExpander ex);
+	public abstract Node<?> expand(Context c, ListForm form, AExpander ex);
 
 }

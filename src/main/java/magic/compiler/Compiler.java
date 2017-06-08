@@ -1,6 +1,6 @@
 package magic.compiler;
 
-import magic.ast.List;
+import magic.ast.ListForm;
 import magic.ast.Node;
 import magic.data.APersistentMap;
 import magic.data.Maps;
@@ -21,6 +21,12 @@ public class Compiler {
 		return (Node<T>) ex.expand(context, form, ex);
 	}
 
+	/**
+	 * Expands, compiles and optimises a node in the given context
+	 * @param context
+	 * @param node
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public static <T> Node<T> compileNode(Context context, Node<? super T> node) {
 		node=Compiler.expand(context, node);
@@ -60,7 +66,7 @@ public class Compiler {
 	 * @return
 	 */
 	public static EvalResult<?> compile(Context c, String string) {
-		List forms=Reader.readAll(string);
+		ListForm forms=Reader.readAll(string);
 		int n=forms.size();
 		
 		EvalResult<?> r=null;

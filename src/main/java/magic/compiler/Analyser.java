@@ -1,7 +1,7 @@
 package magic.compiler;
 
 import magic.ast.Constant;
-import magic.ast.List;
+import magic.ast.ListForm;
 import magic.ast.Lookup;
 import magic.ast.Node;
 import magic.ast.Vector;
@@ -63,7 +63,7 @@ public class Analyser {
 		int n=form.size();
 		if (n==0) return (Node<T>) Constant.create(Lists.EMPTY);
 		
-		return (Node<T>) List.create(analyseAll(form));
+		return (Node<T>) ListForm.create(analyseAll(form));
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -37,7 +37,7 @@ public class Vector<T> extends BaseDataStructure<APersistentVector<? extends T>>
 	}	
 
 	@SuppressWarnings("unchecked")
-	public static <T> Vector<T> create(magic.ast.List list, SourceInfo sourceInfo) {
+	public static <T> Vector<T> create(magic.ast.ListForm list, SourceInfo sourceInfo) {
 		return (Vector<T>) create(list.getNodes(),sourceInfo);
 	}
 

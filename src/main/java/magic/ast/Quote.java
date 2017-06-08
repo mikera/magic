@@ -63,7 +63,7 @@ public class Quote extends Node<Object> {
 			boolean syntaxQuote) {
 		Symbol sym=(syntaxQuote)?Symbols.SYNTAX_QUOTE:Symbols.QUOTE;
 		APersistentList<Node<?>> r=PersistentList.of(Lookup.create(sym),form.evalQuoted(context, bindings, syntaxQuote));
-		return List.create(r, getSourceInfo());
+		return ListForm.create(r, getSourceInfo());
 	}
 
 	public boolean isSyntaxQuote() {

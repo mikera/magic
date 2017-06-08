@@ -33,7 +33,7 @@ public class Invoke<T> extends BaseForm<T> {
 	private Invoke(APersistentSet<Symbol> deps, Node<?> instance, Symbol method, Node<?>[] args,SourceInfo source) {
 		super(Lists.of(
 				(Node<Symbol>)Constant.create(Symbols.DOT), instance, 
-				List.createCons(Constant.create(method),List.create(args),null)  
+				ListForm.createCons(Constant.create(method),ListForm.create(args),null)  
 				)
 				, deps,source);
 		this.instance=instance;

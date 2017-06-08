@@ -134,7 +134,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 				Optional(Sequence( // final expression without whitespace
 							Expression(),
 							AddAction(expVar))),
-				push(magic.ast.List.create(Lists.create(expVar.get()),getSourceInfo()))
+				push(magic.ast.ListForm.create(Lists.create(expVar.get()),getSourceInfo()))
 				);
 	}
 	
@@ -154,7 +154,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 		return Sequence(
 				'\'',
 				r,
-				push(magic.ast.List.create(Lists.of(Lookup.create(Symbols.QUOTE),pop()),getSourceInfo()))
+				push(magic.ast.ListForm.create(Lists.of(Lookup.create(Symbols.QUOTE),pop()),getSourceInfo()))
 				);
 	}
 	
@@ -163,7 +163,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 		return Sequence(
 				'`',
 				r,
-				push(magic.ast.List.create(Lists.of(Lookup.create(Symbols.SYNTAX_QUOTE),pop()),getSourceInfo()))
+				push(magic.ast.ListForm.create(Lists.of(Lookup.create(Symbols.SYNTAX_QUOTE),pop()),getSourceInfo()))
 				);
 	}
 	
@@ -172,7 +172,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 		return Sequence(
 				'~',
 				r,
-				push(magic.ast.List.create(Lists.of(Lookup.create(Symbols.UNQUOTE),pop()),getSourceInfo()))
+				push(magic.ast.ListForm.create(Lists.of(Lookup.create(Symbols.UNQUOTE),pop()),getSourceInfo()))
 				);
 	}
 	
@@ -181,14 +181,14 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 		return Sequence(
 				"~@",
 				r,
-				push(magic.ast.List.create(Lists.of(Lookup.create(Symbols.UNQUOTE_SPLICING),pop()),getSourceInfo()))
+				push(magic.ast.ListForm.create(Lists.of(Lookup.create(Symbols.UNQUOTE_SPLICING),pop()),getSourceInfo()))
 				);
 	}
 	
 	// DATA TYPE LITERALS
 	
-	protected magic.ast.List popNodeList() {
-		return (magic.ast.List) pop();
+	protected magic.ast.ListForm popNodeList() {
+		return (magic.ast.ListForm) pop();
 	}
 	
 	public Rule DataStructure() {
@@ -212,7 +212,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 				'(',
 				ExpressionList(),
 				')',
-				push(magic.ast.List.create(popNodeList(),getSourceInfo())));
+				push(magic.ast.ListForm.create(popNodeList(),getSourceInfo())));
 	}
 	
 	public Rule Set() {
@@ -220,7 +220,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 				"#{",
 				ExpressionList(),
 				'}',
-				push(magic.ast.List.createCons(Lookup.create(Symbols.SET),popNodeList(),getSourceInfo()))
+				push(magic.ast.ListForm.createCons(Lookup.create(Symbols.SET),popNodeList(),getSourceInfo()))
 				);
 	}
 	
@@ -229,7 +229,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 				"{",
 				ExpressionList(),
 				'}',
-				push(magic.ast.List.createCons(Lookup.create(Symbols.HASHMAP),popNodeList(),getSourceInfo()))
+				push(magic.ast.ListForm.createCons(Lookup.create(Symbols.HASHMAP),popNodeList(),getSourceInfo()))
 				);
 	}
 	
@@ -461,8 +461,8 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 	 * @param string
 	 * @return
 	 */
-	public static magic.ast.List readAll(String source) {
-		ParsingResult<magic.ast.List> result = new ReportingParseRunner<magic.ast.List>(parser.Input()).run(source);
+	public static magic.ast.ListForm readAll(String source) {
+		ParsingResult<magic.ast.ListForm> result = new ReportingParseRunner<magic.ast.ListForm>(parser.Input()).run(source);
 		checkErrors(result);
 		return result.resultValue;
 	}

@@ -35,7 +35,7 @@ public class InvokeStatic<T> extends BaseForm<T> {
 	private InvokeStatic(APersistentSet<Symbol> deps, Class<?> klass, Symbol method, Node<?>[] args,SourceInfo source) {
 		super(Lists.of(
 				(Node<Symbol>)Constant.create(Symbols.DOT), 
-				List.createCons(Constant.create(method),List.create(args),null)  
+				ListForm.createCons(Constant.create(method),ListForm.create(args),null)  
 				)
 				, deps,source);
 		this.klass=klass;

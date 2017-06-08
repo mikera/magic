@@ -34,7 +34,7 @@ public abstract class BaseForm<T> extends Node<T> {
 		for (int i=0; i<n; i++) {
 			rs[i]=nodes.get(i).evalQuoted(context, bindings, syntaxQuote);
 		}
-		List listResult=List.create(rs,getSourceInfo());
+		ListForm listResult=ListForm.create(rs,getSourceInfo());
 		return listResult;
 	}
 

@@ -42,7 +42,7 @@ public class Set<T> extends BaseDataStructure<APersistentSet<? extends T>> {
 	}	
 
 	@SuppressWarnings("unchecked")
-	public static <T> Set<T> create(magic.ast.List list, SourceInfo sourceInfo) {
+	public static <T> Set<T> create(magic.ast.ListForm list, SourceInfo sourceInfo) {
 		return (Set<T>) create(list.getNodes(),sourceInfo);
 	}
 

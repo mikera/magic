@@ -1,6 +1,6 @@
 package magic.compiler;
 
-import magic.ast.List;
+import magic.ast.ListForm;
 import magic.ast.Node;
 import magic.fn.IFn;
 import magic.lang.Context;
@@ -22,7 +22,7 @@ public class MacroExpander extends AListExpander {
 	}
 
 	@Override
-	public Node<?> expand(Context c, List form, AExpander ex) {
+	public Node<?> expand(Context c, ListForm form, AExpander ex) {
 		int n=form.size()-1;
 		Object[] arr=new Object[n];
 		for (int i=0; i<n; i++) {

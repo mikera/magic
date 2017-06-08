@@ -23,43 +23,43 @@ import magic.lang.Symbols;
  *
  * @param <T>
  */
-public class List extends BaseForm<Object> {
+public class ListForm extends BaseForm<Object> {
 	/**
 	 * An empty list node with no source information
 	 */
-	public static final List EMPTY = create(Node.EMPTY_ARRAY);
+	public static final ListForm EMPTY = create(Node.EMPTY_ARRAY);
 
-	private List(APersistentList<Node<? extends Object>> nodes, APersistentSet<Symbol> deps, SourceInfo source) {
+	private ListForm(APersistentList<Node<? extends Object>> nodes, APersistentSet<Symbol> deps, SourceInfo source) {
 		super(nodes, deps, source);
 	}
 	
-	public static List create(Node<?>[] nodes, SourceInfo sourceInfo) {
+	public static ListForm create(Node<?>[] nodes, SourceInfo sourceInfo) {
 		return create((APersistentList<Node<?>>)Lists.wrap(nodes),sourceInfo);
 	}
 
-	public static List create(Node<?>[] nodes) {
+	public static ListForm create(Node<?>[] nodes) {
 		return create(nodes,(SourceInfo)null);
 	}
 
-	public static List create(APersistentList<Node<?>> nodes,SourceInfo source) {
+	public static ListForm create(APersistentList<Node<?>> nodes,SourceInfo source) {
 		// get deps from first element in list of present
 		APersistentSet<Symbol> deps=(nodes.size()==0)?Sets.emptySet():nodes.get(0).getDependencies();
-		return new List(nodes,deps,source);
+		return new ListForm(nodes,deps,source);
 	}
 	
-	public static List create(List a,SourceInfo source) {
+	public static ListForm create(ListForm a,SourceInfo source) {
 		return create(a.getNodes(),source);
 	}
 	
-	public static List createCons(Node<?> a,List rest,SourceInfo source) {
+	public static ListForm createCons(Node<?> a,ListForm rest,SourceInfo source) {
 		return create((APersistentList<Node<? extends Object>>) Lists.cons(a, rest.nodes),source);
 	}
 	
-	public static List createCons(Node<?> a,Node<?> b,List rest,SourceInfo source) {
+	public static ListForm createCons(Node<?> a,Node<?> b,ListForm rest,SourceInfo source) {
 		return create((APersistentList<Node<? extends Object>>) Lists.cons(a, b,rest.nodes),source);
 	}
 
-	public static List createCons(Node<?> a,Node<?> b,Node<?> c,List rest,SourceInfo source) {
+	public static ListForm createCons(Node<?> a,Node<?> b,Node<?> c,ListForm rest,SourceInfo source) {
 		return create((APersistentList<Node<? extends Object>>) Lists.cons(a, b,c, rest.nodes),source);
 	}
 
@@ -121,8 +121,8 @@ public class List extends BaseForm<Object> {
 		return nodes;
 	}
 
-	public List subList(int start, int end) {
-		return List.create(nodes.subList(start, end),getSourceInfo());
+	public ListForm subList(int start, int end) {
+		return ListForm.create(nodes.subList(start, end),getSourceInfo());
 	}
 
 }

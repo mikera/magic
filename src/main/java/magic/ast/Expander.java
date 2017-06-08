@@ -65,7 +65,7 @@ public class Expander extends BaseForm<AExpander> {
 			}
 
 			@Override
-			public Node<?> expand(Context c, List form, AExpander ex) {
+			public Node<?> expand(Context c, ListForm form, AExpander ex) {
 				APersistentMap<Symbol, Object> bnds=capturedBindings;
 				bnds=bnds.assoc(exSym, ex);
 				int n=form.size();

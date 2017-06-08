@@ -40,7 +40,7 @@ public class HashMap<K,V> extends BaseDataStructure<APersistentMap<? extends K,?
 	}	
 
 	@SuppressWarnings("unchecked")
-	public static <K,V> HashMap<K,V> create(magic.ast.List list, SourceInfo sourceInfo) {
+	public static <K,V> HashMap<K,V> create(magic.ast.ListForm list, SourceInfo sourceInfo) {
 		return (HashMap<K,V>) create(list.getNodes(),sourceInfo);
 	}
 

@@ -14,7 +14,7 @@ import magic.ast.If;
 import magic.ast.InstanceOf;
 import magic.ast.Lambda;
 import magic.ast.Let;
-import magic.ast.List;
+import magic.ast.ListForm;
 import magic.ast.Lookup;
 import magic.ast.Node;
 import magic.ast.Quote;
@@ -53,8 +53,8 @@ public class Expanders {
 	private static final class DefaultExpander extends AExpander {
 		@Override
 		public Node<?> expand(Context c, Node<?> form, AExpander ex) {
-			if (form instanceof List) {
-				return listExpand(c, (List) form, ex);
+			if (form instanceof ListForm) {
+				return listExpand(c, (ListForm) form, ex);
 			}
 			if (form instanceof Vector) {
 				return vectorExpand(c, (Vector<?>) form, ex);
@@ -79,10 +79,10 @@ public class Expanders {
 			return Vector.create(Lists.wrap(forms), form.getSourceInfo());
 		}
 
-		private Node<?> listExpand(Context c, List form, AExpander ex) {
+		private Node<?> listExpand(Context c, ListForm form, AExpander ex) {
 			int n = form.size();
 			if (n == 0)
-				return List.EMPTY;
+				return ListForm.EMPTY;
 			Node<?> head = form.get(0);
 
 			if (head.isSymbol()) {
@@ -99,7 +99,7 @@ public class Expanders {
 					String memberName = sym.getName().substring(1);
 					Symbol memberSym = Symbol.create(memberName);
 					SourceInfo si = head.getSourceInfo();
-					List newForm = List.createCons(Lookup.create(Symbols.DOT, si), form.get(1),
+					ListForm newForm = ListForm.createCons(Lookup.create(Symbols.DOT, si), form.get(1),
 							Lookup.create(memberSym, si), form.subList(2, n), form.getSourceInfo());
 					return ex.expand(c, newForm, ex);
 				}
@@ -108,7 +108,7 @@ public class Expanders {
 			return applicationExpand(c, form, ex);
 		}
 
-		private Node<?> applicationExpand(Context c, List form, AExpander ex) {
+		private Node<?> applicationExpand(Context c, ListForm form, AExpander ex) {
 			int n = form.size();
 			Node<?>[] forms = new Node[n];
 			for (int i = 0; i < n; i++) {
@@ -125,7 +125,7 @@ public class Expanders {
 
 	private static final class DefExpander extends AListExpander {
 		@Override
-		public Node<?> expand(Context c, List form, AExpander ex) {
+		public Node<?> expand(Context c, ListForm form, AExpander ex) {
 			int n = form.size();
 			if (n != 3)
 				throw new ExpansionException("Can't expand def, requires at least a symbolic name and expression", form);
@@ -153,7 +153,7 @@ public class Expanders {
 
 	private static final class DoExpander extends AListExpander {
 		@Override
-		public Node<?> expand(Context c, List form, AExpander ex) {
+		public Node<?> expand(Context c, ListForm form, AExpander ex) {
 			int n = form.size();
 			if (n < 1)
 				throw new ExpansionException("Can't expand do, requires at least a do symbol", form);
@@ -174,7 +174,7 @@ public class Expanders {
 
 	private static final class DotExpander extends AListExpander {
 		@Override
-		public Node<?> expand(Context c, List form, AExpander ex) {
+		public Node<?> expand(Context c, ListForm form, AExpander ex) {
 			int fn = form.size();
 			if (fn < 3)
 				throw new ExpansionException(
@@ -187,10 +187,10 @@ public class Expanders {
 
 			Node<?> op = form.get(2);
 			// make the method call into a list if it is flattened
-			if (!(op instanceof List))
-				op = List.create(form.getNodes().subList(2, fn), null);
+			if (!(op instanceof ListForm))
+				op = ListForm.create(form.getNodes().subList(2, fn), null);
 
-			List call = (List) op;
+			ListForm call = (ListForm) op;
 			int n = call.size();
 			Node<?> nameObj = call.get(0);
 			if (!nameObj.isSymbol()) {
@@ -224,7 +224,7 @@ public class Expanders {
 
 	private static final class DefnExpander extends AListExpander {
 		@Override
-		public Node<?> expand(Context c, List form, AExpander ex) {
+		public Node<?> expand(Context c, ListForm form, AExpander ex) {
 			int n = form.size();
 			if (n < 3) {
 				throw new ExpansionException("Can't expand defn, requires at least function name and arg vector", form);
@@ -242,10 +242,10 @@ public class Expanders {
 
 			// create the (fn [...] ...) form
 			APersistentList<Node<?>> fnList = Lists.cons(Lookup.create(Symbols.FN), argObj, body);
-			List fnDef = List.create(fnList, si);
+			ListForm fnDef = ListForm.create(fnList, si);
 
 			@SuppressWarnings("unchecked")
-			List newForm = List.create(Lists.of(Lookup.create(Symbols.DEF), nameObj, fnDef), si);
+			ListForm newForm = ListForm.create(Lists.of(Lookup.create(Symbols.DEF), nameObj, fnDef), si);
 			return ex.expand(c, newForm, ex);
 		}
 	}
@@ -258,7 +258,7 @@ public class Expanders {
 	private static final class FnExpander extends AListExpander {
 		@SuppressWarnings("unchecked")
 		@Override
-		public Lambda<?> expand(Context c, List form, AExpander ex) {
+		public Lambda<?> expand(Context c, ListForm form, AExpander ex) {
 			int n = form.size();
 			if (n < 2)
 				throw new ExpansionException("Can't expand fn, requires at least an arg vector", form);
@@ -285,7 +285,7 @@ public class Expanders {
 	private static final class ExpanderExpander extends AListExpander {
 		@SuppressWarnings("unchecked")
 		@Override
-		public Expander expand(Context c, List form, AExpander ex) {
+		public Expander expand(Context c, ListForm form, AExpander ex) {
 			int n = form.size();
 			if (n < 2)
 				throw new ExpansionException("Can't expand expander, requires at least an arg vector", form);
@@ -337,7 +337,7 @@ public class Expanders {
 	private static final class LetExpander extends AListExpander {
 		@SuppressWarnings("unchecked")
 		@Override
-		public Node<?> expand(Context c, List form, AExpander ex) {
+		public Node<?> expand(Context c, ListForm form, AExpander ex) {
 			int n = form.size();
 			if (n < 2)
 				throw new ExpansionException("Can't expand let, requires at least a binding vector", form);
@@ -364,7 +364,7 @@ public class Expanders {
 
 	private static final class VectorExpander extends AListExpander {
 		@Override
-		public Node<?> expand(Context c, List form, AExpander ex) {
+		public Node<?> expand(Context c, ListForm form, AExpander ex) {
 			int n = form.size();
 			if (n < 1)
 				throw new ExpansionException("Can't expand vector! No form present??", form);
@@ -385,7 +385,7 @@ public class Expanders {
 
 	private static final class SetExpander extends AListExpander {
 		@Override
-		public Node<?> expand(Context c, List form, AExpander ex) {
+		public Node<?> expand(Context c, ListForm form, AExpander ex) {
 			int n = form.size();
 			if (n < 1)
 				throw new ExpansionException("Can't expand set! No form present??", form);
@@ -406,7 +406,7 @@ public class Expanders {
 
 	private static final class HashMapExpander extends AListExpander {
 		@Override
-		public Node<?> expand(Context c, List form, AExpander ex) {
+		public Node<?> expand(Context c, ListForm form, AExpander ex) {
 			int n = form.size();
 			if (n < 1)
 				throw new ExpansionException("Can't expand map! No form present??", form);
@@ -427,7 +427,7 @@ public class Expanders {
 
 	private static final class QuoteExpander extends AListExpander {
 		@Override
-		public Quote expand(Context c, List form, AExpander ex) {
+		public Quote expand(Context c, ListForm form, AExpander ex) {
 			int n = form.size();
 			if (n != 2)
 				throw new ExpansionException("Can't expand quote, requires a form", form);
@@ -451,7 +451,7 @@ public class Expanders {
 
 	private static final class UnquoteExpander extends AListExpander {
 		@Override
-		public Node<?> expand(Context c, List form, AExpander ex) {
+		public Node<?> expand(Context c, ListForm form, AExpander ex) {
 			int n = form.size();
 			if (n != 2)
 				throw new ExpansionException("Can't expand unquote, requires a form with one expression", form);
@@ -469,7 +469,7 @@ public class Expanders {
 
 	private static final class DefMacroExpander extends AListExpander {
 		@Override
-		public Node<?> expand(Context c, List form, AExpander ex) {
+		public Node<?> expand(Context c, ListForm form, AExpander ex) {
 			int n = form.size();
 			if (n < 3)
 				throw new ExpansionException("Can't expand defmacro, requires at least macro name and arg vector",
@@ -487,10 +487,10 @@ public class Expanders {
 
 			// create the (fn [...] ...) form
 			APersistentList<Node<?>> fnList = Lists.cons(Lookup.create(Symbols.MACRO), argObj, body);
-			List fnDef = List.create(fnList, si);
+			ListForm fnDef = ListForm.create(fnList, si);
 
 			@SuppressWarnings("unchecked")
-			List newForm = List.create(Lists.of(Lookup.create(Symbols.DEF), nameObj, fnDef), si);
+			ListForm newForm = ListForm.create(Lists.of(Lookup.create(Symbols.DEF), nameObj, fnDef), si);
 			return ex.expand(c, newForm, ex);
 		}
 	};
@@ -503,7 +503,7 @@ public class Expanders {
 	private static final class IfExpander extends AListExpander {
 
 		@Override
-		public Node<?> expand(Context c, List form, AExpander ex) {
+		public Node<?> expand(Context c, ListForm form, AExpander ex) {
 			int n = form.size();
 			SourceInfo si = form.getSourceInfo();
 			if ((n < 3) || (n > 4))
@@ -522,7 +522,7 @@ public class Expanders {
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public Node<?> expand(Context c, List form, AExpander ex) {
+		public Node<?> expand(Context c, ListForm form, AExpander ex) {
 			int n = form.size();
 			SourceInfo si = form.getSourceInfo();
 			if (n != 3) {
@@ -548,7 +548,7 @@ public class Expanders {
 	private static final class MacroExpander extends AListExpander {
 		@SuppressWarnings("unchecked")
 		@Override
-		public Node<?> expand(Context c, List form, AExpander ex) {
+		public Node<?> expand(Context c, ListForm form, AExpander ex) {
 			int n = form.size();
 			if (n < 3)
 				throw new ExpansionException("Can't expand macro: requires at least an arg vector and body", form);
