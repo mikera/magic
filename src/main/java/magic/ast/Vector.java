@@ -82,9 +82,19 @@ public class Vector<T> extends BaseDataStructure<APersistentVector<? extends T>>
 	}
 	
 	@Override
-	public Node<APersistentVector<? extends T>> optimise() {
+	public Node<? extends APersistentVector<? extends T>> optimise() {
 		if (size()==0) return Constant.create(Vectors.emptyVector());
-		return mapChildren(NodeFunctions.optimise());
+		Vector<T> mapped= mapChildren(NodeFunctions.optimise());
+		return mapped.optimiseLocal();
+	}
+	
+	@SuppressWarnings("unchecked")
+	private Node<? extends APersistentVector<? extends T>> optimiseLocal() {
+		int n=size();
+		for (int i=0; i<n; i++) {
+			if (!exps.get(i).isConstant()) return this;
+		}
+		return (Node<? extends APersistentVector<? extends T>>) Constant.create(exps.map(node -> ((Node<T>)node).getValue()));
 	}
 
 	@SuppressWarnings("unchecked")
