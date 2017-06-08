@@ -40,7 +40,6 @@ public class Expander extends BaseForm<AExpander> {
 	public static Expander create(Symbol exSym, APersistentVector<Symbol> args, Node<?> body,SourceInfo source) {
 		return new Expander(exSym,args,body,source);
 	}
-	
 
 	@SuppressWarnings("unchecked")
 	public static Expander create(Symbol exSym, Vector<Symbol> args, APersistentList<Node<?>> body, SourceInfo source) {
@@ -113,5 +112,4 @@ public class Expander extends BaseForm<AExpander> {
 	public String toString() {
 		return "(expander "+args+" "+body+")";
 	}
-
 }

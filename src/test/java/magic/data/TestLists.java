@@ -13,7 +13,6 @@ public class TestLists {
 		testIterator(list);
 	}
 
-	
 	public static <T> void testIterator(List<T> list) {
 		int i=0;
 		for (T t:list) {

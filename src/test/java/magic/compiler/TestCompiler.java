@@ -144,7 +144,6 @@ public class TestCompiler {
 				+ "(def c ~a)");
 		Context c2=r.getContext();
 		
-		// System.out.println(c2.getNode("b"));
 		assertEquals((Long)1L,c2.getValue("b"));
 		assertEquals((Long)2L,c2.getValue("c"));
 	}

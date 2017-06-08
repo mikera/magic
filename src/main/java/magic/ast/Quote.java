@@ -8,7 +8,6 @@ import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
-import magic.data.APersistentVector;
 import magic.data.Lists;
 import magic.data.PersistentList;
 import magic.data.Sets;
@@ -17,13 +16,15 @@ import magic.lang.Context;
 import magic.lang.Symbols;
 
 /**
- * AST node representing a quoted form
+ * AST node representing a quoted form i.e. (quote ....) or (syntax-quote ....)
  * 
- * This may possibly include unquoted elements, which are analysed to produce AST replacement nodes
+ * Quote evaluates to a form data structure.
+ * 
+ * This may possibly include unquoted elements
  * @author Mike
  *
  */
-public class Quote extends Node<Object> {
+public class Quote extends BaseForm<Object> {
 
 	private final boolean syntaxQuote;
 	private final Node<Object> form;
@@ -31,8 +32,13 @@ public class Quote extends Node<Object> {
 	private static final APersistentSet<Symbol> QUOTE_SET=Sets.of(Symbols.QUOTE);
 	private static final APersistentSet<Symbol> SYNTAX_QUOTE_SET=Sets.of(Symbols.SYNTAX_QUOTE);
 
-	public Quote(Node<Object> form, boolean syntaxQuote, APersistentSet<Symbol> symbolSet, APersistentMap<APersistentVector<Object>,Node<Object>> unquotes, SourceInfo source) {
-		super (symbolSet,source);
+	protected static Symbol quoteSymbol(boolean syntaxQuote) {
+		return syntaxQuote?Symbols.SYNTAX_QUOTE:Symbols.QUOTE;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Quote(Node<Object> form, boolean syntaxQuote, APersistentSet<Symbol> symbolSet, SourceInfo source) {
+		super (Lists.of(Lookup.create(quoteSymbol(syntaxQuote)),form),symbolSet,source);
 		this.syntaxQuote=syntaxQuote;
 		this.form=form;
 	}
@@ -48,7 +54,7 @@ public class Quote extends Node<Object> {
 	public static Quote create(Node<? extends Object> node, boolean syntaxQuote, SourceInfo sourceInfo) {
 		// TODO fix deps?
 		APersistentSet<Symbol> syms=(syntaxQuote)?SYNTAX_QUOTE_SET:QUOTE_SET;
-		return new Quote((Node<Object>)node,syntaxQuote,syms,null, sourceInfo);
+		return new Quote((Node<Object>)node,syntaxQuote,syms, sourceInfo);
 	}
 
 	@Override
@@ -91,12 +97,4 @@ public class Quote extends Node<Object> {
 	public String toString() {
 		return (syntaxQuote?"(syntax-quote ":"(quote ")+RT.toString(form)+")";
 	}
-
-	@Override
-	public Object toForm() {
-		return Lists.of(syntaxQuote?Symbols.SYNTAX_QUOTE:Symbols.QUOTE, form.toForm());
-	}
-
-
-
 }
