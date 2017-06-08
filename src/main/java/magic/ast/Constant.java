@@ -25,7 +25,7 @@ public class Constant<T> extends BaseConstant<T> {
 	private final T value;
 	private final Type type;
 	
-	public Constant(T value, APersistentSet<Symbol> deps, SourceInfo source) {
+	private Constant(T value, APersistentSet<Symbol> deps, SourceInfo source) {
 		super((deps==null)?Sets.emptySet():deps,source);
 		this.value=value;
 		this.type=RT.inferType(value);
