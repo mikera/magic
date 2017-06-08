@@ -112,7 +112,6 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 				} catch (Throwable t) {
 					t.printStackTrace(System.err);
 				}
-				// 
 				// System.out.println(o);
 				return true;
 			}
@@ -248,6 +247,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 	public Rule NilLiteral() {
 		return Sequence(
 				"nil",
+				TestNot(FollowingSymbolCharacter()),
 				push(Constant.create(null)));
 	}
 	

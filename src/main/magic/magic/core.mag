@@ -16,6 +16,15 @@
 (defn identity [a] 
   a)
 
+(defn vector? [a] 
+  (instance? magic.data.APersistentVector a))
+
+(defn identical? [a b] 
+  (boolean (. magic.RT identical a b)))
+
+(defn nil? [a] 
+  (boolean (identical? nil a)))
+
 (defmacro when [a b] 
   `(if ~a ~b nil))
 

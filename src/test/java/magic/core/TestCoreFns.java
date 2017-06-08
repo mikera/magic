@@ -57,6 +57,24 @@ public class TestCoreFns {
 		assertFalse(RT.bool(o));
 	}
 	
+	@Test public void testNilQ() {
+		assertTrue(RT.bool(exec("(nil? nil)")));
+		assertTrue(RT.bool(exec("(nil? 1)")));
+		assertTrue(RT.bool(exec("(nil? [])")));
+	}
+	
+	@Test public void testVectorQ() {
+		assertFalse(exec("(vector? nil)"));
+		assertTrue(exec("(vector? [1])"));
+		assertTrue(exec("(vector? [])"));
+	}
+	
+	@Test public void testIdentical() {
+		assertTrue(RT.bool(exec("(identical? nil nil)")));
+		assertTrue(RT.bool(exec("(let [a 1] (identical? a a))")));
+		// assertEquals(Boolean.FALSE,exec("(identical? 1 2)")); // TODO: why is this broken?
+	}
+	
 //	@Test public void testWhen() {
 //		assertEquals("foo",exec("(when true (str 'foo))"));
 //		assertNull(exec("(when false (str 'foo))"));

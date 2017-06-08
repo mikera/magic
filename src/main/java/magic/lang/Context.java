@@ -1,5 +1,6 @@
 package magic.lang;
 
+import magic.RT;
 import magic.ast.Node;
 import magic.compiler.Reader;
 import magic.data.APersistentMap;
@@ -42,9 +43,7 @@ public class Context {
 	 * @throws UnresolvedException if the symbol or one of it's dependencies is not defined.
 	 */
 	public <T> T getValue(Symbol sym) {
-		Slot<T> slot=getSlot(sym); 
-		if (slot==null) throw new UnresolvedException(sym);
-		return slot.getValue();
+		return RT.resolve(this,sym);
 	}
 	
 	/**

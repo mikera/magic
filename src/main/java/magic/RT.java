@@ -26,7 +26,10 @@ import magic.data.Symbol;
 import magic.data.Vectors;
 import magic.fn.Functions;
 import magic.lang.Context;
+import magic.lang.Slot;
 import magic.lang.Symbols;
+import magic.lang.UnresolvedException;
+import magic.type.JavaType;
 import magic.type.Value;
 
 /**
@@ -140,6 +143,19 @@ public class RT {
 		if (a==b) return true;
 		if ((a==null)||(b==null)) return false;
 		return a.equals(b);
+	}
+	
+	/**
+	 * Returns true if and only if two values are identical.
+	 * Handles nulls as distinct values that are identical to null only.
+	 * 
+	 * @param a
+	 * @param b
+	 * @return
+	 */
+	public static final boolean identical(Object a, Object b) {
+		System.out.println(a+" "+b);
+		return a==b;
 	}
 	
 	/**
@@ -438,6 +454,19 @@ public class RT {
 		String name=sym.getName();
 		if (!maybeClassName(name)) return null;
 		return classForName(name);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T resolve(Context c, Symbol sym) {
+		Slot<T> slot=c.getSlot(sym);
+		if (slot!=null) return slot.getValue();
+		
+		Class<?> cls=RT.classForSymbol(sym);
+		if (cls!=null) {
+			Type type=JavaType.create(cls);
+			return (T) type;
+		}
+		throw new UnresolvedException(sym);
 	}
 
 
