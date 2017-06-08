@@ -10,6 +10,7 @@ import magic.data.APersistentSet;
 import magic.data.Lists;
 import magic.data.Sets;
 import magic.data.Symbol;
+import magic.fn.IFn1;
 import magic.lang.Context;
 import magic.lang.Symbols;
 
@@ -80,15 +81,20 @@ public class InvokeStatic<T> extends BaseForm<T> {
 	}
 
 	@Override
-	public Node<T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
-		// TODO
-		return this;
+	public Node<? extends T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
+		return mapChildren(NodeFunctions.specialiseValues(bindings));
 	}
 
 	@Override
-	public Node<T> optimise() {
-		// TODO
-		return this;
+	public Node<? extends T> optimise() {
+		return mapChildren(NodeFunctions.optimise());
+	}
+	
+	@Override
+	public Node<? extends T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
+		Node<?>[] newNodes=NodeFunctions.mapAll(args,fn);
+		if (newNodes==args) return this;
+		return create(klass,method,newNodes,source);
 	}
 
 	@Override 

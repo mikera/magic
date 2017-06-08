@@ -112,7 +112,7 @@ public class Do<T> extends BaseForm<T> {
 
 	@Override
 	public APersistentList<Object> toForm() {
-		return Lists.cons(Symbols.DO, body.map(Nodes.TO_FORM));
+		return Lists.cons(Symbols.DO, body.map(NodeFunctions.TO_FORM));
 	}
 
 

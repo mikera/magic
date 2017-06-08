@@ -1,11 +1,12 @@
 package magic.ast;
 
-import magic.compiler.Reader;
-import magic.compiler.SourceInfo;
 import magic.RT;
 import magic.compiler.EvalResult;
+import magic.compiler.Reader;
+import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.Symbol;
+import magic.fn.IFn1;
 import magic.lang.Context;
 
 /**
@@ -63,6 +64,11 @@ public class Lookup<T> extends Node<T> {
 	
 	@Override
 	public Node<T> optimise() {
+		return this;
+	}
+	
+	@Override
+	public Lookup<T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
 		return this;
 	}
 

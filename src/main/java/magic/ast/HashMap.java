@@ -145,7 +145,7 @@ public class HashMap<K,V> extends BaseDataStructure<APersistentMap<? extends K,?
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public APersistentList<?> toForm() {
-		return Lists.cons(Symbols.HASHMAP, Lists.create(((APersistentVector)exps).map(Nodes.TO_FORM)));
+		return Lists.cons(Symbols.HASHMAP, Lists.create(((APersistentVector)exps).map(NodeFunctions.TO_FORM)));
 	}
 
 }

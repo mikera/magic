@@ -40,6 +40,6 @@ public abstract class BaseForm<T> extends Node<T> {
 
 	@Override
 	public APersistentList<Object> toForm() {
-		return nodes.map(Nodes.TO_FORM);
+		return nodes.map(NodeFunctions.TO_FORM);
 	}
 }

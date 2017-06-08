@@ -139,7 +139,7 @@ public class Set<T> extends BaseDataStructure<APersistentSet<? extends T>> {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public APersistentList<?> toForm() {
-		return Lists.cons(Symbols.SET, Lists.create(((APersistentVector)exps).map(Nodes.TO_FORM)));
+		return Lists.cons(Symbols.SET, Lists.create(((APersistentVector)exps).map(NodeFunctions.TO_FORM)));
 	}
 
 	@SuppressWarnings("unchecked")

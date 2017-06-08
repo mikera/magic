@@ -6,6 +6,11 @@ import magic.data.APersistentVector;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 
+/**
+ * Functions used for AST node transformations
+ * 
+ * @author Mike
+ */
 public class NodeFunctions {
 	
 	public static abstract class NodeFunction implements IFn1<Node<?>, Node<?>> {
@@ -19,6 +24,11 @@ public class NodeFunctions {
 		
 	}
 
+	/**
+	 * A node function that specialises bindings
+	 * @param bindings
+	 * @return
+	 */
 	public static IFn1<Node<?>, Node<?>> specialiseValues(APersistentMap<Symbol, Object> bindings) {
 		return new NodeFunction() {
 			@Override
@@ -28,13 +38,20 @@ public class NodeFunctions {
 		};
 	}
 
+	public static IFn1<Node<?>, Node<?>> OPTIMISE=new NodeFunction() {
+		@Override
+		public Node<?> apply(Node<?> node) {
+			return node.optimise();
+		}
+	};
+	
+	/**
+	 * A node function that performs local node optimisation
+	 * @param bindings
+	 * @return
+	 */
 	public static IFn1<Node<?>, Node<?>> optimise() {
-		return new NodeFunction() {
-			@Override
-			public Node<?> apply(Node<?> node) {
-				return node.optimise();
-			}
-		};
+		return OPTIMISE;
 	}
 
 	/**
@@ -74,5 +91,34 @@ public class NodeFunctions {
 			} 
 		}
 		return newExps;
+	}
+
+	/**
+	 * A function that maps nodes to form data objects
+	 */
+	public static final IFn1<Node<?>,Object> TO_FORM = n -> ((Node<?>)n).toForm();
+
+	/**
+	 * Maps a function across an array of nodes.
+	 * Returns the same array if no nodes are changed, a new array otherwise
+	 * @param args
+	 * @param fn
+	 * @return
+	 */
+	public static Node<?>[] mapAll(Node<?>[] nodes, IFn1<Node<?>, Node<?>> fn) {
+		boolean changed=false;
+		int n=nodes.length;
+		for (int i=0; i<n; i++) {
+			Node<?> node=nodes[i];
+			Node<?> newNode=fn.apply(node);
+			if (node!=newNode) {
+				if (!changed) {
+					nodes=nodes.clone();
+					changed=true;
+				}
+				nodes[i]=newNode;
+			}
+		}
+		return nodes;
 	}
 }
