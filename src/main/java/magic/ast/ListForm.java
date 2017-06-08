@@ -15,9 +15,9 @@ import magic.lang.Context;
 import magic.lang.Symbols;
 
 /**
- * AST node representing a list
+ * AST node representing a form as a list
  * 
- * This is an interim AST data structure: we expect to transform into e.g. an Apply node
+ * This is an interim AST data structure: we expect to transform this into e.g. an Apply node
  * 
  * @author Mike
  *

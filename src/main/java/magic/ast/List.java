@@ -1,6 +1,5 @@
 package magic.ast;
 
-
 import magic.RT;
 import magic.Type;
 import magic.Types;
@@ -18,11 +17,11 @@ import magic.lang.Context;
 import magic.lang.Symbols;
 
 /**
- * AST node class representing a vector construction literal.
+ * AST node class representing a list construction literal.
  * 
  * @author Mike
  *
- * @param <T> the type of all nodes in the Vector
+ * @param <T> the type of all nodes in the List
  */
 public class List<T> extends BaseDataStructure<APersistentList<? extends T>> {
 
@@ -105,7 +104,7 @@ public class List<T> extends BaseDataStructure<APersistentList<? extends T>> {
 	}
 	
 	/**
-	 * Gets the Type of this vector expression
+	 * Gets the Type of this list expression
 	 */
 	@Override
 	public Type getType() {
