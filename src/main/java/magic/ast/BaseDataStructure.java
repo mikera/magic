@@ -6,6 +6,9 @@ import magic.data.APersistentVector;
 import magic.data.Symbol;
 
 public abstract class BaseDataStructure<T> extends Node<T> {
+	/**
+	 * Sub-expressions that represent data in this data structure
+	 */
 	protected final APersistentVector<Node<?>> exps;
 
 	public BaseDataStructure(APersistentVector<Node<?>> exps, APersistentSet<Symbol> deps,

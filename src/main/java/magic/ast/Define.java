@@ -6,6 +6,7 @@ import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.PersistentList;
 import magic.data.Symbol;
+import magic.fn.IFn1;
 import magic.lang.Context;
 import magic.lang.Symbols;
 
@@ -50,8 +51,7 @@ public class Define<T> extends BaseForm<T> {
 	
 	@Override
 	public Node<? extends T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
-		Node<? extends T> newExp=exp.specialiseValues(bindings);
-		return (exp==newExp)?this:create(sym,newExp);
+		return mapChildren(NodeFunctions.specialiseValues(bindings));
 	}
 
 	@Override
@@ -63,5 +63,12 @@ public class Define<T> extends BaseForm<T> {
 	@Override
 	public String toString() {
 		return "(def "+sym+" "+RT.toString(exp)+")";
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Define<T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
+		Node<? extends T> newExp=(Node<? extends T>) fn.apply(exp);
+		return (exp==newExp)?this:(Define<T>) create(sym,newExp);
 	}
 }

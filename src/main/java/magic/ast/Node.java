@@ -5,6 +5,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.nodes.RootNode;
 
+import magic.RT;
 import magic.Type;
 import magic.Types;
 import magic.compiler.EvalResult;
@@ -18,6 +19,7 @@ import magic.data.Sets;
 import magic.data.Symbol;
 import magic.data.Vectors;
 import magic.data.impl.NullSet;
+import magic.fn.IFn1;
 import magic.lang.Context;
 import magic.lang.MagicLanguage;
  
@@ -108,6 +110,16 @@ public abstract class Node<T> extends RootNode {
 		APersistentSet<Symbol> deps=f.getDependencies();
 		deps=deps.includeAll(calcDependencies(args));
 		return deps;
+	}
+	
+	/**
+	 * Applies a function to all regular child nodes of this node.
+	 * Returns the same Node if unchanged.
+	 * @param fn
+	 * @return
+	 */
+	public Node<?> mapChildren(IFn1<Node<?>,Node<?>> fn) {
+		throw new UnsupportedOperationException("mapChildren not supported for class "+RT.print(getClass()));
 	}
 	
 	@SafeVarargs

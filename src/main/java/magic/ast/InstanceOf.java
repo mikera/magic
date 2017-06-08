@@ -26,14 +26,14 @@ public class InstanceOf extends BaseForm<Boolean> {
 		return new InstanceOf(type, exp,si);
 	}
 	
-	
 	@Override
 	public Node<Boolean> specialiseValues(APersistentMap<Symbol,Object> bindings) {
-		return mapTree(node -> ((Node<?>) node).specialiseValues(bindings));
+		return mapChildren(node -> ((Node<?>) node).specialiseValues(bindings));
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
-	private <T> InstanceOf mapTree(IFn1<Node<?>,Node<?>> fn) {
+	public InstanceOf mapChildren(IFn1<Node<?>,Node<?>> fn) {
 		Node<?> newExp=fn.apply(exp);
 		Node<Type> newType=(Node<Type>) fn.apply(typeExpr);
 		if ((newExp==exp)&&(newType==typeExpr)) return this;
@@ -42,7 +42,7 @@ public class InstanceOf extends BaseForm<Boolean> {
 
 	@Override
 	public Node<Boolean> optimise() {
-		InstanceOf opt=mapTree(node -> ((Node<?>) node).optimise());
+		InstanceOf opt=mapChildren(node -> ((Node<?>) node).optimise());
 		return opt.optimiseLocal();
 	}
 	

@@ -12,6 +12,7 @@ import magic.data.APersistentVector;
 import magic.data.Symbol;
 import magic.data.Tuple;
 import magic.data.Vectors;
+import magic.fn.IFn1;
 import magic.lang.Context;
 
 /**
@@ -91,16 +92,22 @@ public class Vector<T> extends BaseDataStructure<APersistentVector<? extends T>>
 		return (exps==newExps)?this:(Vector<T>) create(newExps);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public Node<APersistentVector<? extends T>> optimise() {
+		if (size()==0) return Constant.create(Vectors.emptyVector());
+		return mapChildren(NodeFunctions.optimise());
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Vector<T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
 		int nExps=exps.size();
 		APersistentVector<Node<?>> newExps=exps;
 		for (int i=0; i<nExps; i++) {
 			Node<?> node=exps.get(i);
-			Node<?> newNode=node.optimise();
+			Node<?> newNode=fn.apply(node);
 			if (node!=newNode) {
-				newExps=newExps.assocAt(i,(Node<T>) newNode);
+				newExps=newExps.assocAt(i,newNode);
 			} 
 		}
 		return (exps==newExps)?this:(Vector<T>) create(newExps);
@@ -141,12 +148,6 @@ public class Vector<T> extends BaseDataStructure<APersistentVector<? extends T>>
 	public APersistentVector<? super T> toForm() {
 		return ((APersistentVector)exps).map(Nodes.TO_FORM);
 	}
-
-
-
-
-
-
 
 
 }

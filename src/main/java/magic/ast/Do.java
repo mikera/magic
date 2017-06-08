@@ -10,6 +10,7 @@ import magic.data.APersistentMap;
 import magic.data.Lists;
 import magic.data.PersistentList;
 import magic.data.Symbol;
+import magic.fn.IFn1;
 import magic.lang.Context;
 import magic.lang.Symbols;
 
@@ -73,10 +74,15 @@ public class Do<T> extends BaseForm<T> {
 	public Node<T> optimise() {
 		if (nBody==0) return (Node<T>) Constant.NULL;
 		if (nBody==1) return (Node<T>) body.get(0).optimise();
+		return (Node<T>) mapChildren(NodeFunctions.optimise());
+	}
+	
+	@Override
+	public Node<?> mapChildren(IFn1<Node<?>, Node<?>> fn) {
 		APersistentList<Node<? extends Object>> newBody=body;
 		for (int i=0; i<nBody; i++) {
 			Node<?> node=body.get(i);
-			Node<?> newNode=node.optimise();
+			Node<?> newNode=fn.apply(node);
 			if (node!=newNode) {
 				newBody=newBody.assocAt(i, newNode);
 			} 
@@ -108,6 +114,7 @@ public class Do<T> extends BaseForm<T> {
 	public APersistentList<Object> toForm() {
 		return Lists.cons(Symbols.DO, body.map(Nodes.TO_FORM));
 	}
+
 
 
 

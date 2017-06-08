@@ -16,6 +16,7 @@ import magic.data.Sets;
 import magic.data.Symbol;
 import magic.data.Tuple;
 import magic.data.Vectors;
+import magic.fn.IFn1;
 import magic.lang.Context;
 import magic.lang.Symbols;
 
@@ -100,25 +101,11 @@ public class Set<T> extends BaseDataStructure<APersistentSet<? extends T>> {
 	@Override
 	public Node<APersistentSet<? extends T>> optimise() {
 		int nExps=exps.size();
-		APersistentVector<Node<?>> newExps=exps;
-		boolean constant=true;
-		for (int i=0; i<nExps; i++) {
-			Node<?> node=exps.get(i);
-			Node<?> newNode=node.optimise();
-			if (node!=newNode) {
-				newExps=newExps.assocAt(i,(Node<T>) newNode);
-			} 
-			if (!node.isConstant()) constant=false;
-		}
-		
-		// can optimise to a constant set
-		if (constant) {
-			APersistentVector<T> vals=newExps.map(n->((Node<T>)n).getValue());
-			return Constant.create(Sets.createFrom(vals), deps);
-		}
-		
-		return (exps==newExps)?this:(Set<T>) create(newExps,getSourceInfo());
+		if (nExps==0) return Constant.create(Sets.emptySet(), getSourceInfo());
+		return (Node<APersistentSet<? extends T>>) mapChildren(NodeFunctions.optimise());
 	}
+	
+	
 	
 	/**
 	 * Gets the Type of this vector expression
@@ -153,6 +140,30 @@ public class Set<T> extends BaseDataStructure<APersistentSet<? extends T>> {
 	@Override
 	public APersistentList<?> toForm() {
 		return Lists.cons(Symbols.SET, Lists.create(((APersistentVector)exps).map(Nodes.TO_FORM)));
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Node<?> mapChildren(IFn1<Node<?>, Node<?>> fn) {
+		int nExps=exps.size();
+		APersistentVector<Node<?>> newExps=exps;
+		boolean constant=true;
+		for (int i=0; i<nExps; i++) {
+			Node<?> node=exps.get(i);
+			Node<?> newNode=fn.apply(node);
+			if (node!=newNode) {
+				newExps=newExps.assocAt(i,newNode);
+			} 
+			if (!node.isConstant()) constant=false;
+		}
+		
+		// can optimise to a constant set?
+		if (constant) {
+			APersistentVector<T> vals=newExps.map(n->((Node<T>)n).getValue());
+			return Constant.create(Sets.createFrom(vals), deps);
+		}
+		
+		return (exps==newExps)?this:(Set<T>) create(newExps,getSourceInfo());
 	}
 
 }
