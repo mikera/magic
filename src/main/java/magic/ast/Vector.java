@@ -76,20 +76,9 @@ public class Vector<T> extends BaseDataStructure<APersistentVector<? extends T>>
 		return Vector.create(Vectors.wrap(results),getSourceInfo());
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public Node<APersistentVector<? extends T>> specialiseValues(APersistentMap<Symbol, Object> bindings) {
-		int nExps=exps.size();
-		APersistentVector<Node<?>> newExps=exps;
-		for (int i=0; i<nExps; i++) {
-			Node<?> node=exps.get(i);
-			Node<?> newNode=node.specialiseValues(bindings);
-			if (node!=newNode) {
-				// System.out.println("Specialising "+node+ " to "+newNode);
-				newExps=newExps.assocAt(i,(Node<T>) newNode);
-			} 
-		}
-		return (exps==newExps)?this:(Vector<T>) create(newExps);
+		return mapChildren(NodeFunctions.specialiseValues(bindings));
 	}
 	
 	@Override
@@ -101,15 +90,7 @@ public class Vector<T> extends BaseDataStructure<APersistentVector<? extends T>>
 	@SuppressWarnings("unchecked")
 	@Override
 	public Vector<T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
-		int nExps=exps.size();
-		APersistentVector<Node<?>> newExps=exps;
-		for (int i=0; i<nExps; i++) {
-			Node<?> node=exps.get(i);
-			Node<?> newNode=fn.apply(node);
-			if (node!=newNode) {
-				newExps=newExps.assocAt(i,newNode);
-			} 
-		}
+		APersistentVector<Node<?>> newExps=NodeFunctions.mapAll(exps, fn);
 		return (exps==newExps)?this:(Vector<T>) create(newExps);
 	}
 	

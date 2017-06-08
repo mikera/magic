@@ -2,6 +2,7 @@ package magic.ast;
 
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
+import magic.data.APersistentVector;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 
@@ -53,5 +54,18 @@ public class NodeFunctions {
 			if (node!=newNode) newNodes=newNodes.assocAt(i, newNode);
 		}
 		return newNodes;
+	}
+
+	public static APersistentVector<Node<?>> mapAll(APersistentVector<Node<?>> exps, IFn1<Node<?>, Node<?>> fn) {
+		int nExps=exps.size();
+		APersistentVector<Node<?>> newExps=exps;
+		for (int i=0; i<nExps; i++) {
+			Node<?> node=exps.get(i);
+			Node<?> newNode=fn.apply(node);
+			if (node!=newNode) {
+				newExps=newExps.assocAt(i,newNode);
+			} 
+		}
+		return newExps;
 	}
 }
