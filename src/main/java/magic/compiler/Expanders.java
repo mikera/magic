@@ -395,7 +395,7 @@ public class Expanders {
 			APersistentList<Node<?>> body = form.getNodes().subList(1, n);
 
 			APersistentVector<Node<?>> bodyVec = Vectors.coerce(ex.expandAll(c, body, ex));
-
+ 
 			return List.create(bodyVec, si);
 		}
 	}

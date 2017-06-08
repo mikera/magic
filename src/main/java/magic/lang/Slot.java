@@ -29,6 +29,7 @@ public class Slot<T> {
 	private volatile boolean computed=false;
 	private final Node<T> compiledExpression;
 	
+	@SuppressWarnings("unchecked")
 	private Slot(Node<T> e, Context context, APersistentMap<Symbol, Object> bindings) {
 		this.rawExpression=e;
 		this.context=context;

@@ -28,7 +28,7 @@ public class Compiler {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Node<T> compileNode(Context context, Node<? super T> node) {
+	public static <T> Node<T> compileNode(Context context, Node<?> node) {
 		node=Compiler.expand(context, node);
 		node=(Node<? super T>) node.optimise();
 		return (Node<T>)node;
@@ -38,8 +38,8 @@ public class Compiler {
 	 * Compiles and evaluates a node in the given context. Performs expansion using the default expander
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> EvalResult<T> compile(Context context, Node<? super T> node) {
-		return compile(context,node,(APersistentMap<Symbol, Object>) Maps.EMPTY);
+	public static <T> EvalResult<T> compile(Context context, Node<?> node) {
+		return (EvalResult<T>) compile(context,node,(APersistentMap<Symbol, Object>) Maps.EMPTY);
 		
 	}
 	 
