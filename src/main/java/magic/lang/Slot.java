@@ -38,9 +38,17 @@ public class Slot<T> {
 
 	}
 	
+    /**
+     * Gets the value associated with this Slot. 
+     * 
+     * Forces computation of the value if it has not already been computed
+     * 
+     * @return
+     */
 	public T getValue() {
 		if (computed==false) {
 			synchronized (this) {
+				// double-checked locking, just in case.....
 				if (computed==false) {
 					return tryCompute();
 				}
@@ -99,10 +107,15 @@ public class Slot<T> {
 	}
 
 	/**
-	 * Invalidates the slot, returning a new slot with no cached values assocaited with the given defining context
+	 * Invalidates the slot, returning a slot with no cached values.
+	 * 
+	 * Associates the given defining context with the slot, which will be used to 
+	 * compute the slot's value if it is subsequently requested.
+	 * 
 	 * @return
 	 */
 	public Slot<T> invalidate(Context c) {
+		if ((!computed)&&(c==context)) return this;
 		return create(rawExpression,c,bindings);
 	}
 	
