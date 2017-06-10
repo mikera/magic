@@ -4,10 +4,19 @@ import com.oracle.truffle.api.CallTarget;
 
 import magic.Type;
 import magic.Types;
-import magic.data.IPersistentObject;
+import magic.data.APersistentObject;
 import magic.type.FunctionType;
 
-public abstract class AFn<T> implements IFn<T>, CallTarget, IPersistentObject {
+/**
+ * Abstract base class for Magic functions
+ * 
+ * @author Mike
+ *
+ * @param <T>
+ */
+@SuppressWarnings("serial")
+public abstract class AFn<T> extends APersistentObject implements IFn<T>, CallTarget {
+	
 	@Override
 	public final Object call(Object... args) {
 		return applyToArray(args);

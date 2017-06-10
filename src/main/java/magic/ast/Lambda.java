@@ -83,6 +83,8 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 	}
 	
 	private final class LambdaFn extends AFn<T> {
+		private static final long serialVersionUID = 4368281324742419123L;
+		
 		private final APersistentMap<Symbol, Object> capturedBindings;
 		private Node<? extends T> body;
 

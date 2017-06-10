@@ -18,7 +18,9 @@ import magic.lang.Context;
  * @author Mike
  *
  */
+@SuppressWarnings("serial")
 public abstract class AExpander extends AFn<Node<?>> implements IFn3<Node<?>> {
+
 	@Override
 	public Node<?> apply(Object o1, Object o2, Object o3) {
 		return expand((Context)o1,(Node<?>)o2,(AExpander)o3);

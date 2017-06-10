@@ -58,6 +58,8 @@ public class Expander extends BaseForm<AExpander> {
 		
 		// System.out.println(body);
 		AExpander fn=new AListExpander() {
+			private static final long serialVersionUID = -4348972480593384047L;
+
 			@Override
 			public Type getReturnType() {
 				return body.getType();
