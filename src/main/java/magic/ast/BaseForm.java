@@ -1,5 +1,6 @@
 package magic.ast;
 
+import magic.RT;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
@@ -41,5 +42,10 @@ public abstract class BaseForm<T> extends Node<T> {
 	@Override
 	public APersistentList<Object> toForm() {
 		return nodes.map(NodeFunctions.TO_FORM);
+	}
+	
+	@Override
+	public String toString() {
+		return "("+RT.toString(nodes, " ")+")";
 	}
 }

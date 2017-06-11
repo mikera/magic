@@ -1,6 +1,6 @@
 package magic.ast;
 
-import java.lang.reflect.Method;
+import java.lang.invoke.MethodHandle;
 
 import magic.Reflector;
 import magic.compiler.EvalResult;
@@ -26,12 +26,12 @@ import magic.lang.Symbols;
  */
 public class InvokeStatic<T> extends BaseForm<T> {
 
-	private Method method;	
+	private MethodHandle method;	
 	private final Node<?>[] args;
 	private final int nArgs;
 
 	@SuppressWarnings("unchecked")
-	private InvokeStatic(APersistentSet<Symbol> deps, Method method, Node<?>[] args,SourceInfo source) {
+	private InvokeStatic(APersistentSet<Symbol> deps, MethodHandle method, Node<?>[] args,SourceInfo source) {
 		super(Lists.of(
 				(Node<Symbol>)Constant.create(Symbols.DOT), 
 				ListForm.createCons(Constant.create(method),ListForm.create(args),null)  
@@ -51,11 +51,11 @@ public class InvokeStatic<T> extends BaseForm<T> {
 			deps=deps.includeAll(a.getDependencies());
 			argClasses[i]=a.getType().getJavaClass();
 		}
-		Method m = Reflector.getDeclaredMethod(klass,method.getName(), argClasses);
+		MethodHandle m = Reflector.getStaticMethodHandle(klass,method.getName(), argClasses);
 		return create(deps,m,args,source);
 	}
 	
-	private static <T> InvokeStatic<T> create(APersistentSet<Symbol> deps, Method m, Node<?>[] args, SourceInfo source) {
+	private static <T> InvokeStatic<T> create(APersistentSet<Symbol> deps, MethodHandle m, Node<?>[] args, SourceInfo source) {
 		return new InvokeStatic<T>(deps,m,args,source);
 	}
 
@@ -100,19 +100,4 @@ public class InvokeStatic<T> extends BaseForm<T> {
 		if (newNodes==args) return this;
 		return create(deps,method,newNodes,source);
 	}
-
-	@Override 
-	public String toString() {
-		StringBuilder sb=new StringBuilder ("(. ");
-		sb.append(method.getDeclaringClass().getName());
-		sb.append(" ");
-		sb.append(method.getName());
-		for (Node<?> a : args) {
-			sb.append(' ');
-			sb.append(a);
-		}
-		sb.append(")");
-		return sb.toString();
-	}
-
 }

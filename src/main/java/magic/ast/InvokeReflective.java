@@ -1,6 +1,6 @@
 package magic.ast;
 
-import java.lang.reflect.Method;
+import java.lang.invoke.MethodHandle;
 
 import magic.Reflector;
 import magic.compiler.EvalResult;
@@ -62,19 +62,22 @@ public class InvokeReflective<T> extends BaseForm<T> {
 		EvalResult<Object> r= (EvalResult<Object>) instance.eval(c, bindings);
 		Object o=r.getValue();
 		
-		Object[] argVals=new Object[nArgs];
+		Object[] argVals=new Object[nArgs+1]; // Includes instance, i.e. [o, args....]
+		argVals[0]=o;
 		Class<?>[] argClasses=new Class<?>[nArgs];
 		for (int i=0; i<nArgs; i++) {
 			r=(EvalResult<Object>) args[i].eval(c, bindings);
 			Object arg=r.getValue();
-			argVals[i]=arg;
+			argVals[i+1]=arg;
 			argClasses[i]=arg.getClass();
 		}
 		
-		Method m=Reflector.getMethod(o,method.getName(), argClasses);
+		MethodHandle mh=Reflector.getMethodHandle(o,method.getName(), argClasses);
 	
 		try {
-			return new EvalResult<T>(c,(T) m.invoke(o, argVals));
+			// note mh.invoke(...) doesn't work because it is a special function that uses varargs only
+			Object result=mh.invokeWithArguments(argVals);
+			return new EvalResult<T>(c,(T) result);
 		} catch (Throwable t) {
 			throw new Error("Reflected method invocation failed",t);
 		}

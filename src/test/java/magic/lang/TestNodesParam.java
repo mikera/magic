@@ -34,6 +34,7 @@ public class TestNodesParam {
     
 	@SuppressWarnings("unchecked")
 	static Node<?>[] exampleNodes=new Node<?>[] {
+		InvokeReflective.create(Constant.create("bar"), Symbol.create("length"), new Node[0]),
 		Constant.create(1),
 		Constant.create(null),
 		Vector.create(Constant.create(1)),
@@ -45,8 +46,7 @@ public class TestNodesParam {
 		Do.create(Constant.create("foo")),
 		Let.create(new Symbol[]{Symbol.create("a")},new Constant[]{Constant.create(3.0)},Lookup.create("a")),
 		Lambda.create(Vectors.of(Symbol.create("a")), Constant.create(Keyword.create("foo"))),
-		If.createIf(Constant.create(true), Constant.create(1), Constant.create("foo")),
-		InvokeReflective.create(Constant.create("bar"), Symbol.create("length"), new Node[0])
+		If.createIf(Constant.create(true), Constant.create(1), Constant.create("foo"))
 		
 	};
 	

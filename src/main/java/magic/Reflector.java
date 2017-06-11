@@ -1,5 +1,8 @@
 package magic;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 
 import magic.data.APersistentVector;
@@ -52,6 +55,24 @@ public class Reflector {
 		}
 		return m;
 	}
+	
+	/**
+	 * Gets a method handle
+	 * @param klass
+	 * @param method
+	 * @param argClasses
+	 * @return
+	 */	
+	public static MethodHandle getMethodHandle(Object instance, String methodName, Class<?>[] argClasses) {
+		Class<?> klass=instance.getClass();
+		Method m=getMethod(instance,methodName,argClasses);
+		MethodType mt=MethodType.methodType(m.getReturnType(),m.getParameterTypes());
+		try {
+			return MethodHandles.lookup().findVirtual(klass,methodName,mt);
+		} catch (NoSuchMethodException | IllegalAccessException e) {
+			throw new magic.Error("Unable to get method handle",e);
+		}
+	}
 
 
 	private static boolean isAssignable(Class<?>[] paramTypes, Class<?>[] argClasses) {
@@ -80,5 +101,20 @@ public class Reflector {
 	private static Method[] getAllMethods(Class<?> klass) {
 		// TODO: cache this!
 		return klass.getMethods();
+	}
+
+	public static MethodHandle getStaticMethodHandle(Class<?> klass, String name, Class<?>[] argClasses) {
+		int arity = argClasses.length;
+		// get candidate method matches
+		APersistentVector<Method> methods=getMatchingMethods(klass,name,arity);
+		if (methods.size()==0) return null;
+		
+		Method m=methods.get(0);
+		MethodType mt=MethodType.methodType(m.getReturnType(),m.getParameterTypes());
+		try {
+			return MethodHandles.lookup().findStatic(klass,name,mt);
+		} catch (NoSuchMethodException | IllegalAccessException e) {
+			throw new magic.Error("Unable to get static method handle",e);
+		}
 	}
 } 
