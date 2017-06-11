@@ -22,7 +22,7 @@ public class TestPredicates {
 			public Boolean apply(Object a) {
 				Long v=(Long)a;
 				return ((v&1L)==1L);
-			}	
+			}
 		};
 		
 		assertEquals(true,odd.test(3L));

@@ -8,4 +8,9 @@ public interface IFixedFn<T> extends IFn<T> {
 	
 	@Override
 	public int arity();
+	
+	@Override
+	public default boolean hasArity(int arity) {
+		return arity==arity();
+	}
 }

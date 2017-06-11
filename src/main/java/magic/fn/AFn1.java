@@ -4,7 +4,7 @@ import java.util.function.Predicate;
 
 import magic.RT;
 
-public abstract class AFn1<T, R> extends AFn<R> implements Predicate<T> {
+public abstract class AFn1<T, R> extends AFn<R> implements IFn1<T,R>, Predicate<T> {
 	@Override
 	public abstract R apply(Object a);
 
@@ -18,4 +18,10 @@ public abstract class AFn1<T, R> extends AFn<R> implements Predicate<T> {
 		if (a.length!=1) throw new ArityException(1,a.length);
 		return apply(a[1]);
 	}
+	
+	@Override
+	public boolean hasArity(int i) {
+		return i==1;
+	}	
+
 }

@@ -11,6 +11,7 @@ import magic.data.APersistentVector;
 import magic.data.Lists;
 import magic.data.Maps;
 import magic.data.Symbol;
+import magic.fn.AFixedFn;
 import magic.fn.AFn;
 import magic.fn.ArityException;
 import magic.fn.IFn1;
@@ -82,13 +83,14 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 		return new EvalResult<AFn<T>>(context,fn);
 	}
 	
-	private final class LambdaFn extends AFn<T> {
+	private final class LambdaFn extends AFixedFn<T> {
 		private static final long serialVersionUID = 4368281324742419123L;
 		
 		private final APersistentMap<Symbol, Object> capturedBindings;
 		private Node<? extends T> body;
 
 		private LambdaFn(Node<? extends T> body,APersistentMap<Symbol, Object> capturedBindings) {
+			super(arity);
 			this.capturedBindings = capturedBindings;
 			this.body=body;
 		}

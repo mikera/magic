@@ -2,7 +2,7 @@ package magic.fn;
 
 public class Functions {
 
-	public static final AFn<Object> PRINTLN = new AFn<Object>(){
+	public static final AFn<Object> PRINTLN = new AVariadicFn<Object>(){
 
 		@Override
 		public Object applyToArray(Object... a) {
@@ -11,6 +11,11 @@ public class Functions {
 			}
 			System.out.println("\n");
 			return null;
+		}
+
+		@Override
+		public boolean hasArity(int i) {
+			return true;
 		}
 
 

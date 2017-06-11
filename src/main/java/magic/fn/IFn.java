@@ -152,4 +152,6 @@ public interface IFn<R> {
 	public default Type getParamType(int i) {
 		return Types.ANYTHING;
 	}
+
+	public boolean hasArity(int i);
 }
