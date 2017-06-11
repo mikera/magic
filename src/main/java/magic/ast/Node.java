@@ -37,7 +37,7 @@ public abstract class Node<T> extends RootNode {
 	protected final APersistentSet<Symbol> deps;
 	protected final SourceInfo source;
 
-	public Node(APersistentSet<Symbol> deps, SourceInfo source) {
+	protected Node(APersistentSet<Symbol> deps, SourceInfo source) {
 		super(MagicLanguage.class,null,null);
 		this.deps=deps;
 		this.source=source;
@@ -66,7 +66,7 @@ public abstract class Node<T> extends RootNode {
 	}
 	
 	/**
-	 * 
+	 * TODO: docs for emit
 	 * @param c
 	 * @param bindings
 	 */
@@ -98,6 +98,12 @@ public abstract class Node<T> extends RootNode {
 		return false;
 	}
 	
+	/**
+	 * Get the Symbol representing this node.
+	 * 
+	 * Throws an error if the node is not a symbol.
+	 * @return
+	 */
 	public Symbol getSymbol() {
 		return (Symbol)getValue();
 	}
@@ -154,6 +160,10 @@ public abstract class Node<T> extends RootNode {
 		return Types.ANYTHING;
 	}
 	
+	/**
+	 * Gets source information for this node
+	 * @return
+	 */
 	public SourceInfo getSourceInfo() {
 		return source;
 	}

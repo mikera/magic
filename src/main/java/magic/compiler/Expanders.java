@@ -182,7 +182,7 @@ public class Expanders {
 				throw new ExpansionException("Can't expand cast, requires a type and expression", form);
 
 			Node<?> typeNode = ex.expand(c,form.get(1),ex);	
-			// TOdO: check if this is sane?
+			// TODO: check if this is sane?
 			Type type=(Type) Compiler.compile(c, typeNode).getValue();
 			Node<?> exp = ex.expand(c, form.get(2), ex);
 
