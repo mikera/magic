@@ -1,6 +1,6 @@
 package magic.fn;
 
-public class ArityException extends RuntimeException {
+public class ArityException extends magic.Error {
 	private static final long serialVersionUID = 7873755099725178754L;
 
 	public ArityException(String s) {
