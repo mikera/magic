@@ -103,6 +103,7 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 			// add function arguments to the lexical bindings
 			for (int i=0; i<arity; i++) {
 				Symbol param=params.get(i);
+				if (param==Symbols.UNDERSCORE) continue; // ignore bindings on underscore
 				bnds=bnds.assoc(param, a[i]);
 			}
 			return body.compute(null,bnds); // shouldn't do any context lookup?
