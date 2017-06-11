@@ -129,10 +129,6 @@ public class List<T> extends BaseDataStructure<APersistentList<? extends T>> {
 		return (Node<T>) exps.get(i);
 	}
 
-	public APersistentVector<Node<?>> getNodes() {
-		return exps;
-	}
-
 	@Override
 	public APersistentList<? super T> toForm() {
 		return Lists.cons(Symbols.LIST, Lists.coerce(exps.map(NodeFunctions.TO_FORM)));

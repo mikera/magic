@@ -132,10 +132,6 @@ public class Set<T> extends BaseDataStructure<APersistentSet<? extends T>> {
 		return (Node<T>) exps.get(i);
 	}
 
-	public APersistentVector<Node<?>> getNodes() {
-		return exps;
-	}
-
 	@Override
 	public APersistentList<?> toForm() {
 		return Lists.cons(Symbols.SET, Lists.create(exps.map(NodeFunctions.TO_FORM)));

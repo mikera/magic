@@ -130,10 +130,6 @@ public class Vector<T> extends BaseDataStructure<APersistentVector<? extends T>>
 		return (Node<T>) exps.get(i);
 	}
 
-	public APersistentVector<Node<?>> getNodes() {
-		return exps;
-	}
-
 	@Override
 	public APersistentVector<? super T> toForm() {
 		return exps.map(NodeFunctions.TO_FORM);

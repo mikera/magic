@@ -23,4 +23,8 @@ public abstract class BaseDataStructure<T> extends Node<T> {
 		super(deps, source);
 		this.exps=exps;
 	}
+	
+	public final APersistentVector<Node<?>> getNodes() {
+		return exps;
+	}
 }

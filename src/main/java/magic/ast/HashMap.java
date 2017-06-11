@@ -139,10 +139,6 @@ public class HashMap<K,V> extends BaseDataStructure<APersistentMap<? extends K,?
 		return exps.get(i);
 	}
 
-	public APersistentVector<Node<?>> getNodes() {
-		return exps;
-	}
-
 	@Override
 	public APersistentList<?> toForm() {
 		return Lists.cons(Symbols.HASHMAP, Lists.create(exps.map(NodeFunctions.TO_FORM)));
