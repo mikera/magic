@@ -11,6 +11,14 @@ import magic.fn.IFn1;
 import magic.lang.Context;
 import magic.lang.Symbols;
 
+/**
+ * A node that performs a runtime instance check against a Magic type
+ * 
+ * Can be optimised away if the type of the value is provably a member or not a member of the type.
+ * 
+ * @author Mike
+ *
+ */
 public class InstanceOf extends BaseForm<Boolean> {
 	private final Node<Type> typeExpr;
 	private final Node<?> exp;
