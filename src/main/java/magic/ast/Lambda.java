@@ -12,7 +12,6 @@ import magic.data.Lists;
 import magic.data.Maps;
 import magic.data.Symbol;
 import magic.data.Tuple;
-import magic.fn.AFixedFn;
 import magic.fn.AFn;
 import magic.fn.ArityException;
 import magic.fn.IFn1;
@@ -51,12 +50,12 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 	
 	public static <T> Lambda<T> create(APersistentVector<Symbol> params, Node<T> body,SourceInfo source) {
 		int n=params.size();
-		boolean var=false;
+		boolean variadic=false;
 		if ((n>=2)&&(params.get(n-2)==Symbols.AMPERSAND)) {
-			var=true;
+			variadic=true;
 		}
 		
-		return new Lambda<T>(params,body,source,var);
+		return new Lambda<T>(params,body,source,variadic);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -94,14 +93,13 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 		return new EvalResult<AFn<T>>(context,fn);
 	}
 	
-	private final class LambdaFn extends AFixedFn<T> {
+	private final class LambdaFn extends AFn<T> {
 		private static final long serialVersionUID = 4368281324742419123L;
 		
 		private final APersistentMap<Symbol, Object> capturedBindings;
 		private Node<? extends T> body;
 
 		private LambdaFn(Node<? extends T> body,APersistentMap<Symbol, Object> capturedBindings) {
-			super(arity);
 			this.capturedBindings = capturedBindings;
 			this.body=body;
 		}
@@ -138,6 +136,11 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 		@Override
 		public String toString() {
 			return super.toString()+":"+Lambda.this.toString();
+		}
+
+		@Override
+		public boolean hasArity(int i) {
+			return variadic?(i>=arity):(i==arity);
 		}
 	}
 	
