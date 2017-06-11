@@ -23,6 +23,8 @@ import magic.type.FunctionType;
 /**
  * AST node representing a lambda expression a.k.a. "(fn [...] ...)"
  * 
+ * Supports variadic args in the form (fn [a b & more] ...)
+ * 
  * @author Mike
  *
  * @param <T> The return type of the lambda function
@@ -38,7 +40,7 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 	private Lambda(APersistentVector<Symbol> params, Node<T> body,SourceInfo source, boolean variadic) {
 		super((APersistentList<Node<?>>)(APersistentList<?>)Lists.of(Constant.create(Symbols.FN),Constant.create(params),body),body.getDependencies().excludeAll(params),source);
 		this.params=params;
-		this.arity=params.size()-(variadic?2:0);
+		this.arity=params.size()-(variadic?2:0); // ignore ampersand and vararg parameter
 		this.body=body;
 		this.variadic=variadic;
 	}
