@@ -124,6 +124,20 @@ public class TestCompiler {
 		assertEquals(Tuple.of(2L,3L),c2.getValue("c"));
 	}
 	
+	@Test public void testVariadicDefn2() {
+		Context c=RT.INITIAL_CONTEXT;
+		
+		EvalResult<?> r=Compiler.compile(c, 
+				"(defn f [v & vs] vs)"+
+				"(def a (f 1))"+
+				"(def b (f 2 3))"+
+				"(def c (f 5 6 7))");
+		Context c2=r.getContext();
+		assertEquals(Tuple.EMPTY,c2.getValue("a"));
+		assertEquals(Tuple.of(3L),c2.getValue("b"));
+		assertEquals(Tuple.of(6L,7L),c2.getValue("c"));
+	}
+	
 	
 	@Test public void testCompileVal() {
 		Context c=RT.INITIAL_CONTEXT;
