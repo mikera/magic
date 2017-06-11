@@ -55,20 +55,7 @@ public class Do<T> extends BaseForm<T> {
 		}
 		return r;
 	}
-	
-	@Override
-	public Node<T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
-		APersistentList<Node<? extends Object>> newBody=nodes;
-		for (int i=0; i<nBody; i++) {
-			Node<?> node=body.get(i);
-			Node<?> newNode=node.specialiseValues(bindings);
-			if (node!=newNode) {
-				newBody=newBody.assocAt(i, newNode);
-			} 
-		}
-		return (nodes==newBody)?this:create(newBody,getSourceInfo());
-	}
-	
+		
 	@SuppressWarnings("unchecked")
 	@Override
 	public Node<T> optimise() {
@@ -78,7 +65,7 @@ public class Do<T> extends BaseForm<T> {
 	}
 	
 	@Override
-	public Node<?> mapChildren(IFn1<Node<?>, Node<?>> fn) {
+	public Node<? extends T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
 		APersistentList<Node<? extends Object>> newBody=body;
 		for (int i=0; i<nBody; i++) {
 			Node<?> node=body.get(i);

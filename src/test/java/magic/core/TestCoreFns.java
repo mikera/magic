@@ -36,6 +36,11 @@ public class TestCoreFns {
 		assertEquals(Tuple.of(1L,2L,3L),v);
 	}
 	
+	@Test public void testCast() {
+		Object v=exec("(cast java.lang.String \"foo\")");
+		assertEquals("foo",v);
+	}
+	
 	@Test public void testStr() {
 		assertEquals(":foo",exec("(str :foo)"));
 		assertEquals("1",exec("(str 1)"));

@@ -108,6 +108,7 @@ public class RT {
 			c=c.define(Symbols.HASHMAP, Constant.create(Expanders.HASHMAP)); 
 					
 			c=c.define(Symbols.INSTANCE_Q, Constant.create(Expanders.INSTANCEOF)); 
+			c=c.define(Symbols.CAST, Constant.create(Expanders.CAST)); 
  
 			c=c.define(Symbols._NS_, Constant.create(null)); 
 

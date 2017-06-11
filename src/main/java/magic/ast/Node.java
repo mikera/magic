@@ -164,9 +164,7 @@ public abstract class Node<T> extends RootNode {
 	 * @param bindings 
 	 * @return
 	 */
-	public EvalResult<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
-		throw new UnsupportedOperationException("Cannot compile node of type: "+this.getClass());
-	}
+	public abstract EvalResult<T> eval(Context context, APersistentMap<Symbol, Object> bindings);
 
 	/** 
 	 * Specialises a node with a set of bindings.

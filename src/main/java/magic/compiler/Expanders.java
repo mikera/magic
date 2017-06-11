@@ -3,6 +3,7 @@ package magic.compiler;
 import magic.RT;
 import magic.Type;
 import magic.ast.Apply;
+import magic.ast.Cast;
 import magic.ast.Constant;
 import magic.ast.Define;
 import magic.ast.Do;
@@ -167,7 +168,29 @@ public class Expanders {
 			return Do.create(body, si);
 		}
 	}
+	
+	/**
+	 * An expander that expands cast forms
+	 */
+	public static final AExpander CAST = new CastExpander();
 
+	private static final class CastExpander extends AListExpander {
+		@Override
+		public Node<?> expand(Context c, ListForm form, AExpander ex) {
+			int n = form.size();
+			if (n !=3)
+				throw new ExpansionException("Can't expand cast, requires a type and expression", form);
+
+			Node<?> typeNode = ex.expand(c,form.get(1),ex);	
+			// TOdO: check if this is sane?
+			Type type=(Type) Compiler.compile(c, typeNode).getValue();
+			Node<?> exp = ex.expand(c, form.get(2), ex);
+
+			SourceInfo si = form.getSourceInfo();
+			return Cast.create(type, exp,si);
+		}
+	}
+	
 	/**
 	 * An expander that expands dot forms
 	 */

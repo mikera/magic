@@ -20,9 +20,9 @@ public abstract class BaseForm<T> extends Node<T> {
 
 	protected APersistentList<Node<? extends Object>> nodes;
 
-	public BaseForm(APersistentList<Node<? extends Object>> aPersistentList, APersistentSet<Symbol> deps, SourceInfo source) {
+	public BaseForm(APersistentList<Node<? extends Object>> nodes, APersistentSet<Symbol> deps, SourceInfo source) {
 		super(deps, source);
-		this.nodes=aPersistentList;
+		this.nodes=nodes;
 	}
 	
 	@Override
@@ -44,6 +44,18 @@ public abstract class BaseForm<T> extends Node<T> {
 		return nodes.map(NodeFunctions.TO_FORM);
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Node<? extends T> optimise() {
+		return (Node<T>) mapChildren(NodeFunctions.OPTIMISE);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Node<? extends T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
+		return (Node<? extends T>) mapChildren(NodeFunctions.specialiseValues(bindings));
+	}
+
 	@Override
 	public String toString() {
 		return "("+RT.toString(nodes, " ")+")";
