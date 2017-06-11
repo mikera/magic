@@ -13,7 +13,7 @@ import magic.lang.Context;
 import magic.lang.Symbols;
 
 /**
- * AST node representing a condition `if` expression.
+ * AST node representing a conditional `if` expression.
  * 
  * @author Mike
  *
