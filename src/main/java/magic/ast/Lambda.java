@@ -11,6 +11,7 @@ import magic.data.APersistentVector;
 import magic.data.Lists;
 import magic.data.Maps;
 import magic.data.Symbol;
+import magic.data.Tuple;
 import magic.fn.AFixedFn;
 import magic.fn.AFn;
 import magic.fn.ArityException;
@@ -30,14 +31,16 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 
 	private final APersistentVector<Symbol> params;
 	private final Node<T> body;
-	private final int arity;
+	private final int arity; // minimum arity (excludes trailing varargs)
+	private final boolean variadic;
   
 	@SuppressWarnings("unchecked")
-	private Lambda(APersistentVector<Symbol> params, Node<T> body,SourceInfo source) {
+	private Lambda(APersistentVector<Symbol> params, Node<T> body,SourceInfo source, boolean variadic) {
 		super((APersistentList<Node<?>>)(APersistentList<?>)Lists.of(Constant.create(Symbols.FN),Constant.create(params),body),body.getDependencies().excludeAll(params),source);
 		this.params=params;
-		this.arity=params.size();
+		this.arity=params.size()-(variadic?2:0);
 		this.body=body;
+		this.variadic=variadic;
 	}
 	
 	public static <T> Lambda<T> create(APersistentVector<Symbol> params, Node<T> body) {
@@ -45,7 +48,13 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 	}
 	
 	public static <T> Lambda<T> create(APersistentVector<Symbol> params, Node<T> body,SourceInfo source) {
-		return new Lambda<T>(params,body,source);
+		int n=params.size();
+		boolean var=false;
+		if ((n>=2)&&(params.get(n-2)==Symbols.AMPERSAND)) {
+			var=true;
+		}
+		
+		return new Lambda<T>(params,body,source,var);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -97,7 +106,12 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 
 		@Override
 		public T applyToArray(Object... a) {
-			if (a.length!=arity) throw new ArityException(arity,a.length);
+			int alength=a.length;
+			if (variadic) {
+				if (alength<arity) throw new ArityException(arity,a.length);
+			} else {
+				if (alength!=arity) throw new ArityException(arity,a.length);	
+			}
 			// Context c=context;
 			APersistentMap<Symbol, Object> bnds=capturedBindings;
 			// add function arguments to the lexical bindings
@@ -105,6 +119,11 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 				Symbol param=params.get(i);
 				if (param==Symbols.UNDERSCORE) continue; // ignore bindings on underscore
 				bnds=bnds.assoc(param, a[i]);
+			}
+			if (variadic) {
+				Symbol varParam=params.get(arity+1); // symbol after ampersand
+				Tuple<?> vs=Tuple.wrap(a, arity, alength-arity); // construct arg tuple
+				bnds=bnds.assoc(varParam, vs);
 			}
 			return body.compute(null,bnds); // shouldn't do any context lookup?
 		}
