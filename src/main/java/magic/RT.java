@@ -426,6 +426,27 @@ public class RT {
 		}
 		return sb.toString();
 	}
+	
+	/**
+	 * Generates a symbol with a unique ID and default prefix
+	 * @return
+	 */
+	public static Symbol genSym() {
+		return genSym("g_");
+	}
+	
+	/**
+	 * Private field for gensym IDs
+	 */
+	private static long gensymID=1;
+	
+	/**
+	 * Generates a symbol with a unique ID and the given prefix
+	 * @return
+	 */
+	public static Symbol genSym(String prefix) {
+		return Symbol.create(prefix+(gensymID++));
+	}
 
 	/**
 	 * Compiles and evaluates code in the initial context
