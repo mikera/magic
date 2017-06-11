@@ -168,14 +168,30 @@ public class Vectors<T> {
 		if (a instanceof APersistentVector<?>) return (APersistentVector<T>)a;
 		return Vectors.createFromCollection(a);
 	}
-
-	public static APersistentVector<?> coerce(Object o) {
-		if (o==null) return Tuple.EMPTY;
-		if (o instanceof APersistentCollection) {
-			return coerce((APersistentCollection<?>)o); 
-		} else if (o instanceof Collection) {
-			return coerce((Collection<?>) o);
+	
+	public static <T> APersistentVector<T> create(ISeq<? extends T> source) {
+		if (source==null) return emptyVector();
+		ArrayList<T> al=new ArrayList<>();
+		while (source!=null) {
+			al.add(source.first());
+			source=source.next();
 		}
+		return createFromList(al);
+	}
+
+
+	@SuppressWarnings("unchecked")
+	public static <T> APersistentVector<T> coerce(Object o) {
+		if (o==null) return (APersistentVector<T>) Tuple.EMPTY;
+		if (o instanceof APersistentCollection) {
+			return coerce((APersistentCollection<T>)o); 
+		} else if (o instanceof Collection) {
+			return coerce((Collection<T>) o);
+		}
+		if (o instanceof ISeq) {
+			return create((ISeq<T>)o);
+		}
+		
 		Class<?> klass=o.getClass();
 		if (klass.isArray()) {
 			int n=Array.getLength(o);
@@ -184,7 +200,7 @@ public class Vectors<T> {
 				Object item=Array.get(o, i);
 				arr[i]=item;
 			}
-			return Tuple.wrap(arr);
+			return (APersistentVector<T>) Tuple.wrap(arr);
 		}
 		throw new magic.Error("Can't convert to vector with class: "+klass.getName());
 	}

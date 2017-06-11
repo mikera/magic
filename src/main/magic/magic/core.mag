@@ -7,6 +7,9 @@
 (defn vec [a] 
   (. magic.RT vec a))
 
+(defn seq [a]
+  (. magic.RT seq a))
+
 (defn str [a] 
   (. magic.RT toString a))
 
@@ -18,6 +21,9 @@
 
 (defn vector? [a] 
   (instance? magic.data.APersistentVector a))
+
+(defn list? [a] 
+  (instance? magic.data.APersistentList a))
 
 (defn identical? [a b] 
   (boolean (. magic.RT identical a b)))

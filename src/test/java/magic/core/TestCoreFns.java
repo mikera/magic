@@ -25,6 +25,17 @@ public class TestCoreFns {
 		assertEquals(Tuple.of(1L,2L,3L),v);
 	}
 	
+	@Test public void testEmptySeq() {
+		Object v=exec("(def a []) "
+				    + "(seq a)");
+		assertNull(v);
+	}
+	
+	@Test public void testVecSeq() {
+		Object v=exec("(vec (seq [1 2 3]))");
+		assertEquals(Tuple.of(1L,2L,3L),v);
+	}
+	
 	@Test public void testStr() {
 		assertEquals(":foo",exec("(str :foo)"));
 		assertEquals("1",exec("(str 1)"));

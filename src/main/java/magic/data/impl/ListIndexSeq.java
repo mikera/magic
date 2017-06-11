@@ -9,15 +9,15 @@ public class ListIndexSeq<T> implements ISeq<T> {
 	private List<T> source;
 	private int count;
 	private int offset;
-	
-	public ListIndexSeq(List<T> source) {
-		this(source,0,source.size());
-	}
 
 	public ListIndexSeq(List<T> source, int offset, int count) {
 		this.source=source;
 		this.count=count;
 		this.offset=offset;
+	}
+	
+	public ListIndexSeq(List<T> source) {
+		this(source,0,source.size());
 	}
 
 	@Override

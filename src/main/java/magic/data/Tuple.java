@@ -175,7 +175,8 @@ public final class Tuple<T> extends APersistentVector<T> {
 
 	@Override
 	public ISeq<T> seq() {
-		return null;
+		if (size==0) return null;
+		return ArrayIndexSeq.wrap(data,offset,size);
 	}
 
 	@SuppressWarnings("unchecked")

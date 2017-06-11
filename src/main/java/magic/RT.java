@@ -17,10 +17,12 @@ import java.util.regex.Pattern;
 import magic.ast.Constant;
 import magic.compiler.EvalResult;
 import magic.compiler.Expanders;
+import magic.data.APersistentCollection;
 import magic.data.APersistentList;
 import magic.data.APersistentSequence;
 import magic.data.APersistentVector;
 import magic.data.IPersistentObject;
+import magic.data.ISeq;
 import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.data.Vectors;
@@ -190,6 +192,20 @@ public class RT {
 	 */
 	public static APersistentList<?> list(Object o) {
 		return PersistentList.wrap(Vectors.coerce(o));
+	}
+	
+	/**
+	 * Coerces any sequential object to a ISeq.
+	 * 
+	 * Returns nil if the sequence is empty.
+	 * @param o
+	 * @return
+	 */
+	public static ISeq<?> seq(Object o) {
+		if (o instanceof APersistentCollection) {
+			return ((APersistentCollection<?>)o).seq();
+		};
+		return vec(o).seq();
 	}
 	
 	/**
