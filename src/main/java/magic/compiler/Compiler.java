@@ -31,6 +31,7 @@ public class Compiler {
 	public static <T> Node<T> compileNode(Context context, Node<?> node) {
 		node=Compiler.expand(context, node);
 		node=(Node<? super T>) node.optimise();
+		// TODO: should specialise to context here?
 		return (Node<T>)node;
 	}
 	
