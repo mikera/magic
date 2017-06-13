@@ -516,6 +516,8 @@ public class RT {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T resolve(Context c, Symbol sym) {
+		if (sym==Symbols._CONTEXT_) return (T) c;
+		
 		Slot<T> slot=c.getSlot(sym);
 		if (slot!=null) return slot.getValue();
 		

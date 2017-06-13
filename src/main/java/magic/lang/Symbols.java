@@ -47,6 +47,7 @@ public class Symbols {
 	
 	// environment variables and bindings
 	public static final Symbol _NS_ = Symbol.create("*ns*");
+	public static final Symbol _CONTEXT_ = Symbol.create("*context*");
 
 	
 	
