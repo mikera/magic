@@ -94,7 +94,7 @@ public class InvokeStaticReflective<T> extends BaseForm<T> {
 	public Node<? extends T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
 		Node<?>[] newNodes=NodeFunctions.mapAll(args,fn);
 		if (newNodes==args) return this;
-		return create(klass,method,newNodes,source);
+		return create(klass,method,newNodes,getSourceInfo());
 	}
 
 	@Override 

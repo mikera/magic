@@ -79,7 +79,7 @@ public class ListForm extends BaseForm<Object> {
 	public Node<Object> mapChildren(IFn1<Node<?>, Node<?>> fn) {
 		APersistentList<Node<? extends Object>> newNodes=NodeFunctions.mapAll(nodes,fn);
 		if (newNodes==nodes) return this;
-		return create(newNodes,source);
+		return create(newNodes,getSourceInfo());
 	}
 	
 	@Override

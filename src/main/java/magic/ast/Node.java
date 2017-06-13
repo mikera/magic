@@ -34,8 +34,8 @@ public abstract class Node<T> extends RootNode {
 
 	public static final Node<?>[] EMPTY_ARRAY = new Node[0];
 	
-	protected final APersistentSet<Symbol> deps;
-	protected final SourceInfo source;
+	private final APersistentSet<Symbol> deps;
+	private final SourceInfo source;
 
 	protected Node(APersistentSet<Symbol> deps, SourceInfo source) {
 		super(MagicLanguage.class,null,null);

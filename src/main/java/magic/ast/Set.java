@@ -155,7 +155,7 @@ public class Set<T> extends BaseDataStructure<APersistentSet<? extends T>> {
 		// can optimise to a constant set?
 		if (constant) {
 			APersistentVector<T> vals=newExps.map(n->((Node<T>)n).getValue());
-			return Constant.create(Sets.createFrom(vals), deps);
+			return Constant.create(Sets.createFrom(vals), getDependencies());
 		}
 		
 		return (exps==newExps)?this:(Set<T>) create(newExps,getSourceInfo());

@@ -98,6 +98,6 @@ public class InvokeStatic<T> extends BaseForm<T> {
 	public Node<? extends T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
 		Node<?>[] newNodes=NodeFunctions.mapAll(args,fn);
 		if (newNodes==args) return this;
-		return create(deps,method,newNodes,source);
+		return create(getDependencies(),method,newNodes,getSourceInfo());
 	}
 }

@@ -76,7 +76,7 @@ public class Apply<T> extends BaseForm<T> {
 				newBody[i]=newNode;
 			} 
 		}
-		return (newFunction==function)&&(args==newBody)?this:create(newFunction,newBody,source);	
+		return (newFunction==function)&&(args==newBody)?this:create(newFunction,newBody,getSourceInfo());	
 	}
 
 

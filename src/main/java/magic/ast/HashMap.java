@@ -88,7 +88,7 @@ public class HashMap<K,V> extends BaseDataStructure<APersistentMap<? extends K,?
 	public Node<APersistentMap<? extends K, ? extends V>> mapChildren(IFn1<Node<?>, Node<?>> fn) {
 		APersistentVector<Node<?>> newNodes=NodeFunctions.mapAll(exps,fn);
 		if (newNodes==exps) return this;
-		return create(newNodes,source);
+		return create(newNodes,getSourceInfo());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -109,7 +109,7 @@ public class HashMap<K,V> extends BaseDataStructure<APersistentMap<? extends K,?
 		// can optimise to a constant hashmap
 		if (constant) {
 			APersistentVector<Object> vals=newExps.map(n->((Node<?>)n).getValue());
-			return Constant.create((APersistentMap<K, V>)Maps.createFromFlattenedPairs(vals), deps);
+			return Constant.create((APersistentMap<K, V>)Maps.createFromFlattenedPairs(vals), getDependencies());
 		}
 		
 		return (exps==newExps)?this:(HashMap<K,V>) create(newExps,getSourceInfo());
