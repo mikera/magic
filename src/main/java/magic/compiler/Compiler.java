@@ -39,7 +39,7 @@ public class Compiler {
 	 * Compiles and evaluates a node in the given context. Performs expansion using the default expander
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> EvalResult<T> compile(Context context, Node<?> node) {
+	public static <T> EvalResult<T> compile(Context context, Node<? super T> node) {
 		return (EvalResult<T>) compile(context,node,(APersistentMap<Symbol, Object>) Maps.EMPTY);
 		
 	}
