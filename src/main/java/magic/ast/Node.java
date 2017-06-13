@@ -14,6 +14,7 @@ import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
 import magic.data.APersistentVector;
+import magic.data.Keyword;
 import magic.data.PersistentHashMap;
 import magic.data.Sets;
 import magic.data.Symbol;
@@ -21,6 +22,7 @@ import magic.data.Vectors;
 import magic.data.impl.NullSet;
 import magic.fn.IFn1;
 import magic.lang.Context;
+import magic.lang.Keywords;
 import magic.lang.MagicLanguage;
  
 /**
@@ -34,13 +36,14 @@ public abstract class Node<T> extends RootNode {
 
 	public static final Node<?>[] EMPTY_ARRAY = new Node[0];
 	
-	private final APersistentSet<Symbol> deps;
-	private final SourceInfo source;
-
+	private final APersistentMap<Keyword,Object> meta;
+	
 	protected Node(APersistentSet<Symbol> deps, SourceInfo source) {
 		super(MagicLanguage.class,null,null);
-		this.deps=deps;
-		this.source=source;
+		APersistentMap<Keyword,Object> m=PersistentHashMap.empty();
+		m=m.assoc(Keywords.DEPS,deps);
+		m=m.assoc(Keywords.SOURCE,source);
+		this.meta=m;
 		if (deps==null) throw new Error("Null deps!!");
 	}
 
@@ -108,8 +111,9 @@ public abstract class Node<T> extends RootNode {
 		return (Symbol)getValue();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public final APersistentSet<Symbol> getDependencies() {
-		return deps;
+		return (APersistentSet<Symbol>) meta.get(Keywords.DEPS);
 	}
 	
 	protected static APersistentSet<Symbol> calcDependencies(Node<?> f, Node<?>[] args) {
@@ -165,7 +169,7 @@ public abstract class Node<T> extends RootNode {
 	 * @return
 	 */
 	public SourceInfo getSourceInfo() {
-		return source;
+		return (SourceInfo) meta.get(Keywords.SOURCE);
 	}
 
 	/**

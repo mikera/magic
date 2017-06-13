@@ -39,6 +39,10 @@ public final class PersistentHashMap<K,V> extends APersistentMap<K,V> {
 	@SuppressWarnings("rawtypes")
 	public static final PersistentHashMap<?,?> EMPTY=new PersistentHashMap();
 	
+	@SuppressWarnings("unchecked")
+	public static <K,V>  APersistentMap<K, V> empty() {
+		return (APersistentMap<K, V>) EMPTY;
+	}
 	
 	@SuppressWarnings("unchecked")
 	public PersistentHashMap() {
@@ -934,5 +938,6 @@ public final class PersistentHashMap<K,V> extends APersistentMap<K,V> {
 	public boolean allowsNullKey() {
 		return false;
 	}
+
 
 }
