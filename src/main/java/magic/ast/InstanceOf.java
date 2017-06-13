@@ -59,7 +59,7 @@ public class InstanceOf extends BaseForm<Boolean> {
 			Type type=typeExpr.getValue();
 			Type eType=exp.getType();
 			if (type.contains(eType)) return Constant.create(true,getSourceInfo());
-			if (type.isDisjoint(eType)) return Constant.create(false,getSourceInfo());
+			if (!type.intersects(eType)) return Constant.create(false,getSourceInfo());
 		}
 		return this;
 	}
