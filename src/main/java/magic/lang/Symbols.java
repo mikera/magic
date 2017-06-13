@@ -25,6 +25,7 @@ public class Symbols {
 	public static final Symbol UNDERSCORE = Symbol.create("_");
 	public static final Symbol DOT = Symbol.create(".");
 	public static final Symbol AMPERSAND = Symbol.create("&");
+	public static final Symbol NIL = Symbol.create("nil");
 
 	// macros and expanders
 	public static final Symbol DEFN = Symbol.create("defn");
@@ -43,6 +44,11 @@ public class Symbols {
 	// types and casting
 	public static final Symbol INSTANCE_Q = Symbol.create("instance?");
 	public static final Symbol CAST = Symbol.create("cast");
+	public static final Symbol ANY = Symbol.create("Any");
+	public static final Symbol NONE = Symbol.create("None");
+	public static final Symbol NULL = Symbol.create("Null");
+	public static final Symbol U = Symbol.create("U");
+	public static final Symbol N = Symbol.create("N");
 
 	
 	// environment variables and bindings
