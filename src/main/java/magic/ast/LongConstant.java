@@ -5,7 +5,6 @@ import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.Keyword;
 import magic.data.Maps;
-import magic.data.Sets;
 import magic.lang.Keywords;
 
 /**

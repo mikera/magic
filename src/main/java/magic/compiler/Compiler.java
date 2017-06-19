@@ -10,7 +10,11 @@ import magic.lang.Context;
 public class Compiler {
 	
 	/**
-	 * Expands a form in a given context
+	 * Expands a form in a given context.
+	 * 
+	 * Expansion includes:
+	 * - Running the default expander on the form
+	 * 
 	 * @param context
 	 * @param form
 	 * @return
