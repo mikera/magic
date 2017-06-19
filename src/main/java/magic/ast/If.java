@@ -4,7 +4,6 @@ import magic.RT;
 import magic.Type;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
-import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.Keyword;
 import magic.data.Lists;
@@ -102,16 +101,4 @@ public class If<T> extends BaseForm<T> {
 		Node<? extends T> newFalse=(Node<? extends T>) fn.apply(falseExp);
 		return ((newTest==test)&&(newTrue==trueExp)&&(newFalse==falseExp))?this:createIf(newTest,newTrue,newFalse,getSourceInfo());
 	}
- 
-	@Override
-	public String toString() {
-		return "(if "+test+" "+trueExp+" " +falseExp+")";
-	}
-	
-	@Override
-	public APersistentList<Object> toForm() {
-		return Lists.of(Symbols.IF, test.toForm(), trueExp.toForm(), falseExp.toForm());
-	}
-
-
 }
