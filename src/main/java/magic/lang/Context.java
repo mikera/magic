@@ -97,7 +97,12 @@ public class Context {
 		}
 				
 		// create the new Slot with this as the defining context
-		Slot<T> newSlot=Slot.create(exp,this,bindings);
+		Slot<T> newSlot;
+		try {
+			newSlot=Slot.create(exp,this,bindings);
+		} catch (Throwable t) {
+			throw new Error("Error while defining "+sym,t);
+		}
 		
 		// include new dependencies
 		APersistentSet<Symbol> dependencies=newSlot.getDependencies();
