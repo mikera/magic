@@ -8,11 +8,14 @@ import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
+import magic.data.Keyword;
 import magic.data.Lists;
+import magic.data.Maps;
 import magic.data.PersistentList;
 import magic.data.Sets;
 import magic.data.Symbol;
 import magic.lang.Context;
+import magic.lang.Keywords;
 import magic.lang.Symbols;
 
 /**
@@ -26,8 +29,8 @@ import magic.lang.Symbols;
  */
 public class Quote extends BaseForm<Object> {
 
-	private final boolean syntaxQuote;
 	private final Node<Object> form;
+	private final boolean syntaxQuote;
 	
 	private static final APersistentSet<Symbol> QUOTE_SET=Sets.of(Symbols.QUOTE);
 	private static final APersistentSet<Symbol> SYNTAX_QUOTE_SET=Sets.of(Symbols.SYNTAX_QUOTE);
@@ -37,10 +40,15 @@ public class Quote extends BaseForm<Object> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Quote(Node<Object> form, boolean syntaxQuote, APersistentSet<Symbol> symbolSet, SourceInfo source) {
-		super (Lists.of(Lookup.create(quoteSymbol(syntaxQuote)),form),symbolSet,source);
+	public Quote(Node<Object> form, boolean syntaxQuote, APersistentMap<Keyword, Object> meta) {
+		super (Lists.of(Lookup.create(quoteSymbol(syntaxQuote)),form),meta);
 		this.syntaxQuote=syntaxQuote;
 		this.form=form;
+	}
+	
+	@Override
+	public Node<Object> withMeta(APersistentMap<Keyword, Object> meta) {
+		return new Quote(form,syntaxQuote,meta);
 	}
 	
 	/**
@@ -54,7 +62,9 @@ public class Quote extends BaseForm<Object> {
 	public static Quote create(Node<? extends Object> node, boolean syntaxQuote, SourceInfo sourceInfo) {
 		// TODO fix deps?
 		APersistentSet<Symbol> syms=(syntaxQuote)?SYNTAX_QUOTE_SET:QUOTE_SET;
-		return new Quote((Node<Object>)node,syntaxQuote,syms, sourceInfo);
+		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.DEPS, syms);
+		meta=meta.assoc(Keywords.SOURCE, sourceInfo);
+		return new Quote((Node<Object>)node,syntaxQuote,meta);
 	}
 
 	@Override
@@ -97,4 +107,6 @@ public class Quote extends BaseForm<Object> {
 	public String toString() {
 		return (syntaxQuote?"(syntax-quote ":"(quote ")+RT.toString(form)+")";
 	}
+
+	
 }

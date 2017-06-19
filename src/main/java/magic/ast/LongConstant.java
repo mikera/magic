@@ -2,7 +2,11 @@ package magic.ast;
 
 import magic.RT;
 import magic.compiler.SourceInfo;
+import magic.data.APersistentMap;
+import magic.data.Keyword;
+import magic.data.Maps;
 import magic.data.Sets;
+import magic.lang.Keywords;
 
 /**
  * AST node representing a constant long primitive value
@@ -16,13 +20,22 @@ public class LongConstant extends BaseConstant<Long> {
 
 	private final long value;
 
-	public LongConstant(long value,SourceInfo source) {	
-		super(Sets.emptySet(),source);
+	public LongConstant(long value,APersistentMap<Keyword, Object> meta) {	
+		super(meta);
 		this.value=value;
 	}
 	
+	@Override
+	public Node<Long> withMeta(APersistentMap<Keyword, Object> meta) {
+		return new LongConstant(value,meta);
+	}
+
+
+	
 	public static LongConstant create(long value,SourceInfo source) {	
-		return new LongConstant(value,source);
+		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.SOURCE,source);
+		meta=meta.assoc(Keywords.DEPS, Sets.emptySet());
+		return new LongConstant(value,meta);
 	}
 	
 	public static LongConstant create(long value) {	

@@ -11,7 +11,6 @@ import magic.data.Symbol;
 import magic.fn.IFn1;
 import magic.lang.Context;
 import magic.lang.Keywords;
-import magic.lang.Symbols;
 
 /**
  * AST node representing the action of defining a symbol in the current context
@@ -34,24 +33,19 @@ public class Define<T> extends BaseForm<T> {
 		this.exp=exp;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public Define(Symbol sym, Node<? extends T> exp, SourceInfo source) {
-		this(sym,exp,((APersistentMap<Keyword,Object>)Maps.EMPTY)
-				.assoc(Keywords.DEPS,exp.getDependencies().include(Symbols.DEF).exclude(sym))
-				.assoc(Keywords.SOURCE,source));
-	}
-	
 	@Override
 	public Define<T> withMeta(APersistentMap<Keyword, Object> meta) {
 		return new Define<T>(sym, exp,meta);
 	}
 
 	public static <T> Define<T> create(Symbol sym, Node<T> exp) {
-		return new Define<T>(sym,exp,Maps.empty());
+		return create(sym,exp,null);
 	}
 	
 	public static <T> Define<T> create(Symbol sym, Node<T> exp,SourceInfo source) {
-		return new Define<T>(sym,exp,Maps.create(Keywords.SOURCE,source));
+		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.SOURCE,source);
+		meta=meta.assoc(Keywords.DEPS, exp.getDependencies());
+		return new Define<T>(sym,exp,meta);
 	}
 	
 	@Override

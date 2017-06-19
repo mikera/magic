@@ -126,7 +126,9 @@ public abstract class Node<T> extends RootNode {
 	
 	@SuppressWarnings("unchecked")
 	public final APersistentSet<Symbol> getDependencies() {
-		return (APersistentSet<Symbol>) meta.get(Keywords.DEPS);
+		APersistentSet<Symbol> deps=(APersistentSet<Symbol>) meta.get(Keywords.DEPS);
+		if (deps==null) return Sets.emptySet();
+		return deps;
 	}
 	
 	protected static APersistentSet<Symbol> calcDependencies(Node<?> f, Node<?>[] args) {

@@ -11,13 +11,16 @@ import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
 import magic.data.APersistentVector;
+import magic.data.Keyword;
 import magic.data.Lists;
+import magic.data.Maps;
 import magic.data.Sets;
 import magic.data.Symbol;
 import magic.data.Tuple;
 import magic.data.Vectors;
 import magic.fn.IFn1;
 import magic.lang.Context;
+import magic.lang.Keywords;
 import magic.lang.Symbols;
 
 /**
@@ -29,12 +32,19 @@ import magic.lang.Symbols;
  */
 public class Set<T> extends BaseDataStructure<APersistentSet<? extends T>> {
 
-	private Set(APersistentVector<Node<?>> exps, SourceInfo source) {
-		super((APersistentVector<Node<?>>)exps,calcDependencies(exps),source); 
+	private Set(APersistentVector<Node<?>> exps, APersistentMap<Keyword, Object> meta) {
+		super((APersistentVector<Node<?>>)exps,meta); 
+	}
+	
+	@Override
+	public Node<APersistentSet<? extends T>> withMeta(APersistentMap<Keyword, Object> meta) {
+		return new Set<T>(exps,meta);
 	}
 
 	public static <T> Set<T> create(APersistentVector<Node<?>> exps, SourceInfo source) {
-		return (Set<T>) new Set<T>(exps,source);
+		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.SOURCE,source);
+		meta=meta.assoc(Keywords.DEPS, calcDependencies(exps));
+		return (Set<T>) new Set<T>(exps,meta);
 	}
 	
 	public static <T> Set<T> create(List<Node<? extends T>> list, SourceInfo source) {
@@ -160,5 +170,6 @@ public class Set<T> extends BaseDataStructure<APersistentSet<? extends T>> {
 		
 		return (exps==newExps)?this:(Set<T>) create(newExps,getSourceInfo());
 	}
+
 
 }

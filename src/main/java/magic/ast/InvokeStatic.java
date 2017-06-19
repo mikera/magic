@@ -7,11 +7,14 @@ import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
+import magic.data.Keyword;
 import magic.data.Lists;
+import magic.data.Maps;
 import magic.data.Sets;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 import magic.lang.Context;
+import magic.lang.Keywords;
 import magic.lang.Symbols;
 
 /**
@@ -31,15 +34,20 @@ public class InvokeStatic<T> extends BaseForm<T> {
 	private final int nArgs;
 
 	@SuppressWarnings("unchecked")
-	private InvokeStatic(APersistentSet<Symbol> deps, MethodHandle method, Node<?>[] args,SourceInfo source) {
+	private InvokeStatic(MethodHandle method, Node<?>[] args, APersistentMap<Keyword,Object> meta) {
 		super(Lists.of(
 				(Node<Symbol>)Constant.create(Symbols.DOT), 
 				ListForm.createCons(Constant.create(method),ListForm.create(args),null)  
 				)
-				, deps,source);
+				, meta);
 		this.method=method;
 		this.args=args;
 		this.nArgs=args.length;
+	}
+	
+	@Override
+	public Node<T> withMeta(APersistentMap<Keyword, Object> meta) {
+		return new InvokeStatic<T>(method,args,meta);
 	}
 	
 	public static <T> InvokeStatic<T> create(Class<?> klass, Symbol method, Node<?>[] args,SourceInfo source) {
@@ -56,7 +64,9 @@ public class InvokeStatic<T> extends BaseForm<T> {
 	}
 	
 	private static <T> InvokeStatic<T> create(APersistentSet<Symbol> deps, MethodHandle m, Node<?>[] args, SourceInfo source) {
-		return new InvokeStatic<T>(deps,m,args,source);
+		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.DEPS,deps);
+		meta=meta.assoc(Keywords.SOURCE, source);
+		return new InvokeStatic<T>(m,args,meta);
 	}
 
 	public static <T> InvokeStatic<T> create(Class<?> klass, Symbol method, Node<? super Object>[] args) {
@@ -100,4 +110,5 @@ public class InvokeStatic<T> extends BaseForm<T> {
 		if (newNodes==args) return this;
 		return create(getDependencies(),method,newNodes,getSourceInfo());
 	}
+
 }

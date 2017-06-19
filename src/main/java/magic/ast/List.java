@@ -7,13 +7,17 @@ import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
+import magic.data.APersistentSet;
 import magic.data.APersistentVector;
+import magic.data.Keyword;
 import magic.data.Lists;
+import magic.data.Maps;
 import magic.data.Symbol;
 import magic.data.Tuple;
 import magic.data.Vectors;
 import magic.fn.IFn1;
 import magic.lang.Context;
+import magic.lang.Keywords;
 import magic.lang.Symbols;
 
 /**
@@ -25,13 +29,20 @@ import magic.lang.Symbols;
  */
 public class List<T> extends BaseDataStructure<APersistentList<? extends T>> {
 
-	private List(APersistentVector<Node<?>> exps, SourceInfo source) {
-		super((APersistentVector<Node<?>>)exps,calcDependencies(exps),source); 
+	private List(APersistentVector<Node<?>> exps, APersistentMap<Keyword, Object> meta) {
+		super((APersistentVector<Node<?>>)exps,meta); 
 	}
 
+	@Override
+	public List<T> withMeta(APersistentMap<Keyword, Object> meta) {
+		return new List<T>(exps,meta);
+	}
 	
 	public static <T> List<T> create(APersistentVector<Node<? extends T>> list, SourceInfo source) {
-		return new List<T>(Vectors.createFromList(list),source);
+		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.SOURCE, source);
+		APersistentSet<Symbol> deps=calcDependencies(list);
+		meta=meta.assoc(Keywords.DEPS, deps);
+		return new List<T>(Vectors.createFromList(list),meta);
 	}	
 
 	@SuppressWarnings("unchecked")
@@ -133,6 +144,7 @@ public class List<T> extends BaseDataStructure<APersistentList<? extends T>> {
 	public APersistentList<? super T> toForm() {
 		return Lists.cons(Symbols.LIST, Lists.coerce(exps.map(NodeFunctions.TO_FORM)));
 	}
+
 
 
 }

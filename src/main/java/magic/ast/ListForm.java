@@ -7,11 +7,14 @@ import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
+import magic.data.Keyword;
 import magic.data.Lists;
+import magic.data.Maps;
 import magic.data.Sets;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 import magic.lang.Context;
+import magic.lang.Keywords;
 import magic.lang.Symbols;
 
 /**
@@ -29,9 +32,15 @@ public class ListForm extends BaseForm<Object> {
 	 */
 	public static final ListForm EMPTY = create(Node.EMPTY_ARRAY);
 
-	private ListForm(APersistentList<Node<? extends Object>> nodes, APersistentSet<Symbol> deps, SourceInfo source) {
-		super(nodes, deps, source);
+	private ListForm(APersistentList<Node<? extends Object>> nodes, APersistentMap<Keyword, Object> meta) {
+		super(nodes, meta);
 	}
+	
+	@Override
+	public Node<Object> withMeta(APersistentMap<Keyword, Object> meta) {
+		return new ListForm(nodes,meta);
+	}
+
 	
 	public static ListForm create(Node<?>[] nodes, SourceInfo sourceInfo) {
 		return create((APersistentList<Node<?>>)Lists.wrap(nodes),sourceInfo);
@@ -44,7 +53,9 @@ public class ListForm extends BaseForm<Object> {
 	public static ListForm create(APersistentList<Node<?>> nodes,SourceInfo source) {
 		// get deps from first element in list of present
 		APersistentSet<Symbol> deps=(nodes.size()==0)?Sets.emptySet():nodes.get(0).getDependencies();
-		return new ListForm(nodes,deps,source);
+		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.SOURCE,source);
+		meta=meta.assoc(Keywords.DEPS, deps);
+		return new ListForm(nodes,meta);
 	}
 	
 	public static ListForm create(ListForm a,SourceInfo source) {

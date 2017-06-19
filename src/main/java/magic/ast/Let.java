@@ -6,10 +6,14 @@ import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
+import magic.data.APersistentSet;
+import magic.data.Keyword;
 import magic.data.Lists;
+import magic.data.Maps;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 import magic.lang.Context;
+import magic.lang.Keywords;
 import magic.lang.Symbols;
 
 /**
@@ -26,14 +30,20 @@ public class Let<T> extends BaseForm<T> {
 	private final Node<? extends Object>[] lets;
 	
 	@SuppressWarnings("unchecked")
-	public Let(Symbol[] syms, Node<? extends Object>[] lets, Node<T> bodyExpr,SourceInfo source) {
-		super((APersistentList<Node<?>>)(APersistentList<?>)Lists.of(Constant.create(Symbols.LET),letVector(syms,lets),(Node<Object>)bodyExpr),bodyExpr.getDependencies().excludeAll(syms),source);
+	private Let(Symbol[] syms, Node<? extends Object>[] lets, Node<T> bodyExpr,APersistentMap<Keyword, Object> meta) {
+		super((APersistentList<Node<?>>)(APersistentList<?>)Lists.of(Constant.create(Symbols.LET),letVector(syms,lets),(Node<Object>)bodyExpr),meta);
 		nLets=syms.length;
-		if (nLets!=lets.length) throw new IllegalArgumentException("Incorrect number of bindings forms for let");
 		this.syms=syms;
 		this.lets=lets;
 		body=bodyExpr;
 	}
+	
+	@Override
+	public Node<T> withMeta(APersistentMap<Keyword, Object> meta) {
+		return new Let<T>(syms,lets,body,meta);
+	}
+
+
 
 	@SuppressWarnings("unchecked")
 	private static Vector<Object> letVector(Symbol[] syms2, Node<? extends Object>[] lets2) {
@@ -77,7 +87,18 @@ public class Let<T> extends BaseForm<T> {
 	}
 	
 	public static <T> Let<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<T> body,SourceInfo source) {
-		return new Let<T>(syms,lets,body,source);
+		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.SOURCE,source);
+		APersistentSet<Symbol> deps=body.getDependencies();
+		int n=lets.length;
+		if (n!=syms.length) throw new IllegalArgumentException("Incorrect number of bindings forms for let");
+
+		for (int i=n-1; i>=0; i--) {
+			deps=deps.exclude(syms[i]); // let-bound symbol is provided to subsequent lets / body
+			deps=deps.includeAll(lets[i].getDependencies());
+		}
+		meta=meta.assoc(Keywords.DEPS,deps);
+				
+		return new Let<T>(syms,lets,body,meta);
 	}
 	
 	public static <T> Let<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<T> bodyExpr) {

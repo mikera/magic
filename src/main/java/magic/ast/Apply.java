@@ -7,7 +7,6 @@ import magic.data.APersistentMap;
 import magic.data.Keyword;
 import magic.data.Lists;
 import magic.data.Maps;
-import magic.data.PersistentHashMap;
 import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.fn.IFn;
@@ -36,17 +35,15 @@ public class Apply<T> extends BaseForm<T> {
 		}
 	}
 	
-	private Apply(APersistentList<Node<? extends Object>> form) {
-		this(form,PersistentHashMap.empty());
-	}
-	
 	@Override
 	public Node<T> withMeta(APersistentMap<Keyword, Object> meta) {
 		return new Apply<T>(nodes,meta);
 	}
 	
 	public static <T> Apply<T> create(APersistentList<Node<? extends Object>> form, SourceInfo sourceInfo) {
-		return new Apply<T>(form,Maps.create(Keywords.SOURCE, sourceInfo));
+		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.SOURCE, sourceInfo);
+		meta=meta.assoc(Keywords.DEPS, calcDependencies(form));
+		return new Apply<T>(form,meta);
 	}
 	
 	private Apply<T> create(Node<IFn<? extends T>> newFunction, Node<?>[] newBody, SourceInfo source) {

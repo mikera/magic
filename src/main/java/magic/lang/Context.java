@@ -101,6 +101,9 @@ public class Context {
 		
 		// include new dependencies
 		APersistentSet<Symbol> dependencies=newSlot.getDependencies();
+		if (dependencies==null) {
+			throw new NullPointerException("Null dependencies for "+sym+" with Slot: "+newSlot);
+		}
 		for (Symbol nsym: dependencies) {
 			APersistentSet<Symbol> t=newDependants.get(nsym);
 			if (t==null) {

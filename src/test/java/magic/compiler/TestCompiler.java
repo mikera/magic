@@ -210,6 +210,7 @@ public class TestCompiler {
 		
 		Slot<?> ogSlot=c1.getSlot("g");
 		assertFalse(ogSlot.isComputed());
+		assertTrue(ogSlot.getDependencies().contains(Symbol.create("f")));
 		Object og;
 		try {
 			og=c1.getValue("g");

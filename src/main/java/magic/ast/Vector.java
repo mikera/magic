@@ -9,11 +9,14 @@ import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.APersistentVector;
+import magic.data.Keyword;
+import magic.data.Maps;
 import magic.data.Symbol;
 import magic.data.Tuple;
 import magic.data.Vectors;
 import magic.fn.IFn1;
 import magic.lang.Context;
+import magic.lang.Keywords;
 
 /**
  * AST node class representing a vector construction literal.
@@ -24,12 +27,19 @@ import magic.lang.Context;
  */
 public class Vector<T> extends BaseDataStructure<APersistentVector<? extends T>> {
 
-	private Vector(APersistentVector<Node<?>> exps, SourceInfo source) {
-		super((APersistentVector<Node<?>>)exps,calcDependencies(exps),source); 
+	private Vector(APersistentVector<Node<?>> exps, APersistentMap<Keyword, Object> meta) {
+		super((APersistentVector<Node<?>>)exps,meta); 
+	}
+
+	@Override
+	public Node<APersistentVector<? extends T>> withMeta(APersistentMap<Keyword, Object> meta) {
+		return new Vector<T>(exps,meta);
 	}
 
 	public static <T> Vector<T> create(APersistentVector<Node<?>> exps, SourceInfo source) {
-		return (Vector<T>) new Vector<T>(exps,source);
+		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.SOURCE,source);
+		meta=meta.assoc(Keywords.DEPS, calcDependencies(exps));
+		return (Vector<T>) new Vector<T>(exps,meta);
 	}
 	
 	public static <T> Vector<T> create(List<Node<? extends T>> list, SourceInfo source) {
@@ -134,4 +144,5 @@ public class Vector<T> extends BaseDataStructure<APersistentVector<? extends T>>
 	public APersistentVector<? super T> toForm() {
 		return exps.map(NodeFunctions.TO_FORM);
 	}
+
 }

@@ -8,6 +8,7 @@ import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
 import magic.data.APersistentVector;
+import magic.data.Keyword;
 import magic.data.Lists;
 import magic.data.Maps;
 import magic.data.Symbol;
@@ -16,6 +17,7 @@ import magic.fn.AFn;
 import magic.fn.ArityException;
 import magic.fn.IFn1;
 import magic.lang.Context;
+import magic.lang.Keywords;
 import magic.lang.Symbols;
 import magic.type.FunctionType;
 
@@ -36,12 +38,18 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 	private final boolean variadic;
   
 	@SuppressWarnings("unchecked")
-	private Lambda(APersistentVector<Symbol> params, Node<T> body,SourceInfo source, boolean variadic) {
-		super((APersistentList<Node<?>>)(APersistentList<?>)Lists.of(Constant.create(Symbols.FN),Constant.create(params),body),body.getDependencies().excludeAll(params),source);
+	private Lambda(APersistentVector<Symbol> params, Node<T> body,boolean variadic,APersistentMap<Keyword, Object> meta) {
+		super((APersistentList<Node<?>>)(APersistentList<?>)Lists.of(Constant.create(Symbols.FN),Constant.create(params),body),meta);
 		this.params=params;
 		this.arity=params.size()-(variadic?2:0); // ignore ampersand and vararg parameter
 		this.body=body;
 		this.variadic=variadic;
+	}
+	
+
+	@Override
+	public Lambda<T> withMeta(APersistentMap<Keyword, Object> meta) {
+		return new Lambda<T>(params,body,variadic,meta);
 	}
 	
 	public static <T> Lambda<T> create(APersistentVector<Symbol> params, Node<T> body) {
@@ -54,8 +62,10 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 		if ((n>=2)&&(params.get(n-2)==Symbols.AMPERSAND)) {
 			variadic=true;
 		}
-		
-		return new Lambda<T>(params,body,source,variadic);
+		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.SOURCE,source);
+		APersistentSet<Symbol> deps=body.getDependencies().excludeAll(params);
+		meta=meta.assoc(Keywords.DEPS,deps);
+		return new Lambda<T>(params,body,variadic,meta);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -180,5 +190,6 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 	public String toString() {
 		return "(fn "+params+" "+body+")";
 	}
+
 
 }
