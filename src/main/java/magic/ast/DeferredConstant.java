@@ -43,9 +43,11 @@ public class DeferredConstant<T> extends BaseConstant<T> {
 	public EvalResult<T> eval(Context c, APersistentMap<Symbol, Object> bindings) {
 		return new EvalResult<T>(c,value);
 	}
-	
+
 	public static <T> DeferredConstant<T> create(IFn0<T> fn, APersistentSet<Symbol> deps, SourceInfo sourceInfo) {
-		return new DeferredConstant<T>(fn,Maps.create(Keywords.SOURCE,sourceInfo));
+		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.SOURCE,sourceInfo);
+		meta=meta.assoc(Keywords.DEPS, deps);
+		return new DeferredConstant<T>(fn,meta);
 	}
 	
 	public static <T> DeferredConstant<T> create(IFn0<T> fn) {

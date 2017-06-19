@@ -34,7 +34,7 @@ public class LongConstant extends BaseConstant<Long> {
 	
 	public static LongConstant create(long value,SourceInfo source) {	
 		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.SOURCE,source);
-		meta=meta.assoc(Keywords.DEPS, Sets.emptySet());
+		// meta=meta.assoc(Keywords.DEPS, Sets.emptySet());
 		return new LongConstant(value,meta);
 	}
 	
