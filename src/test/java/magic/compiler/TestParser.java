@@ -94,7 +94,7 @@ public class TestParser {
 		assertEquals(Keyword.create("bar"),metaNode.getValue());
 	}
 	
-	@Test public void testeEmptyVector() {
+	@Test public void testEmptyVector() {
 		Node<?> ev=Reader.read("[]");
 		assertEquals(Vector.class,ev.getClass());
 		assertEquals(0,((Vector<?>)ev).size());
