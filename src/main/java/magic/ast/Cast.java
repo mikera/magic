@@ -4,10 +4,13 @@ import magic.Type;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
+import magic.data.Keyword;
 import magic.data.Lists;
+import magic.data.Maps;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 import magic.lang.Context;
+import magic.lang.Keywords;
 import magic.lang.Symbols;
 
 /**
@@ -19,20 +22,23 @@ import magic.lang.Symbols;
  */
 public class Cast<T> extends BaseForm<T> {
 
-
 	private final Type type;
 	private final Node<?> exp;
 	
 	@SuppressWarnings("unchecked")
-	public Cast(Type type, Node<?> exp, SourceInfo sourceInfo) {
-		super(Lists.of(Lookup.create(Symbols.CAST),Constant.create(type),exp)
-				, exp.getDependencies(), sourceInfo);
+	public Cast(Type type, Node<?> exp, APersistentMap<Keyword,Object> meta) {
+		super(Lists.of(Lookup.create(Symbols.CAST),Constant.create(type),exp), meta);
 		this.exp=exp;
 		this.type=type;
 	}
 	
+	@Override
+	public Cast<T> withMeta(APersistentMap<Keyword, Object> meta) {
+		return new Cast<T>(type,exp,meta);
+	}
+	
 	public static <T> Cast<T> create(Type type, Node<?> exp, SourceInfo sourceInfo) {
-		return new Cast<T>(type,exp,sourceInfo);
+		return new Cast<T>(type,exp,Maps.create(Keywords.SOURCE, sourceInfo));
 	}
 	
 	@Override
@@ -56,6 +62,4 @@ public class Cast<T> extends BaseForm<T> {
 			throw new magic.Error("Cannot cast object of class "+result.getClass()+" to type "+type);
 		}
 	}
-
-
 }

@@ -9,13 +9,16 @@ import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
+import magic.data.APersistentSet;
 import magic.data.APersistentVector;
+import magic.data.Keyword;
 import magic.data.Lists;
 import magic.data.Maps;
 import magic.data.Symbol;
 import magic.data.Vectors;
 import magic.fn.IFn1;
 import magic.lang.Context;
+import magic.lang.Keywords;
 import magic.lang.Symbols;
 
 /**
@@ -28,21 +31,31 @@ import magic.lang.Symbols;
  */
 public class HashMap<K,V> extends BaseDataStructure<APersistentMap<? extends K,? extends V>> {
 
-	private HashMap(APersistentVector<Node<?>> exps, SourceInfo source) {
-		super((APersistentVector<Node<?>>)exps,calcDependencies(exps),source); 
+	private HashMap(APersistentVector<Node<?>> exps, APersistentMap<Keyword,Object> meta) {
+		super(exps,meta); 
+	}
+	
+	@Override
+	public HashMap<K,V> withMeta(APersistentMap<Keyword, Object> meta) {
+		return new HashMap<K, V>(exps,meta);
 	}
 
+	public static <K,V> HashMap<K,V> create(APersistentVector<Node<?>> exps, APersistentSet<Symbol> deps, SourceInfo source) {
+		APersistentMap<Keyword,Object> meta=Maps.create(Keywords.SOURCE, source);
+		meta=meta.assoc(Keywords.DEPS, deps);
+		return (HashMap<K,V>) new HashMap<K,V>(exps,meta);
+	}
+	
 	public static <K,V> HashMap<K,V> create(APersistentVector<Node<?>> exps, SourceInfo source) {
-		return (HashMap<K,V>) new HashMap<K,V>(exps,source);
+		return create(exps,calcDependencies(exps),source);
 	}
 	
 	public static <K,V> HashMap<K,V> create(List<Node<?>> list, SourceInfo source) {
 		return create(Vectors.createFromList(list),source);
 	}	
 
-	@SuppressWarnings("unchecked")
 	public static <K,V> HashMap<K,V> create(magic.ast.ListForm list, SourceInfo sourceInfo) {
-		return (HashMap<K,V>) create(list.getNodes(),sourceInfo);
+		return create(list.getNodes(),sourceInfo);
 	}
 
 	public static <K,V> HashMap<K,V> create(APersistentVector<Node<?>> exps) {
@@ -143,5 +156,7 @@ public class HashMap<K,V> extends BaseDataStructure<APersistentMap<? extends K,?
 	public APersistentList<?> toForm() {
 		return Lists.cons(Symbols.HASHMAP, Lists.create(exps.map(NodeFunctions.TO_FORM)));
 	}
+
+	
 
 }

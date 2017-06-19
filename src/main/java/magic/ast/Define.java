@@ -4,10 +4,13 @@ import magic.RT;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
+import magic.data.Keyword;
+import magic.data.Maps;
 import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 import magic.lang.Context;
+import magic.lang.Keywords;
 import magic.lang.Symbols;
 
 /**
@@ -25,18 +28,30 @@ public class Define<T> extends BaseForm<T> {
 	final Symbol sym;
 	final Node<? extends T> exp;
 
-	public Define(Symbol sym, Node<T> exp, SourceInfo source) {
-		super(PersistentList.of(Constant.create(sym),exp),exp.getDependencies().include(Symbols.DEF).exclude(sym),source);
+	public Define(Symbol sym, Node<? extends T> exp, APersistentMap<Keyword,Object> meta) {
+		super(PersistentList.of(Constant.create(sym),exp),meta);
 		this.sym=sym;
 		this.exp=exp;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public Define(Symbol sym, Node<? extends T> exp, SourceInfo source) {
+		this(sym,exp,((APersistentMap<Keyword,Object>)Maps.EMPTY)
+				.assoc(Keywords.DEPS,exp.getDependencies().include(Symbols.DEF).exclude(sym))
+				.assoc(Keywords.SOURCE,source));
+	}
+	
+	@Override
+	public Define<T> withMeta(APersistentMap<Keyword, Object> meta) {
+		return new Define<T>(sym, exp,meta);
+	}
 
 	public static <T> Define<T> create(Symbol sym, Node<T> exp) {
-		return new Define<T>(sym,exp,null);
+		return new Define<T>(sym,exp,Maps.empty());
 	}
 	
 	public static <T> Define<T> create(Symbol sym, Node<T> exp,SourceInfo source) {
-		return new Define<T>(sym,exp,null);
+		return new Define<T>(sym,exp,Maps.create(Keywords.SOURCE,source));
 	}
 	
 	@Override
@@ -71,4 +86,6 @@ public class Define<T> extends BaseForm<T> {
 		Node<? extends T> newExp=(Node<? extends T>) fn.apply(exp);
 		return (exp==newExp)?this:(Define<T>) create(sym,newExp);
 	}
+
+	
 }

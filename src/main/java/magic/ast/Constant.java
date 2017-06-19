@@ -6,9 +6,11 @@ import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
-import magic.data.Sets;
+import magic.data.Keyword;
+import magic.data.Maps;
 import magic.data.Symbol;
 import magic.lang.Context;
+import magic.lang.Keywords;
 
 /**
  * AST node representing a constant value.
@@ -25,10 +27,15 @@ public class Constant<T> extends BaseConstant<T> {
 	private final T value;
 	private final Type type;
 	
-	private Constant(T value, APersistentSet<Symbol> deps, SourceInfo source) {
-		super((deps==null)?Sets.emptySet():deps,source);
+	private Constant(T value, APersistentMap<Keyword,Object> meta) {
+		super(meta);
 		this.value=value;
 		this.type=RT.inferType(value);
+	}
+	
+	@Override
+	public Constant<T> withMeta(APersistentMap<Keyword, Object> meta) {
+		return new Constant<T>(value,meta);
 	}
 	
 	@Override
@@ -41,11 +48,11 @@ public class Constant<T> extends BaseConstant<T> {
 	}
 
 	public static <T> Constant<T> create(T o, SourceInfo sourceInfo) {
-		return new Constant<T>(o,null,sourceInfo);
+		return new Constant<T>(o,Maps.create(Keywords.SOURCE,sourceInfo));
 	}
 	
 	public static <T> Constant<T> create(T v, APersistentSet<Symbol> deps) {
-		return new Constant<T>(v,deps,null);
+		return new Constant<T>(v,Maps.create(Keywords.DEPS,deps));
 	}
 	
 	@Override

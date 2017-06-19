@@ -48,4 +48,9 @@ public class Maps {
 		}
 		return m;
 	}
+
+	@SuppressWarnings("unchecked")
+	public static <K,V> APersistentMap<K, V> empty() {
+		return (APersistentMap<K, V>) EMPTY;
+	}
 }

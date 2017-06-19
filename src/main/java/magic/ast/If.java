@@ -6,10 +6,13 @@ import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
+import magic.data.Keyword;
 import magic.data.Lists;
+import magic.data.Maps;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 import magic.lang.Context;
+import magic.lang.Keywords;
 import magic.lang.Symbols;
 
 /**
@@ -25,16 +28,16 @@ public class If<T> extends BaseForm<T> {
 	private final Node<? extends T> falseExp; 
 	
 	@SuppressWarnings("unchecked")
-	private If(APersistentList<Node<? extends Object>> nodes, SourceInfo source) {
-		super(nodes, calcDependencies(nodes) ,source);
-		this.test=nodes.get(1);
-		this.trueExp=(Node<? extends T>) nodes.get(2);
-		this.falseExp=(Node<? extends T>) nodes.get(3);
+	private If(Node<?> test, Node<? extends T> trueExp, Node<? extends T> falseExp, APersistentMap<Keyword,Object> meta) {
+		super(Lists.of(Lookup.create(Symbols.IF),test,trueExp,falseExp),meta);
+		this.test=test;
+		this.trueExp=trueExp;
+		this.falseExp=falseExp;
 	}
 	
-	@SuppressWarnings("unchecked")
-	private If(Node<?> test, Node<? extends T> trueExp, Node<? extends T> falseExp, SourceInfo source) {
-		this(Lists.of(Lookup.create(Symbols.IF),test,trueExp,falseExp),source);
+	@Override
+	public If<T> withMeta(APersistentMap<Keyword, Object> meta) {
+		return new If<T>(test,trueExp,falseExp,meta);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -47,7 +50,8 @@ public class If<T> extends BaseForm<T> {
 	}
 	
 	public static <T> If<T> createIf(Node<?> test, Node<? extends T> trueExp, Node<? extends T> falseExp, SourceInfo source) {
-		return new If<T>(test,trueExp,falseExp,source);
+		APersistentMap<Keyword,Object> meta=Maps.create(Keywords.SOURCE,source);
+		return new If<T>(test,trueExp,falseExp,meta);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -104,4 +108,6 @@ public class If<T> extends BaseForm<T> {
 	public APersistentList<Object> toForm() {
 		return Lists.of(Symbols.IF, test.toForm(), trueExp.toForm(), falseExp.toForm());
 	}
+
+
 }

@@ -1,9 +1,8 @@
 package magic.ast;
 
-import magic.compiler.SourceInfo;
-import magic.data.APersistentSet;
+import magic.data.APersistentMap;
 import magic.data.APersistentVector;
-import magic.data.Symbol;
+import magic.data.Keyword;
 
 /**
  * Abstract base class for data structure construction nodes (lists, sets, vectors etc.)
@@ -18,9 +17,8 @@ public abstract class BaseDataStructure<T> extends Node<T> {
 	 */
 	protected final APersistentVector<Node<?>> exps;
 
-	public BaseDataStructure(APersistentVector<Node<?>> exps, APersistentSet<Symbol> deps,
-			SourceInfo source) {
-		super(deps, source);
+	public BaseDataStructure(APersistentVector<Node<?>> exps, APersistentMap<Keyword,Object> meta) {
+		super(meta);
 		this.exps=exps;
 	}
 	

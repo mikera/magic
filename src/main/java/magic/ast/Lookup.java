@@ -5,9 +5,12 @@ import magic.compiler.EvalResult;
 import magic.compiler.Reader;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
+import magic.data.Keyword;
+import magic.data.Maps;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 import magic.lang.Context;
+import magic.lang.Keywords;
 
 /**
  * Expression node for looking up a symbol in a context
@@ -19,9 +22,14 @@ public class Lookup<T> extends Node<T> {
 
 	private final Symbol sym;
 	
-	private Lookup(Symbol sym, SourceInfo source) {
-		super(sym.symbolSet(),source);
+	private Lookup(Symbol sym, APersistentMap<Keyword, Object> meta) {
+		super(meta);
 		this.sym=sym;
+	}
+	
+	@Override
+	public Lookup<T> withMeta(APersistentMap<Keyword, Object> meta) {
+		return new Lookup<T>(sym,meta);
 	}
 	
 	public static <T> Lookup<T> create(Symbol sym) {
@@ -29,7 +37,9 @@ public class Lookup<T> extends Node<T> {
 	}
 	
 	public static <T> Lookup<T> create(Symbol sym, SourceInfo source) {
-		return new Lookup<T>(sym,source);
+		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.SOURCE,source);
+		meta=meta.assoc(Keywords.DEPS, sym.symbolSet());
+		return new Lookup<T>(sym,meta);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -88,5 +98,7 @@ public class Lookup<T> extends Node<T> {
 			boolean syntaxQuote) {
 		return this;
 	}
+
+
 
 }

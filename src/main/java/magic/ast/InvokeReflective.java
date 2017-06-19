@@ -7,9 +7,12 @@ import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
+import magic.data.Keyword;
 import magic.data.Lists;
+import magic.data.Maps;
 import magic.data.Symbol;
 import magic.lang.Context;
+import magic.lang.Keywords;
 import magic.lang.Symbols;
 
 /**
@@ -30,16 +33,21 @@ public class InvokeReflective<T> extends BaseForm<T> {
 	private final int nArgs;
 
 	@SuppressWarnings("unchecked")
-	private InvokeReflective(APersistentSet<Symbol> deps, Node<?> instance, Symbol method, Node<?>[] args,SourceInfo source) {
+	private InvokeReflective(Node<?> instance, Symbol method, Node<?>[] args,APersistentMap<Keyword,Object> meta) {
 		super(Lists.of(
 				(Node<Symbol>)Constant.create(Symbols.DOT), instance, 
 				ListForm.createCons(Constant.create(method),ListForm.create(args),null)  
 				)
-				, deps,source);
+				, meta);
 		this.instance=instance;
 		this.method=method;
 		this.args=args;
 		this.nArgs=args.length;
+	}
+	
+	@Override
+	public Node<T> withMeta(APersistentMap<Keyword, Object> meta) {
+		return new InvokeReflective<T>(instance,method,args,meta);
 	}
 	
 	public static <T> InvokeReflective<T> create(Node<?> instance, Symbol method, Node<?>[] args,SourceInfo source) {
@@ -47,7 +55,9 @@ public class InvokeReflective<T> extends BaseForm<T> {
 		for (Node<?> a: args) {
 			deps=deps.includeAll(a.getDependencies());
 		}
-		return new InvokeReflective<T>(deps,instance, method,args,source);
+		APersistentMap<Keyword,Object> meta=Maps.create(Keywords.SOURCE,source);
+		meta=meta.assoc(Keywords.DEPS,deps);
+		return new InvokeReflective<T>(instance, method,args,meta);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -108,5 +118,7 @@ public class InvokeReflective<T> extends BaseForm<T> {
 		sb.append(")");
 		return sb.toString();
 	}
+
+
 
 }

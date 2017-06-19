@@ -6,10 +6,12 @@ import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
-import magic.data.Sets;
+import magic.data.Keyword;
+import magic.data.Maps;
 import magic.data.Symbol;
 import magic.fn.IFn0;
 import magic.lang.Context;
+import magic.lang.Keywords;
 
 /**
  * AST node representing a constant value, which is computed an a deferred basis when it is first requested
@@ -26,10 +28,15 @@ public class DeferredConstant<T> extends BaseConstant<T> {
 	private boolean computed=false;
 	private T value=null;
 	
-	public DeferredConstant(IFn0<T> fn, APersistentSet<Symbol> deps, SourceInfo source) {
-		super((deps==null)?Sets.emptySet():deps,source);
+	public DeferredConstant(IFn0<T> fn, APersistentMap<Keyword,Object> meta) {
+		super(meta);
 		this.fn=fn;
 		this.type=fn.getReturnType();
+	}
+	
+	@Override
+	public DeferredConstant<T> withMeta(APersistentMap<Keyword, Object> meta) {
+		return new DeferredConstant<T>(fn,meta);
 	}
 	
 	@Override
@@ -37,12 +44,12 @@ public class DeferredConstant<T> extends BaseConstant<T> {
 		return new EvalResult<T>(c,value);
 	}
 	
-	public static <T> DeferredConstant<T> create(IFn0<T> fn, APersistentSet<Symbol> deps, SourceInfo si) {
-		return new DeferredConstant<T>(fn,deps,null);
+	public static <T> DeferredConstant<T> create(IFn0<T> fn, APersistentSet<Symbol> deps, SourceInfo sourceInfo) {
+		return new DeferredConstant<T>(fn,Maps.create(Keywords.SOURCE,sourceInfo));
 	}
 	
 	public static <T> DeferredConstant<T> create(IFn0<T> fn) {
-		return new DeferredConstant<T>(fn,null,null);
+		return new DeferredConstant<T>(fn,Maps.empty());
 	}
 	
 	@Override
@@ -75,6 +82,8 @@ public class DeferredConstant<T> extends BaseConstant<T> {
 	public Type getType() {
 		return type;
 	}
+
+	
 
 
 }

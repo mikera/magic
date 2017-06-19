@@ -46,7 +46,20 @@ public abstract class Node<T> extends RootNode {
 		this.meta=m;
 		if (deps==null) throw new Error("Null deps!!");
 	}
+	
+	public Node(APersistentMap<Keyword, Object> meta) {
+		super(MagicLanguage.class,null,null);
+		this.meta=meta;
+	}
 
+
+	public abstract Node<T> withMeta(APersistentMap<Keyword,Object> meta);
+
+	public Node<T> assocMeta(Keyword k,Object v) {
+		return withMeta(meta.assoc(k,v));
+	}
+
+	
 	@SuppressWarnings("unchecked")
 	public final T compute(Context c) {
 		return compute(c,(PersistentHashMap<Symbol, Object>) PersistentHashMap.EMPTY);
@@ -199,6 +212,7 @@ public abstract class Node<T> extends RootNode {
 	 * @return
 	 */
 	public abstract Node<? extends T> optimise();
+	
 	
 	/** 
 	 * Converts this AST node to a form data representation

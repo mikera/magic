@@ -4,11 +4,15 @@ import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
+import magic.data.Keyword;
 import magic.data.Lists;
+import magic.data.Maps;
+import magic.data.PersistentHashMap;
 import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.fn.IFn;
 import magic.lang.Context;
+import magic.lang.Keywords;
 
 /**
  * AST node representing a function application
@@ -22,8 +26,8 @@ public class Apply<T> extends BaseForm<T> {
 	private final int arity;
 
 	@SuppressWarnings("unchecked")
-	private Apply(APersistentList<Node<? extends Object>> form, SourceInfo source) {
-		super(form,calcDependencies(form),source);
+	private Apply(APersistentList<Node<? extends Object>> form, APersistentMap<Keyword,Object> meta) {
+		super(form,meta);
 		this.function=(Node<IFn<? extends T>>)((Object)form.head());
 		arity=form.size()-1;
 		args=new Node<?>[arity];
@@ -32,8 +36,17 @@ public class Apply<T> extends BaseForm<T> {
 		}
 	}
 	
+	private Apply(APersistentList<Node<? extends Object>> form) {
+		this(form,PersistentHashMap.empty());
+	}
+	
+	@Override
+	public Node<T> withMeta(APersistentMap<Keyword, Object> meta) {
+		return new Apply<T>(nodes,meta);
+	}
+	
 	public static <T> Apply<T> create(APersistentList<Node<? extends Object>> form, SourceInfo sourceInfo) {
-		return new Apply<T>(form,sourceInfo);
+		return new Apply<T>(form,Maps.create(Keywords.SOURCE, sourceInfo));
 	}
 	
 	private Apply<T> create(Node<IFn<? extends T>> newFunction, Node<?>[] newBody, SourceInfo source) {
@@ -100,6 +113,8 @@ public class Apply<T> extends BaseForm<T> {
 		sb.append(')');
 		return sb.toString();
 	}
+
+
 
 
 }

@@ -10,14 +10,18 @@ import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentVector;
+import magic.data.Keyword;
 import magic.data.Lists;
+import magic.data.Maps;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 import magic.lang.Context;
+import magic.lang.Keywords;
 import magic.lang.Symbols;
 
 /**
- * AST node representing a expander expression a.k.a. "(expander [ex [...]] ...)"
+ * AST node representing an expander construction expression 
+ *  a.k.a. "(expander [ex [...]] ...)"
  * 
  * @author Mike
  *
@@ -30,15 +34,24 @@ public class Expander extends BaseForm<AExpander> {
 	private final Node<?> body;
   
 	@SuppressWarnings("unchecked")
-	public Expander(Symbol exSym, APersistentVector<Symbol> args, Node<?> body,SourceInfo source) {
-		super((APersistentList<Node<?>>)(APersistentList<?>)Lists.of(Lookup.create(Symbols.EXPANDER),Constant.create(args),body),body.getDependencies().excludeAll(args),source);
+	public Expander(Symbol exSym, APersistentVector<Symbol> args, Node<?> body, APersistentMap<Keyword,Object> meta) {
+		super((APersistentList<Node<?>>)(APersistentList<?>)
+				Lists.of(Lookup.create(Symbols.EXPANDER),Constant.create(args),body),
+				meta);
 		this.exSym=exSym;
 		this.args=args;
 		this.body=body;
 	}
 	
+	@Override
+	public Node<AExpander> withMeta(APersistentMap<Keyword, Object> meta) {
+		return new Expander(exSym,args,body,meta);
+	}
+	
 	public static Expander create(Symbol exSym, APersistentVector<Symbol> args, Node<?> body,SourceInfo source) {
-		return new Expander(exSym,args,body,source);
+		APersistentMap<Keyword,Object> meta=Maps.create(Keywords.SOURCE, source);
+		meta=meta.assoc(Keywords.DEPS, body.getDependencies().excludeAll(args));
+		return new Expander(exSym,args,body,meta);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -114,4 +127,5 @@ public class Expander extends BaseForm<AExpander> {
 	public String toString() {
 		return "(expander "+args+" "+body+")";
 	}
+
 }

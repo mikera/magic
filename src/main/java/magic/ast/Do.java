@@ -7,11 +7,14 @@ import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
+import magic.data.Keyword;
 import magic.data.Lists;
+import magic.data.Maps;
 import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 import magic.lang.Context;
+import magic.lang.Keywords;
 import magic.lang.Symbols;
 
 /**
@@ -25,10 +28,23 @@ public class Do<T> extends BaseForm<T> {
 	private final APersistentList<Node<?>> body;
 	private final int nBody;
 	
-	public Do(APersistentList<Node<?>> bodyExprs,SourceInfo source) {
-		super(Lists.cons(Constant.create(Symbols.DO),bodyExprs), calcDependencies(bodyExprs),source);
+	public Do(APersistentList<Node<?>> bodyExprs,APersistentMap<Keyword,Object> meta) {
+		super(Lists.cons(Constant.create(Symbols.DO),bodyExprs),meta);
 		body=bodyExprs;
 		nBody=bodyExprs.size();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Do(APersistentList<Node<?>> bodyExprs,SourceInfo source) {
+		this(bodyExprs, 
+				((APersistentMap<Keyword,Object>)Maps.EMPTY)
+				.assoc(Keywords.DEPS,calcDependencies(bodyExprs))
+				.assoc(Keywords.SOURCE,source));
+	}
+	
+	@Override
+	public Node<T> withMeta(APersistentMap<Keyword, Object> meta) {
+		return new Do<T>(body,meta);
 	}
 
 	public static <T> Do<T> create(APersistentList<Node<?>> body,SourceInfo source) {
@@ -101,6 +117,8 @@ public class Do<T> extends BaseForm<T> {
 	public APersistentList<Object> toForm() {
 		return Lists.cons(Symbols.DO, body.map(NodeFunctions.TO_FORM));
 	}
+
+	
 
 
 

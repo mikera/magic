@@ -5,10 +5,13 @@ import magic.Type;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
+import magic.data.Keyword;
 import magic.data.Lists;
+import magic.data.Maps;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 import magic.lang.Context;
+import magic.lang.Keywords;
 import magic.lang.Symbols;
 
 /**
@@ -24,14 +27,21 @@ public class InstanceOf extends BaseForm<Boolean> {
 	private final Node<?> exp;
 
 	@SuppressWarnings("unchecked")
-	private InstanceOf(Node<Type> type, Node<?> exp, SourceInfo source) {
-		super(Lists.of(Lookup.create(Symbols.INSTANCE_Q),type,exp), exp.getDependencies().includeAll(type.getDependencies()), source);
+	private InstanceOf(Node<Type> type, Node<?> exp, APersistentMap<Keyword,Object> meta) {
+		super(Lists.of(Lookup.create(Symbols.INSTANCE_Q),type,exp), meta);
 		this.typeExpr=type;
 		this.exp=exp;
 	}
+	
+	@Override
+	public InstanceOf withMeta(APersistentMap<Keyword, Object> meta) {
+		return new InstanceOf(typeExpr,exp,meta);
+	}
 
 	public static InstanceOf create(Node<Type> type, Node<?> exp, SourceInfo si) {
-		return new InstanceOf(type, exp,si);
+		APersistentMap<Keyword,Object> meta=Maps.create(Keywords.SOURCE, si);
+		meta=meta.assoc(Keywords.DEPS,exp.getDependencies().includeAll(type.getDependencies()));
+		return new InstanceOf(type, exp,meta);
 	}
 	
 	@Override
@@ -77,6 +87,5 @@ public class InstanceOf extends BaseForm<Boolean> {
 		return "(instance? "+RT.toString(typeExpr)+" "+RT.toString(exp)+ ")";
 	}
 
-	
-	
+
 }

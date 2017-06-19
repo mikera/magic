@@ -2,9 +2,8 @@ package magic.ast;
 
 import magic.Type;
 import magic.compiler.EvalResult;
-import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
-import magic.data.APersistentSet;
+import magic.data.Keyword;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 import magic.lang.Context;
@@ -20,8 +19,8 @@ import magic.type.JavaType;
  */
 public abstract class BaseConstant<T> extends Node<T> {
 	
-	public BaseConstant(APersistentSet<Symbol> deps, SourceInfo source) {
-		super(deps,source);
+	public BaseConstant(APersistentMap<Keyword,Object> meta) {
+		super(meta);
 	}
 
 	@Override
