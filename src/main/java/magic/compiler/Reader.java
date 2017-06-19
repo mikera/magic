@@ -22,6 +22,7 @@ import magic.ast.Lookup;
 import magic.ast.Node;
 import magic.data.Lists;
 import magic.data.Symbol;
+import magic.lang.Keywords;
 import magic.lang.Symbols;
 
 /**
@@ -77,10 +78,23 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 	// EXPRESSIONS
 	
 	public Rule Expression() {
-		return FirstOf(
+		return MaybeMeta(FirstOf(
 				DelimitedExpression(),
 				UndelimitedExpression()
-				);
+				));
+	}
+	
+	public Rule MaybeMeta(Rule r) {
+		return FirstOf(r,
+				Sequence(Meta(),
+						WhiteSpace(),
+						Expression(),
+						push(pop().assocMeta(Keywords.META, pop()))));
+	}
+	
+	public Rule Meta() {
+		return Sequence("^",
+				Expression());
 	}
 	
 	// Delimited expressions don't need separating whitespace after them

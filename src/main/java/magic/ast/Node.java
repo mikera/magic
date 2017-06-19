@@ -53,6 +53,10 @@ public abstract class Node<T> extends RootNode {
 	}
 
 
+	public APersistentMap<Keyword,Object> meta() {
+		return meta;
+	}
+
 	public abstract Node<T> withMeta(APersistentMap<Keyword,Object> meta);
 
 	public Node<T> assocMeta(Keyword k,Object v) {
@@ -233,6 +237,7 @@ public abstract class Node<T> extends RootNode {
 	 * @return
 	 */
 	public abstract Node<?> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings, boolean syntaxQuote);
+
 
 
 }

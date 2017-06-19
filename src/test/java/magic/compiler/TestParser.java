@@ -18,6 +18,7 @@ import magic.data.Maps;
 import magic.data.Sets;
 import magic.data.Symbol;
 import magic.data.Tuple;
+import magic.lang.Keywords;
 import magic.lang.Symbols;
 
 public class TestParser {
@@ -84,6 +85,13 @@ public class TestParser {
 	@Test public void testUnqualifiedSymbol() {
 		assertEquals(Symbol.create("foo"),Reader.read("foo").getSymbol());
 		assertEquals(Symbol.create("/"),Reader.read("/").getSymbol());
+	}
+	
+	@Test public void testMetaSymbol() {
+		Node<?> n=Reader.read("^:bar foo");
+		assertEquals(Symbol.create("foo"),n.getSymbol());
+		Node<?> metaNode=(Node<?>) n.meta().get(Keywords.META);
+		assertEquals(Keyword.create("bar"),metaNode.getValue());
 	}
 	
 	@Test public void testeEmptyVector() {
