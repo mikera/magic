@@ -84,7 +84,11 @@ public class If<T> extends BaseForm<T> {
 	}
 	
 	public Node<? extends T> optimiseLocal() {
-		Type testType=(test.isConstant())?RT.inferType(test.getValue()):test.getType();
+		if (test.isConstant()) {
+			return RT.bool(test.getValue())?trueExp:falseExp;
+		}
+		
+		Type testType=test.getType();
 		if (testType.cannotBeFalsey()) return trueExp;
 		if (testType.cannotBeTruthy()) return falseExp;
 		return this;

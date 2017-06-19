@@ -184,7 +184,7 @@ public abstract class Node<T> extends RootNode {
 	}
 	
 	/**
-	 * Gets source information for this node
+	 * Gets source information for this node, or null if not abvailable
 	 * @return
 	 */
 	public SourceInfo getSourceInfo() {
@@ -238,6 +238,13 @@ public abstract class Node<T> extends RootNode {
 	 */
 	public abstract Node<?> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings, boolean syntaxQuote);
 
-
+	/**
+	 * Validation function. Override to perform validation tests.
+	 * Should throw informative errors in the case of any validation failure
+	 */
+	public void validate() {
+		if (getDependencies()==null) throw new Error("Null dependencies?");
+		if (getType()==null) throw new Error("Null type?");
+	}
 
 }
