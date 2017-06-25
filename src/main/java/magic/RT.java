@@ -160,7 +160,7 @@ public class RT {
 	 * 
 	 * @param a
 	 * @param b
-	 * @return Boolean.FALSE or BOOLEAN.TRUE
+	 * @return Boolean.FALSE or Boolean.TRUE
 	 */
 	public static final Boolean identical(Object a, Object b) {
 		return a==b;
