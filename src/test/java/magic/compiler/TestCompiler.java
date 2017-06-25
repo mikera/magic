@@ -9,7 +9,7 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import magic.RT;
+import magic.Core;
 import magic.ast.Node;
 import magic.data.Sets;
 import magic.data.Symbol;
@@ -20,9 +20,11 @@ import magic.lang.Slot;
 import magic.lang.UnresolvedException;
 
 public class TestCompiler {
+	Context INITIAL=Core.INITIAL_CONTEXT;
+	
 
 	@Test public void testCompileDef() {
-		Context c=RT.INITIAL_CONTEXT;
+		Context c=INITIAL;
 		
 		EvalResult<?> r=Compiler.compile(c, 
 				"(def a 1) " +
@@ -39,7 +41,7 @@ public class TestCompiler {
 	}
 	
 	@Test public void testCompileDo() {
-		Context c=RT.INITIAL_CONTEXT;
+		Context c=INITIAL;
 		
 		EvalResult<?> r=Compiler.compile(c, 
 				"(do (def a 1) " +
@@ -51,7 +53,7 @@ public class TestCompiler {
 	}
 	
 	@Test public void testCompileLet() {
-		Context c=RT.INITIAL_CONTEXT;
+		Context c=INITIAL;
 		
 		EvalResult<?> r=Compiler.compile(c, 
 				"(let [a 3] " +
@@ -62,13 +64,13 @@ public class TestCompiler {
 	}
 	
 	@Test public void testCompileLookup() {
-		Context c=RT.INITIAL_CONTEXT;
+		Context c=INITIAL;
 		
 		assertEquals((Long)1L,Compiler.compile(c, "(let [a 1] a)").getValue());
 	}
 	
 	@Test public void testCompileVector() {
-		Context c=RT.INITIAL_CONTEXT;
+		Context c=INITIAL;
 		
 		EvalResult<?> r=Compiler.compile(c, 
 				"(def a 1) " +
@@ -82,7 +84,7 @@ public class TestCompiler {
 	}
 	
 	@Test public void testCompileLambda() {
-		Context c=RT.INITIAL_CONTEXT;
+		Context c=INITIAL;
 		
 		//System.out.println("<START>");
 		EvalResult<?> r=Compiler.compile(c, 
@@ -99,7 +101,7 @@ public class TestCompiler {
 	}
 	
 	@Test public void testCompileDefn() {
-		Context c=RT.INITIAL_CONTEXT;
+		Context c=INITIAL;
 		
 		EvalResult<?> r=Compiler.compile(c, 
 				"(defn f [a] 2)" +
@@ -111,7 +113,7 @@ public class TestCompiler {
 	}
 	
 	@Test public void testVariadicDefn() {
-		Context c=RT.INITIAL_CONTEXT;
+		Context c=INITIAL;
 		
 		EvalResult<?> r=Compiler.compile(c, 
 				"(defn f [& vs] vs)"+
@@ -125,7 +127,7 @@ public class TestCompiler {
 	}
 	
 	@Test public void testVariadicDefn2() {
-		Context c=RT.INITIAL_CONTEXT;
+		Context c=INITIAL;
 		
 		EvalResult<?> r=Compiler.compile(c, 
 				"(defn f [v & vs] vs)"+
@@ -140,7 +142,7 @@ public class TestCompiler {
 	
 	
 	@Test public void testCompileVal() {
-		Context c=RT.INITIAL_CONTEXT;
+		Context c=INITIAL;
 		
 		EvalResult<?> r=Compiler.compile(c, 
 				"(def a 1)" +
@@ -152,7 +154,7 @@ public class TestCompiler {
 	}
 	
 	@Test public void testConditional() {
-		Context c=RT.INITIAL_CONTEXT;
+		Context c=INITIAL;
 		
 		EvalResult<?> r=Compiler.compile(c, 
 				"(if nil (def a 1) (def b 2))");
@@ -163,7 +165,7 @@ public class TestCompiler {
 	}
 	
 	@Test public void testBaseUnquote() {
-		Context c=RT.INITIAL_CONTEXT;
+		Context c=INITIAL;
 		
 		EvalResult<?> r=Compiler.compile(c, 
 				  "(def a 1)"
@@ -177,7 +179,7 @@ public class TestCompiler {
 	}
 	
 	@Test public void testUnquote() {
-		Context c=RT.INITIAL_CONTEXT;
+		Context c=INITIAL;
 		// TODO: make work with quoted form?
 		EvalResult<?> r=Compiler.compile(c, 
 				  "(def a 2)"
@@ -189,7 +191,7 @@ public class TestCompiler {
 	
 // TODO: think about dependencies on special forms
 //	@Test public void testOverwriteSpecialForm() {
-//		Context c=RT.INITIAL_CONTEXT;
+//		Context c=INITIAL;
 //		
 //		EvalResult<?> r=Compiler.compile(c, 
 //				  "(def a (do 2))"  
@@ -202,7 +204,7 @@ public class TestCompiler {
 	
 	@SuppressWarnings("unused")
 	@Test public void testDependencyUpdate() {
-		Context c=RT.INITIAL_CONTEXT;
+		Context c=INITIAL;
 		
 		Context c1=Compiler.compile(c, 
 				  "(defn g [c] (f c))"  
@@ -267,7 +269,7 @@ public class TestCompiler {
 	}
 	
 	@Test public void testDependencies() {
-		Context c=RT.INITIAL_CONTEXT;
+		Context c=INITIAL;
 		
 		EvalResult<?> r=Compiler.compile(c, 
 				  "(defn f [c] d)"

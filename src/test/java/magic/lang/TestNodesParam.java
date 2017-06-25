@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import magic.Core;
 import magic.RT;
 import magic.Type;
 import magic.ast.*;
@@ -70,7 +71,7 @@ public class TestNodesParam {
 	
 	@Test 
 	public void testRoundTrip() {
-		Context c=RT.BOOTSTRAP_CONTEXT;
+		Context c=Core.BOOTSTRAP_CONTEXT;
 		Node<?> node1=Compiler.expand(c,Analyser.analyse(node.toForm())).optimise();
 		Object form1=node1.toForm();
 		Node<?> node2=Compiler.expand(c,Analyser.analyse(form1)).optimise();

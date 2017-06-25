@@ -14,6 +14,7 @@ import magic.type.*;
  */
 public class Types {
 	public static final JavaType<Number> NUMBER = JavaType.NUMBER;
+	public static final JavaType<Long> LONG = JavaType.LONG;
 	public static final JavaType<String> STRING = JavaType.STRING;
 	public static final JavaType<Boolean> BOOLEAN = JavaType.BOOLEAN;
 	public static final JavaType<magic.data.Symbol> SYMBOL = JavaType.SYMBOL;

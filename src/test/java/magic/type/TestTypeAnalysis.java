@@ -2,11 +2,10 @@ package magic.type;
 
 import static org.junit.Assert.assertEquals;
 
-import magic.RT;
-import magic.Type;
-
 import org.junit.Test;
 
+import magic.Core;
+import magic.Type;
 import magic.Types;
 import magic.ast.Constant;
 import magic.ast.Node;
@@ -20,11 +19,11 @@ import magic.data.Symbol;
 
 public class TestTypeAnalysis {
 	private <T> Node<T> compile(String s) {
-		return Compiler.expand(RT.INITIAL_CONTEXT, Reader.read(s));
+		return Compiler.expand(Core.INITIAL_CONTEXT, Reader.read(s));
 	}
 	
 	private Class<?>  analyseClass(Node<?> form) {
-		Node<?> node=Compiler.expand(RT.BOOTSTRAP_CONTEXT, form);
+		Node<?> node=Compiler.expand(Core.BOOTSTRAP_CONTEXT, form);
 		Type type=node.getType();
 		return type.getJavaClass();
 	}
@@ -34,7 +33,7 @@ public class TestTypeAnalysis {
 		assertEquals(Types.NULL,Analyser.analyse(null).getType());
 		assertEquals(Double.class,analyseClass(Constant.create(1.0)));
 		assertEquals(String.class,analyseClass(Constant.create("foo")));
-		assertEquals(Symbol.class,compile("'foo").eval(RT.INITIAL_CONTEXT,(APersistentMap<Symbol, Object>) Maps.EMPTY).getValue().getClass());
+		assertEquals(Symbol.class,compile("'foo").eval(Core.INITIAL_CONTEXT,(APersistentMap<Symbol, Object>) Maps.EMPTY).getValue().getClass());
 	}
 	
 	@Test public void testDataTypes() {

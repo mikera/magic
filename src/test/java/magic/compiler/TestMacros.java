@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import magic.RT;
+import magic.Core;
 import magic.data.Tuple;
 import magic.lang.Context;
 import magic.lang.Symbols;
@@ -27,13 +27,13 @@ public class TestMacros {
 	
 	
 	@Test public void testBootStrapTypes() {
-		Context c=RT.BOOTSTRAP_CONTEXT;
+		Context c=Core.BOOTSTRAP_CONTEXT;
 		assertTrue(c.getSlot(Symbols.DEFMACRO).isExpander());
 	}
 	
 	
 	@Test public void testMacro() {
-		Context c=RT.INITIAL_CONTEXT;
+		Context c=Core.INITIAL_CONTEXT;
 		
 		EvalResult<?> r=Compiler.compile(c, 
 				"(defmacro m [_] 7 [1 2 3])");

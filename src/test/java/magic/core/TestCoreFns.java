@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import magic.Core;
 import magic.RT;
 import magic.data.Tuple;
 
@@ -11,7 +12,7 @@ public class TestCoreFns {
 
 	@SuppressWarnings("unchecked")
 	private <T> T exec(String code) {
-		return (T) RT.compile(code).getValue();
+		return (T) Core.compile(code).getValue();
 	}
 	
 	@Test public void testComment() {

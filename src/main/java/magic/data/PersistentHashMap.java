@@ -684,7 +684,7 @@ public final class PersistentHashMap<K,V> extends APersistentMap<K,V> {
 		}
 		
 		public boolean matches(K key) {
-			return this.key.equals(key);
+			return RT.equals(this.key,key);
 		}
 		
 		public boolean matchesValue(V value) {
@@ -705,7 +705,7 @@ public final class PersistentHashMap<K,V> extends APersistentMap<K,V> {
 		@SuppressWarnings("unchecked")
 		@Override
 		protected PHMNode<K, V> include(K newkey, V value, int hash, int shift) {
-			if (newkey.equals(this.key)) {
+			if (RT.equals(newkey,this.key)) {
 				// replacement case
 				if (!matchesValue(value)) return new PHMEntry<K, V>(newkey,value);
 				return this;
@@ -882,7 +882,7 @@ public final class PersistentHashMap<K,V> extends APersistentMap<K,V> {
 
 	@Override
 	public PersistentHashMap<K, V> assoc(K key, V value) {
-		PHMNode<K,V> newRoot=root.include(key, value,key.hashCode(),0);
+		PHMNode<K,V> newRoot=root.include(key, value,RT.hashCode(key),0);
 		if (root==newRoot) return this;
 		return new PersistentHashMap<K, V>(newRoot);
 	}

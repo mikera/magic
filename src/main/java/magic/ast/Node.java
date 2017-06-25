@@ -188,7 +188,12 @@ public abstract class Node<T> extends RootNode {
 	 * @return
 	 */
 	public SourceInfo getSourceInfo() {
-		return (SourceInfo) meta.get(Keywords.SOURCE);
+		try {
+			return (SourceInfo) meta.get(Keywords.SOURCE);
+		} catch (Throwable t) {
+			System.err.println("Problem getting source info for node: "+this+" with meta " +meta());
+			throw t;
+		}
 	}
 
 	/**

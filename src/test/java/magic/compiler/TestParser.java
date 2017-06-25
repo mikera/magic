@@ -6,23 +6,26 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import magic.ast.Vector;
 import org.junit.Test;
 
-import magic.RT;
+import magic.Core;
 import magic.ast.ListForm;
 import magic.ast.Node;
+import magic.ast.Vector;
 import magic.data.IPersistentVector;
 import magic.data.Keyword;
 import magic.data.Maps;
 import magic.data.Sets;
 import magic.data.Symbol;
 import magic.data.Tuple;
+import magic.lang.Context;
 import magic.lang.Keywords;
 import magic.lang.Symbols;
 
 public class TestParser {
 
+	private static final Context INITIAL=Core.INITIAL_CONTEXT;
+	
 	@Test public void testString() {
 		Node<?> c=Reader.read("\"foo\"");
 		assertEquals("foo",c.getValue());
@@ -126,24 +129,24 @@ public class TestParser {
 	}
 	
 	@Test public void testSet() {
-		Object s1= Compiler.compile(RT.INITIAL_CONTEXT,"#{3}").getValue();
+		Object s1= Compiler.compile(INITIAL,"#{3}").getValue();
 		assertEquals(Sets.of(3L),s1);
-		Object s2= Compiler.compile(RT.INITIAL_CONTEXT,"#{1,3,2,3,1}").getValue();
+		Object s2= Compiler.compile(INITIAL,"#{1,3,2,3,1}").getValue();
 		assertEquals(Sets.of(1L,2L,3L),s2);
 	}
 	
 	@Test public void testSetDuplicates() {
-		Object s2= Compiler.compile(RT.INITIAL_CONTEXT,"#{:foo :foo}").getValue();
+		Object s2= Compiler.compile(INITIAL,"#{:foo :foo}").getValue();
 		assertEquals(Sets.of(Keyword.create("foo")),s2);
 	}
 	
 	@Test public void testSetDuplicates2() {
-		Object s2= Compiler.compile(RT.INITIAL_CONTEXT,"#{'foo 'foo}").getValue();
+		Object s2= Compiler.compile(INITIAL,"#{'foo 'foo}").getValue();
 		assertEquals(Sets.of(Symbol.create("foo")),s2);
 	}
 	
 	@Test public void testMap() {
-		Object c= Compiler.compile(RT.INITIAL_CONTEXT,"{1 2}").getValue();
+		Object c= Compiler.compile(INITIAL,"{1 2}").getValue();
 		assertEquals(Maps.create(1L, 2L),c);
 	}
 	

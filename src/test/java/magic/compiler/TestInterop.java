@@ -4,14 +4,15 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import magic.Core;
 import magic.RT;
 import magic.lang.Context;
 
 public class TestInterop {
-
+	Context INITIAL=Core.INITIAL_CONTEXT;
 
 	@Test public void testInstanceCall() {
-		Context c=RT.INITIAL_CONTEXT;
+		Context c=INITIAL;
 		
 		EvalResult<?> r=Compiler.compile(c, 
 				"(def len (. \"foo\" (length)))");
@@ -23,7 +24,7 @@ public class TestInterop {
 	}
 	
 	@Test public void testInstanceCall2() {
-		Context c=RT.INITIAL_CONTEXT;
+		Context c=INITIAL;
 		
 		EvalResult<?> r=Compiler.compile(c, 
 				"(def len (. \"foo\" length))");
@@ -34,7 +35,7 @@ public class TestInterop {
 	
 	@Test public void testStaticCall() {
 		@SuppressWarnings("unused")
-		Context c=RT.INITIAL_CONTEXT;
+		Context c=INITIAL;
 		
 		try {
 			assertNotNull(RT.class.getMethod("toString", Object.class));
@@ -51,8 +52,8 @@ public class TestInterop {
 	}
 	
 	@Test public void testInteropForms() {
-		assertEquals((Integer)3,RT.compile("(. \"foo\" length)").getValue());
-		assertEquals((Integer)3,RT.compile("(.length \"foo\")").getValue());
+		assertEquals((Integer)3,Core.compile("(. \"foo\" length)").getValue());
+		assertEquals((Integer)3,Core.compile("(.length \"foo\")").getValue());
 	}
 	
 }

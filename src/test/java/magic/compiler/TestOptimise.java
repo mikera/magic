@@ -1,10 +1,11 @@
 package magic.compiler;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import magic.RT;
+import magic.Core;
 import magic.ast.Node;
 import magic.lang.Context;
 
@@ -16,7 +17,7 @@ public class TestOptimise {
 	 * @return
 	 */
 	private Node<?> compile(String s) {
-		Context context=RT.INITIAL_CONTEXT;
+		Context context=Core.INITIAL_CONTEXT;
 		Node<?> raw=Reader.read(s);
 		Node<?> compiled=Compiler.compileNode(context, raw);
 		return compiled;

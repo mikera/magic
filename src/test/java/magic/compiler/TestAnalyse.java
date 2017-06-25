@@ -1,15 +1,16 @@
 package magic.compiler;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import magic.RT;
+import magic.Core;
 import magic.ast.Constant;
-import magic.ast.Node;
 import magic.ast.Lambda;
 import magic.ast.Lookup;
-import magic.compiler.Reader;
+import magic.ast.Node;
 import magic.data.PersistentList;
 import magic.data.Sets;
 import magic.data.Symbol;
@@ -22,7 +23,7 @@ public class TestAnalyse {
 
 	public <T> Node<T> analyse(String t) {
 		Node<?> node= Reader.read(t);
-		return Compiler.expand(RT.INITIAL_CONTEXT,node);
+		return Compiler.expand(Core.INITIAL_CONTEXT,node);
 	}
 	
 	@Test 
@@ -40,13 +41,13 @@ public class TestAnalyse {
 	}
 	
 	@Test public void testQuote() {
-		EvalResult<?> r=RT.compile("(def sym 'x)");
+		EvalResult<?> r=Core.compile("(def sym 'x)");
 		Context c2=r.getContext();
 		assertEquals(Symbol.create("x"),c2.getValue("sym"));
 	}
 	
 	@Test public void testUnexpanded() {
-		EvalResult<?> r=RT.compile("(def x a)");
+		EvalResult<?> r=Core.compile("(def x a)");
 		Context c2=r.getContext();
 		try {
 			c2.getValue("x");
@@ -57,13 +58,13 @@ public class TestAnalyse {
 	}
 	
 	@Test public void testSyntaxQuote() {
-		EvalResult<?> r=RT.compile("(def sym `x)");
+		EvalResult<?> r=Core.compile("(def sym `x)");
 		Context c2=r.getContext();
 		assertEquals(Symbol.create("x"),c2.getValue("sym"));
 	}
 	
 	@Test public void testUnquote() {
-		EvalResult<?> r=RT.compile("(def a 1) (def v '[~a 2])");
+		EvalResult<?> r=Core.compile("(def a 1) (def v '[~a 2])");
 		Context c2=r.getContext();
 		Object v=c2.getValue("v");
 		assertNotNull(v);
@@ -124,7 +125,7 @@ public class TestAnalyse {
 	public void testLambda() {
 		Node<?> e=analyse("(fn [a] a)");
 		assertEquals(Lambda.class,e.getClass());
-		Context c=RT.INITIAL_CONTEXT.define("identity",e);
+		Context c=Core.INITIAL_CONTEXT.define("identity",e);
 		Node<?> app=analyse("(identity 2)");
 		assertEquals(Long.valueOf(2),app.compute(c));
 

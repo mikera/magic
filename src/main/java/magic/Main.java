@@ -12,7 +12,7 @@ import magic.lang.Context;
  */
 public class Main {
 
-	private static final Context MAIN_CONTEXT=RT.INITIAL_CONTEXT;
+	private static final Context MAIN_CONTEXT=Core.INITIAL_CONTEXT;
 	
 	public static void main(String... args) throws FileNotFoundException {
 		if (args.length>0) {
