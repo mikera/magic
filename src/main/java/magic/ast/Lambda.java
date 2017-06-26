@@ -45,7 +45,6 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 		this.body=body;
 		this.variadic=variadic;
 	}
-	
 
 	@Override
 	public Lambda<T> withMeta(APersistentMap<Keyword, Object> meta) {
@@ -103,7 +102,7 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 		return new EvalResult<AFn<T>>(context,fn);
 	}
 	
-	private final class LambdaFn extends AFn<T> {
+	public final class LambdaFn extends AFn<T> {
 		private static final long serialVersionUID = 4368281324742419123L;
 		
 		private final APersistentMap<Symbol, Object> capturedBindings;
@@ -152,6 +151,14 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 		public boolean hasArity(int i) {
 			return variadic?(i>=arity):(i==arity);
 		}
+
+		public APersistentVector<Symbol> getParams() {
+			return params;
+		}
+
+		public Node<? extends T> getBody() {
+			return body;
+		}
 	}
 	
 	@Override
@@ -162,12 +169,13 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 	
 	@Override
 	public Node<? extends AFn<T>> optimise() {
-		return mapChildren(NodeFunctions.optimise());
+		Lambda<T> lambda=mapChildren(NodeFunctions.optimise());
+		return lambda;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Node<? extends AFn<T>> mapChildren(IFn1<Node<?>, Node<?>> fn) {
+	public Lambda<T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
 		Node<? extends T> newBody=(Node<? extends T>) fn.apply(body);
 		return (body==newBody)?this:(Lambda<T>) create(params,newBody,getSourceInfo());
 	}

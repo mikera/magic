@@ -116,7 +116,7 @@ public class Expanders {
 			for (int i = 0; i < n; i++) {
 				forms[i] = ex.expand(c, form.get(i), ex);
 			}
-			return Apply.create(Lists.wrap(forms), form.getSourceInfo());
+			return Apply.create(Lists.wrap(forms), form.meta());
 		}
 	}
 

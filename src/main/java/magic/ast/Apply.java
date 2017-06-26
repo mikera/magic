@@ -42,13 +42,17 @@ public class Apply<T> extends BaseForm<T> {
 	
 	public static <T> Apply<T> create(APersistentList<Node<? extends Object>> form, SourceInfo sourceInfo) {
 		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.SOURCE, sourceInfo);
-		meta=meta.assoc(Keywords.DEPS, calcDependencies(form));
-		return new Apply<T>(form,meta);
+		return create(form,meta);
 	}
 	
 	private Apply<T> create(Node<IFn<? extends T>> newFunction, Node<?>[] newBody, SourceInfo source) {
 		APersistentList<Node<? extends Object>> form=Lists.cons(newFunction, PersistentList.wrap(newBody));
 		return create(form,source);
+	}
+	
+	public static <T> Apply<T> create(APersistentList<Node<? extends Object>> form, APersistentMap<Keyword, Object> meta) {
+		meta=meta.assoc(Keywords.DEPS, calcDependencies(form));
+		return new Apply<T>(form,meta);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -89,13 +93,26 @@ public class Apply<T> extends BaseForm<T> {
 		return (newFunction==function)&&(args==newBody)?this:create(newFunction,newBody,getSourceInfo());	
 	}
 
-
-
+	@SuppressWarnings("unchecked")
 	@Override
-	public Node<T> optimise() {
-		if ((arity==0)&&(function.isConstant())) {
-			return Constant.create(function.getValue().apply());
+	public Node<T> optimise() {	
+		// optimise constant functions, i.e. function is known at compile time
+		if (function.isConstant()) {
+			IFn<? extends T> f=function.getValue();
+			if (arity==0) return Constant.create(f.apply());
+
+			// inlining specified at call site
+			APersistentMap<Keyword,Object> meta=meta();
+			if (meta.containsKey(Keywords.INLINE)&&f instanceof Lambda.LambdaFn) {
+				Lambda<T>.LambdaFn lf=(Lambda<T>.LambdaFn) f;
+				
+				Let<? extends T> let=Let.create(lf.getParams().toArray(new Symbol[arity]), args, lf.getBody());
+				return (Node<T>) let.optimise(); 
+			}
+
 		}
+
+		
 		return this;
 	}
 
@@ -110,6 +127,8 @@ public class Apply<T> extends BaseForm<T> {
 		sb.append(')');
 		return sb.toString();
 	}
+
+
 
 
 

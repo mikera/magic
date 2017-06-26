@@ -100,6 +100,20 @@ public class TestCompiler {
 		assertEquals(Tuple.of(3L,2L,7L),res);
 	}
 	
+	@Test public void testInline() {
+		Context c=INITIAL;
+		
+		//System.out.println("<START>");
+		EvalResult<?> r=Compiler.compile(c, 
+				"(def f (fn [a] [a a]))"+
+				"(def b ^{:inline true} (f 2))");
+		Context c2=r.getContext();
+		Node<?> n=c2.getSlot("b").getNode();
+		
+		Object res=c2.getValue("b");
+		assertEquals(Tuple.of(2L,2L),res);
+	}
+	
 	@Test public void testCompileDefn() {
 		Context c=INITIAL;
 		
