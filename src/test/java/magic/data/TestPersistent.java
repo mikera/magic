@@ -393,7 +393,7 @@ public class TestPersistent {
 	
 	public <T> void testSubLists(APersistentVector<T> a) {
 		int n=a.size();
-		for (int i=0; i<10; i++) {
+		for (int i=0; i<3; i++) {
 			int b=Rand.r(n);
 			int c=Rand.range(b, n);
 			APersistentVector<T> sl=a.subList(b, c);
