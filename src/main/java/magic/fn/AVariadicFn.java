@@ -11,10 +11,19 @@ package magic.fn;
  * @param <T>
  */
 public abstract class AVariadicFn<T> extends AFn<T> implements IVariadicFn<T> {
+	private int minArity;
 
+	protected AVariadicFn(int minArity) {
+		this.minArity=minArity;
+	}
+	
+	protected AVariadicFn() {
+		this(0);
+	}
+	
 	@Override
 	public boolean hasArity(int i) {
-		return true;
+		return i>=minArity;
 	}
 	
 	@Override
