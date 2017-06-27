@@ -18,10 +18,12 @@ import org.parboiled.support.StringVar;
 import org.parboiled.support.Var;
 
 import magic.ast.Constant;
+import magic.ast.HashMap;
 import magic.ast.Lookup;
 import magic.ast.Node;
 import magic.data.Lists;
 import magic.data.Symbol;
+import magic.data.Tuple;
 import magic.lang.Keywords;
 import magic.lang.Symbols;
 
@@ -89,9 +91,24 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 				Sequence(Meta(),
 						WhiteSpace(),
 						Expression(),
-						push(pop().assocMeta(Keywords.META, pop()))));
+						push(pop().assocMeta(Keywords.META, interpretMetadata(pop())))));
 	}
 	
+	/**
+	 * Converts a metadata object according to the following rule:
+	 * - Map -> unchanged
+	 * - Keyword -> {:keyword true}
+	 * - Any other expression -> {:tag expression}
+	 * 
+	 * @param node
+	 * @return
+	 */
+	public Node<? extends Object> interpretMetadata(Node<? extends Object> node) {
+		if (node instanceof magic.ast.HashMap) return node;
+		if (node.isKeyword()) return HashMap.create(Tuple.of(node,Constant.TRUE));
+		return HashMap.create(Tuple.of(Constant.create(Keywords.TAG),node));
+	}
+
 	public Rule Meta() {
 		return Sequence("^",
 				Expression());

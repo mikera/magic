@@ -119,6 +119,14 @@ public abstract class Node<T> extends RootNode {
 	}
 	
 	/**
+	 * Returns true if this node is a keyword constant
+	 * @return
+	 */
+	public boolean isKeyword() {
+		return false;
+	}
+	
+	/**
 	 * Get the Symbol representing this node.
 	 * 
 	 * Throws an error if the node is not a symbol.
@@ -251,5 +259,7 @@ public abstract class Node<T> extends RootNode {
 		if (getDependencies()==null) throw new Error("Null dependencies?");
 		if (getType()==null) throw new Error("Null type?");
 	}
+
+	
 
 }

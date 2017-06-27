@@ -23,6 +23,8 @@ import magic.lang.Keywords;
 public class Constant<T> extends BaseConstant<T> {
 
 	public static final Constant<?> NULL = Constant.create(null);
+	public static final Constant<Boolean> TRUE = Constant.create(Boolean.TRUE);
+	public static final Constant<Boolean> FALSE = Constant.create(Boolean.FALSE);
 	
 	private final T value;
 	private final Type type;
@@ -53,6 +55,11 @@ public class Constant<T> extends BaseConstant<T> {
 	
 	public static <T> Constant<T> create(T v, APersistentSet<Symbol> deps) {
 		return new Constant<T>(v,Maps.create(Keywords.DEPS,deps));
+	}
+	
+	@Override
+	public boolean isKeyword() {
+		return value instanceof magic.data.Keyword;
 	}
 	
 	@Override
