@@ -90,7 +90,7 @@ public class TestCompiler {
 		EvalResult<?> r=Compiler.compile(c, 
 				"(def a 1) " +
 				"(def b 2) " +
-				"(def s #{a b b 2 3})");
+				"(def s #{a b b 2 3 (+ 0 3)})");
 		Context c2=r.getContext();
 	
 		assertEquals(Sets.of(1L,2L,3L),c2.getValue("s"));

@@ -1,5 +1,7 @@
 package magic.fn;
 
+import magic.RT;
+
 /**
  * Some Magic functions defined in Java
  * 
@@ -17,6 +19,17 @@ public class Functions {
 			}
 			System.out.println("\n");
 			return null;
+		}
+	};
+	
+	public static final AFn<Long> LONGADD = new AVariadicFn<Long>(){
+		@Override
+		public Long applyToArray(Object... a) {
+			long r=0;
+			for (int i=0; i<a.length; i++) {
+				r+=RT.longValue(a[i]);
+			}
+			return r;
 		}
 	};
 

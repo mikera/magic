@@ -34,8 +34,7 @@ public class Core {
 			c=c.define(Symbols.QUOTE, Constant.create(Expanders.QUOTE));
 			c=c.define(Symbols.UNQUOTE, Constant.create(Expanders.UNQUOTE));
 			c=c.define(Symbols.SYNTAX_QUOTE, Constant.create(Expanders.QUOTE));
-			c=c.define(Symbols.PRINTLN, Constant.create(Functions.PRINTLN)); 
-			
+					
 			c=c.define(Symbols.VECTOR, Constant.create(Expanders.VECTOR)); 
 			c=c.define(Symbols.LIST, Constant.create(Expanders.LIST)); 
 			c=c.define(Symbols.SET, Constant.create(Expanders.SET)); 
@@ -47,6 +46,10 @@ public class Core {
 			c=c.define(Symbols.ANY, Constant.create(Types.ANYTHING)); 
 			c=c.define(Symbols.NONE, Constant.create(Types.NOTHING)); 
 			c=c.define(Symbols.NULL, Constant.create(Types.NULL)); 
+			
+			c=c.define(Symbols.PRINTLN, Constant.create(Functions.PRINTLN)); 
+			c=c.define(Symbols.PLUS, Constant.create(Functions.LONGADD)); 
+
 	
 			
 			c=c.define(Symbols._NS_, Constant.create(null)); 

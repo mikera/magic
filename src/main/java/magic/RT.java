@@ -28,6 +28,7 @@ import magic.lang.Slot;
 import magic.lang.Symbols;
 import magic.lang.UnresolvedException;
 import magic.type.JavaType;
+import magic.type.TypeError;
 import magic.type.Value;
 
 /**
@@ -446,6 +447,15 @@ public class RT {
 			return (T) type;
 		}
 		throw new UnresolvedException(sym);
+	}
+
+	public static long longValue(Object a) {
+		if (a instanceof Long) return (Long)a;
+		if (a instanceof Number) {
+			Number n=(Number)a;
+			return n.longValue();
+		};
+		throw new TypeError("Can't cast value of type "+a.getClass()+" to long integer");
 	}
 
 
