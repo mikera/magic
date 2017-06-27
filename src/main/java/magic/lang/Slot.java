@@ -27,15 +27,12 @@ public class Slot<T> {
 	
 	private T value=null;
 	private volatile boolean computed=false;
-	private final Node<T> compiledExpression;
+	private Node<T> compiledExpression=null;
 	
-	@SuppressWarnings("unchecked")
 	private Slot(Node<T> e, Context context, APersistentMap<Symbol, Object> bindings) {
 		this.rawExpression=e;
 		this.context=context;
 		this.bindings=bindings;
-		compiledExpression=(Node<T>) magic.compiler.Compiler.compileNode(context,rawExpression);
-
 	}
 	
     /**
@@ -65,18 +62,22 @@ public class Slot<T> {
 //				if (c.getSlot(s)==null) throw new UnresolvedException(s);
 //			}
 //		}
-		EvalResult<T> result=compiledExpression.eval(context,bindings);
+		EvalResult<T> result=getNode().eval(context,bindings);
 		value=result.getValue();
 		computed=true;
 		return value;
 	}
 	
 	/**
-	 * Gets the compiled Node associated with this Slot
-	 * This Node may have unresolved dependencies.
+	 * Gets the compiled Node associated with this Slot.
+	 * Note that this Node may have unresolved dependencies.
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public Node<T> getNode() {
+		if (compiledExpression==null) {
+			compiledExpression=(Node<T>) magic.compiler.Compiler.compileNode(context,rawExpression);
+		}
 		return compiledExpression;
 	}
 

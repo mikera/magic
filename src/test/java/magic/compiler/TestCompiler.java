@@ -42,7 +42,7 @@ public class TestCompiler {
 	
 	@Test public void testCompileDo() {
 		Context c=INITIAL;
-		
+		// test that sequential defs in a do block update the context correctly.
 		EvalResult<?> r=Compiler.compile(c, 
 				"(do (def a 1) " +
 				"    (def b a)) ");
@@ -55,12 +55,13 @@ public class TestCompiler {
 	@Test public void testCompileLet() {
 		Context c=INITIAL;
 		
+		// check that a let-bound variable can be used in a def
 		EvalResult<?> r=Compiler.compile(c, 
 				"(let [a 3] " +
 				"    (def b a)) ");
-		Context c2=r.getContext();
+		c=r.getContext();
 	
-		assertEquals((Long)3L,c2.getValue("b"));
+		assertEquals((Long)3L,c.getValue("b"));
 	}
 	
 	@Test public void testCompileLookup() {
@@ -109,6 +110,7 @@ public class TestCompiler {
 				"(def b ^{:inline true} (f 2))");
 		Context c2=r.getContext();
 		Node<?> n=c2.getSlot("b").getNode();
+		// assertTrue(n.isConstant()); // TODO should this be true?
 		
 		Object res=c2.getValue("b");
 		assertEquals(Tuple.of(2L,2L),res);
