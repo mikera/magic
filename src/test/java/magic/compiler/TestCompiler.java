@@ -84,6 +84,18 @@ public class TestCompiler {
 		assertEquals(Tuple.of(3L,1L,5L),c2.getValue("v"));
 	}
 	
+	@Test public void testCompileSet() {
+		Context c=INITIAL;
+		
+		EvalResult<?> r=Compiler.compile(c, 
+				"(def a 1) " +
+				"(def b 2) " +
+				"(def s #{a b b 2 3})");
+		Context c2=r.getContext();
+	
+		assertEquals(Sets.of(1L,2L,3L),c2.getValue("s"));
+	}
+	
 	@Test public void testCompileLambda() {
 		Context c=INITIAL;
 		
@@ -109,7 +121,7 @@ public class TestCompiler {
 				"(def f (fn [a] [a a]))"+
 				"(def b ^{:inline true} (f 2))");
 		Context c2=r.getContext();
-		Node<?> n=c2.getSlot("b").getNode();
+		//Node<?> n=c2.getSlot("b").getNode();
 		// assertTrue(n.isConstant()); // TODO should this be true?
 		
 		Object res=c2.getValue("b");

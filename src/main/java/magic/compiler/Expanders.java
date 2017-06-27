@@ -61,15 +61,11 @@ public class Expanders {
 			if (form instanceof Vector) {
 				return vectorExpand(c, (Vector<?>) form, ex);
 			}
-
-			if (form.isSymbol()) {
-				return symbolExpand(form.getSymbol());
-			}
+			// note the things we can leave unchanged:
+			// - Maps and sets are read in as HashMap and Set nodes
+			// - Symbols are already read in as Lookup nodes
+			// - constant literals and keywords are already Constant nodes
 			return form;
-		}
-
-		private Node<?> symbolExpand(Symbol sym) {
-			return Lookup.create(sym);
 		}
 
 		private Node<?> vectorExpand(Context c, Vector<?> form, AExpander ex) {
