@@ -1,10 +1,14 @@
 package magic.type;
 
 import magic.Type;
+import magic.Types;
 import magic.fn.IFn;
 
 /**
- * Type representing a fixed arity function
+ * Type representing a Magic function featuring:
+ * - A single return type
+ * - A fixed number of parameters with specified types
+ * - Optional variadic parmameters of a specified type
  * 
  * @author Mike
  *
@@ -12,34 +16,38 @@ import magic.fn.IFn;
 public class FunctionType extends AFunctionType {
 
 	private final Type returnType;
-	private final Type[] paramTypes;
+	private final Type[] paramTypes; // types of fixed parameters
+	private final Type variadicType; // type of all variadic parameters after minArity
 	private final int minArity;
 	private final boolean variadic;
 	
 	private FunctionType(Type returnType) {
-		this(returnType,Type.EMPTY_TYPE_ARRAY,true);
+		this(returnType,Type.EMPTY_TYPE_ARRAY,Types.ANYTHING);
 	}
 	
-	private FunctionType(Type returnType, Type[] paramTypes, boolean variadic) {
+	private FunctionType(Type returnType, Type[] paramTypes, Type variadicType) {
 		this.returnType=returnType;
 		this.paramTypes=paramTypes;
-		this.variadic=variadic;
-		this.minArity=paramTypes.length - (variadic?1:0);
+		this.variadicType=variadicType;
+		this.variadic=(variadicType!=null);
+		this.minArity=paramTypes.length;
 	}
 	
 	public static FunctionType create(Type returnType, Type... types) {
-		int n=types.length;
-		Type[] ptypes=new Type[n];
-		for (int i=0; i<n; i++) {
-			ptypes[i]=types[i];
-		}
-		return new FunctionType(returnType,ptypes,false);
+		return create(returnType,types,null);
+	}
+	
+	public static FunctionType create(Type returnType, Type[] ptypes,Type variadicType) {
+		return new FunctionType(returnType,ptypes,variadicType);
 	}
 	
 	public static FunctionType createMultiArity(Type returnType) {
-		// TODO: how to handle types for variable arity?
+		return createMultiArity(returnType,Types.ANYTHING);
+	}
+	
+	public static FunctionType createMultiArity(Type returnType,Type variadicType) {
 		Type[] ptypes=new Type[0];
-		return new FunctionType(returnType,ptypes,true);
+		return new FunctionType(returnType,ptypes,variadicType);
 	}
 	
 	public boolean hasArity(int n) {
@@ -77,25 +85,68 @@ public class FunctionType extends AFunctionType {
 	}
 
 	@Override
-	public boolean contains(Type t) {
-		if (t==this) return true;
-		
+	public boolean contains(Type t) {	
 		if (t instanceof FunctionType) {
-			FunctionType ft=(FunctionType)t;
-			
-			// TODO: handle variable arity
-			int n=getMinArity();
-			if (ft.getMinArity()!=n) return false;
-					
-			if (!returnType.contains(ft.returnType)) return false;
-			
-			for (int i=0; i<n; i++) {
-				if (!(ft.paramTypes[i].contains(paramTypes[i]))) return false;
-			}
-			return true;
+			return contains((FunctionType)t);
 		} else {
 			return false;
 		}
+	}
+	
+	public boolean contains(FunctionType ft) {
+		return intersection(ft)==this;
+	}
+
+	/**
+	 * Internal implementation of intersection with another FunctionType
+	 * 
+	 * Note we try very hard to return 'this' if possible without any allocation,
+	 * in order to optimise the common case of equivalent function types, and to provide
+	 * an efficient implementation for 'contains'
+	 * @param ft
+	 * @return
+	 */
+	protected Type intersection(FunctionType ft) {
+		if (ft==this) return this;
+		int thisN=getMinArity();
+		int fN=ft.getMinArity();
+		if (thisN<fN) {
+			if (!isVariadic()) return Nothing.INSTANCE; // same arity not possible
+			return ft.intersection(this); // ensure thisN>=fN 
+		}
+		if ((thisN>fN)&&(!ft.isVariadic())) {
+			return Nothing.INSTANCE;
+		}
+		
+		Type rt=getReturnType().intersection(ft.returnType);
+		if (rt instanceof Nothing) return Nothing.INSTANCE;
+		
+		// compute intersection of fixed arity types
+		Type[] ips=paramTypes;
+		for (int i=0; i<thisN ; i++) {
+			Type pt=paramTypes[i];
+			Type it=pt.intersection(ft.getParamType(i));
+			if (it!=pt) {
+				if (ips==paramTypes) ips=paramTypes.clone(); // copy on first write
+				ips[i]=it;
+			}
+		}
+		Type vt=null;
+		if (variadic&&ft.isVariadic()) {
+			// both are variadic, so we need the intersected variadic type
+			vt=variadicType.intersection(ft.getVariadicType());
+		}
+		
+		if ((rt==returnType)&&(ips==paramTypes)&&(vt==variadicType)) return this;
+		return create(rt,ips,vt);
+	}
+	
+	/**
+	 * Returns the type of a variadic parameters, or null if this function type is not variadic
+	 * @return
+	 */
+	public Type getVariadicType() {
+		return variadicType;
 	}
 
 	@Override
@@ -103,23 +154,7 @@ public class FunctionType extends AFunctionType {
 		if ((t==this)||(t instanceof Anything)) return this;
 		
 		if (t instanceof FunctionType) {
-			FunctionType ft=(FunctionType)t;
-			// TODO: handle variable arity
-			int n=getMinArity();
-			if (ft.getMinArity()!=n) return Nothing.INSTANCE;
-			
-			Type rt=getReturnType().intersection(ft.returnType);
-			if (rt instanceof Nothing) return Nothing.INSTANCE;
-			boolean match=(rt==returnType);
-			
-			Type[] ips=new Type[n];
-			for (int i=0; i<n ; i++) {
-				Type it=paramTypes[i].intersection(ft.paramTypes[i]);
-				ips[i]=it;
-				match &= (it==paramTypes[i]);
-			}
-			if (match) return this;
-			return create(rt,ips);
+			return intersection((FunctionType)t);
 		}
 		if (t instanceof JavaType) {
 			JavaType<?> jt = (JavaType<?>) t;
@@ -142,11 +177,13 @@ public class FunctionType extends AFunctionType {
 
 	@Override
 	public boolean canBeTruthy() {
+		// a function is always a truthy value
 		return true;
 	}
 
 	@Override
 	public boolean canBeFalsey() {
+		// a function is never a falsey value
 		return false;
 	}
 	
@@ -173,6 +210,11 @@ public class FunctionType extends AFunctionType {
 			sb.append(t);
 			sb.append(" ");
 		}
+		if (variadic) {
+			sb.append("& ");
+			// TODO: should this be a sequence type?
+			sb.append(variadicType);
+		}
 		sb.append("] ");
 		sb.append(returnType);
 		sb.append(')');
@@ -181,17 +223,13 @@ public class FunctionType extends AFunctionType {
 
 	@Override
 	public void validate() {
-		if (variadic) {
-			if (minArity!=paramTypes.length-1) throw new TypeError("Mismatched arity count (variadic)");
-		} else {
-			if (minArity!=paramTypes.length) throw new TypeError("Mismatched arity count (non-variadic)");
-		}
-		
+		if (minArity!=paramTypes.length) throw new TypeError("Mismatched arity count");
+		if (variadic&&(variadicType==null)) throw new TypeError("Missing variadic type");
 	}
 
 	@Override
 	public Type getParamType(int i) {
-		if (variadic&&i>=minArity) i=minArity;
+		if (variadic&&(i>=minArity)) return variadicType;
 		return paramTypes[i];
 	}
 

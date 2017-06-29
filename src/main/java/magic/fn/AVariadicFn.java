@@ -27,7 +27,7 @@ public abstract class AVariadicFn<T> extends AFn<T> implements IVariadicFn<T> {
 	}
 	
 	@Override
-	public boolean isFixedArity() {
-		return false;
+	public boolean isVariadic() {
+		return true;
 	}
 }

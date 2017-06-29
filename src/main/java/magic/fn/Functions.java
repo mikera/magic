@@ -20,6 +20,11 @@ public class Functions {
 			System.out.println("\n");
 			return null;
 		}
+
+		@Override
+		public int arity() {
+			return 0;
+		}
 	};
 	
 	public static final AFn<Long> LONGADD = new AVariadicFn<Long>(){
@@ -30,6 +35,11 @@ public class Functions {
 				r+=RT.longValue(a[i]);
 			}
 			return r;
+		}
+
+		@Override
+		public int arity() {
+			return 0;
 		}
 	};
 

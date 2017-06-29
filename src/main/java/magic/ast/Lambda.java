@@ -159,6 +159,11 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 		public Node<? extends T> getBody() {
 			return body;
 		}
+
+		@Override
+		public int arity() {
+			return arity;
+		}
 	}
 	
 	@Override

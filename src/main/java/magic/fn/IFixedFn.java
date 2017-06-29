@@ -1,9 +1,15 @@
 package magic.fn;
 
+/**
+ * Interface for fixed arity functions
+ * @author Mike
+ *
+ * @param <T>
+ */
 public interface IFixedFn<T> extends IFn<T> {
 	@Override
-	public default boolean isFixedArity() {
-		return true;
+	public default boolean isVariadic() {
+		return false;
 	}
 	
 	@Override

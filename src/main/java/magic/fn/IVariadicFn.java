@@ -2,8 +2,8 @@ package magic.fn;
 
 public interface IVariadicFn<T> extends IFn<T> {
 	@Override
-	public default boolean isFixedArity() {
-		return false;
+	public default boolean isVariadic() {
+		return true;
 	}
 	
 	@Override

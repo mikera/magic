@@ -137,13 +137,15 @@ public interface IFn<R> {
 		throw new ArityException(arity(), arity);
 	}
 	
-	public default boolean isFixedArity() {
-		return false;
+	public default boolean isVariadic() {
+		return true;
 	}
 	
-	public default int arity() {
-		throw new ArityException("No arity defined");
-	}
+	/**
+	 * Gets the arity of the function, or the minimum permissible arity if variadic
+	 * @return
+	 */
+	public int arity();
 	
 	public default Type getReturnType() {
 		return Types.ANYTHING;
