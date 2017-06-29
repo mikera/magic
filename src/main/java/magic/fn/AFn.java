@@ -36,6 +36,12 @@ public abstract class AFn<T> extends APersistentObject implements IFn<T>, CallTa
 	}
 	
 	@Override
+	public Type getVariadicType() {
+		// default: assume not variadic
+		return null;
+	}
+	
+	@Override
 	public boolean hasFastHashCode() {
 		return false;
 	}

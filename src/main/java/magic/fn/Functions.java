@@ -1,6 +1,8 @@
 package magic.fn;
 
 import magic.RT;
+import magic.Type;
+import magic.Types;
 
 /**
  * Some Magic functions defined in Java
@@ -25,6 +27,11 @@ public class Functions {
 		public int arity() {
 			return 0;
 		}
+
+		@Override
+		public Type getVariadicType() {
+			return Types.ANYTHING;
+		}
 	};
 	
 	public static final AFn<Long> LONGADD = new AVariadicFn<Long>(){
@@ -40,6 +47,11 @@ public class Functions {
 		@Override
 		public int arity() {
 			return 0;
+		}
+
+		@Override
+		public Type getVariadicType() {
+			return Types.LONG;
 		}
 	};
 

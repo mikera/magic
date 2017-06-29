@@ -69,8 +69,18 @@ public class FunctionType extends AFunctionType {
 		if (o instanceof IFn) {
 			IFn<?> fn=(IFn<?>)o;
 			if (!returnType.contains(fn.getReturnType())) return false; // covariance on return type
+
+			int fArity=fn.arity(); // min arity for fn
+			if (fArity>minArity) return false; // can't accept short param lists, so can't be a member of this type
+			if (minArity>fArity) {
+				if (!fn.isVariadic()) return false; // can't accept enough parameters
+				if (variadic){
+					if (!fn.getVariadicType().contains(this.getVariadicType())) return false;
+				}
+			}
+			
 			for (int i=0; i<minArity; i++) {
-				if (!fn.getParamType(i).contains(paramTypes[i])) return false; // contravariance on parameter type				
+				if (!fn.getParamType(i).contains(getParamType(i))) return false; // contravariance on parameter type				
 			}
 			return true;
 		} else {

@@ -142,6 +142,14 @@ public interface IFn<R> {
 	}
 	
 	/**
+	 * Gets the variadic type of the function, or null if not variadic.
+	 * @return
+	 */
+	public default Type getVariadicType() {
+		return null;
+	}
+	
+	/**
 	 * Gets the arity of the function, or the minimum permissible arity if variadic
 	 * @return
 	 */
@@ -156,4 +164,6 @@ public interface IFn<R> {
 	}
 
 	public boolean hasArity(int i);
+
+	
 }
