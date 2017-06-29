@@ -142,11 +142,11 @@ public interface IFn<R> {
 	}
 	
 	/**
-	 * Gets the variadic type of the function, or null if not variadic.
+	 * Gets the variadic type of the function
 	 * @return
 	 */
 	public default Type getVariadicType() {
-		return null;
+		return Types.ANYTHING;
 	}
 	
 	/**

@@ -1,7 +1,5 @@
 package magic.fn;
 
-import magic.Type;
-
 /**
  * Abstract base class for variadic functions.
  * 
@@ -32,7 +30,4 @@ public abstract class AVariadicFn<T> extends AFn<T> implements IVariadicFn<T> {
 	public boolean isVariadic() {
 		return true;
 	}
-	
-	@Override
-	public abstract Type getVariadicType();
 }
