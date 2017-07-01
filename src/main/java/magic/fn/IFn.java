@@ -146,7 +146,7 @@ public interface IFn<R> {
 	 * @return
 	 */
 	public default Type getVariadicType() {
-		return Types.ANYTHING;
+		return Types.ANY;
 	}
 	
 	/**
@@ -156,11 +156,11 @@ public interface IFn<R> {
 	public int arity();
 	
 	public default Type getReturnType() {
-		return Types.ANYTHING;
+		return Types.ANY;
 	}
 	
 	public default Type getParamType(int i) {
-		return Types.ANYTHING;
+		return Types.ANY;
 	}
 
 	public boolean hasArity(int i);

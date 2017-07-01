@@ -20,12 +20,13 @@ public class Types {
 	public static final JavaType<magic.data.Symbol> SYMBOL = JavaType.SYMBOL;
 	public static final JavaType<magic.data.Keyword> KEYWORD = JavaType.KEYWORD;
 
-	public static final Anything ANYTHING = Anything.INSTANCE;
+	public static final Anything ANY = Anything.INSTANCE;
+	public static final Nothing NONE = Nothing.INSTANCE;
+	
 	public static final Something SOMETHING = Something.INSTANCE;
-	public static final Nothing NOTHING = Nothing.INSTANCE;
 	public static final Null NULL = Null.INSTANCE;
 	public static final Type TYPE = JavaType.MAGIC_TYPE;
-	public static final Type PREDICATE = FunctionType.create(BOOLEAN, ANYTHING);
+	public static final Type PREDICATE = FunctionType.create(BOOLEAN, ANY);
 	public static final Type FORM = JavaType.OBJECT;
 	public static final JavaType<APersistentVector<?>> VECTOR = JavaType.create(APersistentVector.class);
 	public static final JavaType<APersistentVector<?>> LIST = JavaType.create(APersistentList.class);

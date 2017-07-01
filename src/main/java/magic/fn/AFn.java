@@ -32,7 +32,7 @@ public abstract class AFn<T> extends APersistentObject implements IFn<T>, CallTa
 	
 	@Override
 	public Type getType() {
-		return FunctionType.create(Types.ANYTHING);
+		return FunctionType.create(Types.ANY);
 	}
 	
 	@Override

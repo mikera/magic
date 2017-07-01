@@ -41,6 +41,7 @@ public class Symbols {
 	public static final Symbol VECTOR = Symbol.create("vector");
 	public static final Symbol LIST = Symbol.create("list");
 	public static final Symbol PLUS = Symbol.create("+");
+	public static final Symbol EQUALS =  Symbol.create("=");;
 	
 	// types and casting
 	public static final Symbol INSTANCE_Q = Symbol.create("instance?");

@@ -194,7 +194,7 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 		Type[] argTypes=new Type[n];
 		for (int i=0; i<n; i++) {
 			// TODO: specialised argument types
-			argTypes[i]=Types.ANYTHING;
+			argTypes[i]=Types.ANY;
 		}
 		return FunctionType.create(body.getType(),argTypes);
 	}

@@ -30,7 +30,7 @@ public class Functions {
 
 		@Override
 		public Type getVariadicType() {
-			return Types.ANYTHING;
+			return Types.ANY;
 		}
 	};
 	
@@ -52,6 +52,27 @@ public class Functions {
 		@Override
 		public Type getVariadicType() {
 			return Types.LONG;
+		}
+	};
+	
+	public static final AFn<Boolean> EQUALS = new AVariadicFn<Boolean>(){
+		@Override
+		public Boolean applyToArray(Object... a) {
+			int n=a.length;
+			for (int i=1; i<n; i++) {
+				if(!RT.equals(a[i], a[i-1])) return false;
+			}
+			return true;
+		}
+
+		@Override
+		public int arity() {
+			return 0;
+		}
+
+		@Override
+		public Type getVariadicType() {
+			return Types.ANY;
 		}
 	};
 

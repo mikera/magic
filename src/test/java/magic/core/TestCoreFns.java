@@ -42,6 +42,19 @@ public class TestCoreFns {
 		assertEquals("foo",v);
 	}
 	
+	@Test public void testEquals() {
+		assertTrue(exec("(= :foo :foo)"));
+		assertTrue(exec("(= 1 1)"));
+		assertTrue(exec("(= nil nil)"));
+		assertTrue(exec("(= [] [])"));
+		assertFalse(exec("(= nil 1)"));
+		assertFalse(exec("(= 1 nil)"));
+		assertFalse(exec("(= nil 1)"));
+		assertFalse(exec("(= 1 1 2)"));
+		assertFalse(exec("(= 1 1 2)"));
+		assertFalse(exec("(= :foo :bar)"));
+	}
+	
 	@Test public void testStr() {
 		assertEquals(":foo",exec("(str :foo)"));
 		assertEquals("1",exec("(str 1)"));

@@ -22,7 +22,7 @@ public class FunctionType extends AFunctionType {
 	private final boolean variadic;
 	
 	private FunctionType(Type returnType) {
-		this(returnType,Type.EMPTY_TYPE_ARRAY,Types.ANYTHING);
+		this(returnType,Type.EMPTY_TYPE_ARRAY,Types.ANY);
 	}
 	
 	private FunctionType(Type returnType, Type[] paramTypes, Type variadicType) {
@@ -42,7 +42,7 @@ public class FunctionType extends AFunctionType {
 	}
 	
 	public static FunctionType createMultiArity(Type returnType) {
-		return createMultiArity(returnType,Types.ANYTHING);
+		return createMultiArity(returnType,Types.ANY);
 	}
 	
 	public static FunctionType createMultiArity(Type returnType,Type variadicType) {

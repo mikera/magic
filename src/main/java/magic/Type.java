@@ -147,6 +147,6 @@ public abstract class Type {
 	}
 
 	public boolean intersects(Type type) {
-		return !intersection(type).equals(Types.NOTHING);
+		return !intersection(type).equals(Types.NONE);
 	}
 }

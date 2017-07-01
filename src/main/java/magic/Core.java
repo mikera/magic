@@ -43,10 +43,11 @@ public class Core {
 			c=c.define(Symbols.INSTANCE_Q, Constant.create(Expanders.INSTANCEOF)); 
 			c=c.define(Symbols.CAST, Constant.create(Expanders.CAST)); 
 	
-			c=c.define(Symbols.ANY, Constant.create(Types.ANYTHING)); 
-			c=c.define(Symbols.NONE, Constant.create(Types.NOTHING)); 
+			c=c.define(Symbols.ANY, Constant.create(Types.ANY)); 
+			c=c.define(Symbols.NONE, Constant.create(Types.NONE)); 
 			c=c.define(Symbols.NULL, Constant.create(Types.NULL)); 
 			
+			c=c.define(Symbols.EQUALS, Constant.create(Functions.EQUALS)); 
 			c=c.define(Symbols.PRINTLN, Constant.create(Functions.PRINTLN)); 
 			c=c.define(Symbols.PLUS, Constant.create(Functions.LONGADD)); 
 

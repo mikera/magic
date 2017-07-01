@@ -196,7 +196,7 @@ public abstract class Node<T> extends RootNode {
 	 * Gets the Magic Type for this expression
 	 */
 	public Type getType() {
-		return Types.ANYTHING;
+		return Types.ANY;
 	}
 	
 	/**
