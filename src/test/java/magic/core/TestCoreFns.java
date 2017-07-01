@@ -51,20 +51,23 @@ public class TestCoreFns {
 		assertFalse(exec("(= 1 nil)"));
 		assertFalse(exec("(= nil 1)"));
 		assertFalse(exec("(= 1 1 2)"));
-		assertFalse(exec("(= 1 1 2)"));
+		assertFalse(exec("(= 1 1 nil)"));
 		assertFalse(exec("(= :foo :bar)"));
 	}
 	
 	@Test public void testStr() {
 		assertEquals(":foo",exec("(str :foo)"));
 		assertEquals("1",exec("(str 1)"));
+		assertEquals("nil",exec("(str nil)"));
 		assertEquals("[1 2]",exec("(str [1 2])"));
 	}
 	
 	@Test public void testInstanceOf() {
 		assertTrue(RT.bool(exec("(instance? java.lang.String (str :foo))")));
 		assertTrue(RT.bool(exec("(instance? java.lang.Long 1)")));
+		
 		assertFalse(RT.bool(exec("(instance? java.lang.Long nil)")));
+		assertFalse(RT.bool(exec("(instance? java.lang.Long :foo)")));
 		
 	}
 	

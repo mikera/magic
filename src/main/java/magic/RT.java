@@ -25,7 +25,6 @@ import magic.data.Symbol;
 import magic.data.Vectors;
 import magic.lang.Context;
 import magic.lang.Slot;
-import magic.lang.Symbols;
 import magic.lang.UnresolvedException;
 import magic.type.JavaType;
 import magic.type.TypeError;

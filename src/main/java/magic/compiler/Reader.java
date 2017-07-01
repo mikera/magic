@@ -17,6 +17,8 @@ import org.parboiled.support.Position;
 import org.parboiled.support.StringVar;
 import org.parboiled.support.Var;
 
+import magic.Keywords;
+import magic.Symbols;
 import magic.ast.Constant;
 import magic.ast.HashMap;
 import magic.ast.Lookup;
@@ -24,8 +26,6 @@ import magic.ast.Node;
 import magic.data.Lists;
 import magic.data.Symbol;
 import magic.data.Tuple;
-import magic.lang.Keywords;
-import magic.lang.Symbols;
 
 /**
  * Parboiled Parser implementation which reads Magic source code and produces a tree of parsed objects.

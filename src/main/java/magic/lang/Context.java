@@ -1,6 +1,7 @@
 package magic.lang;
 
 import magic.RT;
+import magic.Symbols;
 import magic.ast.Node;
 import magic.compiler.Reader;
 import magic.data.APersistentMap;

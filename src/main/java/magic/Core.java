@@ -7,7 +7,6 @@ import magic.compiler.EvalResult;
 import magic.compiler.Expanders;
 import magic.fn.Functions;
 import magic.lang.Context;
-import magic.lang.Symbols;
 
 public class Core {
 

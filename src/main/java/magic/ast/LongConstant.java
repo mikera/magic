@@ -1,11 +1,11 @@
 package magic.ast;
 
+import magic.Keywords;
 import magic.RT;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.Keyword;
 import magic.data.Maps;
-import magic.lang.Keywords;
 
 /**
  * AST node representing a constant long primitive value

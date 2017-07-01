@@ -1,6 +1,8 @@
 package magic.ast;
 
+import magic.Keywords;
 import magic.RT;
+import magic.Symbols;
 import magic.compiler.Analyser;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
@@ -14,8 +16,6 @@ import magic.data.Sets;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 import magic.lang.Context;
-import magic.lang.Keywords;
-import magic.lang.Symbols;
 
 /**
  * AST node representing a form as a list

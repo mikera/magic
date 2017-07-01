@@ -1,5 +1,6 @@
 package magic.ast;
 
+import magic.Keywords;
 import magic.RT;
 import magic.Type;
 import magic.compiler.EvalResult;
@@ -10,7 +11,6 @@ import magic.data.Keyword;
 import magic.data.Maps;
 import magic.data.Symbol;
 import magic.lang.Context;
-import magic.lang.Keywords;
 
 /**
  * AST node representing a constant value.

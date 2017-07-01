@@ -1,5 +1,6 @@
 package magic.ast;
 
+import magic.Keywords;
 import magic.RT;
 import magic.compiler.EvalResult;
 import magic.compiler.Reader;
@@ -10,7 +11,6 @@ import magic.data.Maps;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 import magic.lang.Context;
-import magic.lang.Keywords;
 
 /**
  * Expression node for looking up a symbol in a context

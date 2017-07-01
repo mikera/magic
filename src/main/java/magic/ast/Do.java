@@ -1,6 +1,8 @@
 package magic.ast;
 
+import magic.Keywords;
 import magic.RT;
+import magic.Symbols;
 import magic.Type;
 import magic.Types;
 import magic.compiler.EvalResult;
@@ -14,8 +16,6 @@ import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 import magic.lang.Context;
-import magic.lang.Keywords;
-import magic.lang.Symbols;
 
 /**
  * AST node representing a `do` block of sequential expressions

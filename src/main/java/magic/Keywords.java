@@ -1,4 +1,4 @@
-package magic.lang;
+package magic;
 
 import magic.data.Keyword;
 

@@ -6,9 +6,9 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import magic.Core;
+import magic.Symbols;
 import magic.data.Tuple;
 import magic.lang.Context;
-import magic.lang.Symbols;
 
 public class TestMacros {
 

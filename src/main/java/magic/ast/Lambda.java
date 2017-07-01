@@ -1,5 +1,7 @@
 package magic.ast;
 
+import magic.Keywords;
+import magic.Symbols;
 import magic.Type;
 import magic.Types;
 import magic.compiler.EvalResult;
@@ -17,8 +19,6 @@ import magic.fn.AFn;
 import magic.fn.ArityException;
 import magic.fn.IFn1;
 import magic.lang.Context;
-import magic.lang.Keywords;
-import magic.lang.Symbols;
 import magic.type.FunctionType;
 
 /**

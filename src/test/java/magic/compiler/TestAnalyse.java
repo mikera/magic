@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import magic.Core;
+import magic.Symbols;
 import magic.ast.Constant;
 import magic.ast.Lambda;
 import magic.ast.Lookup;
@@ -16,7 +17,6 @@ import magic.data.Sets;
 import magic.data.Symbol;
 import magic.data.Tuple;
 import magic.lang.Context;
-import magic.lang.Symbols;
 import magic.lang.UnresolvedException;
 
 public class TestAnalyse {

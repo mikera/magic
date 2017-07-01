@@ -2,7 +2,9 @@ package magic.ast;
 
 import java.lang.reflect.Method;
 
+import magic.Keywords;
 import magic.Reflector;
+import magic.Symbols;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
@@ -14,8 +16,6 @@ import magic.data.Sets;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 import magic.lang.Context;
-import magic.lang.Keywords;
-import magic.lang.Symbols;
 
 /**
  * Node representing a Java reflective interop invocation, of the form:

@@ -5,6 +5,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.nodes.RootNode;
 
+import magic.Keywords;
 import magic.RT;
 import magic.Type;
 import magic.Types;
@@ -22,7 +23,6 @@ import magic.data.Vectors;
 import magic.data.impl.NullSet;
 import magic.fn.IFn1;
 import magic.lang.Context;
-import magic.lang.Keywords;
 import magic.lang.MagicLanguage;
  
 /**

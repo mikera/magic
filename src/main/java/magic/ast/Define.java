@@ -1,5 +1,6 @@
 package magic.ast;
 
+import magic.Keywords;
 import magic.RT;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
@@ -10,7 +11,6 @@ import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 import magic.lang.Context;
-import magic.lang.Keywords;
 
 /**
  * AST node representing the action of defining a symbol in the current context

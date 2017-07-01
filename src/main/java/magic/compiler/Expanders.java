@@ -1,6 +1,7 @@
 package magic.compiler;
 
 import magic.RT;
+import magic.Symbols;
 import magic.Type;
 import magic.ast.Apply;
 import magic.ast.Cast;
@@ -30,7 +31,6 @@ import magic.data.Vectors;
 import magic.fn.IFn;
 import magic.lang.Context;
 import magic.lang.Slot;
-import magic.lang.Symbols;
 
 /**
  * A standard set of expanders used to transform raw AST nodes into compilable

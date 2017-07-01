@@ -1,5 +1,6 @@
 package magic.ast;
 
+import magic.Keywords;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
@@ -11,7 +12,6 @@ import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.fn.IFn;
 import magic.lang.Context;
-import magic.lang.Keywords;
 
 /**
  * AST node representing a function application

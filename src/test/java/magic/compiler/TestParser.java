@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import magic.Core;
+import magic.Keywords;
+import magic.Symbols;
 import magic.ast.ListForm;
 import magic.ast.Node;
 import magic.ast.Vector;
@@ -15,8 +17,6 @@ import magic.data.Sets;
 import magic.data.Symbol;
 import magic.data.Tuple;
 import magic.lang.Context;
-import magic.lang.Keywords;
-import magic.lang.Symbols;
 
 public class TestParser {
 

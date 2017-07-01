@@ -1,6 +1,8 @@
 package magic.ast;
 
+import magic.Keywords;
 import magic.RT;
+import magic.Symbols;
 import magic.Type;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
@@ -11,8 +13,6 @@ import magic.data.Maps;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 import magic.lang.Context;
-import magic.lang.Keywords;
-import magic.lang.Symbols;
 
 /**
  * AST node representing a conditional `if` expression.

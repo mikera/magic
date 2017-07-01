@@ -2,7 +2,9 @@ package magic.ast;
 
 import java.util.List;
 
+import magic.Keywords;
 import magic.RT;
+import magic.Symbols;
 import magic.Type;
 import magic.Types;
 import magic.compiler.EvalResult;
@@ -20,8 +22,6 @@ import magic.data.Tuple;
 import magic.data.Vectors;
 import magic.fn.IFn1;
 import magic.lang.Context;
-import magic.lang.Keywords;
-import magic.lang.Symbols;
 
 /**
  * AST node class representing a vector construction literal.
