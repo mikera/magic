@@ -1,5 +1,9 @@
 package magic.fn;
 
+import magic.Type;
+import magic.Types;
+import magic.type.FunctionType;
+
 /**
  * Abstract base class for variadic functions.
  * 
@@ -19,6 +23,16 @@ public abstract class AVariadicFn<T> extends AFn<T> implements IVariadicFn<T> {
 	
 	protected AVariadicFn() {
 		this(0);
+	}
+	
+	@Override
+	public FunctionType getType() {
+		return FunctionType.create(Types.ANY);
+	}
+	
+	@Override
+	public Type getVariadicType() {
+		return getType().getVariadicType();
 	}
 	
 	@Override
