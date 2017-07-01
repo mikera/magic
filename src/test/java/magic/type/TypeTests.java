@@ -25,8 +25,11 @@ public class TypeTests {
 		assertFalse(t.isVariadic());
 		assertEquals(1,t.getParamTypes().length);
 		
-		assertTrue(t.contains(FunctionType.create(Null.INSTANCE,JavaType.create(Number.class))));
-		assertFalse(t.contains(FunctionType.create(Null.INSTANCE,JavaType.create(String.class))));
+		FunctionType t2=FunctionType.create(Null.INSTANCE,JavaType.create(Number.class));
+		assertTrue(t.contains(t2));
+		
+		FunctionType t3=FunctionType.create(Null.INSTANCE,JavaType.create(String.class));
+		assertFalse(t.contains(t3));
 	}
 	
 	@Test public void testExactValue() {

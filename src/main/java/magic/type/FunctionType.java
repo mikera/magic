@@ -104,15 +104,15 @@ public class FunctionType extends AFunctionType {
 	}
 	
 	public boolean contains(FunctionType ft) {
-		return intersection(ft)==this;
+		Type ift=ft.intersection(this);
+		return ift==ft;
 	}
 
 	/**
 	 * Internal implementation of intersection with another FunctionType
 	 * 
 	 * Note we try very hard to return 'this' if possible without any allocation,
-	 * in order to optimise the common case of equivalent function types, and to provide
-	 * an efficient implementation for 'contains'
+	 * in order to optimise the common case of equivalent function types
 	 * @param ft
 	 * @return
 	 */
@@ -131,11 +131,12 @@ public class FunctionType extends AFunctionType {
 		Type rt=getReturnType().intersection(ft.returnType);
 		if (rt instanceof Nothing) return Nothing.INSTANCE;
 		
-		// compute intersection of fixed arity types
+		// compute union of fixed arity types
+		// need union rather than intersection because arguments are contravariant
 		Type[] ips=paramTypes;
 		for (int i=0; i<thisN ; i++) {
 			Type pt=paramTypes[i];
-			Type it=pt.intersection(ft.getParamType(i));
+			Type it=pt.union(ft.getParamType(i));
 			if (it!=pt) {
 				if (ips==paramTypes) ips=paramTypes.clone(); // copy on first write
 				ips[i]=it;
@@ -143,8 +144,8 @@ public class FunctionType extends AFunctionType {
 		}
 		Type vt=null;
 		if (variadic&&ft.isVariadic()) {
-			// both are variadic, so we need the intersected variadic type
-			vt=variadicType.intersection(ft.getVariadicType());
+			// both are variadic, so we need the union variadic type
+			vt=variadicType.union(ft.getVariadicType());
 		}
 		
 		if ((rt==returnType)&&(ips==paramTypes)&&(vt==variadicType)) return this;

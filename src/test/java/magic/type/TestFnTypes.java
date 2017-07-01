@@ -32,6 +32,14 @@ public class TestFnTypes {
 		assertTrue(analyseType(c,"(identity 2)").contains(Types.LONG));
 	}
 
-
+	@Test public void testVariadicTypes() {
+		
+		
+		FunctionType f1=FunctionType.createMultiArity(Types.ANY, Types.LONG);
+		FunctionType f2=FunctionType.createMultiArity(Types.LONG, Types.ANY);
+		FunctionType f3=FunctionType.create(Types.LONG);
+		assertFalse(f3.isVariadic());
+		assertTrue(f1.contains(f2));
+	}
 
 }
