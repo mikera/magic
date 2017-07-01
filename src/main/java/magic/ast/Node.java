@@ -52,11 +52,19 @@ public abstract class Node<T> extends RootNode {
 		this.meta=meta;
 	}
 
-
+	/**
+	 * Get the metadata associated with this Node
+	 * @return
+	 */
 	public APersistentMap<Keyword,Object> meta() {
 		return meta;
 	}
 
+	/**
+	 * Returns this node with updated metadata
+	 * @param meta
+	 * @return
+	 */
 	public abstract Node<T> withMeta(APersistentMap<Keyword,Object> meta);
 
 	public Node<T> assocMeta(Keyword k,Object v) {
