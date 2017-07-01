@@ -50,11 +50,15 @@ public class Constant<T> extends BaseConstant<T> {
 	}
 
 	public static <T> Constant<T> create(T o, SourceInfo sourceInfo) {
-		return new Constant<T>(o,Maps.create(Keywords.SOURCE,sourceInfo));
+		return create(o,Maps.create(Keywords.SOURCE,sourceInfo));
 	}
 	
 	public static <T> Constant<T> create(T v, APersistentSet<Symbol> deps) {
-		return new Constant<T>(v,Maps.create(Keywords.DEPS,deps));
+		return create(v,Maps.create(Keywords.DEPS,deps));
+	}
+	
+	public static <T> Constant<T> create(T v, APersistentMap<Keyword,Object> meta) {
+		return new Constant<T>(v,meta);
 	}
 	
 	@Override
