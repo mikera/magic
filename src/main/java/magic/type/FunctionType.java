@@ -111,8 +111,11 @@ public class FunctionType extends AFunctionType {
 	/**
 	 * Internal implementation of intersection with another FunctionType
 	 * 
-	 * Note we try very hard to return 'this' if possible without any allocation,
-	 * in order to optimise the common case of equivalent function types
+	 * Note we guarantee to return 'this' if possible without any allocation,
+	 * in order to :
+	 *   A) optimise the common case of equivalent function types, and
+	 *   B) to provide an efficient implementation for 'contains'
+	 *   
 	 * @param ft
 	 * @return
 	 */
@@ -210,8 +213,14 @@ public class FunctionType extends AFunctionType {
 
 	@Override
 	public Type union(Type t) {
-		if (t==this) return t;
+		if (t instanceof FunctionType) return union((FunctionType)t);
 		return Union.create(this,t);
+	}
+	
+	public Type union(FunctionType ft) {
+		if (ft==this) return ft;
+		// TODO: smarter union
+		return Union.create(this,ft);
 	}
 	
 	@Override 

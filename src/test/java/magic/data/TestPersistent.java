@@ -19,20 +19,20 @@ import mikera.util.Rand;
 
 public class TestPersistent {
 	
-	@Test public void testListTypes() {	
+	@Test public void testVectorTypes() {	
 		APersistentVector<Integer> pl=Vectors.createFromArray(new Integer[] {1,2,3,4,5});
 		assertEquals(5,pl.size());
 		
-		testPersistentList(pl);
-		testPersistentList(pl.subList(1, 4));
-		testPersistentList(EmptyVector.INSTANCE);
-		testPersistentList(Tuple.of(1,2,3,4,5));
-		testPersistentList(RepeatVector.create("Hello persistent lists!",1));
-		testPersistentList(RepeatVector.create("Hello", 40));
-		testPersistentList(MapEntry.create(Keyword.create("foo"), 40));
-		testPersistentList(PersistentVector.create(pl));
-		testPersistentList(PersistentVector.create(RepeatVector.create("MM", 40)));
-		testPersistentList(SubVector.create(pl,2,3));
+		testPersistentVector(pl);
+		testPersistentVector(pl.subList(1, 4));
+		testPersistentVector(EmptyVector.INSTANCE);
+		testPersistentVector(Tuple.of(1,2,3,4,5));
+		testPersistentVector(RepeatVector.create("Hello persistent lists!",1));
+		testPersistentVector(RepeatVector.create("Hello", 40));
+		testPersistentVector(MapEntry.create(Keyword.create("foo"), 40));
+		testPersistentVector(PersistentVector.create(pl));
+		testPersistentVector(PersistentVector.create(RepeatVector.create("MM", 40)));
+		testPersistentVector(SubVector.create(pl,2,3));
 	}
 	
 	@Test public void testCollectionTypes() {
@@ -179,7 +179,7 @@ public class TestPersistent {
 		}
 	}
 	
-	public <T> void testPersistentList(APersistentVector<T> a) {
+	public <T> void testPersistentVector(APersistentVector<T> a) {
 		a.validate();
 		testSubLists(a);
 		testHeadTail(a);

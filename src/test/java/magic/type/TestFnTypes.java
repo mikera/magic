@@ -33,13 +33,19 @@ public class TestFnTypes {
 	}
 
 	@Test public void testVariadicTypes() {
-		
-		
 		FunctionType f1=FunctionType.createMultiArity(Types.ANY, Types.LONG);
 		FunctionType f2=FunctionType.createMultiArity(Types.LONG, Types.ANY);
-		FunctionType f3=FunctionType.create(Types.LONG);
+		FunctionType f3=FunctionType.create(Types.LONG); // zero arity
+		
 		assertFalse(f3.isVariadic());
 		assertTrue(f1.contains(f2));
+		assertTrue(f1.contains(f3));
+		assertTrue(f2.contains(f3));
+
+		assertFalse(f3.contains(f1));
+		assertFalse(f2.contains(f1));
+		assertFalse(f3.contains(f2)); // doesn't contain multi-arity case
+
 	}
 
 }
