@@ -307,13 +307,13 @@ public class TestCompiler {
 			    + "(defn f [c] b)");
 		Context c2=r.getContext();
 		Node<?> f=c2.getNode("f");
-		assertEquals(Sets.of(Symbol.create("b"),Symbol.create("fn")),f.getDependencies());
+		assertEquals(Sets.of(Symbol.create("b"),Symbol.create("fn"),Symbol.create("defn")),f.getDependencies());
 		
 		assertEquals(Sets.of(),c2.getDependencies("a"));
 		assertEquals(Sets.of(Symbol.create("b")),c2.getDependants("a"));
 		assertEquals(Sets.of(Symbol.create("a")),c2.getDependencies("b"));
 		assertEquals(Sets.of(Symbol.create("f")),c2.getDependants("b"));
-		assertEquals(Sets.of(Symbol.create("b"),Symbol.create("fn")),c2.getDependencies("f"));
+		assertEquals(Sets.of(Symbol.create("b"),Symbol.create("fn"),Symbol.create("defn")),c2.getDependencies("f"));
 		assertEquals(Sets.of(),c2.getDependants("f"));
 	}
 }

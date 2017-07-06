@@ -1,14 +1,11 @@
 package magic.ast;
 
-import magic.Keywords;
 import magic.Symbols;
 import magic.Type;
 import magic.compiler.EvalResult;
-import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.Keyword;
 import magic.data.Lists;
-import magic.data.Maps;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 import magic.lang.Context;
@@ -37,8 +34,8 @@ public class Cast<T> extends BaseForm<T> {
 		return new Cast<T>(type,exp,meta);
 	}
 	
-	public static <T> Cast<T> create(Type type, Node<?> exp, SourceInfo sourceInfo) {
-		return new Cast<T>(type,exp,Maps.create(Keywords.SOURCE, sourceInfo));
+	public static <T> Cast<T> create(Type type, Node<?> exp, APersistentMap<Keyword,Object> meta) {
+		return new Cast<T>(type,exp,meta);
 	}
 	
 	@Override
@@ -48,7 +45,7 @@ public class Cast<T> extends BaseForm<T> {
 
 	@Override
 	public Cast<T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
-		return create(type,fn.apply(exp),getSourceInfo());
+		return create(type,fn.apply(exp),meta());
 	}
 
 	@SuppressWarnings("unchecked")

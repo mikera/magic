@@ -42,25 +42,36 @@ public class ListForm extends BaseForm<Object> {
 		return new ListForm(nodes,meta);
 	}
 
-	
 	public static ListForm create(Node<?>[] nodes, SourceInfo sourceInfo) {
-		return create((APersistentList<Node<?>>)Lists.wrap(nodes),sourceInfo);
+		APersistentMap<Keyword,Object> meta=Maps.create(Keywords.SOURCE, sourceInfo);
+		return create((APersistentList<Node<?>>)Lists.wrap(nodes),meta);
 	}
 
 	public static ListForm create(Node<?>[] nodes) {
 		return create(nodes,(SourceInfo)null);
 	}
 
-	public static ListForm create(APersistentList<Node<?>> nodes,SourceInfo source) {
+	@SuppressWarnings("unchecked")
+	public static ListForm create(APersistentList<Node<?>> nodes, APersistentMap<Keyword,Object> meta) {
 		// get deps from first element in list of present
 		APersistentSet<Symbol> deps=(nodes.size()==0)?Sets.emptySet():nodes.get(0).getDependencies();
-		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.SOURCE,source);
+		APersistentSet<Symbol> oldDeps=(APersistentSet<Symbol>) meta.get(Keywords.DEPS);
+		if (oldDeps!=null) deps=deps.includeAll(oldDeps);
 		meta=meta.assoc(Keywords.DEPS, deps);
 		return new ListForm(nodes,meta);
 	}
 	
+	public static ListForm create(APersistentList<Node<?>> nodes, SourceInfo source) {
+		// get deps from first element in list of present
+		APersistentMap<Keyword,Object> meta=Maps.empty();
+		meta=meta.assoc(Keywords.SOURCE, source);
+		return create(nodes,meta);
+	}
+	
 	public static ListForm create(ListForm a,SourceInfo source) {
-		return create(a.getNodes(),source);
+		APersistentMap<Keyword,Object> meta=a.meta();
+		meta=meta.assoc(Keywords.SOURCE, source);
+		return create(a.getNodes(),meta);
 	}
 	
 	public static ListForm createCons(Node<?> a,ListForm rest,SourceInfo source) {
@@ -134,7 +145,7 @@ public class ListForm extends BaseForm<Object> {
 	}
 
 	public ListForm subList(int start, int end) {
-		return ListForm.create(nodes.subList(start, end),getSourceInfo());
+		return ListForm.create(nodes.subList(start, end),Maps.empty());
 	}
 
 }

@@ -107,6 +107,7 @@ public class HashMap<K,V> extends BaseDataStructure<APersistentMap<? extends K,?
 	@SuppressWarnings("unchecked")
 	@Override
 	public Node<APersistentMap<? extends K, ? extends V>> optimise() {
+		// customised optimise, checking for constant values
 		int nExps=exps.size();
 		APersistentVector<Node<?>> newExps=exps;
 		boolean constant=true;

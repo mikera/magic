@@ -28,6 +28,7 @@ import magic.data.APersistentMap;
 import magic.data.APersistentVector;
 import magic.data.Keyword;
 import magic.data.Lists;
+import magic.data.Maps;
 import magic.data.Symbol;
 import magic.data.Vectors;
 import magic.fn.IFn;
@@ -158,12 +159,12 @@ public class Expanders {
 			if (n < 1)
 				throw new ExpansionException("Can't expand do, requires at least a do symbol", form);
 
-			SourceInfo si = form.getSourceInfo();
 			APersistentList<Node<?>> body = form.getNodes().subList(1, n);
 
 			body = (APersistentList<Node<?>>) ex.expandAll(c, body, ex);
 
-			return Do.create(body, si);
+			APersistentMap<Keyword,Object> meta=form.meta();
+			return Do.create(body, meta);
 		}
 	}
 	
@@ -184,8 +185,8 @@ public class Expanders {
 			Type type=(Type) Compiler.eval(c, typeNode).getValue();
 			Node<?> exp = ex.expand(c, form.get(2), ex);
 
-			SourceInfo si = form.getSourceInfo();
-			return Cast.create(type, exp,si);
+			APersistentMap<Keyword,Object> meta=form.meta();
+			return Cast.create(type, exp,meta);
 		}
 	}
 	
@@ -210,7 +211,7 @@ public class Expanders {
 			Node<?> op = form.get(2);
 			// make the method call into a list if it is flattened
 			if (!(op instanceof ListForm))
-				op = ListForm.create(form.getNodes().subList(2, fn), null);
+				op = ListForm.create(form.getNodes().subList(2, fn),Maps.empty());
 
 			ListForm call = (ListForm) op;
 			int n = call.size();
@@ -234,8 +235,7 @@ public class Expanders {
 					}
 				}
 			}
-			
-
+		
 			return InvokeReflective.create(inst, method, argsExpanded.toArray(new Node<?>[n - 1]), meta);
 		}
 	}
@@ -259,16 +259,16 @@ public class Expanders {
 			}
 			Node<?> argObj = ex.expand(c, form.get(2), ex);
 
-			SourceInfo si = form.getSourceInfo();
+			APersistentMap<Keyword,Object> meta=form.meta();
 			// get the body. Don't expand yet: fn does this
 			APersistentList<Node<?>> body = form.getNodes().subList(3, n);
 
 			// create the (fn [...] ...) form
 			APersistentList<Node<?>> fnList = Lists.cons(Lookup.create(Symbols.FN), argObj, body);
-			ListForm fnDef = ListForm.create(fnList, si);
+			ListForm fnDef = ListForm.create(fnList, meta);
 
 			@SuppressWarnings("unchecked")
-			ListForm newForm = ListForm.create(Lists.of(Lookup.create(Symbols.DEF), nameObj, fnDef), si);
+			ListForm newForm = ListForm.create(Lists.of(Lookup.create(Symbols.DEF), nameObj, fnDef), meta);
 			return ex.expand(c, newForm, ex);
 		}
 	}
