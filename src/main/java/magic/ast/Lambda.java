@@ -134,7 +134,7 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 				Tuple<?> vs=Tuple.wrap(a, arity, alength-arity); // construct arg tuple
 				bnds=bnds.assoc(varParam, vs);
 			}
-			return body.compute(null,bnds); // shouldn't do any context lookup?
+			return body.compute(null,bnds); // TODO: shouldn't do any context lookup?
 		}
 
 		@Override
