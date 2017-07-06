@@ -16,6 +16,7 @@ import magic.data.Maps;
 import magic.data.PersistentList;
 import magic.data.Sets;
 import magic.data.Symbol;
+import magic.fn.IFn1;
 import magic.lang.Context;
 
 /**
@@ -92,14 +93,8 @@ public class Quote extends BaseForm<Object> {
 	}
 
 	@Override
-	public Node<Object> specialiseValues(APersistentMap<Symbol, Object> bindings) {
-		// TODO: specialise unquotes 
-		return this;
-	}
-
-	@Override
-	public Node<Object> optimise() {
-		// TODO: optimise unquotes into constants?
+	public Node<?> mapChildren(IFn1<Node<?>,Node<?>> fn) {
+		// TODO: should map over unquoted nodes?
 		return this;
 	}
 	

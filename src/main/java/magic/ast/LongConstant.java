@@ -2,6 +2,8 @@ package magic.ast;
 
 import magic.Keywords;
 import magic.RT;
+import magic.Type;
+import magic.Types;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.Keyword;
@@ -49,6 +51,11 @@ public class LongConstant extends BaseConstant<Long> {
 	@Override
 	public String toString() {
 		return "(LongConstant "+RT.print(value)+")";
+	}
+
+	@Override
+	public Type getType() {
+		return Types.LONG;
 	}
 
 

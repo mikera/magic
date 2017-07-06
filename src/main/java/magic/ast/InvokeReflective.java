@@ -6,13 +6,13 @@ import magic.Keywords;
 import magic.Reflector;
 import magic.Symbols;
 import magic.compiler.EvalResult;
-import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
 import magic.data.Keyword;
 import magic.data.Lists;
 import magic.data.Maps;
 import magic.data.Symbol;
+import magic.fn.IFn1;
 import magic.lang.Context;
 
 /**
@@ -50,19 +50,21 @@ public class InvokeReflective<T> extends BaseForm<T> {
 		return new InvokeReflective<T>(instance,method,args,meta);
 	}
 	
-	public static <T> InvokeReflective<T> create(Node<?> instance, Symbol method, Node<?>[] args,SourceInfo source) {
+	@SuppressWarnings("unchecked")
+	public static <T> InvokeReflective<T> create(Node<?> instance, Symbol method, Node<?>[] args,APersistentMap<Keyword,Object> meta) {
 		APersistentSet<Symbol> deps=instance.getDependencies();
+		APersistentSet<Symbol> mdeps=(APersistentSet<Symbol>) meta.get(Keywords.DEPS);
+		if (mdeps!=null) deps=deps.includeAll(mdeps);
 		for (Node<?> a: args) {
 			deps=deps.includeAll(a.getDependencies());
 		}
-		APersistentMap<Keyword,Object> meta=Maps.create(Keywords.SOURCE,source);
 		meta=meta.assoc(Keywords.DEPS,deps);
 		return new InvokeReflective<T>(instance, method,args,meta);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public static <T> InvokeReflective<T> create(Node<?> instance, Symbol method, Node<? super Object>[] args) {
-		return create((Node<Object>)instance, method,args,null);
+		return create((Node<Object>)instance, method,args,Maps.empty());
 	}
 	
 	
@@ -94,15 +96,11 @@ public class InvokeReflective<T> extends BaseForm<T> {
 	}
 
 	@Override
-	public Node<T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
-		// TODO
-		return this;
-	}
-
-	@Override
-	public Node<T> optimise() {
-		// TODO
-		return this;
+	public Node<? extends T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
+		Node<?> newInstance=fn.apply(instance);
+		Node<?>[] newNodes=NodeFunctions.mapAll(args,fn);
+		if ((newNodes==args)&&(newInstance==instance)) return this;
+		return create(instance,method,newNodes,meta());
 	}
 
 	@Override 

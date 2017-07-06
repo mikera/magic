@@ -7,7 +7,6 @@ import magic.data.Keyword;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 import magic.lang.Context;
-import magic.type.JavaType;
 
 /**
  * Abstract base class for AST nodes representing constant expressions. 
@@ -54,12 +53,10 @@ public abstract class BaseConstant<T> extends Node<T> {
 	}
 	
 	/**
-	 * Gets the Java Type of this constant
+	 * Gets the Type of this constant
 	 */
 	@Override
-	public Type getType() {
-		return JavaType.create(getValue());
-	}
+	public abstract Type getType();
 	
 	@Override
 	public Node<?> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings,

@@ -6,12 +6,10 @@ import magic.Keywords;
 import magic.Reflector;
 import magic.Symbols;
 import magic.compiler.EvalResult;
-import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
 import magic.data.Keyword;
 import magic.data.Lists;
-import magic.data.Maps;
 import magic.data.Sets;
 import magic.data.Symbol;
 import magic.fn.IFn1;
@@ -52,13 +50,14 @@ public class InvokeStaticReflective<T> extends BaseForm<T> {
 		return new InvokeStaticReflective<T>(klass,method,args,meta);
 	}
 	
-	public static <T> InvokeStaticReflective<T> create(Class<?> klass, Symbol method, Node<?>[] args,SourceInfo source) {
-		APersistentSet<Symbol> deps=Sets.emptySet();
+	@SuppressWarnings("unchecked")
+	public static <T> InvokeStaticReflective<T> create(Class<?> klass, Symbol method, Node<?>[] args,APersistentMap<Keyword, Object> meta) {
+		APersistentSet<Symbol> deps=(APersistentSet<Symbol>) meta.get(Keywords.DEPS);
+		if (deps==null) deps=Sets.emptySet();
 		for (Node<?> a: args) {
 			deps=deps.includeAll(a.getDependencies());
 		}
-		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.DEPS,deps);
-		meta=meta.assoc(Keywords.SOURCE, source);
+		meta=meta.assoc(Keywords.DEPS, deps);
 		return new InvokeStaticReflective<T>(klass, method,args,meta);
 	}
 	
@@ -104,7 +103,7 @@ public class InvokeStaticReflective<T> extends BaseForm<T> {
 	public Node<? extends T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
 		Node<?>[] newNodes=NodeFunctions.mapAll(args,fn);
 		if (newNodes==args) return this;
-		return create(klass,method,newNodes,getSourceInfo());
+		return create(klass,method,newNodes,meta());
 	}
 
 	@Override 

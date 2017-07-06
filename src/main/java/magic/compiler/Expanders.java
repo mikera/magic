@@ -24,7 +24,9 @@ import magic.ast.Quote;
 import magic.ast.Set;
 import magic.ast.Vector;
 import magic.data.APersistentList;
+import magic.data.APersistentMap;
 import magic.data.APersistentVector;
+import magic.data.Keyword;
 import magic.data.Lists;
 import magic.data.Symbol;
 import magic.data.Vectors;
@@ -201,7 +203,7 @@ public class Expanders {
 						"Can't expand dot, requires at least an instance or classname and method call or member symbol",
 						form);
 
-			SourceInfo si = form.getSourceInfo();
+			APersistentMap<Keyword, Object> meta=form.meta();
 
 			Node<?> inst = ex.expand(c, form.get(1), ex);
 
@@ -228,12 +230,13 @@ public class Expanders {
 				if ((!s.isQualified()) && RT.maybeClassName(name)) {
 					Class<?> cl = RT.classForName(name);
 					if (cl != null) {
-						return InvokeStaticReflective.create(cl, method, argsExpanded.toArray(new Node<?>[n - 1]), si);
+						return InvokeStaticReflective.create(cl, method, argsExpanded.toArray(new Node<?>[n - 1]), meta);
 					}
 				}
 			}
+			
 
-			return InvokeReflective.create(inst, method, argsExpanded.toArray(new Node<?>[n - 1]), si);
+			return InvokeReflective.create(inst, method, argsExpanded.toArray(new Node<?>[n - 1]), meta);
 		}
 	}
 

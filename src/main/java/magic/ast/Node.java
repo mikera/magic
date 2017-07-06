@@ -274,7 +274,7 @@ public abstract class Node<T> extends RootNode {
 	 * @return
 	 */
 	public Node<?> analyse(Context context) {
-		return this;
+		return mapChildren(NodeFunctions.analyse(context));
 	}
 
 	

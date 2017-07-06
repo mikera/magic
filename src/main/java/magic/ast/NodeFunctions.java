@@ -5,6 +5,7 @@ import magic.data.APersistentMap;
 import magic.data.APersistentVector;
 import magic.data.Symbol;
 import magic.fn.IFn1;
+import magic.lang.Context;
 
 /**
  * Functions used for AST node transformations
@@ -37,6 +38,20 @@ public class NodeFunctions {
 			}
 		};
 	}
+	
+	/**
+	 * A node function that analyses nodes
+	 * @param bindings
+	 * @return
+	 */
+	public static IFn1<Node<?>, Node<?>> analyse(Context context) {
+		return new NodeFunction() {
+			@Override
+			public Node<?> apply(Node<?> node) {
+				return node.analyse(context);
+			}
+		};
+	}
 
 	public static IFn1<Node<?>, Node<?>> OPTIMISE=new NodeFunction() {
 		@Override
@@ -44,6 +59,7 @@ public class NodeFunctions {
 			return node.optimise();
 		}
 	};
+
 	
 	/**
 	 * A node function that performs local node optimisation

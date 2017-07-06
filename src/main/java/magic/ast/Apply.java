@@ -11,6 +11,7 @@ import magic.data.Maps;
 import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.fn.IFn;
+import magic.fn.IFn1;
 import magic.lang.Context;
 
 /**
@@ -72,16 +73,16 @@ public class Apply<T> extends BaseForm<T> {
 		}
 		return EvalResult.create(r.getContext(),f.applyToArray(values));
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Node<? extends T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
-		Node<IFn<? extends T>> newFunction=(Node<IFn<? extends T>>) function.specialiseValues(bindings);
+	public Node<T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
+		Node<IFn<? extends T>> newFunction=(Node<IFn<? extends T>>) fn.apply(function);
 		boolean changed=false;
 		Node<?>[] newBody=args;
 		for (int i=0; i<arity; i++) {
 			Node<?> node=args[i];
-			Node<?> newNode=node.specialiseValues(bindings);
+			Node<?> newNode=fn.apply(node);
 			if (node!=newNode) {
 				if (!changed) {
 					newBody=newBody.clone();
@@ -111,7 +112,6 @@ public class Apply<T> extends BaseForm<T> {
 			}
 
 		}
-
 		
 		return this;
 	}
