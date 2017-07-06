@@ -146,6 +146,11 @@ public abstract class Type {
 		return null;
 	}
 
+	/**
+	 * Returns true if this type potentially intersects another type
+	 * @param type
+	 * @return
+	 */
 	public boolean intersects(Type type) {
 		return !intersection(type).equals(Types.NONE);
 	}
