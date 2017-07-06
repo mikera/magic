@@ -33,6 +33,7 @@ public class Core {
 			c=c.define(Symbols.QUOTE, Constant.create(Expanders.QUOTE));
 			c=c.define(Symbols.UNQUOTE, Constant.create(Expanders.UNQUOTE));
 			c=c.define(Symbols.SYNTAX_QUOTE, Constant.create(Expanders.QUOTE));
+			c=c.define(Symbols.RETURN, Constant.create(Expanders.RETURN));
 					
 			c=c.define(Symbols.VECTOR, Constant.create(Expanders.VECTOR)); 
 			c=c.define(Symbols.LIST, Constant.create(Expanders.LIST)); 

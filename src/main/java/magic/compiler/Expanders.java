@@ -21,6 +21,7 @@ import magic.ast.ListForm;
 import magic.ast.Lookup;
 import magic.ast.Node;
 import magic.ast.Quote;
+import magic.ast.Return;
 import magic.ast.Set;
 import magic.ast.Vector;
 import magic.data.APersistentList;
@@ -257,7 +258,7 @@ public class Expanders {
 			if (!nameObj.isSymbol()) {
 				throw new ExpansionException("Can't expand defn: requires a symbolic function name", form);
 			}
-			Node<?> argObj = ex.expand(c, form.get(2), ex);
+			Node<?> argObj = form.get(2);
 
 			APersistentMap<Keyword,Object> meta=form.meta();
 			// get the body. Don't expand yet: fn does this
@@ -288,7 +289,7 @@ public class Expanders {
 
 			Node<?> argObj = form.get(1);
 			if (!(argObj instanceof Vector)) {
-				throw new AnalyserException("Can't expand fn: requires a vector of arguments but got " + argObj, form);
+				throw new AnalyserException("Can't expand fn: requires a vector of arguments but got " + argObj + " of type "+argObj.getClass(), form);
 			}
 
 			// expand the body
@@ -297,6 +298,25 @@ public class Expanders {
 
 			APersistentMap<Keyword,Object> meta=form.meta();
 			return Lambda.create((Vector<Symbol>) argObj, body, meta);
+		}
+	}
+	
+	/**
+	 * An expander that expands return forms
+	 */
+	public static final AExpander RETURN = new ReturnExpander();
+
+	private static final class ReturnExpander extends AListExpander {
+		@Override
+		public Return<?> expand(Context c, ListForm form, AExpander ex) {
+			int n = form.size();
+			if (n != 2)
+				throw new ExpansionException("Can't expand return, requires a return value", form);
+
+			Node<?> rExp = ex.expand(c, form.get(1),ex);
+
+			APersistentMap<Keyword,Object> meta=form.meta();
+			return Return.create(rExp, meta);
 		}
 	}
 

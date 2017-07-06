@@ -20,6 +20,7 @@ public class Symbols {
 	public static final Symbol UNQUOTE = Symbol.create("unquote");
 	public static final Symbol UNQUOTE_SPLICING = Symbol.create("unquote-splicing");
 	public static final Symbol SYNTAX_QUOTE = Symbol.create("syntax-quote");;
+	public static final Symbol RETURN = Symbol.create("return");
 
 	// special symbols
 	public static final Symbol UNDERSCORE = Symbol.create("_");

@@ -84,6 +84,17 @@ public class TestCompiler {
 		assertEquals(Tuple.of(3L,1L,5L),c2.getValue("v"));
 	}
 	
+	@Test public void testReturn() {
+		Context c=INITIAL;
+		
+		EvalResult<?> r=Compiler.compile(c, 
+				"(defn f [_] (do 1 (return 2) 3)) "
+				+ "(def b (f 4))");
+		Context c2=r.getContext();
+	
+		assertEquals((Long)2L,c2.getValue("b"));
+	}
+	
 	@Test public void testCompileSet() {
 		Context c=INITIAL;
 		
@@ -307,6 +318,8 @@ public class TestCompiler {
 			    + "(defn f [c] b)");
 		Context c2=r.getContext();
 		Node<?> f=c2.getNode("f");
+		
+		// note def is never a dependency, it gets executed to install the definition
 		assertEquals(Sets.of(Symbol.create("b"),Symbol.create("fn"),Symbol.create("defn")),f.getDependencies());
 		
 		assertEquals(Sets.of(),c2.getDependencies("a"));
