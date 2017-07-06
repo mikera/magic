@@ -45,7 +45,7 @@ public class Compiler {
 	public static <T> Node<T> compileNode(Context context, Node<?> node) {
 		node=Compiler.expand(context, node);
 		node=Compiler.analyse(context,node);
-		node=(Node<? super T>) node.optimise();
+		node=node.optimise();
 		// TODO: should specialise to context here?
 		return (Node<T>)node;
 	}
@@ -55,8 +55,8 @@ public class Compiler {
 	 * Compiles and evaluates a node in the given context. Performs expansion using the default expander
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> EvalResult<T> compile(Context context, Node<? super T> node) {
-		return (EvalResult<T>) compile(context,node,(APersistentMap<Symbol, Object>) Maps.EMPTY);
+	public static <T> EvalResult<T> eval(Context context, Node<? super T> node) {
+		return (EvalResult<T>) eval(context,node,(APersistentMap<Symbol, Object>) Maps.EMPTY);
 		
 	}
 	 
@@ -64,7 +64,7 @@ public class Compiler {
 	 * Compiles and evaluates a node in the given context. Performs expansion using the default expander
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> EvalResult<T> compile(Context context, Node<? super T> node, APersistentMap<Symbol, Object> bindings) {
+	public static <T> EvalResult<T> eval(Context context, Node<? super T> node, APersistentMap<Symbol, Object> bindings) {
 		Node<? super T> compiledNode=compileNode(context,node);
 		EvalResult<T> result;
 		try {
@@ -89,7 +89,7 @@ public class Compiler {
 		EvalResult<?> r=null;
 		for (int i=0; i<n; i++) {
 			Node<?> form=forms.get(i);
-			r=compile(c,form);
+			r=eval(c,form);
 			c=r.getContext();
 		}
 		return r;

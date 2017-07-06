@@ -181,7 +181,7 @@ public class Expanders {
 
 			Node<?> typeNode = ex.expand(c,form.get(1),ex);	
 			// TODO: check if this is sane?
-			Type type=(Type) Compiler.compile(c, typeNode).getValue();
+			Type type=(Type) Compiler.eval(c, typeNode).getValue();
 			Node<?> exp = ex.expand(c, form.get(2), ex);
 
 			SourceInfo si = form.getSourceInfo();
@@ -504,7 +504,7 @@ public class Expanders {
 			SourceInfo si = form.getSourceInfo();
 
 			// TODO: is this right?
-			Node<?> node = Constant.create(Compiler.compile(c, unquotedNode).getValue(), si);
+			Node<?> node = Constant.create(Compiler.eval(c, unquotedNode).getValue(), si);
 			return node;
 		}
 	}
