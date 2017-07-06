@@ -24,6 +24,16 @@ public class Compiler {
 		AExpander ex=Expanders.INITAL_EXPANDER;
 		return (Node<T>) ex.expand(context, form, ex);
 	}
+	
+	/**
+	 * Analyses a node in the given context. Performs type checking etc.
+	 * @param context
+	 * @param node
+	 * @return
+	 */
+	private static Node<?> analyse(Context context, Node<?> node) {
+		return node.analyse(context);
+	}
 
 	/**
 	 * Expands, compiles and optimises a node in the given context
@@ -34,11 +44,13 @@ public class Compiler {
 	@SuppressWarnings("unchecked")
 	public static <T> Node<T> compileNode(Context context, Node<?> node) {
 		node=Compiler.expand(context, node);
+		node=Compiler.analyse(context,node);
 		node=(Node<? super T>) node.optimise();
 		// TODO: should specialise to context here?
 		return (Node<T>)node;
 	}
-	
+
+
 	/**
 	 * Compiles and evaluates a node in the given context. Performs expansion using the default expander
 	 */

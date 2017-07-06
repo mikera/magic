@@ -268,6 +268,15 @@ public abstract class Node<T> extends RootNode {
 		if (getType()==null) throw new Error("Null type?");
 	}
 
+	/**
+	 * Analyses a node in the given context.
+	 * @param context
+	 * @return
+	 */
+	public Node<?> analyse(Context context) {
+		return this;
+	}
+
 	
 
 }
