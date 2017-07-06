@@ -69,7 +69,7 @@ public class Let<T> extends BaseForm<T> {
 			syms[i]=bindings.get(i*2).getSymbol();
 			lets[i]=bindings.get(i*2+1);
 		}
-		Node<Object> bodyExpr=(body.size()==1)?(Node<Object>)body.get(0):Do.create(body,null);
+		Node<Object> bodyExpr=(body.size()==1)?(Node<Object>)body.get(0):Do.create(body);
 		return (Let<T>) create(syms,lets,bodyExpr,si);
 	}
 

@@ -90,7 +90,7 @@ public class Expanders {
 				Slot<Object> slot = c.getSlot(sym);
 				// handle nested expander
 				if ((slot != null) && slot.isExpander()) {
-					AExpander e = (AExpander) slot.getValue();
+					AExpander e = (AExpander) slot.getValue(); 
 					return e.expand(c, form, ex).includeDependency(sym);
 				}
 
@@ -141,8 +141,8 @@ public class Expanders {
 			Node<?> exp = form.get(2);
 			// Node<?> exp=ex.expand(c, form.get(2), ex);
 
-			SourceInfo si = form.getSourceInfo();
-			return Define.create(name, exp, si);
+			APersistentMap<Keyword,Object> meta=form.meta();
+			return Define.create(name, exp, meta);
 		}
 	}
 
@@ -291,12 +291,12 @@ public class Expanders {
 				throw new AnalyserException("Can't expand fn: requires a vector of arguments but got " + argObj, form);
 			}
 
-			SourceInfo si = form.getSourceInfo();
 			// expand the body
 			APersistentList<Node<?>> body = (APersistentList<Node<?>>) ex.expandAll(c, form.getNodes().subList(2, n),
 					ex);
 
-			return Lambda.create((Vector<Symbol>) argObj, body, si);
+			APersistentMap<Keyword,Object> meta=form.meta();
+			return Lambda.create((Vector<Symbol>) argObj, body, meta);
 		}
 	}
 
@@ -605,8 +605,10 @@ public class Expanders {
 			SourceInfo si = form.getSourceInfo();
 			APersistentList<Node<?>> body = (APersistentList<Node<?>>) ex.expandAll(c, form.getNodes().subList(2, n),
 					ex);
-
-			Lambda<Object> macroFn = Lambda.create((Vector<Symbol>) argObj, body, si);
+			
+			APersistentMap<Keyword, Object> meta = form.meta();
+			Lambda<Object> macroFn = Lambda.create((Vector<Symbol>) argObj, body, meta);
+			
 			IFn<Object> fn = (IFn<Object>) macroFn.compute(c);
 			magic.compiler.MacroExpander me = magic.compiler.MacroExpander.create(fn);
 			return Constant.create(me, si);

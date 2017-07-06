@@ -5,7 +5,6 @@ import magic.Symbols;
 import magic.Type;
 import magic.Types;
 import magic.compiler.EvalResult;
-import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
@@ -52,26 +51,28 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 	}
 	
 	public static <T> Lambda<T> create(APersistentVector<Symbol> params, Node<T> body) {
-		return create(params,body,null);
+		return create(params,body,Maps.empty());
 	}
 	
-	public static <T> Lambda<T> create(APersistentVector<Symbol> params, Node<T> body,SourceInfo source) {
+	@SuppressWarnings("unchecked")
+	public static <T> Lambda<T> create(APersistentVector<Symbol> params, Node<T> body,APersistentMap<Keyword,Object> meta) {
 		int n=params.size();
 		boolean variadic=false;
 		if ((n>=2)&&(params.get(n-2)==Symbols.AMPERSAND)) {
 			variadic=true;
 		}
-		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.SOURCE,source);
 		APersistentSet<Symbol> deps=body.getDependencies().excludeAll(params);
+		APersistentSet<Symbol> oldDeps=(APersistentSet<Symbol>) meta.get(Keywords.DEPS);
+		if (oldDeps!=null) deps=deps.includeAll(oldDeps);
 		meta=meta.assoc(Keywords.DEPS,deps);
 		return new Lambda<T>(params,body,variadic,meta);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> Lambda<T> create(Vector<Symbol> params, APersistentList<Node<?>> body, SourceInfo source) {
+	public static <T> Lambda<T> create(Vector<Symbol> params, APersistentList<Node<?>> body, APersistentMap<Keyword,Object> meta) {
 		APersistentVector<Symbol> alist=(APersistentVector<Symbol>) params.toForm();
-		Node<T> bodyExpr=(body.size()==1)?(Node<T>) body.get(0):Do.create(body,source);
-		return create(alist,bodyExpr,source);
+		Node<T> bodyExpr=(body.size()==1)?(Node<T>) body.get(0):Do.create(body);
+		return create(alist,bodyExpr,meta);
 	}
 
 	/**
@@ -182,7 +183,7 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 	@Override
 	public Lambda<T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
 		Node<? extends T> newBody=(Node<? extends T>) fn.apply(body);
-		return (body==newBody)?this:(Lambda<T>) create(params,newBody,getSourceInfo());
+		return (body==newBody)?this:(Lambda<T>) create(params,newBody,meta());
 	}
 	
 	/**

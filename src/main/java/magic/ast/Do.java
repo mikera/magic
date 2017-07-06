@@ -34,25 +34,25 @@ public class Do<T> extends BaseForm<T> {
 		nBody=bodyExprs.size();
 	}
 	
-	@SuppressWarnings("unchecked")
-	public Do(APersistentList<Node<?>> bodyExprs,SourceInfo source) {
-		this(bodyExprs, 
-				((APersistentMap<Keyword,Object>)Maps.EMPTY)
-				.assoc(Keywords.DEPS,calcDependencies(bodyExprs))
-				.assoc(Keywords.SOURCE,source));
-	}
-	
 	@Override
 	public Node<T> withMeta(APersistentMap<Keyword, Object> meta) {
 		return new Do<T>(body,meta);
 	}
+	
+	public static <T> Do<T> create(APersistentList<Node<?>> body,APersistentMap<Keyword,Object> meta) {
+		return new Do<T>(body,meta);
+	}
 
 	public static <T> Do<T> create(APersistentList<Node<?>> body,SourceInfo source) {
-		return new Do<T>(body,source);
+		return create(body,Maps.create(Keywords.SOURCE, source));
+	}
+	
+	public static <T> Do<T> create(APersistentList<Node<?>> body) {
+		return new Do<T>(body,Maps.empty());
 	}
 	
 	public static <T> Node<T> create(Node<?>... body) {
-		return create(PersistentList.wrap(body),null);
+		return create(PersistentList.wrap(body));
 	}
 	
 	public static <T> Node<T> create(Node<?>[] body,SourceInfo source) {
@@ -90,7 +90,7 @@ public class Do<T> extends BaseForm<T> {
 				newBody=newBody.assocAt(i, newNode);
 			} 
 		}
-		return (nodes==newBody)?this:create(newBody,getSourceInfo());
+		return (nodes==newBody)?this:create(newBody,meta());
 	}
 	
 	/**

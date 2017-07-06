@@ -3,11 +3,12 @@ package magic.ast;
 import magic.Keywords;
 import magic.RT;
 import magic.compiler.EvalResult;
-import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
+import magic.data.APersistentSet;
 import magic.data.Keyword;
 import magic.data.Maps;
 import magic.data.PersistentList;
+import magic.data.Sets;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 import magic.lang.Context;
@@ -39,12 +40,15 @@ public class Define<T> extends BaseForm<T> {
 	}
 
 	public static <T> Define<T> create(Symbol sym, Node<T> exp) {
-		return create(sym,exp,null);
+		return create(sym,exp,Maps.empty());
 	}
 	
-	public static <T> Define<T> create(Symbol sym, Node<T> exp,SourceInfo source) {
-		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.SOURCE,source);
-		meta=meta.assoc(Keywords.DEPS, exp.getDependencies());
+	@SuppressWarnings("unchecked")
+	public static <T> Define<T> create(Symbol sym, Node<T> exp,APersistentMap<Keyword, Object> meta) {
+		APersistentSet<Symbol> deps=(APersistentSet<Symbol>) meta.get(Keywords.DEPS);
+		if (deps==null) deps=Sets.emptySet();
+		deps=deps.includeAll(exp.getDependencies());
+		meta=meta.assoc(Keywords.DEPS, deps);
 		return new Define<T>(sym,exp,meta);
 	}
 	
