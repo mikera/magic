@@ -14,6 +14,7 @@ public class Compiler {
 	 * 
 	 * Expansion includes:
 	 * - Running the default expander on the form
+	 * - Acculmulating dependencies from successive expansions
 	 * 
 	 * @param context
 	 * @param form
@@ -26,7 +27,7 @@ public class Compiler {
 	}
 	
 	/**
-	 * Analyses a node in the given context. Performs type checking etc.
+	 * Analyses an expanded node in the given context. Performs type checking etc.
 	 * @param context
 	 * @param node
 	 * @return

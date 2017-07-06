@@ -94,10 +94,11 @@ public class TestAnalyse {
 	public void testDeps() {
 		Symbol foo=Symbol.create("foo");
 		Symbol bar=Symbol.create("bar");
+		Symbol fn=Symbol.create("fn");
 		assertEquals(Sets.of(foo),analyse("foo").getDependencies());
 		assertEquals(Sets.of(foo,bar),analyse("[foo bar]").getDependencies());
-		assertEquals(Sets.of(),analyse("(fn [bar] bar)").getDependencies());
-		assertEquals(Sets.of(foo),analyse("(fn [bar] foo)").getDependencies());
+		assertEquals(Sets.of(fn),analyse("(fn [bar] bar)").getDependencies());
+		assertEquals(Sets.of(foo,fn),analyse("(fn [bar] foo)").getDependencies());
 
 		assertEquals(Sets.of(Symbols.QUOTE),analyse("'(foo bar)").getDependencies());
 	}

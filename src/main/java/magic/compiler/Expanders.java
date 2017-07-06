@@ -91,7 +91,7 @@ public class Expanders {
 				// handle nested expander
 				if ((slot != null) && slot.isExpander()) {
 					AExpander e = (AExpander) slot.getValue();
-					return e.expand(c, form, ex);
+					return e.expand(c, form, ex).includeDependency(sym);
 				}
 
 				// handle .someMethod forms
@@ -101,7 +101,7 @@ public class Expanders {
 					SourceInfo si = head.getSourceInfo();
 					ListForm newForm = ListForm.createCons(Lookup.create(Symbols.DOT, si), form.get(1),
 							Lookup.create(memberSym, si), form.subList(2, n), form.getSourceInfo());
-					return ex.expand(c, newForm, ex);
+					return ex.expand(c, newForm, ex).includeDependency(sym);
 				}
 			}
 

@@ -277,6 +277,12 @@ public abstract class Node<T> extends RootNode {
 		return mapChildren(NodeFunctions.analyse(context));
 	}
 
+	public Node<T> includeDependency(Symbol sym) {
+		APersistentSet<Symbol> deps=getDependencies();
+		if (deps.containsKey(sym)) return this;
+		return withMeta(meta.assoc(Keywords.DEPS, deps.include(sym)));
+	}
+
 	
 
 }
