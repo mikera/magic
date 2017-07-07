@@ -70,6 +70,10 @@ public class TestCoreFns {
 		assertFalse(exec("(number? :foo)"));
 	}
 	
+	@Test public void testConcat() {
+		assertEquals(Tuple.of(1L,2L,3L,4L),exec("(concat [1 2] [3 4])"));
+	}
+	
 	@Test public void testNth() {
 		Object v=exec("(nth [1 2 3] 1)");
 		assertEquals(2L,v);

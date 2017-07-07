@@ -202,6 +202,14 @@ public class RT {
 		return vec(o).seq();
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static Object concat(Object a, Object b) {
+		if (a instanceof APersistentVector) {
+			return ((APersistentVector<Object>)a).concat((APersistentVector<Object>) vec(b));
+		};
+		throw new IllegalArgumentException("Can't concat objects of type "+a.getClass()+" and "+b.getClass());
+	}
+	
 	/**
 	 * Returns the items in the sequence after the first, as a seq
 	 * 

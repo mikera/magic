@@ -36,6 +36,9 @@
 (defn str [a] 
   (. magic.RT toString a))
 
+(defn concat [a b]
+  (. magic.RT concat a b))
+
 ;; ===========================================================
 ;; Boolean functions and basic logic
 
