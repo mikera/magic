@@ -2,7 +2,7 @@
 ;; Magic core namespace
 ;;
 
-(defmacro comment [_] nil)
+(defmacro comment [& _] nil)
 
 (defn vec [a] 
   (. magic.RT vec a))
@@ -43,3 +43,14 @@
 (defmacro when [a b] 
   `(if ~a ~b nil))
 
+(defn + [a b]
+  (. magic.Maths add a b)) 
+
+(defn - [a b]
+  (. magic.Maths sub a b)) 
+
+(defn inc [a]
+  (. magic.Maths add a 1)) 
+
+(defn dec [a]
+  (. magic.Maths sub a 1)) 

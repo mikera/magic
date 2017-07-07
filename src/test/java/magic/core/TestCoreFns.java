@@ -16,8 +16,8 @@ public class TestCoreFns {
 	}
 	
 	@Test public void testComment() {
-		Object v=exec("(comment ignored-symbol)");
-		assertNull(v);
+		assertNull(exec("(comment ignored-symbol)"));
+		assertNull(exec("(comment ignored-symbol :foo)"));
 	}
 	
 	@Test public void testVec() {
@@ -150,6 +150,19 @@ public class TestCoreFns {
 		assertTrue(RT.bool(exec("(identical? nil nil)")));
 		assertTrue(RT.bool(exec("(let [a 1] (identical? a a))")));
 		assertEquals(Boolean.FALSE,exec("(identical? 1 2)")); // TODO: why is this broken?
+	}
+	
+	@Test public void testIncDec() {
+		assertEquals((Long)1L,exec("(inc(dec 1))"));
+		assertEquals((Long)4L,exec("(inc 3)"));
+		assertEquals((Long)2L,exec("(dec 3)"));
+		
+		try {
+			exec("(inc :foo)");
+			fail("Should fail!");
+		} catch (Throwable t) {
+			// OK
+		}
 	}
 	
 //	@Test public void testWhen() {
