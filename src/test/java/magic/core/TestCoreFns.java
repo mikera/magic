@@ -186,6 +186,8 @@ public class TestCoreFns {
 	@Test public void testApply() {
 		assertEquals((Long)3L,exec("(apply + [1 2])"));
 		assertEquals((Long)3L,exec("(apply + 1 [2])"));
+		assertTrue(exec("(apply = 1 1 [1 1 1])"));
+		assertFalse(exec("(apply = 1 2 [1 2 1])"));
 	}
 	
 	@Test public void testIdentical() {
