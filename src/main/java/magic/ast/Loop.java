@@ -136,10 +136,18 @@ public class Loop<T> extends BaseForm<T> {
 				}
 				newLets[i]=newNode;
 			} 
+			
+			if (newNode.isConstant()) {
+				// if constant, we can optimise subsequent initialisations
+				bindings=bindings.assoc(syms[i],newNode.getValue());
+			} else {
+		        bindings=bindings.dissoc(syms[i]); // must be calculated
+			}
 		}
 		
+		// don't specialise on any bound variables, may be recur targets within body
 		for (int i=0; i<nLets; i++) {
-	        bindings=bindings.dissoc(syms[i]); // binding no longer visible, must be calculated
+	        bindings=bindings.dissoc(syms[i]); 
 		}
 		
 		Node<? extends T> newBody=body.specialiseValues(bindings);
