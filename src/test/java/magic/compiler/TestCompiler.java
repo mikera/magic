@@ -93,6 +93,8 @@ public class TestCompiler {
 		Context c2=r.getContext();
 	
 		assertEquals((Long)2L,c2.getValue("b"));
+		
+		assertEquals("Foo",Core.compile(c2, "((fn [a] (if true (return a) 4)) \"Foo\")").getValue());
 	}
 	
 	@Test public void testCompileSet() {

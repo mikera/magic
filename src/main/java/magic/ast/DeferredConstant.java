@@ -41,7 +41,7 @@ public class DeferredConstant<T> extends BaseConstant<T> {
 	
 	@Override
 	public EvalResult<T> eval(Context c, APersistentMap<Symbol, Object> bindings) {
-		return new EvalResult<T>(c,value);
+		return new EvalResult<T>(c,getValue());
 	}
 
 	public static <T> DeferredConstant<T> create(IFn0<T> fn, APersistentSet<Symbol> deps, SourceInfo sourceInfo) {
