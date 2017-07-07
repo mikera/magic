@@ -76,6 +76,16 @@
   (boolean (identical? nil a)))
 
 ;; ================================================================
+;; Misc higher order functions
+
+(defn apply [f & args]
+  (. magic.RT applyWith f args))
+
+(defn complement [f]
+  (fn [& args]
+    (not (apply f args))))
+
+;; ================================================================
 ;; Maths functions
 ;;
 ;; TODO: these should support all arities

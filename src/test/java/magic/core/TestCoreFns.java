@@ -183,6 +183,11 @@ public class TestCoreFns {
 		assertTrue(exec("(vector? [])"));
 	}
 	
+	@Test public void testApply() {
+		assertEquals((Long)3L,exec("(apply + [1 2])"));
+		assertEquals((Long)3L,exec("(apply + 1 [2])"));
+	}
+	
 	@Test public void testIdentical() {
 		assertTrue(RT.bool(exec("(identical? nil nil)")));
 		assertTrue(RT.bool(exec("(let [a 1] (identical? a a))")));

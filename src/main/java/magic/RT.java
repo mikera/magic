@@ -24,6 +24,7 @@ import magic.data.ISeq;
 import magic.data.PersistentList;
 import magic.data.Symbol;
 import magic.data.Vectors;
+import magic.fn.IFn;
 import magic.lang.Context;
 import magic.lang.Slot;
 import magic.lang.UnresolvedException;
@@ -523,6 +524,41 @@ public class RT {
 			return (T) type;
 		}
 		throw new UnresolvedException(sym);
+	}
+	
+	public static Object applyWith(Object f, Object args) {
+		if (!(f instanceof IFn)) throw new IllegalArgumentException("apply requires a function as first argument but got: "+RT.className(f));
+		
+		IFn<?> fn=(IFn<?>)f;
+		
+		APersistentVector<?> avec=vec(args);
+		int al=avec.size();
+		
+		int n;
+		APersistentVector<?> rest;
+		if (al>0) {
+			rest=vec(avec.get(al-1));
+			n=al-1+rest.size();
+		} else {
+			n=0;
+			rest=Vectors.emptyVector();
+		}
+		
+		Object[] as=new Object[n];
+		for (int i=0; i<al-1; i++) {
+			as[i]=avec.get(i);
+		}
+		
+		for (int i=0; i<(n-(al-1)); i++) {
+			as[(al-1)+i]=rest.get(i);
+		}
+		
+		return fn.applyToArray(as);
+	}
+
+	private static String className(Object o) {
+		if (o==null) return "nil";
+		return o.getClass().toString();
 	}
 
 	public static long longValue(Object a) {
