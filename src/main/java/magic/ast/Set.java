@@ -73,7 +73,7 @@ public class Set<T> extends BaseDataStructure<APersistentSet<? extends T>> {
 		Object[] results=new Object[n];
 		for (int i=0; i<n; i++) {
 			EvalResult<?> r=exps.get(i).eval(c,bindings);
-			if (r.isReturn()) return (EvalResult<APersistentSet<? extends T>>) r;
+			if (r.isEscaping()) return (EvalResult<APersistentSet<? extends T>>) r;
 			results[i]=r.getValue();
 		}
 		APersistentSet <? extends T> r=(APersistentSet<? extends T>)Sets.createFrom(results);

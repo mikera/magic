@@ -68,7 +68,7 @@ public class Do<T> extends BaseForm<T> {
 		EvalResult<T> r=new EvalResult<>(context,null);
 		for (int i=0; i<nBody; i++) {
 			r=(EvalResult<T>) body.get(i).eval(r.getContext(),bindings);
-			if (r.isReturn()) return r;
+			if (r.isEscaping()) return r;
 		}
 		return r;
 	}

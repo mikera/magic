@@ -50,7 +50,7 @@ public class Return<T> extends BaseForm<T> {
 	@Override
 	public EvalResult<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
 		EvalResult<?> r=exp.eval(context, bindings);
-		if (r.isReturn()) throw new Error("Can't return from within a return in form: "+this);
+		if (r.isEscaping()) throw new Error("Can't return from within a return in form: "+this);
 		return EvalResult.returnValue(r.getContext(),r.getValue());
 	}
 }

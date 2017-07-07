@@ -52,7 +52,7 @@ public class Cast<T> extends BaseForm<T> {
 	@Override
 	public EvalResult<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
 		EvalResult<?> r=exp.eval(context, bindings);
-		if (r.isReturn()) return (EvalResult<T>) r;
+		if (r.isEscaping()) return (EvalResult<T>) r;
 		
 		Object result=r.getValue();
 		if (type.checkInstance(result)) {

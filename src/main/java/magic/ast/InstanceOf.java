@@ -78,11 +78,11 @@ public class InstanceOf extends BaseForm<Boolean> {
 	@Override
 	public EvalResult<Boolean> eval(Context context, APersistentMap<Symbol, Object> bindings) {
 		EvalResult<?> typeRes=this.typeExpr.eval(context, bindings);
-		if (typeRes.isReturn()) return (EvalResult<Boolean>) typeRes;
+		if (typeRes.isEscaping()) return (EvalResult<Boolean>) typeRes;
 		
 		Type type=(Type) typeRes.getValue();
 		EvalResult<?> res=exp.eval(typeRes.getContext(), bindings);
-		if (res.isReturn()) return (EvalResult<Boolean>) res;
+		if (res.isEscaping()) return (EvalResult<Boolean>) res;
 	
 		return new EvalResult<Boolean>(res.getContext(),type.checkInstance(res.getValue()));
 	}

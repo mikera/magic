@@ -67,7 +67,7 @@ public class List<T> extends BaseDataStructure<APersistentList<? extends T>> {
 		Object[] results=new Object[n];
 		for (int i=0; i<n; i++) {
 			EvalResult<?> r=exps.get(i).eval(c,bindings);
-			if (r.isReturn()) return (EvalResult<APersistentList<? extends T>>) r;
+			if (r.isEscaping()) return (EvalResult<APersistentList<? extends T>>) r;
 			
 			results[i]=r.getValue();
 		}
@@ -114,7 +114,7 @@ public class List<T> extends BaseDataStructure<APersistentList<? extends T>> {
 	@Override
 	public List<T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
 		APersistentVector<Node<?>> newExps=NodeFunctions.mapAll(exps, fn);
-		return (exps==newExps)?this:(List<T>) create(newExps);
+		return (exps==newExps)?this:(List<T>) create(newExps,getSourceInfo());
 	}
 	
 	/**

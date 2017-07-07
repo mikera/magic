@@ -37,7 +37,16 @@ public final class EvalResult<T> {
 		return value;
 	}
 	
-	public boolean isReturn() {
+	/**
+	 * Returns true if the result of this evaluation is escaping outside normal control flow.
+	 * 
+	 * This may be:
+	 * - a function 'return' value
+	 * - a loop 'recur' value
+	 *  
+	 * @return
+	 */
+	public boolean isEscaping() {
 		return isReturn;
 	}
 	

@@ -110,7 +110,7 @@ public class Let<T> extends BaseForm<T> {
 	public EvalResult<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
 		for (int i=0; i<nLets; i++) {
 			EvalResult<?> r=lets[i].eval(context,bindings);
-			if (r.isReturn()) return (EvalResult<T>) r;
+			if (r.isEscaping()) return (EvalResult<T>) r;
 			
 			bindings=bindings.assoc(syms[i], r.getValue());
 		}

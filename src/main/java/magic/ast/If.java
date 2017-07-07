@@ -57,7 +57,7 @@ public class If<T> extends BaseForm<T> {
 	@Override
 	public EvalResult<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
 		EvalResult<?> r = test.eval(context,bindings);
-		if (r.isReturn()) return (EvalResult<T>) r; // handle return from if branch
+		if (r.isEscaping()) return (EvalResult<T>) r; // handle return from if branch
 		
 		Object testVal=r.getValue();
 		context=r.getContext();

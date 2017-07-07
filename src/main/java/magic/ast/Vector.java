@@ -68,7 +68,7 @@ public class Vector<T> extends BaseDataStructure<APersistentVector<? extends T>>
 		Object[] results=new Object[n];
 		for (int i=0; i<n; i++) {
 			EvalResult<?> r=exps.get(i).eval(c,bindings);
-			if (r.isReturn()) return (EvalResult<APersistentVector<? extends T>>) r;
+			if (r.isEscaping()) return (EvalResult<APersistentVector<? extends T>>) r;
 			
 			results[i]=r.getValue();
 		}

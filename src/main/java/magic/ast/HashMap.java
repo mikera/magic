@@ -70,7 +70,7 @@ public class HashMap<K,V> extends BaseDataStructure<APersistentMap<? extends K,?
 		Object[] results=new Object[n];
 		for (int i=0; i<n; i++) {
 			EvalResult<?> r=exps.get(i).eval(c,bindings);
-			if (r.isReturn()) return (EvalResult<APersistentMap<? extends K, ? extends V>>) r;
+			if (r.isEscaping()) return (EvalResult<APersistentMap<? extends K, ? extends V>>) r;
 			
 			results[i]=r.getValue();
 		}
