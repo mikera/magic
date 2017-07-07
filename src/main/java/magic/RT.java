@@ -12,6 +12,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import magic.data.APersistentCollection;
@@ -97,6 +98,33 @@ public class RT {
 	 */
 	public static final Boolean identical(Object a, Object b) {
 		return a==b;
+	}
+	
+	/**
+	 * Gets the item from an indexed collection at the given index
+	 * 
+	 * @param a
+	 * @param index
+	 * @return Boolean.FALSE or Boolean.TRUE
+	 */
+	public static final Object nth(Object a, Object index) {
+		int i=RT.intValue(index);
+		return nth(a,i);
+	}
+	
+	public static final Object nth(Object a, int i) {
+		if (a instanceof List) {
+			return ((List<?>)a).get(i);
+		}
+		Class<?> klass=a.getClass();
+		if (klass.isArray()) {
+			return Array.get(a, i);
+		}
+		throw new IllegalArgumentException("Can't do indexed get on object of type: "+a.getClass());
+	}
+	
+	public static final Object first(Object a) {
+		return nth(a,0);
 	}
 	
 	/**
@@ -455,6 +483,15 @@ public class RT {
 			return n.longValue();
 		};
 		throw new TypeError("Can't cast value of type "+a.getClass()+" to long integer");
+	}
+	
+	public static int intValue(Object a) {
+		if (a instanceof Integer) return (Integer)a;
+		if (a instanceof Number) {
+			Number n=(Number)a;
+			return n.intValue();
+		};
+		throw new TypeError("Can't cast value of type "+a.getClass()+" to int");
 	}
 
 

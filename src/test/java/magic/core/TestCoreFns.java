@@ -37,6 +37,37 @@ public class TestCoreFns {
 		assertEquals(Tuple.of(1L,2L,3L),v);
 	}
 	
+	@Test public void testNth() {
+		Object v=exec("(nth [1 2 3] 1)");
+		assertEquals(2L,v);
+		
+		try {
+			exec("(nth [1 2 3] -1)");
+			fail("Should fail!");
+		} catch (Throwable t) {
+			// OK
+		}
+		
+		try {
+			exec("(nth [1 2 3] 3)");
+			fail("Should fail!");
+		} catch (Throwable t) {
+			// OK
+		}
+	}
+	
+	@Test public void testFirst() {
+		Object v=exec("(first [1 2 3])");
+		assertEquals(1L,v);
+		
+		try {
+			exec("(first [])");
+			fail("Should fail!");
+		} catch (Throwable t) {
+			// OK
+		}
+	}
+	
 	@Test public void testCast() {
 		Object v=exec("(cast java.lang.String \"foo\")");
 		assertEquals("foo",v);

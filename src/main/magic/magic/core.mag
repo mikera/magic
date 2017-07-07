@@ -7,6 +7,12 @@
 (defn vec [a] 
   (. magic.RT vec a))
 
+(defn nth [a index]
+  (. magic.RT nth a index))
+
+(defn first [a]
+  (. magic.RT first a))
+
 (defn seq [a]
   (. magic.RT seq a))
 
