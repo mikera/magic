@@ -56,6 +56,19 @@ public class TestCoreFns {
 		} 
 	}
 	
+	@Test public void testBooleanQ() {
+		assertTrue(exec("(boolean? true)"));
+		assertTrue(exec("(boolean? false)"));
+		assertFalse(exec("(boolean? nil)"));
+		assertTrue(exec("(boolean? (= 2 3))"));
+	}
+	
+	@Test public void testNumberQ() {
+		assertTrue(exec("(number? 1)"));
+		assertTrue(exec("(number? 2.0)"));
+		assertFalse(exec("(number? nil)"));
+		assertFalse(exec("(number? :foo)"));
+	}
 	
 	@Test public void testNth() {
 		Object v=exec("(nth [1 2 3] 1)");

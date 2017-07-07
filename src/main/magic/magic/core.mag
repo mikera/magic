@@ -57,6 +57,15 @@
 (defn list? [a] 
   (instance? magic.data.APersistentList a))
 
+(defn boolean? [a] 
+  (instance? java.lang.Boolean a))
+
+(defn coll? [a]
+  (instance? java.util.Collection a))
+
+(defn number? [a] 
+  (instance? java.lang.Number a))
+
 (defn identical? [a b] 
   (boolean (. magic.RT identical a b)))
 

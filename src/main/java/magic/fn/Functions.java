@@ -60,9 +60,9 @@ public class Functions {
 		public Boolean applyToArray(Object... a) {
 			int n=a.length;
 			for (int i=1; i<n; i++) {
-				if(!RT.equals(a[i], a[i-1])) return false;
+				if(!RT.equals(a[i], a[i-1])) return Boolean.FALSE;
 			}
-			return true;
+			return Boolean.TRUE;
 		}
 
 		@Override
