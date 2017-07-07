@@ -69,7 +69,10 @@ public class HashMap<K,V> extends BaseDataStructure<APersistentMap<? extends K,?
 		if (n==0) return  EvalResult.create(c, (APersistentMap<K,V>)Maps.EMPTY);
 		Object[] results=new Object[n];
 		for (int i=0; i<n; i++) {
-			results[i]=exps.get(i).compute(c,bindings);
+			EvalResult<?> r=exps.get(i).eval(c,bindings);
+			if (r.isReturn()) return (EvalResult<APersistentMap<? extends K, ? extends V>>) r;
+			
+			results[i]=r.getValue();
 		}
 		APersistentMap<K,V> r=(APersistentMap<K, V>) Maps.createFromFlattenedArray(results);
 		return EvalResult.create(c, r);

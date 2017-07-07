@@ -114,6 +114,7 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 			this.body=body;
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public T applyToArray(Object... a) {
 			int alength=a.length;
@@ -135,7 +136,8 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 				Tuple<?> vs=Tuple.wrap(a, arity, alength-arity); // construct arg tuple
 				bnds=bnds.assoc(varParam, vs);
 			}
-			return body.compute(null,bnds); // TODO: shouldn't do any context lookup?
+			EvalResult<T> r=(EvalResult<T>) body.eval(null,bnds); // TODO: shouldn't do any context lookup?
+			return r.getValue(); 
 		}
 
 		@Override

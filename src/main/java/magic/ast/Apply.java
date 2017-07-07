@@ -60,6 +60,8 @@ public class Apply<T> extends BaseForm<T> {
 	@Override
 	public EvalResult<T> eval(Context c,APersistentMap<Symbol, Object> bindings) {
 		EvalResult<?> rf= (EvalResult<?>) function.eval(c,bindings);
+		if (rf.isReturn()) return (EvalResult<T>) rf;
+		
 		Object rfo=rf.getValue();
 		if (!(rfo instanceof IFn)) {
 			throw new Error("Function expected in "+this+" but got "+rfo.getClass());
@@ -69,6 +71,7 @@ public class Apply<T> extends BaseForm<T> {
 		EvalResult<?> r=rf;
 		for (int i=0; i<arity; i++) {
 			r=args[i].eval(c,bindings);
+			if (r.isReturn()) return (EvalResult<T>) r;
 			values[i]=r.getValue();
 		}
 		return EvalResult.create(r.getContext(),f.applyToArray(values));

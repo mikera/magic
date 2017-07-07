@@ -66,7 +66,10 @@ public class List<T> extends BaseDataStructure<APersistentList<? extends T>> {
 		if (n==0) return  EvalResult.create(c, (APersistentList<T>)Lists.EMPTY);
 		Object[] results=new Object[n];
 		for (int i=0; i<n; i++) {
-			results[i]=exps.get(i).compute(c,bindings);
+			EvalResult<?> r=exps.get(i).eval(c,bindings);
+			if (r.isReturn()) return (EvalResult<APersistentList<? extends T>>) r;
+			
+			results[i]=r.getValue();
 		}
 		APersistentList <? extends T> r=(APersistentList<? extends T>) Lists.wrap(results);
 		return EvalResult.create(c, r);

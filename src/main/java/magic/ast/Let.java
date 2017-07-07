@@ -105,10 +105,14 @@ public class Let<T> extends BaseForm<T> {
 		return create(syms,lets,bodyExpr,null);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public EvalResult<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
 		for (int i=0; i<nLets; i++) {
-			bindings=bindings.assoc(syms[i], (Object)(lets[i].compute(context,bindings)));
+			EvalResult<?> r=lets[i].eval(context,bindings);
+			if (r.isReturn()) return (EvalResult<T>) r;
+			
+			bindings=bindings.assoc(syms[i], r.getValue());
 		}
 		
 		EvalResult<T> r=body.eval(context,bindings);
