@@ -30,6 +30,9 @@
 (defn seq [a]
   (. magic.RT seq a))
 
+(defn next [a]
+  (. magic.RT next a))
+
 (defn str [a] 
   (. magic.RT toString a))
 
@@ -59,7 +62,6 @@
 
 (defn nil? [a] 
   (boolean (identical? nil a)))
-
 
 ;; ================================================================
 ;; Maths functions

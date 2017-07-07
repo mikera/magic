@@ -37,6 +37,26 @@ public class TestCoreFns {
 		assertEquals(Tuple.of(1L,2L,3L),v);
 	}
 	
+	@Test public void testNext() {
+		assertEquals(Tuple.of(2L,3L),exec("(vec (next [1 2 3]))"));
+		assertNull(exec("(next [1])"));
+		 
+		try {
+			exec("(next nil)");
+			fail("Should fail!");
+		} catch (Throwable t) {
+			// OK
+		} 
+		
+		try {
+			exec("(next [])");
+			fail("Should fail!");
+		} catch (Throwable t) {
+			// OK
+		} 
+	}
+	
+	
 	@Test public void testNth() {
 		Object v=exec("(nth [1 2 3] 1)");
 		assertEquals(2L,v);

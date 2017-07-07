@@ -109,6 +109,12 @@ public class RT {
 		return a.equals(b);
 	}
 	
+	public static final Boolean equalsObject(Object a, Object b) {
+		if (a==b) return Boolean.TRUE;
+		if ((a==null)||(b==null)) return Boolean.FALSE;
+		return a.equals(b)?Boolean.TRUE:Boolean.FALSE;
+	}
+	
 	/**
 	 * Returns true if and only if two values are identical.
 	 * Handles nulls as distinct values that are identical to null only.
@@ -194,6 +200,20 @@ public class RT {
 			return ((APersistentCollection<?>)o).seq();
 		};
 		return vec(o).seq();
+	}
+	
+	/**
+	 * Returns the items in the sequence after the first, as a seq
+	 * 
+	 * Returns nil if the sequence is empty.
+	 * @param o
+	 * @return
+	 */
+	public static ISeq<?>next(Object o) {
+		if (o instanceof APersistentCollection) {
+			return ((APersistentCollection<?>)o).seq().next();
+		};
+		return vec(o).seq().next();
 	}
 	
 	/**
