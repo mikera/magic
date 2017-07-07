@@ -2,7 +2,21 @@
 ;; Magic core namespace
 ;;
 
+;; ============================================================
+;; Basic language tools
+
 (defmacro comment [& _] nil)
+
+
+;; =============================================================
+;; Conditionals and control flow
+
+(defmacro when [a b] 
+  `(if ~a ~b nil))
+
+;; =========================================
+;; Basic sequence functions
+;;
 
 (defn vec [a] 
   (. magic.RT vec a))
@@ -19,6 +33,9 @@
 (defn str [a] 
   (. magic.RT toString a))
 
+;; ===========================================================
+;; Boolean functions and basic logic
+
 (defn boolean [a] 
   (. magic.RT boolObject a))
 
@@ -27,6 +44,9 @@
 
 (defn identity [a] 
   a)
+
+;; ============================================================
+;; Predicates
 
 (defn vector? [a] 
   (instance? magic.data.APersistentVector a))
@@ -40,8 +60,12 @@
 (defn nil? [a] 
   (boolean (identical? nil a)))
 
-(defmacro when [a b] 
-  `(if ~a ~b nil))
+
+;; ================================================================
+;; Maths functions
+;;
+;; TODO: these should support all arities
+
 
 (defn + [a b]
   (. magic.Maths add a b)) 
