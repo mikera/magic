@@ -64,6 +64,17 @@ public class RT {
 	}
 	
 	/**
+	 * Computes the negation of an object's truthiness
+	 * i.e. nil or Boolean.FALSE returns true, everything else returns false
+	 * @param o
+	 * @return
+	 */
+	public static Boolean not(Object o) {
+		if (o == Boolean.FALSE) return Boolean.TRUE;
+		return (o==null)?Boolean.TRUE:Boolean.FALSE;
+	}
+	
+	/**
 	 * Converts an object to a boolean Object value, according to Clojure's truthiness rules
 	 * i.e. nil or Boolean.FALSE is false, everything else is truthy
 	 * @param o

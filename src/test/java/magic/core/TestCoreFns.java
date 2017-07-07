@@ -71,6 +71,13 @@ public class TestCoreFns {
 	@Test public void testCast() {
 		Object v=exec("(cast java.lang.String \"foo\")");
 		assertEquals("foo",v);
+		
+		try {
+			exec("(cast java.lang.String 1)");
+			fail("Should fail!");
+		} catch (Throwable t) {
+			// OK
+		}
 	}
 	
 	@Test public void testEquals() {
@@ -119,6 +126,12 @@ public class TestCoreFns {
 		Object o2=Boolean.FALSE;
 		assertFalse(RT.bool(o2));
 		assertFalse(RT.bool(o));
+	}
+	
+	@Test public void testNot() {
+		assertTrue(RT.bool(exec("(not false)")));
+		Object o2=exec("(not 1)");
+		assertFalse(RT.bool(o2));
 	}
 	
 	@Test public void testNilQ() {

@@ -22,6 +22,9 @@
 (defn boolean [a] 
   (. magic.RT boolObject a))
 
+(defn not [a] 
+  (. magic.RT not a))
+
 (defn identity [a] 
   a)
 
