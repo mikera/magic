@@ -43,5 +43,16 @@ public class Maths {
 	public static Long sub(Long a, Long b) {
 		return a-b;
 	}
+	
+	public static Number mul(Object a, Object b) {
+		if ((a instanceof Long)&&(b instanceof Long)) {
+			return mul((Long)a,(Long)b);
+		}
+		return ((Number)a).doubleValue()*((Number)b).doubleValue();
+	}
+	
+	public static Long mul(Long a, Long b) {
+		return a*b;
+	}
 
 }

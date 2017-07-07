@@ -49,6 +49,9 @@
 (defn - [a b]
   (. magic.Maths sub a b)) 
 
+(defn * [a b]
+  (. magic.Maths mul a b)) 
+
 (defn inc [a]
   (. magic.Maths add a 1)) 
 

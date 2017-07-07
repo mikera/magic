@@ -165,6 +165,45 @@ public class TestCoreFns {
 		}
 	}
 	
+	@Test public void testPlus() {
+		assertEquals((Double)2.0,exec("(+ 1 1.0)"));
+		assertEquals((Double)3.0,exec("(+ 2.0 1.0)"));
+		assertEquals((Long)4L,exec("(+ 1 3)"));
+		
+		try {
+			exec("(+ 1 :foo)");
+			fail("Should fail!");
+		} catch (Throwable t) {
+			// OK
+		}
+	}
+	
+	@Test public void testMinus() {
+		assertEquals((Double)1.0,exec("(- 2 1.0)"));
+		assertEquals((Double)3.0,exec("(- 4.0 1.0)"));
+		assertEquals((Long)4L,exec("(- 6 2)"));
+		
+		try {
+			exec("(- 1 :foo)");
+			fail("Should fail!");
+		} catch (Throwable t) {
+			// OK
+		}
+	}
+	
+	@Test public void testMul() {
+		assertEquals((Double)2.0,exec("(* 2 1.0)"));
+		assertEquals((Double)3.0,exec("(* 6.0 0.5)"));
+		assertEquals((Long)6L,exec("(* 2 3)"));
+		
+		try {
+			exec("(* 1 :foo)");
+			fail("Should fail!");
+		} catch (Throwable t) {
+			// OK
+		}
+	}
+	
 //	@Test public void testWhen() {
 //		assertEquals("foo",exec("(when true (str 'foo))"));
 //		assertNull(exec("(when false (str 'foo))"));
