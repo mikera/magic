@@ -213,8 +213,6 @@ public class TestCoreFns {
 	
 	}
 	
-	
-	
 //	@Test public void testWhen() {
 //		assertEquals("foo",exec("(when true (str 'foo))"));
 //		assertNull(exec("(when false (str 'foo))"));
