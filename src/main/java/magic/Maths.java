@@ -54,5 +54,38 @@ public class Maths {
 	public static Long mul(Long a, Long b) {
 		return a*b;
 	}
+	
+	public static Boolean eq(Object a, Object b) {
+		if ((a instanceof Long)&&(b instanceof Long)) {
+			return eq((Long)a,(Long)b);
+		}
+		return RT.boolObject(((Number)a).doubleValue()==((Number)b).doubleValue());
+	}
+	
+	public static Boolean eq(Long a, Long b) {
+		return RT.boolObject(a==b);
+	}
+	
+	public static Boolean lt(Object a, Object b) {
+		if ((a instanceof Long)&&(b instanceof Long)) {
+			return eq((Long)a,(Long)b);
+		}
+		return RT.boolObject(((Number)a).doubleValue()<((Number)b).doubleValue());
+	}
+	
+	public static Boolean lt(Long a, Long b) {
+		return RT.boolObject(a<b);
+	}
+	
+	public static Boolean gt(Object a, Object b) {
+		if ((a instanceof Long)&&(b instanceof Long)) {
+			return eq((Long)a,(Long)b);
+		}
+		return RT.boolObject(((Number)a).doubleValue()>((Number)b).doubleValue());
+	}
+	
+	public static Boolean gt(Long a, Long b) {
+		return RT.boolObject(a>b);
+	}
 
 }

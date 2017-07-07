@@ -204,6 +204,17 @@ public class TestCoreFns {
 		}
 	}
 	
+	@Test public void testComps() {
+		assertTrue(exec("(> 2 1.0)"));
+		assertFalse(exec("(< 2 1.0)"));
+		assertFalse(exec("(<= 2 -10)"));
+		assertTrue(exec("(== 2 2.0)"));
+		assertFalse(exec("(== 2 1)"));
+	
+	}
+	
+	
+	
 //	@Test public void testWhen() {
 //		assertEquals("foo",exec("(when true (str 'foo))"));
 //		assertNull(exec("(when false (str 'foo))"));

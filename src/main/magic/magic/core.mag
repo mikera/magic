@@ -81,3 +81,22 @@
 
 (defn dec [a]
   (. magic.Maths sub a 1)) 
+
+(defn == [a b]
+  (. magic.Maths eq a b))
+
+(defn < [a b]
+  (. magic.Maths lt a b))
+
+(defn > [a b]
+  (. magic.Maths gt a b))
+
+(defn != [a b]
+  (not (. magic.Maths eq a b)))
+
+(defn >= [a b]
+  (not (. magic.Maths lt a b)))
+
+(defn <= [a b]
+  (not (. magic.Maths gt a b)))
+
