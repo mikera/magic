@@ -17,16 +17,20 @@ public final class EvalResult<T> {
 
 	private final Context context;
 	private final T value;
-	private final boolean isReturn;
+	private final int returnType;
 
+	public static final int NORMAL=0;
+	public static final int RETURN=1;
+	public static final int RECUR=2;
+	
 	public EvalResult(Context c, T value) {
-		this(c,value,false);
+		this(c,value,0);
 	}
 	
-	public EvalResult(Context c, T value, boolean isReturn) {
+	public EvalResult(Context c, T value, int returnType) {
 		this.context=c;
 		this.value=value;
-		this.isReturn=isReturn;
+		this.returnType=returnType;
 	}
 
 	public Context getContext() {
@@ -47,7 +51,7 @@ public final class EvalResult<T> {
 	 * @return
 	 */
 	public boolean isEscaping() {
-		return isReturn;
+		return returnType>0;
 	}
 	
 	@Override
@@ -62,6 +66,15 @@ public final class EvalResult<T> {
 
 	@SuppressWarnings("unchecked")
 	public static <T> EvalResult<T> returnValue(Context c,Object r) {
-		return new EvalResult<T>(c,(T)r,true);
+		return new EvalResult<T>(c,(T)r,1);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> EvalResult<T> recurValues(Context c,Object[] args) {
+		return new EvalResult<T>(c,(T)args,2);
+	}
+
+	public boolean isRecurring() {
+		return returnType==RECUR;
 	}
 }

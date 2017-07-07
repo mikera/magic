@@ -13,25 +13,26 @@ import magic.data.Keyword;
 import magic.data.Lists;
 import magic.data.Maps;
 import magic.data.Symbol;
+import magic.fn.ArityException;
 import magic.fn.IFn1;
 import magic.lang.Context;
 
 /**
- * AST `let` node capable of defining lexical bindings
+ * AST `loop` node capable of defining lexical bindings and looping via `recur`
  * 
  * @author Mike
  *
  * @param <T>
  */
-public class Let<T> extends BaseForm<T> {
+public class Loop<T> extends BaseForm<T> {
 	private final int nLets;
 	private final Node<T> body;
 	private final Symbol[] syms;
 	private final Node<? extends Object>[] lets;
 	
 	@SuppressWarnings("unchecked")
-	private Let(Symbol[] syms, Node<? extends Object>[] lets, Node<T> bodyExpr,APersistentMap<Keyword, Object> meta) {
-		super((APersistentList<Node<?>>)(APersistentList<?>)Lists.of(Constant.create(Symbols.LET),letVector(syms,lets),(Node<Object>)bodyExpr),meta);
+	private Loop(Symbol[] syms, Node<? extends Object>[] lets, Node<T> bodyExpr,APersistentMap<Keyword, Object> meta) {
+		super((APersistentList<Node<?>>)(APersistentList<?>)Lists.of(Constant.create(Symbols.LOOP),letVector(syms,lets),(Node<Object>)bodyExpr),meta);
 		nLets=syms.length;
 		this.syms=syms;
 		this.lets=lets;
@@ -40,7 +41,7 @@ public class Let<T> extends BaseForm<T> {
 	
 	@Override
 	public Node<T> withMeta(APersistentMap<Keyword, Object> meta) {
-		return new Let<T>(syms,lets,body,meta);
+		return new Loop<T>(syms,lets,body,meta);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -56,9 +57,9 @@ public class Let<T> extends BaseForm<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> Let<T> create(Vector<? extends Object> bindings, APersistentList<Node<?>> body, SourceInfo si) {
+	public static <T> Loop<T> create(Vector<? extends Object> bindings, APersistentList<Node<?>> body, SourceInfo si) {
 		int nb=bindings.size();
-		if ((nb&1)!=0) throw new Error("Let requires an even number of forms in binding vector");
+		if ((nb&1)!=0) throw new Error("Loop requires an even number of forms in binding vector");
 		int n=nb/2;
 		
 		Symbol [] syms=new Symbol[n];
@@ -68,22 +69,22 @@ public class Let<T> extends BaseForm<T> {
 			lets[i]=bindings.get(i*2+1);
 		}
 		Node<Object> bodyExpr=(body.size()==1)?(Node<Object>)body.get(0):Do.create(body);
-		return (Let<T>) create(syms,lets,bodyExpr,si);
+		return (Loop<T>) create(syms,lets,bodyExpr,si);
 	}
 	
 	public static <T> Node<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<?>[] bodyExprs) {
 		return create(syms,lets,Do.create(bodyExprs));
 	}
 	
-	public static <T> Let<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<?>[] bodyExprs,SourceInfo source) {
+	public static <T> Loop<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<?>[] bodyExprs,SourceInfo source) {
 		return create(syms,lets,Do.create(bodyExprs),source);
 	}
 	
-	public static <T> Let<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<T> body,SourceInfo source) {
+	public static <T> Loop<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<T> body,SourceInfo source) {
 		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.SOURCE,source);
 		APersistentSet<Symbol> deps=body.getDependencies();
 		int n=lets.length;
-		if (n!=syms.length) throw new IllegalArgumentException("Incorrect number of bindings forms for let");
+		if (n!=syms.length) throw new IllegalArgumentException("Incorrect number of bindings forms for loop");
 
 		for (int i=n-1; i>=0; i--) {
 			deps=deps.exclude(syms[i]); // let-bound symbol is provided to subsequent lets / body
@@ -91,10 +92,10 @@ public class Let<T> extends BaseForm<T> {
 		}
 		meta=meta.assoc(Keywords.DEPS,deps);
 				
-		return new Let<T>(syms,lets,body,meta);
+		return new Loop<T>(syms,lets,body,meta);
 	}
 	
-	public static <T> Let<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<T> bodyExpr) {
+	public static <T> Loop<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<T> bodyExpr) {
 		return create(syms,lets,bodyExpr,null);
 	}
 	
@@ -103,43 +104,51 @@ public class Let<T> extends BaseForm<T> {
 	public EvalResult<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
 		for (int i=0; i<nLets; i++) {
 			EvalResult<?> r=lets[i].eval(context,bindings);
-			if (r.isEscaping()) return (EvalResult<T>) r;
+			if (r.isEscaping()) {
+				return (EvalResult<T>) r;
+			}
 			
 			bindings=bindings.assoc(syms[i], r.getValue());
 		}
 		
 		EvalResult<T> r=body.eval(context,bindings);
+		
+		while (r.isRecurring()) {
+			Object[] rvs=(Object[]) r.getValue();
+			if (rvs.length!=nLets) throw new ArityException("loop expects "+nLets+" arguments for recur but got: "+rvs.length );
+			for (int i=0; i<nLets; i++) {
+				bindings=bindings.assoc(syms[i], rvs[i]);
+			}
+			r=body.eval(context, bindings);
+		}
 		return r;
 	}
 	
 	@Override
 	public Node<? extends T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
 		Node<? extends Object>[] newLets=lets;
-		boolean changed=false;
 		for (int i=0; i<nLets; i++) {
 			Node<? extends Object> node=lets[i];
 			Node<? extends Object> newNode=node.specialiseValues(bindings);
 			if (node!=newNode) {
-				if (!changed) {
-					newLets=newLets.clone();
-					changed=true;
+				if (lets==newLets) {
+					newLets=lets.clone();
 				}
 				newLets[i]=newNode;
 			} 
-			if (newNode.isConstant()) {
-				bindings=bindings.assoc(syms[i],newNode.getValue());
-			} else {
-		        bindings=bindings.dissoc(syms[i]); // binding no longer visible, must be calculated
-			}
 		}
-
+		
+		for (int i=0; i<nLets; i++) {
+	        bindings=bindings.dissoc(syms[i]); // binding no longer visible, must be calculated
+		}
+		
 		Node<? extends T> newBody=body.specialiseValues(bindings);
 		return ((body==newBody)&&(lets==newLets))?this:create(syms,newLets,newBody);
 	}
 	
 	@Override
 	public Node<? extends T> optimise() {
-		Let<T> newLet=mapChildren(NodeFunctions.optimise());
+		Loop<T> newLet=mapChildren(NodeFunctions.optimise());
 		return newLet.optimiseLocal();
 	}
 	
@@ -150,7 +159,7 @@ public class Let<T> extends BaseForm<T> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Let<T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
+	public Loop<T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
 		Node<? extends Object>[] newLets=lets;
 		boolean changed=false;
 		for (int i=0; i<nLets; i++) {
@@ -166,7 +175,7 @@ public class Let<T> extends BaseForm<T> {
 		}
 		
 		Node<? extends AExpander> newBody=(Node<? extends AExpander>) fn.apply(body);
-		return ((body==newBody)&&(lets==newLets))?this:(Let<T>) create(syms,lets,newBody,getSourceInfo());
+		return ((body==newBody)&&(lets==newLets))?this:(Loop<T>) create(syms,lets,newBody,getSourceInfo());
 	}
 	
 	/**

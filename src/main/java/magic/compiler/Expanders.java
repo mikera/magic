@@ -19,8 +19,10 @@ import magic.ast.Let;
 import magic.ast.List;
 import magic.ast.ListForm;
 import magic.ast.Lookup;
+import magic.ast.Loop;
 import magic.ast.Node;
 import magic.ast.Quote;
+import magic.ast.Recur;
 import magic.ast.Return;
 import magic.ast.Set;
 import magic.ast.Vector;
@@ -319,6 +321,26 @@ public class Expanders {
 			return Return.create(rExp, meta);
 		}
 	}
+	
+	/**
+	 * An expander that expands recur forms
+	 */
+	public static final AExpander RECUR = new RecurExpander();
+
+	private static final class RecurExpander extends AListExpander {
+		@Override
+		public Recur<?> expand(Context c, ListForm form, AExpander ex) {
+			int n = form.size();
+			if (n <1)
+				throw new ExpansionException("Can't expand recur, invalid form: ", form);
+
+			APersistentList<Node<?>> exps = form.getNodes().subList(1, n);
+			APersistentVector<Node<?>> expsVec = Vectors.coerce(ex.expandAll(c, exps, ex));
+			
+			APersistentMap<Keyword,Object> meta=form.meta();
+			return Recur.create(expsVec, meta);
+		}
+	}
 
 	/**
 	 * An expander that expands expander forms
@@ -397,6 +419,34 @@ public class Expanders {
 					ex);
 
 			return Let.create((Vector<Object>) argObj, body, si);
+		}
+	}
+	
+	/**
+	 * An expander that expands loop forms
+	 */
+	public static final AExpander LOOP = new LoopExpander();
+
+	private static final class LoopExpander extends AListExpander {
+		@SuppressWarnings("unchecked")
+		@Override
+		public Node<?> expand(Context c, ListForm form, AExpander ex) {
+			int n = form.size();
+			if (n < 2)
+				throw new ExpansionException("Can't expand loop, requires at least a binding vector", form);
+
+			SourceInfo si = form.getSourceInfo();
+
+			Node<?> argObj = form.get(1);
+			if (!(argObj instanceof Vector)) {
+				throw new AnalyserException("Can't expand loop: requires a vector of bindings but got " + argObj, form);
+			}
+
+			// expand the body
+			APersistentList<Node<?>> body = (APersistentList<Node<?>>) ex.expandAll(c, form.getNodes().subList(2, n),
+					ex);
+
+			return Loop.create((Vector<Object>) argObj, body, si);
 		}
 	}
 

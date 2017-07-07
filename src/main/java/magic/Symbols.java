@@ -21,6 +21,8 @@ public class Symbols {
 	public static final Symbol UNQUOTE_SPLICING = Symbol.create("unquote-splicing");
 	public static final Symbol SYNTAX_QUOTE = Symbol.create("syntax-quote");;
 	public static final Symbol RETURN = Symbol.create("return");
+	public static final Symbol LOOP = Symbol.create("loop");
+	public static final Symbol RECUR = Symbol.create("recur");
 
 	// special symbols
 	public static final Symbol UNDERSCORE = Symbol.create("_");
@@ -57,6 +59,7 @@ public class Symbols {
 	// environment variables and bindings
 	public static final Symbol _NS_ = Symbol.create("*ns*");
 	public static final Symbol _CONTEXT_ = Symbol.create("*context*");
+
 
 	
 	

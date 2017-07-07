@@ -97,6 +97,17 @@ public class TestCompiler {
 		assertEquals("Foo",Core.compile(c2, "((fn [a] (if true (return a) 4)) \"Foo\")").getValue());
 	}
 	
+	@Test public void testRecur() {
+		Context c=INITIAL;
+		
+		EvalResult<?> r=Compiler.compile(c, 
+				"(defn f [x] (loop [c false] (if c (return 2) (recur true)))) "
+				+ "(def b (f 4))");
+		Context c2=r.getContext();
+	
+		assertEquals((Long)2L,c2.getValue("b"));
+	}
+	
 	@Test public void testCompileSet() {
 		Context c=INITIAL;
 		
