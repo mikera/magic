@@ -83,15 +83,15 @@ public class Core {
 	 * @param code
 	 * @return an EvalResult containing the resulting value and a (possibly) updated context
 	 */
-	public static EvalResult<?> compile(String code) {
-		return compile(INITIAL_CONTEXT,code);
+	public static EvalResult<?> eval(String code) {
+		return eval(INITIAL_CONTEXT,code);
 	}
 	/**
 	 * Compiles and evaluates code in the initial context
 	 * @param code
 	 * @return an EvalResult containing the resulting value and a (possibly) updated context
 	 */
-	public static EvalResult<?> compile(Context c,String code) {
+	public static EvalResult<?> eval(Context c,String code) {
 		return magic.compiler.Compiler.eval(c, code);
 	}
 

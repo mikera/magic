@@ -41,13 +41,13 @@ public class TestAnalyse {
 	}
 	
 	@Test public void testQuote() {
-		EvalResult<?> r=Core.compile("(def sym 'x)");
+		EvalResult<?> r=Core.eval("(def sym 'x)");
 		Context c2=r.getContext();
 		assertEquals(Symbol.create("x"),c2.getValue("sym"));
 	}
 	
 	@Test public void testUnexpanded() {
-		EvalResult<?> r=Core.compile("(def x a)");
+		EvalResult<?> r=Core.eval("(def x a)");
 		Context c2=r.getContext();
 		try {
 			c2.getValue("x");
@@ -58,13 +58,13 @@ public class TestAnalyse {
 	}
 	
 	@Test public void testSyntaxQuote() {
-		EvalResult<?> r=Core.compile("(def sym `x)");
+		EvalResult<?> r=Core.eval("(def sym `x)");
 		Context c2=r.getContext();
 		assertEquals(Symbol.create("x"),c2.getValue("sym"));
 	}
 	
 	@Test public void testUnquote() {
-		EvalResult<?> r=Core.compile("(def a 1) (def v '[~a 2])");
+		EvalResult<?> r=Core.eval("(def a 1) (def v '[~a 2])");
 		Context c2=r.getContext();
 		Object v=c2.getValue("v");
 		assertNotNull(v);

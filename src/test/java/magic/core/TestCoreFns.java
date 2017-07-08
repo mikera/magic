@@ -12,7 +12,7 @@ public class TestCoreFns {
 
 	@SuppressWarnings("unchecked")
 	private <T> T exec(String code) {
-		return (T) Core.compile(code).getValue();
+		return (T) Core.eval(code).getValue();
 	}
 	
 	@Test public void testComment() {
@@ -135,6 +135,7 @@ public class TestCoreFns {
 		assertEquals("1",exec("(str 1)"));
 		assertEquals("nil",exec("(str nil)"));
 		assertEquals("[1 2]",exec("(str [1 2])"));
+		assertEquals("(1 2)",exec("(str (seq [1 2]))"));
 	}
 	
 	@Test public void testInstanceOf() {

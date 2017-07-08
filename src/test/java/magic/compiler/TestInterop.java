@@ -52,8 +52,8 @@ public class TestInterop {
 	}
 	
 	@Test public void testInteropForms() {
-		assertEquals((Integer)3,Core.compile("(. \"foo\" length)").getValue());
-		assertEquals((Integer)3,Core.compile("(.length \"foo\")").getValue());
+		assertEquals((Integer)3,Core.eval("(. \"foo\" length)").getValue());
+		assertEquals((Integer)3,Core.eval("(.length \"foo\")").getValue());
 	}
 	
 }

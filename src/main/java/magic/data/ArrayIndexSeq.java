@@ -1,6 +1,6 @@
 package magic.data;
 
-public class ArrayIndexSeq<T> implements ISeq<T> {
+public class ArrayIndexSeq<T> extends magic.data.impl.ASeq<T> {
 
 	private final T[] data;
 	private final int offset;

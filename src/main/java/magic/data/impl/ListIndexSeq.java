@@ -4,7 +4,7 @@ import java.util.List;
 
 import magic.data.ISeq;
 
-public class ListIndexSeq<T> implements ISeq<T> {
+public class ListIndexSeq<T> extends ASeq<T> {
 
 	private List<T> source;
 	private int count;
@@ -30,5 +30,7 @@ public class ListIndexSeq<T> implements ISeq<T> {
 		if (count==1) return null;
 		return new ListIndexSeq<T>(source,offset+1,count-1);
 	}
+
+
 
 }
