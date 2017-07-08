@@ -220,7 +220,9 @@ public class RT {
 	 */
 	public static ISeq<?>next(Object o) {
 		if (o instanceof APersistentCollection) {
-			return ((APersistentCollection<?>)o).seq().next();
+			ISeq<?> seq=((APersistentCollection<?>)o).seq();
+			if (seq==null) throw new Error("Can't calculate 'next' on empty sequence");
+			return seq.next();
 		};
 		return vec(o).seq().next();
 	}
