@@ -35,12 +35,12 @@ public class TestMacros {
 	@Test public void testMacro() {
 		Context c=Core.INITIAL_CONTEXT;
 		
-		EvalResult<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.eval(c, 
 				"(defmacro m [_] 7 [1 2 3])");
 		
 		c=r.getContext();
 		// System.out.println(c.getExpression("m"));
-		r=Compiler.compile(c, 
+		r=Compiler.eval(c, 
 				"(def b (m 3))");
 		
 		Context c2=r.getContext();

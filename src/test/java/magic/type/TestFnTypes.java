@@ -22,7 +22,7 @@ public class TestFnTypes {
 	}
 	
 	private Context compileWith(String string) {
-		EvalResult<?> er=Compiler.compile(Core.INITIAL_CONTEXT, string);
+		EvalResult<?> er=Compiler.eval(Core.INITIAL_CONTEXT, string);
 		return er.getContext();
 	}
 	

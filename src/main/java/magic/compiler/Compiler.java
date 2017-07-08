@@ -83,7 +83,7 @@ public class Compiler {
 	 * @param string
 	 * @return
 	 */
-	public static EvalResult<?> compile(Context c, String string) {
+	public static EvalResult<?> eval(Context c, String string) {
 		ListForm forms=Reader.readAll(string);
 		int n=forms.size();
 		

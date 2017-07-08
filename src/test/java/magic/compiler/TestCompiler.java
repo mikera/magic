@@ -26,7 +26,7 @@ public class TestCompiler {
 	@Test public void testCompileDef() {
 		Context c=INITIAL;
 		
-		EvalResult<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.eval(c, 
 				"(def a 1) " +
 				"(def b 2) " +
 			    "(def id (fn [a] a)) "+
@@ -43,7 +43,7 @@ public class TestCompiler {
 	@Test public void testCompileDo() {
 		Context c=INITIAL;
 		// test that sequential defs in a do block update the context correctly.
-		EvalResult<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.eval(c, 
 				"(do (def a 1) " +
 				"    (def b a)) ");
 		Context c2=r.getContext();
@@ -56,7 +56,7 @@ public class TestCompiler {
 		Context c=INITIAL;
 		
 		// check that a let-bound variable can be used in a def
-		EvalResult<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.eval(c, 
 				"(let [a 3] " +
 				"    (def b a)) ");
 		c=r.getContext();
@@ -67,13 +67,13 @@ public class TestCompiler {
 	@Test public void testCompileLookup() {
 		Context c=INITIAL;
 		
-		assertEquals((Long)1L,Compiler.compile(c, "(let [a 1] a)").getValue());
+		assertEquals((Long)1L,Compiler.eval(c, "(let [a 1] a)").getValue());
 	}
 	
 	@Test public void testCompileVector() {
 		Context c=INITIAL;
 		
-		EvalResult<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.eval(c, 
 				"(def a 1) " +
 				"(def b 1) " +
 				"(def v (let [a 3, c 5] " +
@@ -87,7 +87,7 @@ public class TestCompiler {
 	@Test public void testReturn() {
 		Context c=INITIAL;
 		
-		EvalResult<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.eval(c, 
 				"(defn f [_] (do 1 (return 2) 3)) "
 				+ "(def b (f 4))");
 		Context c2=r.getContext();
@@ -100,7 +100,7 @@ public class TestCompiler {
 	@Test public void testRecur() {
 		Context c=INITIAL;
 		
-		EvalResult<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.eval(c, 
 				"(defn f [x] (loop [c false] (if c (return 2) (recur true)))) "
 				+ "(def b (f 4))");
 		Context c2=r.getContext();
@@ -111,7 +111,7 @@ public class TestCompiler {
 	@Test public void testCompileSet() {
 		Context c=INITIAL;
 		
-		EvalResult<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.eval(c, 
 				"(def a 1) " +
 				"(def b 2) " +
 				"(def s #{a b b 2 3 (+ 0 3)})");
@@ -124,7 +124,7 @@ public class TestCompiler {
 		Context c=INITIAL;
 		
 		//System.out.println("<START>");
-		EvalResult<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.eval(c, 
 				"(def a 1)" +
 				"(def b 2)" +
 				"(let[a 3, c 5] " +
@@ -141,7 +141,7 @@ public class TestCompiler {
 		Context c=INITIAL;
 		
 		//System.out.println("<START>");
-		EvalResult<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.eval(c, 
 				"(def f (fn [a] [a a]))"+
 				"(def b ^{:inline true} (f 2))");
 		Context c2=r.getContext();
@@ -155,7 +155,7 @@ public class TestCompiler {
 	@Test public void testCompileDefn() {
 		Context c=INITIAL;
 		
-		EvalResult<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.eval(c, 
 				"(defn f [a] 2)" +
 				"(def r (f 7))");
 		Context c2=r.getContext();
@@ -167,7 +167,7 @@ public class TestCompiler {
 	@Test public void testVariadicDefn() {
 		Context c=INITIAL;
 		
-		EvalResult<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.eval(c, 
 				"(defn f [& vs] vs)"+
 				"(def a (f))"+
 				"(def b (f 1))"+
@@ -181,7 +181,7 @@ public class TestCompiler {
 	@Test public void testVariadicDefn2() {
 		Context c=INITIAL;
 		
-		EvalResult<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.eval(c, 
 				"(defn f [v & vs] vs)"+
 				"(def a (f 1))"+
 				"(def b (f 2 3))"+
@@ -196,7 +196,7 @@ public class TestCompiler {
 	@Test public void testCompileVal() {
 		Context c=INITIAL;
 		
-		EvalResult<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.eval(c, 
 				"(def a 1)" +
 				"(def b 2)" +
 				"a");
@@ -208,7 +208,7 @@ public class TestCompiler {
 	@Test public void testConditional() {
 		Context c=INITIAL;
 		
-		EvalResult<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.eval(c, 
 				"(if nil (def a 1) (def b 2))");
 		Context c2=r.getContext();
 		
@@ -219,7 +219,7 @@ public class TestCompiler {
 	@Test public void testBaseUnquote() {
 		Context c=INITIAL;
 		
-		EvalResult<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.eval(c, 
 				  "(def a 1)"
 				+ "(def b ~a)"
 				+ "(def a 2)"
@@ -233,7 +233,7 @@ public class TestCompiler {
 	@Test public void testUnquote() {
 		Context c=INITIAL;
 		// TODO: make work with quoted form?
-		EvalResult<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.eval(c, 
 				  "(def a 2)"
 				+ "(def b [1 ~a])");
 		Context c2=r.getContext();
@@ -258,7 +258,7 @@ public class TestCompiler {
 	@Test public void testDependencyUpdate() {
 		Context c=INITIAL;
 		
-		Context c1=Compiler.compile(c, 
+		Context c1=Compiler.eval(c, 
 				  "(defn g [c] (f c))"  
 				+ "(def a 1)").getContext();
 		
@@ -281,7 +281,7 @@ public class TestCompiler {
 			assertTrue(c1.getDependants(Symbol.create("f")).contains(Symbol.create("g")));
 		}
 
-		EvalResult<?> r=Compiler.compile(c1, 
+		EvalResult<?> r=Compiler.eval(c1, 
 				  "(defn f [c] a)"
 				+ "(def a 2)"
 				+ "(def b (g 3))");
@@ -323,7 +323,7 @@ public class TestCompiler {
 	@Test public void testDependencies() {
 		Context c=INITIAL;
 		
-		EvalResult<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.eval(c, 
 				  "(defn f [c] d)"
 				+ "(def foo bar)"
 				+ "(def a 1)"

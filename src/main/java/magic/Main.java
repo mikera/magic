@@ -29,7 +29,7 @@ public class Main {
 	}
 
 	private static EvalResult<?> evaluate(Context c, String s) {
-		EvalResult<?> r=magic.compiler.Compiler.compile(c,s);
+		EvalResult<?> r=magic.compiler.Compiler.eval(c,s);
 		return r;	
 	}
 }

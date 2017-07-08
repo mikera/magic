@@ -14,7 +14,7 @@ public class TestInterop {
 	@Test public void testInstanceCall() {
 		Context c=INITIAL;
 		
-		EvalResult<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.eval(c, 
 				"(def len (. \"foo\" (length)))");
 		Context c2=r.getContext();
 		//System.out.println(c2.getExpression("f"));
@@ -26,7 +26,7 @@ public class TestInterop {
 	@Test public void testInstanceCall2() {
 		Context c=INITIAL;
 		
-		EvalResult<?> r=Compiler.compile(c, 
+		EvalResult<?> r=Compiler.eval(c, 
 				"(def len (. \"foo\" length))");
 		Context c2=r.getContext();
 		Object res=c2.getValue("len");

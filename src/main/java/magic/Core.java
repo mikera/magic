@@ -71,7 +71,7 @@ public class Core {
 		Context c=BOOTSTRAP_CONTEXT;
 		EvalResult<?> r;
 		try {
-			r=(EvalResult<?>) magic.compiler.Compiler.compile(c, RT.getResourceAsString("magic/core.mag"));
+			r=(EvalResult<?>) magic.compiler.Compiler.eval(c, RT.getResourceAsString("magic/core.mag"));
 		} catch (Throwable t) {
 			t.printStackTrace(System.err);
 			throw new magic.Error("Failed to initialise Magic environment",t);
@@ -92,7 +92,7 @@ public class Core {
 	 * @return an EvalResult containing the resulting value and a (possibly) updated context
 	 */
 	public static EvalResult<?> compile(Context c,String code) {
-		return magic.compiler.Compiler.compile(c, code);
+		return magic.compiler.Compiler.eval(c, code);
 	}
 
 }
