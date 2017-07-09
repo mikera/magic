@@ -290,7 +290,7 @@ public class Expanders {
 			if (n < 2)
 				throw new ExpansionException("Can't expand fn, requires at least an arg vector", form);
 
-			Node<?> argObj = form.get(1);
+			Node<?> argObj = ex.expand(c, form.get(1), ex);
 			if (!(argObj instanceof Vector)) {
 				throw new AnalyserException("Can't expand fn: requires a vector of arguments but got " + argObj + " of type "+argObj.getClass(), form);
 			}
