@@ -59,7 +59,7 @@ public class Symbols {
 	// environment variables and bindings
 	public static final Symbol _NS_ = Symbol.create("*ns*");
 	public static final Symbol _CONTEXT_ = Symbol.create("*context*");
-	public static final Symbol IN_CONTEXT = Symbol.create("in-context");
+	public static final Symbol CONTEXT = Symbol.create("context");
 
 
 	

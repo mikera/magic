@@ -28,10 +28,10 @@ public class TestEdgeCases {
 	
 	@Test public void testContextTravel() {
 		assertEquals(Tuple.of(1L),exec(
-				"(def a 1) "
+				  "(def a 1) "
 				+ "(def ctx *context*)"
 				+ "(def a 2)"
-				+ "(in-context ctx)"
+				+ "(context ctx)"
 				+ "[a]"));
 	}
 }

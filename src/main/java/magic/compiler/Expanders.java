@@ -495,9 +495,9 @@ public class Expanders {
 	}
 	
 	/**
-	 * An expander that expands in-context forms
+	 * An expander that expands 'context' forms
 	 */
-	public static final AExpander IN_CONTEXT = new InContextExpander();
+	public static final AExpander CONTEXT = new InContextExpander();
 
 	private static final class InContextExpander extends AListExpander {
 		@Override
