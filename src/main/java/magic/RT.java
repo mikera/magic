@@ -517,6 +517,13 @@ public class RT {
 	public static <T> T resolve(Context c, Symbol sym) {
 		if (sym==Symbols._CONTEXT_) return (T) c;
 		
+		if (!sym.isQualified()) {
+			String ns=c.getCurrentNamespace();
+			if (ns!=null) {
+				sym=Symbol.create(ns,sym.getName());
+			}
+		} 
+		
 		Slot<T> slot=c.getSlot(sym);
 		if (slot!=null) return slot.getValue();
 		

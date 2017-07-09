@@ -55,8 +55,6 @@ public class Core {
 			c=c.define(Symbols.PRINTLN, Constant.create(Functions.PRINTLN)); 
 			c=c.define(Symbols.PLUS, Constant.create(Functions.LONGADD)); 
 
-	
-			
 			c=c.define(Symbols._NS_, Constant.create(null)); 
 	
 		} catch (Throwable t) {

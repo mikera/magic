@@ -28,8 +28,8 @@ public class TestAnalyse {
 	
 	@Test 
 	public void testLookup() {
-		Context c=Context.createWith("foo",Constant.create(1));
-		Node<?> e=analyse("foo");
+		Context c=Context.createWith("test/foo",Constant.create(1));
+		Node<?> e=analyse("test/foo");
 		assertEquals(Integer.valueOf(1),e.compute(c));
 		
 		try {
@@ -105,8 +105,8 @@ public class TestAnalyse {
 	
 	@Test 
 	public void testVector() {
-		Context c=Context.createWith("foo",Constant.create(2L));
-		Node<?> e=analyse("[1 foo]");
+		Context c=Context.createWith("test/foo",Constant.create(2L));
+		Node<?> e=analyse("[1 test/foo]");
 		assertEquals(Tuple.of(1L,2L),e.compute(c));
 	}
 	

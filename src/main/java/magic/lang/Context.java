@@ -245,7 +245,9 @@ public class Context {
 	
 
 	public String getCurrentNamespace() {
-		return getValue(Symbols._NS_);
+		Slot<String> s=getSlot(Symbols._NS_);
+		if (s==null) return null;
+		return (String) s.getValue();
 	}
 
 

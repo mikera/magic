@@ -38,6 +38,6 @@ public class TestEdgeCases {
 	@Test public void testNS() {
 		assertEquals("foo.bar",exec(
 				  "(ns foo.bar) "
-				+ "*ns*"));
+				+ "magic.core/*ns*"));
 	}
 }
