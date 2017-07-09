@@ -60,6 +60,7 @@ public class Symbols {
 	public static final Symbol _NS_ = Symbol.create("*ns*");
 	public static final Symbol _CONTEXT_ = Symbol.create("*context*");
 	public static final Symbol CONTEXT = Symbol.create("context");
+	public static final Symbol NS = Symbol.create("ns");
 
 
 	

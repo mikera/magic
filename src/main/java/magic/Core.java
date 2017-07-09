@@ -37,6 +37,7 @@ public class Core {
 			c=c.define(Symbols.LOOP, Constant.create(Expanders.LOOP));
 			c=c.define(Symbols.RECUR, Constant.create(Expanders.RECUR));
 			c=c.define(Symbols.CONTEXT, Constant.create(Expanders.CONTEXT));
+			c=c.define(Symbols.NS, Constant.create(Expanders.NS));
 					
 			c=c.define(Symbols.VECTOR, Constant.create(Expanders.VECTOR)); 
 			c=c.define(Symbols.LIST, Constant.create(Expanders.LIST)); 

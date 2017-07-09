@@ -34,4 +34,10 @@ public class TestEdgeCases {
 				+ "(context ctx)"
 				+ "[a]"));
 	}
+	
+	@Test public void testNS() {
+		assertEquals("foo.bar",exec(
+				  "(ns foo.bar) "
+				+ "*ns*"));
+	}
 }

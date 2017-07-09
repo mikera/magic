@@ -521,6 +521,42 @@ public class Expanders {
 			return icNode;
 		}
 	}
+	
+	/**
+	 * An expander that expands 'ns' forms
+	 */
+	public static final AExpander NS = new NSExpander();
+
+	private static final class NSExpander extends AListExpander {
+		@Override
+		public Node<?> expand(Context c, ListForm form, AExpander ex) {
+			int n = form.size();
+			if (n !=2)
+				throw new ExpansionException("Can't expand ns, requires exactly one context expression", form);
+
+			APersistentList<Node<?>> body = Lists.coerce(ex.expandAll(c, form.getNodes(),ex));
+			APersistentMap<Keyword,Object> meta=form.meta();
+			
+			if (!body.get(1).isSymbol()) {
+				throw new ExpansionException("Can't expand ns, requires a symbol as namespace argument", form);
+			}
+			Symbol nSym=body.get(1).getSymbol();
+			
+			// the sublist thing is a hack to stop the ns symbol getting evaluated
+			// probably OK?
+			@SuppressWarnings({ "rawtypes", "unchecked" })
+			ContextAction<?> icNode=new ContextAction(body.subList(0, 1),
+					new ContextAction.Action() {
+						@Override
+						public EvalResult eval(Context context, APersistentMap bindings,Object[] args) {
+							context=context.define(Symbols._NS_, Constant.create(nSym.getName()));
+							return EvalResult.create(context, null);
+						}
+					},meta);
+			
+			return icNode;
+		}
+	}
 
 	/**
 	 * An expander that expands set forms
