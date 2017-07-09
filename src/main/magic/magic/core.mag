@@ -39,6 +39,12 @@
 (defn concat [a b]
   (. magic.RT concat a b))
 
+;; ============================================================
+;; Data handling
+
+(defn symbol [^String a]
+  (. magic.data.Symbol create a))
+
 ;; ===========================================================
 ;; Boolean functions and basic logic
 

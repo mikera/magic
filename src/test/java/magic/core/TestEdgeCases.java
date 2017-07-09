@@ -15,5 +15,6 @@ public class TestEdgeCases {
 	@Test public void testDefUnquote() {
 		// unquote should create a symbol that can be used with def
 		assertEquals((Long)2L,exec("(def ~'a 2) a"));
+		assertEquals((Long)2L,exec("(def ~(symbol \"a\") 2) a"));
 	}
 }
