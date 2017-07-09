@@ -77,7 +77,7 @@ public class NodeFunctions {
 	 * @param fn
 	 * @return
 	 */
-	public static APersistentList<Node<? extends Object>> mapAll(APersistentList<Node<? extends Object>> nodes,
+	public static APersistentList<Node<?>> mapAll(APersistentList<Node<?>> nodes,
 			IFn1<Node<?>, Node<?>> fn) {
 		int n=nodes.size();
 		APersistentList<Node<? extends Object>> newNodes=nodes;

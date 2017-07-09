@@ -20,7 +20,11 @@ public class Errors {
 	}
 
 	public static String immutable(Object o) {
-		return "Class is immutable: "+o.getClass();
+		return "Class is immutable: "+RT.className(o);
+	}
+
+	public static String metaNotSupported(Object o) {
+		return "Metadata is not supported on objects of class: "+RT.className(o);
 	}
 
 }

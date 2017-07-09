@@ -1,5 +1,6 @@
 package magic.data;
 
+import java.util.Collection;
 import java.util.List;
 
 public class Lists {
@@ -30,6 +31,13 @@ public class Lists {
 
 	public static <T> APersistentList<T> coerce(APersistentVector<? extends T> vs) {
 		return PersistentList.wrap(vs);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> APersistentList<T> coerce(Collection<? extends T> a) {
+		if (a instanceof APersistentVector<?>) return PersistentList.wrap((APersistentVector<T>)a);
+		if (a instanceof APersistentList<?>) return (APersistentList<T>)a;
+		return create(Vectors.coerce(a));
 	}
 
 	@SuppressWarnings("unchecked")

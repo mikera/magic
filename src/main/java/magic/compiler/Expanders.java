@@ -6,14 +6,15 @@ import magic.Type;
 import magic.ast.Apply;
 import magic.ast.Cast;
 import magic.ast.Constant;
+import magic.ast.ContextAction;
 import magic.ast.Define;
 import magic.ast.Do;
-import magic.ast.InvokeReflective;
-import magic.ast.InvokeStaticReflective;
 import magic.ast.Expander;
 import magic.ast.HashMap;
 import magic.ast.If;
 import magic.ast.InstanceOf;
+import magic.ast.InvokeReflective;
+import magic.ast.InvokeStaticReflective;
 import magic.ast.Lambda;
 import magic.ast.Let;
 import magic.ast.List;
@@ -490,6 +491,34 @@ public class Expanders {
 			APersistentVector<Node<?>> bodyVec = Vectors.coerce(ex.expandAll(c, body, ex));
  
 			return List.create(bodyVec, si);
+		}
+	}
+	
+	/**
+	 * An expander that expands in-context forms
+	 */
+	public static final AExpander IN_CONTEXT = new InContextExpander();
+
+	private static final class InContextExpander extends AListExpander {
+		@Override
+		public Node<?> expand(Context c, ListForm form, AExpander ex) {
+			int n = form.size();
+			if (n !=2)
+				throw new ExpansionException("Can't expand in-context, requires exactly one context expression", form);
+
+			APersistentList<Node<?>> body = Lists.coerce(ex.expandAll(c, form.getNodes(),ex));
+			APersistentMap<Keyword,Object> meta=form.meta();
+			
+			@SuppressWarnings({ "rawtypes", "unchecked" })
+			ContextAction<?> icNode=new ContextAction(body,
+					new ContextAction.Action() {
+						@Override
+						public EvalResult eval(Context context, APersistentMap bindings,Object[] args) {
+							return EvalResult.create((Context)args[0], null);
+						}
+					},meta);
+			
+			return icNode;
 		}
 	}
 

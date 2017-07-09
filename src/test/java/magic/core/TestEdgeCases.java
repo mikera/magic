@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import magic.Core;
+import magic.data.Tuple;
 
 public class TestEdgeCases {
 	@SuppressWarnings("unchecked")
@@ -23,5 +24,14 @@ public class TestEdgeCases {
 		assertEquals((Long)3L,exec(
 				"(defn foo [~'a] (+ 2 a)) "
 				+ "(foo 1)"));
+	}
+	
+	@Test public void testContextTravel() {
+		assertEquals(Tuple.of(1L),exec(
+				"(def a 1) "
+				+ "(def ctx *context*)"
+				+ "(def a 2)"
+				+ "(in-context ctx)"
+				+ "[a]"));
 	}
 }

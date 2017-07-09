@@ -18,7 +18,7 @@ import magic.lang.Context;
  */
 public abstract class BaseForm<T> extends Node<T> {
 
-	protected APersistentList<Node<? extends Object>> nodes;
+	protected APersistentList<Node<?>> nodes;
 
 	protected BaseForm(APersistentList<Node<? extends Object>> nodes, APersistentMap<Keyword,Object> meta) {
 		super(meta);

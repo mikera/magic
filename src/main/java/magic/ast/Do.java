@@ -83,7 +83,7 @@ public class Do<T> extends BaseForm<T> {
 	
 	@Override
 	public Node<? extends T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
-		APersistentList<Node<? extends Object>> newBody=body;
+		APersistentList<Node<?>> newBody=body;
 		for (int i=0; i<nBody; i++) {
 			Node<?> node=body.get(i);
 			Node<?> newNode=fn.apply(node);

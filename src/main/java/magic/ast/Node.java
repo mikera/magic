@@ -164,7 +164,7 @@ public abstract class Node<T> extends RootNode {
 	 * @return
 	 */
 	public Node<?> mapChildren(IFn1<Node<?>,Node<?>> fn) {
-		throw new UnsupportedOperationException("mapChildren not supported for class "+RT.print(getClass()));
+		throw new UnsupportedOperationException("mapChildren not supported for class "+RT.className(this));
 	}
 	
 	@SafeVarargs
