@@ -558,7 +558,15 @@ public class RT {
 		return fn.applyToArray(as);
 	}
 
-	private static String className(Object o) {
+	/**
+	 * Gets a string representing the class name of an Object
+	 * 
+	 * Intended for use mainly in generation of descriptive error messages.
+	 * 
+	 * @param o
+	 * @return
+	 */
+	public static String className(Object o) {
 		if (o==null) return "nil";
 		return o.getClass().toString();
 	}

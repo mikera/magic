@@ -134,9 +134,10 @@ public class Expanders {
 			if (n != 3)
 				throw new ExpansionException("Can't expand def, requires at least a symbolic name and expression", form);
 
-			Node<?> nameObj = form.get(1);
+			Node<?> symForm=form.get(1);
+			Node<?> nameObj = ex.expand(c, symForm,ex);
 			if (!nameObj.isSymbol()) {
-				throw new AnalyserException("Can't expand def: requires a symbol as name but got: "+nameObj, form);
+				throw new AnalyserException("Can't expand def: requires a symbol as name but got: "+RT.className(nameObj), form);
 			}
 			Symbol name = nameObj.getSymbol();
 
@@ -571,11 +572,15 @@ public class Expanders {
 				throw new ExpansionException("Can't expand unquote, requires a form with one expression", form);
 
 			Node<?> unquotedNode = form.get(1);
-			SourceInfo si = form.getSourceInfo();
 
-			// TODO: is this right?
-			Node<?> node = Constant.create(Compiler.eval(c, unquotedNode).getValue(), si);
-			return node;
+			// Execute the code to create a resulting form
+			
+			Object resultForm= Compiler.eval(c, unquotedNode).getValue();
+			Node<?> analysed=Analyser.analyse(resultForm);
+			
+			// return an expanded form
+			Node<?> expanded=ex.expand(c, analysed, ex);
+			return expanded;
 		}
 	}
 
