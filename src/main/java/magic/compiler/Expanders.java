@@ -314,7 +314,7 @@ public class Expanders {
 		public Return<?> expand(Context c, ListForm form, AExpander ex) {
 			int n = form.size();
 			if (n != 2)
-				throw new ExpansionException("Can't expand return, requires a return value", form);
+				throw new ExpansionException("Can't expand return, requires a single return value e.g.: (return :foo)", form);
 
 			Node<?> rExp = ex.expand(c, form.get(1),ex);
 

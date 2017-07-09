@@ -1,7 +1,7 @@
 package magic.ast;
 
 import magic.Keywords;
-import magic.RT;
+import magic.Symbols;
 import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
@@ -29,7 +29,7 @@ public class Define<T> extends BaseForm<T> {
 	final Node<? extends T> exp;
 
 	public Define(Symbol sym, Node<? extends T> exp, APersistentMap<Keyword,Object> meta) {
-		super(PersistentList.of(Constant.create(sym),exp),meta);
+		super(PersistentList.of(Lookup.create(Symbols.DEF),Lookup.create(sym),exp),meta);
 		this.sym=sym;
 		this.exp=exp;
 	}
@@ -55,9 +55,6 @@ public class Define<T> extends BaseForm<T> {
 	@Override
 	public EvalResult<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
 		Node<?> theExp=exp;
-		// use evalQuoted to expand any unquotes... TODO is this a good idea?
-		//theExp=theExp.evalQuoted(context,bindings,true);
-		// theExp=theExp.specialiseValues(bindings);
 		context=context.define(sym, theExp, bindings); 
 		return new EvalResult<T>(context,null); // TODO: what should def return??
 	}
@@ -71,11 +68,6 @@ public class Define<T> extends BaseForm<T> {
 	public Node<? extends T> optimise() {
 		Node<? extends T> newExp=exp.optimise();
 		return (exp==newExp)?this:create(sym,newExp);
-	}
-
-	@Override
-	public String toString() {
-		return "(def "+sym+" "+RT.toString(exp)+")";
 	}
 
 	@SuppressWarnings("unchecked")
