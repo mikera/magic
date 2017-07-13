@@ -38,7 +38,7 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
   
 	@SuppressWarnings("unchecked")
 	private Lambda(APersistentVector<Symbol> params, Node<T> body,boolean variadic,APersistentMap<Keyword, Object> meta) {
-		super((APersistentList<Node<?>>)(APersistentList<?>)Lists.of(Constant.create(Symbols.FN),Constant.create(params),body),meta);
+		super((APersistentList<Node<?>>)(APersistentList<?>)Lists.of(Lookup.create(Symbols.FN),Constant.create(params),body),meta);
 		this.params=params;
 		this.arity=params.size()-(variadic?2:0); // ignore ampersand and vararg parameter
 		this.body=body;
@@ -201,11 +201,4 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 		}
 		return FunctionType.create(body.getType(),argTypes);
 	}
-	
-	@Override
-	public String toString() {
-		return "(fn "+params+" "+body+")";
-	}
-
-
 }

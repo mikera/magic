@@ -148,9 +148,9 @@ public class TestParser {
 	}
 	
 	@Test public void testQuote() {
-		assertEquals(Reader.read("(quote foo/bar)").toForm(),Reader.read("'foo/bar").toForm());
-		assertEquals(Reader.read("(unquote (quote foo))").toForm(),Reader.read("~'foo").toForm());
-		assertEquals(Reader.read("(unquote (syntax-quote foo))").toForm(),Reader.read("~`foo").toForm());
+		assertEquals(Reader.read("(magic.core/quote foo/bar)").toForm(),Reader.read("'foo/bar").toForm());
+		assertEquals(Reader.read("(magic.core/unquote (magic.core/quote foo))").toForm(),Reader.read("~'foo").toForm());
+		assertEquals(Reader.read("(magic.core/unquote (magic.core/syntax-quote foo))").toForm(),Reader.read("~`foo").toForm());
 	}
 	
 	@Test public void testExtraInputFail() {

@@ -33,12 +33,16 @@ public class Lookup<T> extends Node<T> {
 	}
 	
 	public static <T> Lookup<T> create(Symbol sym) {
-		return create(sym,null);
+		return create(sym,Maps.empty());
 	}
 	
 	public static <T> Lookup<T> create(Symbol sym, SourceInfo source) {
 		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.SOURCE,source);
 		meta=meta.assoc(Keywords.DEPS, sym.symbolSet());
+		return create(sym,meta);
+	}
+	
+	public static <T> Lookup<T> create(Symbol sym, APersistentMap<Keyword, Object> meta) {
 		return new Lookup<T>(sym,meta);
 	}
 

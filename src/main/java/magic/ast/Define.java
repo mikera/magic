@@ -55,6 +55,11 @@ public class Define<T> extends BaseForm<T> {
 	@Override
 	public EvalResult<T> eval(Context context, APersistentMap<Symbol, Object> bindings) {
 		Node<?> theExp=exp;
+		Symbol sym=this.sym;
+		if (!sym.isQualified()) {
+			// add current namespace to symbol
+			sym=Symbol.create(context.getCurrentNamespace(),sym.getName());
+		}
 		context=context.define(sym, theExp, bindings); 
 		return new EvalResult<T>(context,null); // TODO: what should def return??
 	}

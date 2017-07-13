@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import magic.ast.Node;
 import magic.data.APersistentCollection;
 import magic.data.APersistentList;
 import magic.data.APersistentSequence;
@@ -503,6 +504,17 @@ public class RT {
 		return classForName(name);
 	}
 
+	
+
+	public static Symbol resolveSym(Context c, Symbol symbol) {
+		if (symbol.isQualified()) return symbol;
+		String ns=c.getCurrentNamespace();
+		if (ns!=null) {
+			symbol=Symbol.create(ns,symbol.getName());
+		}
+		return symbol;
+	}
+	
 	/**
 	 * Gets the value associated with a Symbol in the given context.
 	 * 
@@ -515,16 +527,8 @@ public class RT {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T resolve(Context c, Symbol sym) {
-		if (sym==Symbols._CONTEXT_) return (T) c;
 		
-		if (!sym.isQualified()) {
-			String ns=c.getCurrentNamespace();
-			if (ns!=null) {
-				sym=Symbol.create(ns,sym.getName());
-			}
-		} 
-		
-		Slot<T> slot=c.getSlot(sym);
+		Slot<T> slot=resolveSlot(c,sym);
 		if (slot!=null) return slot.getValue();
 		
 		Class<?> cls=RT.classForSymbol(sym);
@@ -533,6 +537,27 @@ public class RT {
 			return (T) type;
 		}
 		throw new UnresolvedException(sym);
+	}
+	
+	/**
+	 * Gets the slot associated with a Symbol in the given context.
+	 * 
+	 * Handles:
+	 * - Lookup of values from slots in this context
+	 * - Lookup of class names
+	 * @param c
+	 * @param sym
+	 * @return
+	 */
+	public static <T> Slot<T> resolveSlot(Context c, Symbol sym) {
+		sym=RT.resolveSym(c, sym);
+		
+		Slot<T> slot=c.getSlot(sym);
+		return slot;
+	}
+	
+	public static Node<?> resolveNode(Context c, Symbol sym) {
+		return RT.resolveSlot(c, sym).getNode();
 	}
 	
 	public static Object applyWith(Object f, Object args) {
@@ -595,6 +620,8 @@ public class RT {
 		};
 		throw new TypeError("Can't cast value of type "+a.getClass()+" to int");
 	}
+
+
 
 
 

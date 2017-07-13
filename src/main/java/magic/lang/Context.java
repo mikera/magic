@@ -182,7 +182,7 @@ public class Context {
 	 * @return
 	 */
 	public APersistentSet<Symbol> getDependencies(Symbol sym) {
-		return getSlot(sym).getDependencies();
+		return RT.resolveSlot(this,sym).getDependencies();
 	}
 	
 	/**
@@ -220,7 +220,7 @@ public class Context {
 	 * @return
 	 */
 	public Slot<?> getSlot(String symName) {
-		return getSlot(Reader.readSymbol(symName));
+		return RT.resolveSlot(this,Reader.readSymbol(symName));
 	}
 
 	/**
@@ -229,7 +229,7 @@ public class Context {
 	 * @return
 	 */
 	public Node<?> getNode(String symbol) {
-		return getNode(Reader.readSymbol(symbol));
+		return RT.resolveNode(this,Reader.readSymbol(symbol));
 	}
 	
 	/**

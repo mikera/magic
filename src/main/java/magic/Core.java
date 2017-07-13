@@ -20,6 +20,8 @@ public class Core {
 	private static Context createBootstrapContext() {
 		Context c=Context.EMPTY;
 		try {
+			c=c.define(Symbols._NS_, Constant.create("magic.core")); 
+
 			c=c.define(Symbols.DEF, Constant.create(Expanders.DEF));
 			c=c.define(Symbols.DEFN, Constant.create(Expanders.DEFN));
 			c=c.define(Symbols.FN, Constant.create(Expanders.FN));
@@ -55,7 +57,7 @@ public class Core {
 			c=c.define(Symbols.PRINTLN, Constant.create(Functions.PRINTLN)); 
 			c=c.define(Symbols.PLUS, Constant.create(Functions.LONGADD)); 
 
-			c=c.define(Symbols._NS_, Constant.create(null)); 
+			c=c.define(Symbols._CONTEXT_, null); 
 	
 		} catch (Throwable t) {
 			t.printStackTrace(System.err);

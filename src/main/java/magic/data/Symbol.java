@@ -48,6 +48,10 @@ public class Symbol extends APersistentObject {
 		}
 	}
 	
+	public static Symbol createCore(String name) {
+		return create("magic.core",name);
+	}
+	
     /**
      * Like create, but different arg order to support parsing (i.e. ordering of pop()s)
      * @param name

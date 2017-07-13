@@ -10,6 +10,7 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import magic.Core;
+import magic.Symbols;
 import magic.ast.Node;
 import magic.data.Sets;
 import magic.data.Symbol;
@@ -277,8 +278,8 @@ public class TestCompiler {
 		{ // check dependency exists
 			Node<?> g=c1.getNode("g");
 			assertTrue(g.getDependencies().contains(Symbol.create("f")));
-			assertTrue(c1.getDependencies(Symbol.create("g")).contains(Symbol.create("f")));
-			assertTrue(c1.getDependants(Symbol.create("f")).contains(Symbol.create("g")));
+			assertEquals(Sets.of(Symbol.create("f"),Symbols.FN, Symbols.DEFN),c1.getDependencies(Symbol.create("g")));
+			assertEquals(Sets.of(Symbol.create("magic.core/g")),c1.getDependants(Symbol.create("f")));
 		}
 
 		EvalResult<?> r=Compiler.eval(c1, 
@@ -333,13 +334,13 @@ public class TestCompiler {
 		Node<?> f=c2.getNode("f");
 		
 		// note def is never a dependency, it gets executed to install the definition
-		assertEquals(Sets.of(Symbol.create("b"),Symbol.create("fn"),Symbol.create("defn")),f.getDependencies());
+		assertEquals(Sets.of(Symbol.create("b"),Symbols.FN,Symbols.DEFN),f.getDependencies());
 		
 		assertEquals(Sets.of(),c2.getDependencies("a"));
 		assertEquals(Sets.of(Symbol.create("b")),c2.getDependants("a"));
 		assertEquals(Sets.of(Symbol.create("a")),c2.getDependencies("b"));
 		assertEquals(Sets.of(Symbol.create("f")),c2.getDependants("b"));
-		assertEquals(Sets.of(Symbol.create("b"),Symbol.create("fn"),Symbol.create("defn")),c2.getDependencies("f"));
+		assertEquals(Sets.of(Symbol.create("b"),Symbols.FN,Symbols.DEFN),c2.getDependencies("f"));
 		assertEquals(Sets.of(),c2.getDependants("f"));
 	}
 }

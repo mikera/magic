@@ -68,10 +68,21 @@ public class Expanders {
 			if (form instanceof Vector) {
 				return vectorExpand(c, (Vector<?>) form, ex);
 			}
+			
+			if (form instanceof Lookup) {
+				return lookupExpand(c,(Lookup<?>)form);
+			}
+			
 			// note the things we can leave unchanged:
 			// - Maps and sets are read in as HashMap and Set nodes
-			// - Symbols are already read in as Lookup nodes
-			// - constant literals and keywords are already Constant nodes
+			// - constant literals and keywords are already Constant nodes		
+			return form;
+		}
+
+		private Node<?> lookupExpand(Context c, Lookup<?> form) {
+			//Symbol sym = form.getSymbol();
+			//Symbol resSym=RT.resolveSym(c, sym);
+			//return Lookup.create(resSym,form.meta());
 			return form;
 		}
 
@@ -92,11 +103,11 @@ public class Expanders {
 
 			if (head.isSymbol()) {
 				Symbol sym = head.getSymbol();
-				Slot<Object> slot = c.getSlot(sym);
+				Slot<Object> slot = RT.resolveSlot(c,sym);
 				// handle nested expander
 				if ((slot != null) && slot.isExpander()) {
 					AExpander e = (AExpander) slot.getValue(); 
-					return e.expand(c, form, ex).includeDependency(sym);
+					return e.expand(c, form, ex).includeDependency(RT.resolveSym(c,sym));
 				}
 
 				// handle .someMethod forms
@@ -106,7 +117,7 @@ public class Expanders {
 					SourceInfo si = head.getSourceInfo();
 					ListForm newForm = ListForm.createCons(Lookup.create(Symbols.DOT, si), form.get(1),
 							Lookup.create(memberSym, si), form.subList(2, n), form.getSourceInfo());
-					return ex.expand(c, newForm, ex).includeDependency(sym);
+					return ex.expand(c, newForm, ex);
 				}
 			}
 

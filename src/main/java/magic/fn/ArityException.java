@@ -12,6 +12,6 @@ public class ArityException extends magic.Error {
 	}
 	
 	public ArityException(int expected , int arity) {
-		this("Expected arity "+expected+" but called with "+arity+ " argument");
+		this("Expected arity "+expected+" but called with arity "+arity);
 	}
 }
