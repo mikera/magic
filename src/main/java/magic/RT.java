@@ -560,8 +560,19 @@ public class RT {
 		return slot;
 	}
 	
+	/**
+	 * Resolves a node for a given symbol in this context
+	 * 
+	 * Returns null if the slot does not exist
+	 * @param c
+	 * @param sym
+	 * @return
+	 */
 	public static Node<?> resolveNode(Context c, Symbol sym) {
-		return RT.resolveSlot(c, sym).getNode();
+		Slot<?> slot=RT.resolveSlot(c, sym);
+		if (slot==null) return null;
+		
+		return  slot.getNode();
 	}
 	
 	public static Object applyWith(Object f, Object args) {

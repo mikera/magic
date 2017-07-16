@@ -41,6 +41,10 @@ public class InstanceOf extends BaseForm<Boolean> {
 	public static InstanceOf create(Node<Type> type, Node<?> exp, SourceInfo si) {
 		APersistentMap<Keyword,Object> meta=Maps.create(Keywords.SOURCE, si);
 		meta=meta.assoc(Keywords.DEPS,exp.getDependencies().includeAll(type.getDependencies()));
+		return create(type, exp,meta);
+	}
+	
+	public static InstanceOf create(Node<Type> type, Node<?> exp, APersistentMap<Keyword,Object> meta) {
 		return new InstanceOf(type, exp,meta);
 	}
 	
@@ -53,14 +57,16 @@ public class InstanceOf extends BaseForm<Boolean> {
 	@SuppressWarnings("unchecked")
 	public InstanceOf mapChildren(IFn1<Node<?>,Node<?>> fn) {
 		Node<?> newExp=fn.apply(exp);
+		
 		Node<Type> newType=(Node<Type>) fn.apply(typeExpr);
+		
 		if ((newExp==exp)&&(newType==typeExpr)) return this;
 		return create(newType,newExp,getSourceInfo());
-	}
+	}	
 
 	@Override
 	public Node<Boolean> optimise() {
-		InstanceOf opt=mapChildren(node -> ((Node<?>) node).optimise());
+		InstanceOf opt=mapChildren(NodeFunctions.OPTIMISE);
 		return opt.optimiseLocal();
 	}
 	

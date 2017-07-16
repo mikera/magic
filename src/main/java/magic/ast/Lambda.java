@@ -176,6 +176,10 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 		for (int i=0; i<arity; i++) {
 			context=context.bind(params.get(i), Constant.create(null));
 		}
+		if (variadic) {
+			// skip the & character, get the last symbol
+			context=context.bind(params.get(arity+1), Constant.create(null));
+		}
 		Node<? extends T> newBody=(Node<? extends T>) body.analyse(context);
 		return (body==newBody)?this:(Lambda<T>) create(params,newBody,meta());
 	}
