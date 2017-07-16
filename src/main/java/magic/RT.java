@@ -498,7 +498,6 @@ public class RT {
 	}
 
 	public static Class<?> classForSymbol(Symbol sym) {
-		if (sym.isQualified()) return null;
 		String name=sym.getName();
 		if (!maybeClassName(name)) return null;
 		return classForName(name);
@@ -529,12 +528,15 @@ public class RT {
 	 * Handles:
 	 * - Lookup of values from slots in this context
 	 * - Lookup of class names
+	 * - Special case of *context*
+	 * 
 	 * @param c
 	 * @param sym
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T resolve(Context c, Symbol sym) {
+		if (sym==Symbols._CONTEXT_) return (T) c;
 		
 		Slot<T> slot=resolveSlot(c,sym);
 		if (slot!=null) return slot.getValue();

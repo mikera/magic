@@ -66,6 +66,7 @@ public class Lookup<T> extends Node<T> {
 		Node<?> node=context.getNode(rSym);
 		if (node==null) {
 			// TODO: what about unresolved dependencies?
+			// TODO: what about class names?
 			// throw new Error("Analysis error: Symbol "+sym+" cannot be resolved");
 		} 
 		if (sym==rSym) {
