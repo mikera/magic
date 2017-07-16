@@ -14,7 +14,7 @@ import magic.type.FunctionType;
  *
  * @param <T>
  */
-public abstract class AVariadicFn<T> extends AFn<T> implements IVariadicFn<T> {
+public abstract class AVariadicFn<T> extends AArrayFn<T> implements IVariadicFn<T> {
 	private int minArity;
 
 	protected AVariadicFn(int minArity) {

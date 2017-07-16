@@ -334,12 +334,25 @@ public class RT {
 		return o.toString();
 	}
 	
+
+	public static String printTypes(Object[] a) {
+		StringBuilder sb=new StringBuilder("[");
+		int n=a.length;
+		for (int i=0; i<n; i++) {
+			Object item=Array.get(a, i);
+			sb.append(RT.toString(item));
+			if (i<(n-1)) sb.append(", ");
+		}		
+		sb.append(']');
+		return sb.toString();
+	}
+	
 	public static String arrayToString(Object o) {
 		StringBuilder sb=new StringBuilder("[");
 		int n=Array.getLength(o);
 		for (int i=0; i<n; i++) {
 			Object item=Array.get(o, i);
-			sb.append(RT.toString(item));
+			sb.append(RT.className(item));
 			if (i<(n-1)) sb.append(", ");
 		}
 		sb.append(']');
@@ -644,6 +657,7 @@ public class RT {
 		};
 		throw new TypeError("Can't cast value of type "+a.getClass()+" to int");
 	}
+
 
 
 

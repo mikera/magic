@@ -49,4 +49,8 @@ public abstract class AFn<T> extends APersistentObject implements IFn<T>, CallTa
 	public void validate() {
 		// nothing to check
 	}
+
+	public boolean acceptsArgs(Object[] a) {
+		return hasArity(a.length);
+	}
 }

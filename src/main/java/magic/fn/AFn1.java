@@ -16,7 +16,7 @@ public abstract class AFn1<T, R> extends AFn<R> implements IFn1<T,R>, Predicate<
 	@Override
 	public R applyToArray(Object... a) {
 		if (a.length!=1) throw new ArityException(1,a.length);
-		return apply(a[1]);
+		return apply(a[0]);
 	}
 	
 	@Override
