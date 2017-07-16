@@ -4,6 +4,7 @@ import magic.Keywords;
 import magic.Symbols;
 import magic.Type;
 import magic.Types;
+import magic.compiler.AnalysisContext;
 import magic.compiler.EvalResult;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
@@ -167,6 +168,16 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 		public int arity() {
 			return arity;
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Lambda<T> analyse(AnalysisContext context) {
+		for (int i=0; i<arity; i++) {
+			context=context.bind(params.get(i), Constant.create(null));
+		}
+		Node<? extends T> newBody=(Node<? extends T>) body.analyse(context);
+		return (body==newBody)?this:(Lambda<T>) create(params,newBody,meta());
 	}
 	
 	@Override

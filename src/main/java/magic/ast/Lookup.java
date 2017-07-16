@@ -2,6 +2,7 @@ package magic.ast;
 
 import magic.Keywords;
 import magic.RT;
+import magic.compiler.AnalysisContext;
 import magic.compiler.EvalResult;
 import magic.compiler.Reader;
 import magic.compiler.SourceInfo;
@@ -55,6 +56,16 @@ public class Lookup<T> extends Node<T> {
 
 	public static <T> Lookup<T> create(String sym) {
 		return create(Reader.readSymbol(sym));
+	}
+	
+	@Override
+	public Node<?> analyse(AnalysisContext context) {
+		Node<?> node=context.getNode(sym);
+		if (node==null) {
+			// TODO: might be a class name?
+			// throw new Error("Analysis error: Symbol "+sym+" cannot be resolved");
+		}
+		return this;
 	}
 	
 	@SuppressWarnings("unchecked")

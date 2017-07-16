@@ -2,6 +2,7 @@ package magic.ast;
 
 import magic.Keywords;
 import magic.Symbols;
+import magic.compiler.AnalysisContext;
 import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
@@ -62,6 +63,14 @@ public class Define<T> extends BaseForm<T> {
 		}
 		context=context.define(sym, theExp, bindings); 
 		return new EvalResult<T>(context,null); // TODO: what should def return??
+	}
+	
+	@Override
+	public Define<T> analyse(AnalysisContext context) {
+		// TODO: no analysis?
+		// sym should be a symbol
+		// exp should be raw expression
+		return this;
 	}
 	
 	@Override

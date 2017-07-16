@@ -4,6 +4,7 @@ import magic.Keywords;
 import magic.Symbols;
 import magic.Type;
 import magic.compiler.AExpander;
+import magic.compiler.AnalysisContext;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
@@ -71,8 +72,9 @@ public class Let<T> extends BaseForm<T> {
 		return (Let<T>) create(syms,lets,bodyExpr,si);
 	}
 	
-	public static <T> Node<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<?>[] bodyExprs) {
-		return create(syms,lets,Do.create(bodyExprs));
+	@SuppressWarnings("unchecked")
+	public static <T> Let<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<?>[] bodyExprs) {
+		return create(syms,lets,(Node<T>)Do.create(bodyExprs));
 	}
 	
 	public static <T> Let<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<?>[] bodyExprs,SourceInfo source) {
@@ -94,8 +96,26 @@ public class Let<T> extends BaseForm<T> {
 		return new Let<T>(syms,lets,body,meta);
 	}
 	
-	public static <T> Let<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<T> bodyExpr) {
-		return create(syms,lets,bodyExpr,null);
+	@SuppressWarnings("unchecked")
+	public static <T> Let<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<? extends T> bodyExpr) {
+		return (Let<T>) create(syms,lets,bodyExpr,null);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Let<T> analyse(AnalysisContext context) {
+		Node<? extends Object>[] newLets=lets;
+		for (int i=0; i<nLets; i++) {
+			Node<?> n=lets[i];
+			Node<?> an=n.analyse(context);
+			if (an!=n) {
+				if (newLets==lets) newLets=lets.clone();
+				newLets[i]=n;
+			}
+			context=context.bind(syms[i], an);
+		}
+		Node<?> newBody=(Node<?>) body.analyse(context);
+		return ((body==newBody)&&(lets==newLets))?this:(Let<T>) create(syms,newLets,newBody);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -112,6 +132,7 @@ public class Let<T> extends BaseForm<T> {
 		return r;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public Node<? extends T> specialiseValues(APersistentMap<Symbol, Object> bindings) {
 		Node<? extends Object>[] newLets=lets;
@@ -134,7 +155,7 @@ public class Let<T> extends BaseForm<T> {
 		}
 
 		Node<? extends T> newBody=body.specialiseValues(bindings);
-		return ((body==newBody)&&(lets==newLets))?this:create(syms,newLets,newBody);
+		return ((body==newBody)&&(lets==newLets))?this:(Let<T>) create(syms,newLets,newBody);
 	}
 	
 	@Override

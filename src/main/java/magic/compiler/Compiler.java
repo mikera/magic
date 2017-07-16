@@ -32,8 +32,13 @@ public class Compiler {
 	 * @param node
 	 * @return
 	 */
-	private static Node<?> analyse(Context context, Node<?> node) {
-		return node.analyse(context);
+	private static Node<?> analyse(AnalysisContext context, Node<?> node) {
+		try {
+			return node.analyse(context);
+		} catch (Throwable t) {
+			throw new Error(t.getMessage()+"\n"+
+		              "while analysing: " + node,t); 
+		}
 	}
 
 	/**
@@ -45,7 +50,7 @@ public class Compiler {
 	@SuppressWarnings("unchecked")
 	public static <T> Node<T> compileNode(Context context, Node<?> node) {
 		node=Compiler.expand(context, node);
-		node=Compiler.analyse(context,node);
+		node=Compiler.analyse(AnalysisContext.create(context),node);
 		node=node.optimise();
 		// TODO: should specialise to context here?
 		return (Node<T>)node;
@@ -66,14 +71,16 @@ public class Compiler {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> EvalResult<T> eval(Context context, Node<? super T> node, APersistentMap<Symbol, Object> bindings) {
-		Node<? super T> compiledNode=compileNode(context,node);
 		EvalResult<T> result;
+		Node<? super T> compiledNode;
+		compiledNode=compileNode(context,node);
 		try {
 			result=(EvalResult<T>) compiledNode.eval(context,bindings);
 		} catch (Throwable t) {
 			throw new Error(t.getMessage()+"\n"+
-		              "while evaluating: " + node,t); 
+		              "while evaluating: " + compiledNode,t); 
 		}
+
 		return result;
 	}
 

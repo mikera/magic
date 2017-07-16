@@ -240,7 +240,8 @@ public class Context {
 	 */
 	public <T> Node<T> getNode(Symbol sym) {
 		Slot<T> slot=getSlot(sym); 
-		if (slot==null) throw new IllegalArgumentException("Symbol not defined: "+sym);
+		//if (slot==null) throw new IllegalArgumentException("Symbol not defined: "+sym);
+		if (slot==null) return null;
 		return slot.getNode();
 	}
 	

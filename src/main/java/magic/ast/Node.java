@@ -9,6 +9,7 @@ import magic.Keywords;
 import magic.RT;
 import magic.Type;
 import magic.Types;
+import magic.compiler.AnalysisContext;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
@@ -273,7 +274,7 @@ public abstract class Node<T> extends RootNode {
 	 * @param context
 	 * @return
 	 */
-	public Node<?> analyse(Context context) {
+	public Node<?> analyse(AnalysisContext context) {
 		return mapChildren(NodeFunctions.analyse(context));
 	}
 
