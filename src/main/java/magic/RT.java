@@ -504,8 +504,12 @@ public class RT {
 		return classForName(name);
 	}
 
-	
-
+	/** 
+	 * Resolves a symbol in the current context, namespace qualifying if necessary
+	 * @param c
+	 * @param symbol
+	 * @return
+	 */
 	public static Symbol resolveSym(Context c, Symbol symbol) {
 		if (symbol.isQualified()) return symbol;
 		String ns=c.getCurrentNamespace();

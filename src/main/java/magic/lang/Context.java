@@ -191,6 +191,7 @@ public class Context {
 	 * @return
 	 */
 	public APersistentSet<Symbol> getDependants(Symbol sym) {
+		sym=RT.resolveSym(this,sym);
 		APersistentSet<Symbol> ds=dependants.get(sym);
 		return (ds==null)?Sets.emptySet():ds;
 	}

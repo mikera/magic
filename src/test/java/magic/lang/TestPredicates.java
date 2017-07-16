@@ -16,6 +16,7 @@ public class TestPredicates {
 		assertEquals(false,odd.test(4L));
 	}
 	
+	@SuppressWarnings("serial")
 	@Test public void testAFn1() {
 		Predicate<Object> odd = new AFn1<Object,Boolean>() {
 			@Override

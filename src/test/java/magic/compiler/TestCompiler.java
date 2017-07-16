@@ -12,6 +12,7 @@ import org.junit.Test;
 import magic.Core;
 import magic.Symbols;
 import magic.ast.Node;
+import magic.data.APersistentSet;
 import magic.data.Sets;
 import magic.data.Symbol;
 import magic.data.Tuple;
@@ -35,6 +36,10 @@ public class TestCompiler {
 				"(def c (id a)) "+
 				"(def d (fst 7 8))");
 		Context c2=r.getContext();
+		
+		// check the slot is being namespace qualified correctly
+		assertEquals(c2.getSlot("a"),c2.getSlot("magic.core/a"));
+		
 		assertEquals((Long)1L,c2.getValue("a"));
 		assertEquals((Long)2L,c2.getValue("b"));
 		assertEquals((Long)1L,c2.getValue("c"));
@@ -258,6 +263,7 @@ public class TestCompiler {
 	@SuppressWarnings("unused")
 	@Test public void testDependencyUpdate() {
 		Context c=INITIAL;
+		String USER_NS="magic.core";
 		
 		Context c1=Compiler.eval(c, 
 				  "(defn g [c] (f c))"  
@@ -265,7 +271,9 @@ public class TestCompiler {
 		
 		Slot<?> ogSlot=c1.getSlot("g");
 		assertFalse(ogSlot.isComputed());
-		assertTrue(ogSlot.getDependencies().contains(Symbol.create("f")));
+		
+		// should force analysis, needs to resolve to fully qualified symbol for dependency update to be correct
+		assertTrue(ogSlot.getDependencies().contains(Symbol.create(USER_NS,"f")));
 		Object og;
 		try {
 			og=c1.getValue("g");
@@ -278,8 +286,8 @@ public class TestCompiler {
 		{ // check dependency exists
 			Node<?> g=c1.getNode("g");
 			assertTrue(g.getDependencies().contains(Symbol.create("f")));
-			assertEquals(Sets.of(Symbol.create("f"),Symbols.FN, Symbols.DEFN),c1.getDependencies(Symbol.create("g")));
-			assertEquals(Sets.of(Symbol.create("magic.core/g")),c1.getDependants(Symbol.create("f")));
+			assertEquals(Sets.of(Symbol.create("f"),Symbols.FN),c1.getDependencies(Symbol.create("g")));
+			assertEquals(Sets.of(Symbol.create(USER_NS,"g")),c1.getDependants(Symbol.create("f")));
 		}
 
 		EvalResult<?> r=Compiler.eval(c1, 
@@ -298,8 +306,9 @@ public class TestCompiler {
 		assertTrue(g.getDependencies().contains(Symbol.create("f")));
 		Node<?> f=c2.getNode("f");
 		assertTrue(f.getDependencies().contains(Symbol.create("a")));
-		assertTrue(c2.getDependants("a").contains(Symbol.create("f")));
-		assertTrue(c2.calcDependants(Symbol.create("a")).contains(Symbol.create("b")));
+		assertTrue(c2.getDependants("a").contains(Symbol.create(USER_NS,"f")));
+		APersistentSet<Symbol> c2depsA=c2.calcDependants(Symbol.create("a"));
+		assertTrue(c2depsA.contains(Symbol.create(USER_NS,"f")));
 		assertEquals(fSlot.getDependencies(),f.getDependencies());
 		
 		// compute b, should transitively compute g and f
@@ -334,13 +343,13 @@ public class TestCompiler {
 		Node<?> f=c2.getNode("f");
 		
 		// note def is never a dependency, it gets executed to install the definition
-		assertEquals(Sets.of(Symbol.create("b"),Symbols.FN,Symbols.DEFN),f.getDependencies());
+		assertEquals(Sets.of(Symbol.create("b"),Symbols.FN),f.getDependencies());
 		
-		assertEquals(Sets.of(),c2.getDependencies("a"));
-		assertEquals(Sets.of(Symbol.create("b")),c2.getDependants("a"));
+		assertEquals(Sets.of(),c2.getDependencies("magic.core/a"));
+		assertEquals(Sets.of(Symbol.create("magic.core","b")),c2.getDependants("magic.core/a"));
 		assertEquals(Sets.of(Symbol.create("a")),c2.getDependencies("b"));
-		assertEquals(Sets.of(Symbol.create("f")),c2.getDependants("b"));
-		assertEquals(Sets.of(Symbol.create("b"),Symbols.FN,Symbols.DEFN),c2.getDependencies("f"));
+		assertEquals(Sets.of(Symbol.create("magic.core","f")),c2.getDependants("b"));
+		assertEquals(Sets.of(Symbol.create("b"),Symbols.FN),c2.getDependencies("f"));
 		assertEquals(Sets.of(),c2.getDependants("f"));
 	}
 }

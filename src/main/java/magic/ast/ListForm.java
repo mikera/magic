@@ -8,11 +8,9 @@ import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
-import magic.data.APersistentSet;
 import magic.data.Keyword;
 import magic.data.Lists;
 import magic.data.Maps;
-import magic.data.Sets;
 import magic.data.Symbol;
 import magic.fn.IFn1;
 import magic.lang.Context;
@@ -51,18 +49,11 @@ public class ListForm extends BaseForm<Object> {
 		return create(nodes,(SourceInfo)null);
 	}
 
-	@SuppressWarnings("unchecked")
 	public static ListForm create(APersistentList<Node<?>> nodes, APersistentMap<Keyword,Object> meta) {
-		// get deps from first element in list of present
-		APersistentSet<Symbol> deps=(nodes.size()==0)?Sets.emptySet():nodes.get(0).getDependencies();
-		APersistentSet<Symbol> oldDeps=(APersistentSet<Symbol>) meta.get(Keywords.DEPS);
-		if (oldDeps!=null) deps=deps.includeAll(oldDeps);
-		meta=meta.assoc(Keywords.DEPS, deps);
 		return new ListForm(nodes,meta);
 	}
 	
 	public static ListForm create(APersistentList<Node<?>> nodes, SourceInfo source) {
-		// get deps from first element in list of present
 		APersistentMap<Keyword,Object> meta=Maps.empty();
 		meta=meta.assoc(Keywords.SOURCE, source);
 		return create(nodes,meta);

@@ -43,7 +43,7 @@ import magic.lang.Slot;
  * A standard set of expanders used to transform raw AST nodes into compilable
  * AST
  * 
- * These expanders are available in the RT.BOOTSTRAP_CONTEXT, and represent the
+ * These expanders are available in the Core.BOOTSTRAP_CONTEXT, and represent the
  * basic special forms and constructs necessary to bootstrap the Magic
  * environment.
  * 
@@ -102,12 +102,13 @@ public class Expanders {
 			Node<?> head = form.get(0);
 
 			if (head.isSymbol()) {
-				Symbol sym = head.getSymbol();
-				Slot<Object> slot = RT.resolveSlot(c,sym);
+				Symbol sym = head.getSymbol(); // potentially unqualified symbol
+				Symbol rSym=RT.resolveSym(c, sym);
+				Slot<Object> slot = c.getSlot(rSym);
 				// handle nested expander
 				if ((slot != null) && slot.isExpander()) {
 					AExpander e = (AExpander) slot.getValue(); 
-					return e.expand(c, form, ex).includeDependency(RT.resolveSym(c,sym));
+					return e.expand(c, form, ex).includeDependency(rSym);
 				}
 
 				// handle .someMethod forms
@@ -525,7 +526,11 @@ public class Expanders {
 					new ContextAction.Action() {
 						@Override
 						public EvalResult eval(Context context, APersistentMap bindings,Object[] args) {
-							return EvalResult.create((Context)args[0], null);
+							Object newContext=args[0];
+							if (!(newContext instanceof Context)) {
+								throw new Error("Error setting context: expexted a context but got: "+RT.toString(newContext));
+							}
+							return EvalResult.create((Context)newContext, null);
 						}
 					},meta);
 			

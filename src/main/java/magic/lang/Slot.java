@@ -104,7 +104,8 @@ public class Slot<T> {
 	}
 
 	public APersistentSet<Symbol> getDependencies() {
-		return getNode().getDependencies();
+		APersistentSet<Symbol> rawDeps= getNode().getDependencies();
+		return rawDeps;
 	}
 
 	/**

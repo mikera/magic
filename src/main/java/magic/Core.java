@@ -57,8 +57,10 @@ public class Core {
 			c=c.define(Symbols.PRINTLN, Constant.create(Functions.PRINTLN)); 
 			c=c.define(Symbols.PLUS, Constant.create(Functions.LONGADD)); 
 
-			c=c.define(Symbols._CONTEXT_, null); 
-	
+			// TODO: figure out if this needs a definition or not?
+			c=c.define(Symbols._CONTEXT_, Constant.create(null)); 
+
+
 		} catch (Throwable t) {
 			t.printStackTrace(System.err);
 		}
@@ -74,6 +76,10 @@ public class Core {
 		EvalResult<?> r;
 		try {
 			r=(EvalResult<?>) magic.compiler.Compiler.eval(c, RT.getResourceAsString("magic/core.mag"));
+
+			// TODO: Switch to user namespace - need to work out magic.core imports first
+			// c=c.define(Symbols._NS_, Constant.create("user")); 
+
 		} catch (Throwable t) {
 			t.printStackTrace(System.err);
 			throw new magic.Error("Failed to initialise Magic environment",t);
