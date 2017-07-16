@@ -39,6 +39,7 @@ public final class SingletonSet<T> extends BasePersistentSet<T> {
 
 	@Override
 	public APersistentSet<T> include(T value) {
+		if (value==this.value) return this;
 		return PersistentHashSet.coerce(this).include(value);
 	}
 	

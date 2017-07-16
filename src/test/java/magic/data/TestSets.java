@@ -21,4 +21,19 @@ public class TestSets {
 		
 		assertEquals("Removing from: "+s1.toString(),t,r);
 	}
+	
+	@Test public void testIncludeIdentity() {
+		String a="a";
+		String b="b";
+		
+		APersistentSet<String> s1=Sets.of(a);
+		assertTrue(s1.contains(a));
+		assertTrue(s1==s1.include(a));
+		
+		APersistentSet<String> s2=s1.include(b);
+		assertTrue(s2==s2.include(a));
+		assertTrue(s2==s2.include(b));
+		assertTrue(s2==s2.includeAll(s1));
+		assertTrue(s2==s2.includeAll(s2));
+	}
 }
