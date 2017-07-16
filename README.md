@@ -40,7 +40,7 @@ This is an EXPERIMENT in programming language design, combining several big idea
 
 ## Documentation
 
-See the [Wiki|https://github.com/mikera/magic/wiki]
+See [https://github.com/mikera/magic/wiki]
 
 ## Contributing
 
