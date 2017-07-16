@@ -38,6 +38,10 @@ This is an EXPERIMENT in programming language design, combining several big idea
 - The ability to run on the excellent **JVM platform** and take advantage of the huge library ecosystem this gives you
 - The (I believe novel?) concept of programming with a succession of **immutable environments**
 
+## Documentation
+
+See the [Wiki|https://github.com/mikera/magic/wiki]
+
 ## Contributing
 
 Magic is a 100% open source project, licensed under the EPL.
