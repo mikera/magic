@@ -1,5 +1,7 @@
 package magic.compiler;
 
+import java.util.Map.Entry;
+
 import magic.RT;
 import magic.ast.Constant;
 import magic.ast.Node;
@@ -27,12 +29,33 @@ public class AnalysisContext {
 		return new AnalysisContext(context,Maps.empty());
 	}
 	
+	public static AnalysisContext create(Context context,APersistentMap<Symbol, Object> bindings) {
+		APersistentMap<Symbol, Node<?>> boundNodes=Maps.empty();
+		for (Entry<Symbol, Object> e:bindings.entrySet()) {
+			boundNodes=boundNodes.assoc(e.getKey(), Constant.create(e.getValue()));
+		}
+		return new AnalysisContext(context,boundNodes);
+	}
+	
 	public AnalysisContext bind(Symbol sym,Node<?> node) {
 		return withBindings(bindings.assoc(sym, node));
+	}
+	
+	/**
+	 * Attempts to resolve the given symbol in the analysis context
+	 * @param sym
+	 * @return
+	 */
+	public Symbol resolveSym(Symbol sym) {
+		// OK if a local binding
+		if (bindings.get(sym)!=null) return sym;
+
+		return RT.resolveSym(context, sym);
 	}
 
 	/**
 	 * Gets the node associated with a symbol in the current analysis context.
+	 * Does *not* attempt to resolve symbols.
 	 * 
 	 * Could be:
 	 * a) A local expression bindings
@@ -50,7 +73,7 @@ public class AnalysisContext {
 		if (bound!=null) return bound;
 		
 		// handle a context reference in underlying context
-		Node<?> node= RT.resolveNode(context, sym);
+		Node<?> node= context.getNode(sym);
 		if (node!=null) return node;
 		
 		// handle a class lookup

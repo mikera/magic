@@ -512,6 +512,10 @@ public class RT {
 	 */
 	public static Symbol resolveSym(Context c, Symbol symbol) {
 		if (symbol.isQualified()) return symbol;
+		
+		// TODO: remove this check once everything is working
+		if (c==null) throw new Error("Null context when trying to resove symbol: " +symbol);
+			
 		String ns=c.getCurrentNamespace();
 		if (ns!=null) {
 			symbol=Symbol.create(ns,symbol.getName());
@@ -555,7 +559,10 @@ public class RT {
 	 */
 	public static <T> Slot<T> resolveSlot(Context c, Symbol sym) {
 		sym=RT.resolveSym(c, sym);
-		
+
+		// TODO: remove this check once everything is working
+		if (c==null) throw new Error("Null context when trying to resove slot: " +sym);
+
 		Slot<T> slot=c.getSlot(sym);
 		return slot;
 	}

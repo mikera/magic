@@ -39,12 +39,14 @@ public class Lookup<T> extends Node<T> {
 	
 	public static <T> Lookup<T> create(Symbol sym, SourceInfo source) {
 		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.SOURCE,source);
-		meta=meta.assoc(Keywords.DEPS, sym.symbolSet());
+		//meta=meta.assoc(Keywords.DEPS, sym.symbolSet());
 		return create(sym,meta);
 	}
 	
 	public static <T> Lookup<T> create(Symbol sym, APersistentMap<Keyword, Object> meta) {
-		return new Lookup<T>(sym,meta);
+		Lookup<T> lookup= new Lookup<T>(sym,meta);
+		//lookup=(Lookup<T>)lookup.withDependency(sym);
+		return lookup;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -60,12 +62,19 @@ public class Lookup<T> extends Node<T> {
 	
 	@Override
 	public Node<?> analyse(AnalysisContext context) {
-		Node<?> node=context.getNode(sym);
+		Symbol rSym=context.resolveSym(sym);
+		Node<?> node=context.getNode(rSym);
 		if (node==null) {
 			// TODO: what about unresolved dependencies?
 			// throw new Error("Analysis error: Symbol "+sym+" cannot be resolved");
+		} 
+		if (sym==rSym) {
+			// just need to update the dependency
+			return this.withDependency(rSym);
+		} else {
+			// need a new Lookup with correct symbol
+			return create(rSym,meta()).withDependency(rSym);
 		}
-		return this;
 	}
 	
 	@SuppressWarnings("unchecked")

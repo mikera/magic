@@ -55,6 +55,21 @@ public class Compiler {
 		// TODO: should specialise to context here?
 		return (Node<T>)node;
 	}
+	
+	/**
+	 * Expands, compiles and optimises a node in the given context with specified local bindings
+	 * @param context
+	 * @param node
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> Node<T> compileNode(Context context, APersistentMap<Symbol, Object> bindings, Node<?> node) {
+		node=Compiler.expand(context, node);
+		node=Compiler.analyse(AnalysisContext.create(context,bindings),node);
+		node=node.optimise();
+		// TODO: should specialise to context here?
+		return (Node<T>)node;
+	}
 
 
 	/**

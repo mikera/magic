@@ -4,6 +4,7 @@ import magic.Keywords;
 import magic.Symbols;
 import magic.Type;
 import magic.compiler.AExpander;
+import magic.compiler.AnalysisContext;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
@@ -152,6 +153,23 @@ public class Loop<T> extends BaseForm<T> {
 		
 		Node<? extends T> newBody=body.specialiseValues(bindings);
 		return ((body==newBody)&&(lets==newLets))?this:create(syms,newLets,newBody);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Loop<T> analyse(AnalysisContext context) {
+		Node<? extends Object>[] newLets=lets;
+		for (int i=0; i<nLets; i++) {
+			Node<?> n=lets[i];
+			Node<?> an=n.analyse(context);
+			if (an!=n) {
+				if (newLets==lets) newLets=lets.clone();
+				newLets[i]=n;
+			}
+			context=context.bind(syms[i], an);
+		}
+		Node<?> newBody=(Node<?>) body.analyse(context);
+		return ((body==newBody)&&(lets==newLets))?this:(Loop<T>) create(syms,newLets,newBody);
 	}
 	
 	@Override

@@ -181,6 +181,7 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 			context=context.bind(params.get(arity+1), Constant.create(null));
 		}
 		Node<? extends T> newBody=(Node<? extends T>) body.analyse(context);
+		
 		return (body==newBody)?this:(Lambda<T>) create(params,newBody,meta());
 	}
 	

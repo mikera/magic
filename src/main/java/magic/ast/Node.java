@@ -1,4 +1,6 @@
 package magic.ast;
+import java.util.Collection;
+
 import org.objectweb.asm.commons.GeneratorAdapter;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
@@ -288,10 +290,29 @@ public abstract class Node<T> extends RootNode {
 		return mapChildren(NodeFunctions.analyse(context));
 	}
 
-	public Node<T> includeDependency(Symbol sym) {
+	/**
+	 * Updates this node, including the specified symbolic dependency
+	 * 
+	 * @param sym
+	 * @return
+	 */
+	public Node<T> withDependency(Symbol sym) {
 		APersistentSet<Symbol> deps=getDependencies();
 		if (deps.containsKey(sym)) return this;
 		return withMeta(meta.assoc(Keywords.DEPS, deps.include(sym)));
+	}
+	
+	/**
+	 * Updates this node, including the specified symbolic dependency
+	 * 
+	 * @param sym
+	 * @return
+	 */
+	public Node<T> withDependencies(Collection<Symbol> syms) {
+		APersistentSet<Symbol> deps=getDependencies();
+		APersistentSet<Symbol> newDeps=deps.includeAll(syms);
+		if (deps==newDeps) return this;
+		return withMeta(meta.assoc(Keywords.DEPS, newDeps));
 	}
 
 	

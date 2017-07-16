@@ -80,6 +80,7 @@ public class Expanders {
 		}
 
 		private Node<?> lookupExpand(Context c, Lookup<?> form) {
+			// TODO: probably don't want any symbol resolution during expansion?
 			//Symbol sym = form.getSymbol();
 			//Symbol resSym=RT.resolveSym(c, sym);
 			//return Lookup.create(resSym,form.meta());
@@ -108,7 +109,7 @@ public class Expanders {
 				// handle nested expander
 				if ((slot != null) && slot.isExpander()) {
 					AExpander e = (AExpander) slot.getValue(); 
-					return e.expand(c, form, ex).includeDependency(rSym);
+					return e.expand(c, form, ex).withDependency(rSym);
 				}
 
 				// handle .someMethod forms

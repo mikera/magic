@@ -46,9 +46,9 @@ public class Apply<T> extends BaseForm<T> {
 		return create(form,meta);
 	}
 	
-	private Apply<T> create(Node<IFn<? extends T>> newFunction, Node<?>[] newBody, SourceInfo source) {
+	private Apply<T> create(Node<IFn<? extends T>> newFunction, Node<?>[] newBody,  APersistentMap<Keyword, Object> meta) {
 		APersistentList<Node<? extends Object>> form=Lists.cons(newFunction, PersistentList.wrap(newBody));
-		return create(form,source);
+		return create(form,meta);
 	}
 	
 	public static <T> Apply<T> create(APersistentList<Node<? extends Object>> form, APersistentMap<Keyword, Object> meta) {
@@ -95,7 +95,7 @@ public class Apply<T> extends BaseForm<T> {
 				newBody[i]=newNode;
 			} 
 		}
-		return (newFunction==function)&&(args==newBody)?this:create(newFunction,newBody,getSourceInfo());	
+		return (newFunction==function)&&(args==newBody)?this:create(newFunction,newBody,meta());	
 	}
 
 	@SuppressWarnings("unchecked")

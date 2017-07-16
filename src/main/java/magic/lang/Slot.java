@@ -76,7 +76,7 @@ public class Slot<T> {
 	@SuppressWarnings("unchecked")
 	public Node<T> getNode() {
 		if (compiledExpression==null) {
-			compiledExpression=(Node<T>) magic.compiler.Compiler.compileNode(context,rawExpression);
+			compiledExpression=(Node<T>) magic.compiler.Compiler.compileNode(context,bindings,rawExpression);
 		}
 		return compiledExpression;
 	}

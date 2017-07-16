@@ -23,7 +23,7 @@ public class TestAnalyse {
 
 	public <T> Node<T> analyse(String t) {
 		Node<?> node= Reader.read(t);
-		return Compiler.expand(Core.INITIAL_CONTEXT,node);
+		return Compiler.compileNode(Core.INITIAL_CONTEXT,node);
 	}
 	
 	@Test 
@@ -53,7 +53,7 @@ public class TestAnalyse {
 			c2.getValue("x");
 			fail();
 		} catch (UnresolvedException e) {
-			assertEquals(Symbol.create("a"),e.getSymbol());
+			assertEquals(Symbol.create("magic.core","a"),e.getSymbol());
 		}
 	}
 	
@@ -92,8 +92,8 @@ public class TestAnalyse {
 	
 	@Test
 	public void testDeps() {
-		Symbol foo=Symbol.create("foo");
-		Symbol bar=Symbol.create("bar");
+		Symbol foo=Symbol.create("magic.core","foo");
+		Symbol bar=Symbol.create("magic.core","bar");
 		Symbol fn=Symbols.FN;
 		assertEquals(Sets.of(foo),analyse("foo").getDependencies());
 		assertEquals(Sets.of(foo,bar),analyse("[foo bar]").getDependencies());

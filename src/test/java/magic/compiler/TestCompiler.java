@@ -279,14 +279,14 @@ public class TestCompiler {
 			og=c1.getValue("g");
 			fail("Should not be able to compute g at this point!"); // TODO: what happens here?
 		} catch (UnresolvedException e) {
-			assertEquals(e.getSymbol(),Symbol.create("f"));
+			assertEquals(e.getSymbol(),Symbol.create(USER_NS,"f"));
 		}
 		assertFalse(ogSlot.isComputed());
 		
 		{ // check dependency exists
 			Node<?> g=c1.getNode("g");
-			assertTrue(g.getDependencies().contains(Symbol.create("f")));
-			assertEquals(Sets.of(Symbol.create("f"),Symbols.FN),c1.getDependencies(Symbol.create("g")));
+			assertTrue(g.getDependencies().contains(Symbol.create(USER_NS,"f")));
+			assertEquals(Sets.of(Symbol.create(USER_NS,"f"),Symbols.FN),c1.getDependencies(Symbol.create("g")));
 			assertEquals(Sets.of(Symbol.create(USER_NS,"g")),c1.getDependants(Symbol.create("f")));
 		}
 
@@ -303,11 +303,11 @@ public class TestCompiler {
 		Slot<?> gSlot=c2.getSlot("g");
 		
 		Node<?> g=c2.getNode("g");
-		assertTrue(g.getDependencies().contains(Symbol.create("f")));
+		assertTrue(g.getDependencies().contains(Symbol.create(USER_NS,"f")));
 		Node<?> f=c2.getNode("f");
-		assertTrue(f.getDependencies().contains(Symbol.create("a")));
+		assertTrue(f.getDependencies().contains(Symbol.create(USER_NS,"a")));
 		assertTrue(c2.getDependants("a").contains(Symbol.create(USER_NS,"f")));
-		APersistentSet<Symbol> c2depsA=c2.calcDependants(Symbol.create("a"));
+		APersistentSet<Symbol> c2depsA=c2.calcDependants(Symbol.create(USER_NS,"a"));
 		assertTrue(c2depsA.contains(Symbol.create(USER_NS,"f")));
 		assertEquals(fSlot.getDependencies(),f.getDependencies());
 		
@@ -341,15 +341,16 @@ public class TestCompiler {
 			    + "(defn f [c] b)");
 		Context c2=r.getContext();
 		Node<?> f=c2.getNode("f");
+		//Node<?> b=c2.getNode("b");
 		
 		// note def is never a dependency, it gets executed to install the definition
-		assertEquals(Sets.of(Symbol.create("b"),Symbols.FN),f.getDependencies());
+		assertEquals(Sets.of(Symbol.create("magic.core","b"),Symbols.FN),f.getDependencies());
 		
 		assertEquals(Sets.of(),c2.getDependencies("magic.core/a"));
+		assertEquals(Sets.of(Symbol.create("magic.core","a")),c2.getDependencies("b"));
 		assertEquals(Sets.of(Symbol.create("magic.core","b")),c2.getDependants("magic.core/a"));
-		assertEquals(Sets.of(Symbol.create("a")),c2.getDependencies("b"));
 		assertEquals(Sets.of(Symbol.create("magic.core","f")),c2.getDependants("b"));
-		assertEquals(Sets.of(Symbol.create("b"),Symbols.FN),c2.getDependencies("f"));
+		assertEquals(Sets.of(Symbol.create("magic.core","b"),Symbols.FN),c2.getDependencies("f"));
 		assertEquals(Sets.of(),c2.getDependants("f"));
 	}
 }
