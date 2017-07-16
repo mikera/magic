@@ -9,6 +9,7 @@ import magic.Keywords;
 import magic.RT;
 import magic.Type;
 import magic.Types;
+import magic.compiler.Analyser;
 import magic.compiler.AnalysisContext;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
@@ -51,6 +52,15 @@ public abstract class Node<T> extends RootNode {
 	public Node(APersistentMap<Keyword, Object> meta) {
 		super(MagicLanguage.class,null,null);
 		this.meta=meta;
+	}
+	
+	/**
+	 * Creates a raw AST node tree from the given form
+	 * @param form
+	 * @return
+	 */
+	public static <T> Node<T> toNode(Object form) {
+		return Analyser.analyse(form);
 	}
 
 	/**
