@@ -8,12 +8,22 @@ Magic is an experimental language, strongly influenced by Clojure.
 - Performance like **Java**
 - Type safety like **Haskell**
 
-## Exmaples
+## Examples
 ```clojure
 ;; Obligatory....
 (println "Hello World")
 
-;;  
+;; Typical functional programming operations such as map, reduce etc. are available
+(defn add2 [x] (+ x 2))
+(map add2 [1 2 3])
+;; result: [3 4 5]
+
+;; Compilation is delayed until all symbolic dependencies are available 
+(def a [1 b])
+(def b 2)
+(println a)
+;; result: [1 2]
+
 
 ```
 
