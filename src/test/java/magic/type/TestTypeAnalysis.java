@@ -9,7 +9,6 @@ import magic.Type;
 import magic.Types;
 import magic.ast.Constant;
 import magic.ast.Node;
-import magic.compiler.Analyser;
 import magic.compiler.Compiler;
 import magic.compiler.Reader;
 import magic.data.APersistentMap;
@@ -30,7 +29,7 @@ public class TestTypeAnalysis {
 	
 	@SuppressWarnings("unchecked")
 	@Test public void testConstantTypes() {
-		assertEquals(Types.NULL,Analyser.analyse(null).getType());
+		assertEquals(Types.NULL,Node.toNode(null).getType());
 		assertEquals(Double.class,analyseClass(Constant.create(1.0)));
 		assertEquals(String.class,analyseClass(Constant.create("foo")));
 		assertEquals(Symbol.class,compile("'foo").eval(Core.INITIAL_CONTEXT,(APersistentMap<Symbol, Object>) Maps.EMPTY).getValue().getClass());

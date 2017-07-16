@@ -3,7 +3,6 @@ package magic.ast;
 import magic.Keywords;
 import magic.RT;
 import magic.Symbols;
-import magic.compiler.Analyser;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
@@ -109,7 +108,7 @@ public class ListForm extends BaseForm<Object> {
 			if (h.isSymbol()&&(h.getSymbol().equals(Symbols.UNQUOTE))) {
 				Node<?> ex=get(1);
 				Object form=ex.compute(context, bindings);
-				return Analyser.analyse(form);
+				return Node.toNode(form);
 			}
 		};
 		// TODO: shouldn't we be recursively evalQuoting?

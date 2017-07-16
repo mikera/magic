@@ -1,6 +1,9 @@
 package magic.lang;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,8 +16,16 @@ import org.junit.runners.Parameterized.Parameters;
 import magic.Core;
 import magic.RT;
 import magic.Type;
-import magic.ast.*;
-import magic.compiler.Analyser;
+import magic.ast.Constant;
+import magic.ast.DeferredConstant;
+import magic.ast.Do;
+import magic.ast.If;
+import magic.ast.InvokeReflective;
+import magic.ast.Lambda;
+import magic.ast.Let;
+import magic.ast.Lookup;
+import magic.ast.Node;
+import magic.ast.Vector;
 import magic.compiler.Compiler;
 import magic.data.APersistentSet;
 import magic.data.Keyword;
@@ -72,9 +83,9 @@ public class TestNodesParam {
 	@Test 
 	public void testRoundTrip() {
 		Context c=Core.BOOTSTRAP_CONTEXT;
-		Node<?> node1=Compiler.expand(c,Analyser.analyse(node.toForm())).optimise();
+		Node<?> node1=Compiler.expand(c,Node.toNode(node.toForm())).optimise();
 		Object form1=node1.toForm();
-		Node<?> node2=Compiler.expand(c,Analyser.analyse(form1)).optimise();
+		Node<?> node2=Compiler.expand(c,Node.toNode(form1)).optimise();
 		
 		assertEquals(form1,node2.toForm());
 		assertEquals(node1.getClass(),node2.getClass());

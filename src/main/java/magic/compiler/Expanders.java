@@ -657,10 +657,10 @@ public class Expanders {
 			// Execute the code to create a resulting form
 			
 			Object resultForm= Compiler.eval(c, unquotedNode).getValue();
-			Node<?> analysed=Analyser.analyse(resultForm);
+			Node<?> node=Node.toNode(resultForm);
 			
 			// return an expanded form
-			Node<?> expanded=ex.expand(c, analysed, ex);
+			Node<?> expanded=ex.expand(c, node, ex);
 			return expanded;
 		}
 	}

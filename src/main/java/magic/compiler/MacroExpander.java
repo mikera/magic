@@ -30,8 +30,8 @@ public class MacroExpander extends AListExpander {
 		}
 		
 		Object expandedForm=fn.applyToArray(arr);
-		Node<?> analysedNode=Analyser.analyse(expandedForm);
-		Node<?> result=ex.expand(c, analysedNode,ex);
+		Node<?> rawNode=Node.toNode(expandedForm);
+		Node<?> result=ex.expand(c, rawNode,ex);
 		return result;
 	}
 }
