@@ -14,7 +14,7 @@ public class Compiler {
 	 * 
 	 * Expansion includes:
 	 * - Running the default expander on the form
-	 * - Acculmulating dependencies from successive expansions
+	 * - Accumulating dependencies from successive expansions
 	 * 
 	 * @param context
 	 * @param form
@@ -76,8 +76,9 @@ public class Compiler {
 	 * Compiles and evaluates a node in the given context. Performs expansion using the default expander
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> EvalResult<T> eval(Context context, Node<? super T> node) {
-		return (EvalResult<T>) eval(context,node,(APersistentMap<Symbol, Object>) Maps.EMPTY);
+	public static <T> EvalResult<T> eval(Context context, Node<?> node) {
+		APersistentMap<Symbol, Object> bindings=Maps.empty();
+		return (EvalResult<T>) eval(context,node, bindings);
 		
 	}
 	 
@@ -85,7 +86,7 @@ public class Compiler {
 	 * Compiles and evaluates a node in the given context. Performs expansion using the default expander
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> EvalResult<T> eval(Context context, Node<? super T> node, APersistentMap<Symbol, Object> bindings) {
+	public static <T> EvalResult<T> eval(Context context, Node<?> node, APersistentMap<Symbol, Object> bindings) {
 		EvalResult<T> result;
 		Node<? super T> compiledNode;
 		compiledNode=compileNode(context,node);
