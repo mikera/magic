@@ -9,13 +9,20 @@ import magic.lang.Context;
 public class Repl {
 
 	private static void runRepl() {
+		System.out.println();
+		System.out.println(" *** Welcome to Magic ***");
+		System.out.println();
+		System.out.println(" Version: "+Repl.class.getPackage().getImplementationVersion());
+		System.out.println(" Type 'quit' to exit REPL");
+		System.out.println();
+
 		Context c=Main.MAIN_CONTEXT;
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		while (true) {
 			try {
 				System.out.print(c.getCurrentNamespace()+"=>");
 				String line = reader.readLine();
-				if (line.equals("quit")) break;
+				if (line.trim().equals("quit")) break;
 				EvalResult<?> r=Core.eval(c,line);
 				c=r.getContext();
 				Object result=r.getValue();

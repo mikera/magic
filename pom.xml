@@ -43,8 +43,8 @@
 			<artifactId>asm-util</artifactId>
 			<version>5.2</version>
 		</dependency>
-		
-		
+
+
 		<dependency>
 			<groupId>com.oracle.truffle</groupId>
 			<artifactId>truffle-api</artifactId>
@@ -81,6 +81,8 @@
 					<archive>
 						<manifest>
 							<mainClass>magic.Main</mainClass>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 						</manifest>
 					</archive>
 				</configuration>
