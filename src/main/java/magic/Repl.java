@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import magic.compiler.EvalResult;
+import magic.data.Symbol;
 import magic.lang.Context;
 
 public class Repl {
@@ -19,17 +20,22 @@ public class Repl {
 		Context c=Main.MAIN_CONTEXT;
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		while (true) {
+			String namespace=c.getCurrentNamespace();
 			try {
-				System.out.print(c.getCurrentNamespace()+"=>");
+				System.out.print(namespace+"=>");
 				String line = reader.readLine();
-				if (line.trim().equals("quit")) break;
+				
+				String tline=line.trim();
+				if (tline.equals("quit")) break;
+				
 				EvalResult<?> r=Core.eval(c,line);
 				c=r.getContext();
 				Object result=r.getValue();
 				System.out.println(RT.print(result));
 			} catch (Throwable e) {
-				e.printStackTrace();
-				System.err.flush();
+				c=c.put(Symbol.create(namespace, "*e"),e);
+				System.out.println(e);
+				// System.err.flush();
 				try {
 					// try to avoid intermixing err output with next prompt
 					Thread.sleep(1);

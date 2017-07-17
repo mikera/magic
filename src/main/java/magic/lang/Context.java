@@ -2,6 +2,7 @@ package magic.lang;
 
 import magic.RT;
 import magic.Symbols;
+import magic.ast.Constant;
 import magic.ast.Node;
 import magic.compiler.Reader;
 import magic.data.APersistentMap;
@@ -250,6 +251,16 @@ public class Context {
 		Slot<String> s=getSlot(Symbols._NS_);
 		if (s==null) return null;
 		return (String) s.getValue();
+	}
+
+	/**
+	 * Sets a definition in this context to a constant value
+	 * @param sym
+	 * @param o
+	 * @return
+	 */
+	public Context put(Symbol sym, Object o) {
+		return define(sym,Constant.create(o));
 	}
 
 

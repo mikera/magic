@@ -19,4 +19,12 @@ public class Error extends java.lang.Error {
 		super(message,cause);
 	}
 
+	@Override
+	public String toString() {
+		return errorString()+": "+getMessage();
+	}
+
+	private String errorString() {
+		return "ERROR";
+	}
 }
