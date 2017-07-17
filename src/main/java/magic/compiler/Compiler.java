@@ -93,7 +93,7 @@ public class Compiler {
 		try {
 			result=(EvalResult<T>) compiledNode.eval(context,bindings);
 		} catch (Throwable t) {
-			throw new Error(t.getMessage()+"\n"+
+			throw new magic.Error(t.getMessage()+"\n"+
 		              "while evaluating: " + compiledNode,t); 
 		}
 
