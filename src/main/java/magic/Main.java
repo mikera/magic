@@ -2,7 +2,6 @@ package magic;
 
 import java.io.FileNotFoundException;
 
-import magic.compiler.EvalResult;
 import magic.lang.Context;
 
 /**
@@ -12,9 +11,19 @@ import magic.lang.Context;
  */
 public class Main {
 
-	private static final Context MAIN_CONTEXT=Core.INITIAL_CONTEXT;
+	static final Context MAIN_CONTEXT=Core.INITIAL_CONTEXT;
 	
 	public static void main(String... args) throws FileNotFoundException {
+		int alen=args.length;
+		
+		if (alen==1) {
+			String a0=args[0];
+			if (a0.equals("repl")) {
+				Repl.main(args);
+				System.exit(0);
+			}
+		}
+		
 		if (args.length==0||(args[0].equals("help"))) {
 			System.out.println("Magic! 0.0.1");
 			System.out.println("usage: java -jat magic.jar <args>");
@@ -24,12 +33,9 @@ public class Main {
 			System.out.println("   repl          => Launch a standard Magic REPL (TODO)");
 			System.exit(0);
 		}
+		
 		String s=RT.getResourceAsString(args[0]);
-		evaluate(MAIN_CONTEXT,s);
+		Core.eval(MAIN_CONTEXT,s);
 	}
 
-	private static EvalResult<?> evaluate(Context c, String s) {
-		EvalResult<?> r=magic.compiler.Compiler.eval(c,s);
-		return r;	
-	}
 }
