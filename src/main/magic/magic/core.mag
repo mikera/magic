@@ -130,3 +130,8 @@
 (defn <= [a b]
   (not (. magic.Maths gt a b)))
 
+;; ================================================================
+;; Utility functions
+
+(defn pst [^java.lang.Throwable e]
+  (.printStackTrace e))
