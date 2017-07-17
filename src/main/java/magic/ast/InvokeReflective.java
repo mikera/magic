@@ -95,7 +95,7 @@ public class InvokeReflective<T> extends BaseForm<T> {
 			Object result=mh.invokeWithArguments(argVals);
 			return new EvalResult<T>(c,(T) result);
 		} catch (Throwable t) {
-			throw new Error("Reflected method invocation failed",t);
+			throw new magic.Error("Reflected method invocation failed",t);
 		}
 	}
 

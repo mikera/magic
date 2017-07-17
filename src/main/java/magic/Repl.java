@@ -8,8 +8,8 @@ import magic.data.Symbol;
 import magic.lang.Context;
 
 public class Repl {
-
-	private static void runRepl() {
+	
+	public static void main(String... args) {
 		System.out.println();
 		System.out.println("  *** Welcome to Magic ***");
 		System.out.println();
@@ -44,11 +44,6 @@ public class Repl {
 				} 
 			}
 		}
-	}
-
-	public static void main(String... args) {
-		runRepl();
-		
 	}
 
 }
