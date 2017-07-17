@@ -113,7 +113,7 @@ public class Compiler {
 		EvalResult<?> r=null;
 		for (int i=0; i<n; i++) {
 			Node<?> form=forms.get(i);
-			r=eval(c,form);
+			r=eval(c,form,Maps.empty());
 			c=r.getContext();
 		}
 		return r;
