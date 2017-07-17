@@ -42,8 +42,9 @@ public abstract class Node<T> extends RootNode {
 	
 	private final APersistentMap<Keyword,Object> meta;
 	
+	@SuppressWarnings("deprecation")
 	protected Node(APersistentSet<Symbol> deps, SourceInfo source) {
-		super(MagicLanguage.class,null,null);
+		super(MagicLanguage.class, null,null);
 		APersistentMap<Keyword,Object> m=PersistentHashMap.empty();
 		m=m.assoc(Keywords.DEPS,deps);
 		m=m.assoc(Keywords.SOURCE,source);
@@ -51,8 +52,9 @@ public abstract class Node<T> extends RootNode {
 		if (deps==null) throw new Error("Null deps!!");
 	}
 	
+	@SuppressWarnings("deprecation")
 	public Node(APersistentMap<Keyword, Object> meta) {
-		super(MagicLanguage.class,null,null);
+		super(MagicLanguage.class, null,null);
 		this.meta=meta;
 	}
 	
