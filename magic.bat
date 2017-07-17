@@ -1,0 +1,1 @@
+@java -jar target/magic.jar %1 %2 %3 %4
