@@ -73,6 +73,10 @@ public class InvokeReflective<T> extends BaseForm<T> {
 	public EvalResult<T> eval(Context c, APersistentMap<Symbol, Object> bindings) {
 		EvalResult<Object> r= (EvalResult<Object>) instance.eval(c, bindings);
 		Object o=r.getValue();
+		if (o==null) {
+			// TODO: Some kind of special null error?
+			throw new magic.Error("Reflective method call of method '"+method.getName()+"' attempted on a nil value");
+		}
 		
 		Object[] argVals=new Object[nArgs+1]; // Includes instance, i.e. [o, args....]
 		argVals[0]=o;
