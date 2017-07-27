@@ -15,6 +15,12 @@ public class TestCoreFns {
 		return (T) Core.eval(code).getValue();
 	}
 	
+	@Test public void testEmptyEval() {
+		assertNull(exec(""));
+		assertNull(exec("  "));
+	}
+	
+	
 	@Test public void testComment() {
 		assertNull(exec("(comment ignored-symbol)"));
 		assertNull(exec("(comment ignored-symbol :foo)"));
