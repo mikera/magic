@@ -25,6 +25,12 @@ public final class Tuple<T> extends APersistentVector<T> {
 	public static final Tuple<?> EMPTY=new Tuple(EmptyArrays.EMPTY_OBJECTS);
 	
 	@SuppressWarnings("unchecked")
+	@Override
+	public Tuple<T> empty() {
+		return (Tuple<T>) EMPTY;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public static <T> Tuple<T> of(T... values) {
 		int n=values.length;
 		if (n==0) return (Tuple<T>) EMPTY;
@@ -203,6 +209,7 @@ public final class Tuple<T> extends APersistentVector<T> {
 	public int hashCode() {
 		return RT.arrayHashCode(data, offset, size);
 	}
+
 
 
 }

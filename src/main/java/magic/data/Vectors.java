@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import magic.data.impl.EmptyVector;
 import magic.data.impl.RepeatVector;
 
 /**
@@ -29,7 +28,7 @@ public class Vectors<T> {
 	
 	@SuppressWarnings("unchecked")
 	public static <T> APersistentVector<T> emptyVector() {
-		return (APersistentVector<T>) EmptyVector.INSTANCE;
+		return (APersistentVector<T>) Tuple.EMPTY;
 	}	
 	
 	public static <T> APersistentVector<T> of(T value) {

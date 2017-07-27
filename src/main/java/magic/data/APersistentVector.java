@@ -319,9 +319,7 @@ public abstract class APersistentVector<T> extends APersistentSequence<T> implem
 	}
 	
 	@Override
-	public APersistentVector<T> empty() {
-		return Vectors.emptyVector();
-	}
+	public abstract APersistentVector<T> empty();
 	
 	@Override
 	@SuppressWarnings("unchecked")
