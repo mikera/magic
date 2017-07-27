@@ -90,7 +90,7 @@ public class JavaType<T> extends Type {
 	
 	@Override 
 	public boolean equals(Type t) {
-		if (t instanceof JavaType) {
+		if (t.getClass()==JavaType.class) {
 			return klass==((JavaType<?>)t).klass;
 		}
 		return false;

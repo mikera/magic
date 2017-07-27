@@ -67,7 +67,7 @@ public class Not extends Type {
 		if (t instanceof Not) {
 			Not nt=(Not)t;
 			if (type.equals(nt.type)) return this;
-			return (nt).type.union(type).inverse();
+			return nt.type.union(type).inverse();
 		}		
 		
 		if (t==Anything.INSTANCE) return this;
@@ -94,7 +94,7 @@ public class Not extends Type {
 		if (t instanceof Not) {
 			return type.equals(((Not)t).type);
 		}
-		return super.equals(t);
+		return false;
 	}
 	
 	@Override

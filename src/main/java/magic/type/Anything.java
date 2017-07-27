@@ -11,6 +11,10 @@ import magic.Type;
 public class Anything extends Type {
 	public static final Anything INSTANCE=new Anything();
 
+	private Anything() {
+		
+	}
+	
 	@Override
 	public boolean checkInstance(Object o) {
 		return true;
@@ -29,6 +33,11 @@ public class Anything extends Type {
 	@Override
 	public boolean contains(Type t) {
 		return true;
+	}
+	
+	@Override
+	public boolean equals(Type t) {
+		return t==INSTANCE;
 	}
 
 	@Override

@@ -11,6 +11,10 @@ import magic.Type;
 public class Reference extends Type {
 
 	public static final Reference INSTANCE = new Reference();
+	
+	private Reference() {
+		
+	}
 
 	@Override
 	public boolean checkInstance(Object o) {
@@ -46,7 +50,12 @@ public class Reference extends Type {
 	@Override
 	public boolean contains(Type t) {
 		// TODO filter out primitives?
-		return true;
+		return t!=Anything.INSTANCE;
+	}
+	
+	@Override
+	public boolean equals(Type t) {
+		return t==INSTANCE;
 	}
 
 	@Override

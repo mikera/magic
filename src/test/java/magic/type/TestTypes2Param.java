@@ -77,6 +77,15 @@ public class TestTypes2Param {
         type1=(Type) t1;
         type2=(Type) t2;
     }
+    
+	@Test public void testComparisons() {
+		Type a=type1;
+		Type b=type2;
+		if (a.equals(b)) {
+			assertEquals(a.hashCode(),b.hashCode());
+			assertTrue(a.equiv(b));
+		}
+	}
 	
 	@Test public void testIntersections() {
 		Type a=type1;

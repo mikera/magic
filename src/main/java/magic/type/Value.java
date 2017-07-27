@@ -109,9 +109,13 @@ public class Value<T> extends JavaType<T> {
 		if (t instanceof Value) {
 			Value<?> v=(Value<?>) t;
 			if (Tools.equals(v.value,this.value)) return true;
-			return false;
 		}
-		return super.equals(t);
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return RT.hashCode(value);
 	}
 	
 	@Override
