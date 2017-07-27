@@ -7,6 +7,7 @@ import java.util.List;
 
 import magic.RT;
 import magic.data.impl.FilteredIterator;
+import magic.fn.IFn1;
 
 /**
  * Abstract base class for all Magic collection types
@@ -216,4 +217,6 @@ public abstract class APersistentCollection<T> extends APersistentObject impleme
 	public void validate() {
 		// TODO: validation
 	}
+
+	public abstract <R> APersistentCollection<R>  map(IFn1<? super T, ? extends R> f);
 }

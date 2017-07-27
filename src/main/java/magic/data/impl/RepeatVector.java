@@ -3,7 +3,7 @@ package magic.data.impl;
 import magic.Errors;
 import magic.RT;
 import magic.data.APersistentVector;
-import magic.data.PersistentVector;
+import magic.data.Tuple;
 import magic.data.Vectors;
 
 /**
@@ -81,7 +81,7 @@ public class RepeatVector<T> extends APersistentVector<T> {
 		if ((size==0)||(value==this.value)) {
 			return create(value,size+1);
 		}
-		return PersistentVector.coerce(this).include(value);
+		return Tuple.coerce(this).include(value);
 	}
 	
 	@Override

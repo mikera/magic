@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import magic.RT;
 import magic.data.impl.FilteredIterator;
+import magic.fn.IFn1;
 
 public abstract class APersistentSet<T> extends APersistentCollection<T> implements IPersistentSet<T> {
 	private static final long serialVersionUID = -6984657587635163165L;
@@ -148,6 +149,15 @@ public abstract class APersistentSet<T> extends APersistentCollection<T> impleme
 			}		
 		};
 		return Sets.createFrom(it);
+	}
+	
+	@Override
+	public <R> APersistentSet<R> map(IFn1<? super T, ? extends R> f) {
+		APersistentSet<R> r=Sets.create();
+		for (T t: this) {
+			r=r.include(f.apply(t));
+		}
+		return r;
 	}
 	
 	@Override

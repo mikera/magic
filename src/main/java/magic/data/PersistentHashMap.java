@@ -8,7 +8,7 @@ import java.util.Map;
 import magic.RT;
 import magic.data.impl.BasePersistentSet;
 import magic.data.impl.KeySetWrapper;
-import magic.data.impl.ValueCollectionWrapper;
+import magic.fn.IFn1;
 
 /**
  * Persistent HashMap implementation, inspired by Clojure's
@@ -789,6 +789,12 @@ public final class PersistentHashMap<K,V> extends APersistentMap<K,V> {
 				Map.Entry<K, V> value) {
 			return Sets.create(this).include(value);
 		}
+
+		@Override
+		public <R> APersistentSet<R> map(IFn1<? super java.util.Map.Entry<K, V>, ? extends R> f) {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 	
 	
@@ -877,7 +883,11 @@ public final class PersistentHashMap<K,V> extends APersistentMap<K,V> {
 
 	@Override
 	public APersistentCollection<V> values() {
-		return new ValueCollectionWrapper<K, V>(entrySet());
+		APersistentVector<V> r=Vectors.emptyVector();
+		for (Map.Entry<K,V> e : entrySet()) {
+			r=r.include(e.getValue());
+		}
+		return Lists.coerce(r);
 	}
 
 	@Override
