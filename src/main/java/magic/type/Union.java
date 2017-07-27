@@ -2,6 +2,7 @@ package magic.type;
 
 import magic.RT;
 import magic.Type;
+import magic.Types;
 
 public class Union extends ACompoundType {
 
@@ -82,9 +83,28 @@ public class Union extends ACompoundType {
 	
 	@Override
 	public Type getReturnType() {
-		Type t=types[0].getReturnType();
+		Type t=Types.NONE;
 		for (int i=1; i<types.length; i++) {
-			t=t.union(types[i].getReturnType());
+			Type rt=types[i].getReturnType();
+			t=t.union(rt);
+		}
+		return t;
+	}
+	
+	@Override
+	public Type getVariadicType() {
+		Type t=types[0].getVariadicType();
+		for (int i=1; i<types.length; i++) {
+			t=t.union(types[i].getVariadicType());
+		}
+		return t;
+	}
+	
+	@Override
+	public Type getParamType(int i) {
+		Type t=types[0].getParamType(i);
+		for (int ix=1; ix<types.length; ix++) {
+			t=t.union(types[ix].getParamType(i));
 		}
 		return t;
 	}

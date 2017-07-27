@@ -139,11 +139,29 @@ public abstract class Type {
 
 	/**
 	 * Gets the return type of instances of this type
-	 * Returns null if the Type does not represent a function 
+	 * Returns None if the Type does not represent a function 
 	 * @return
 	 */
 	public Type getReturnType() {
-		return null;
+		return Types.NONE;
+	}
+	
+	/**
+	 * Gets the variadic parameter type of instances of this type
+	 * Returns None if the Type does not represent a function 
+	 * @return
+	 */
+	public Type getVariadicType() {
+		return Types.NONE;
+	}
+	
+	/**
+	 * Gets the variadic parameter type of instances of this type
+	 * Returns None if the Type does not represent a function 
+	 * @return
+	 */
+	public Type getParamType(int i) {
+		return Types.NONE;
 	}
 
 	/**
@@ -155,7 +173,5 @@ public abstract class Type {
 		return !intersection(type).equals(Types.NONE);
 	}
 
-	public Type getVariadicType() {
-		return null;
-	}
+
 }

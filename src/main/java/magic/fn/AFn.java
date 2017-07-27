@@ -5,7 +5,7 @@ import com.oracle.truffle.api.CallTarget;
 import magic.data.APersistentObject;
 
 /**
- * Abstract base class for Magic functions
+ * Abstract base class for all Magic functions
  * 
  * @author Mike
  *

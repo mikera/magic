@@ -4,7 +4,6 @@ import magic.Type;
 
 public abstract class AFunctionType extends Type {
 	
-	public abstract Type getParamType(int i);
 	
 	public abstract boolean isVariadic();
 	

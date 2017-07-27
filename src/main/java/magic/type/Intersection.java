@@ -59,9 +59,27 @@ public class Intersection extends ACompoundType {
 	
 	@Override
 	public Type getReturnType() {
-		Type t=null;
+		Type t=types[0].getReturnType();
 		for (int i=1; i<types.length; i++) {
 			t=Types.intersect(t, types[i].getReturnType());
+		}
+		return t;
+	}
+	
+	@Override
+	public Type getVariadicType() {
+		Type t=types[0].getVariadicType();
+		for (int i=1; i<types.length; i++) {
+			t=Types.intersect(t, types[i].getVariadicType());
+		}
+		return t;
+	}
+	
+	@Override
+	public Type getParamType(int index) {
+		Type t=types[0].getParamType(index);
+		for (int i=1; i<types.length; i++) {
+			t=Types.intersect(t, types[i].getParamType(index));
 		}
 		return t;
 	}
