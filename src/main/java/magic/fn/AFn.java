@@ -2,10 +2,7 @@ package magic.fn;
 
 import com.oracle.truffle.api.CallTarget;
 
-import magic.Type;
-import magic.Types;
 import magic.data.APersistentObject;
-import magic.type.FunctionType;
 
 /**
  * Abstract base class for Magic functions
@@ -28,16 +25,6 @@ public abstract class AFn<T> extends APersistentObject implements IFn<T>, CallTa
 	@Override
 	public AFn<T> clone() {
 		return this;
-	}
-	
-	@Override
-	public Type getType() {
-		return FunctionType.create(Types.ANY);
-	}
-	
-	@Override
-	public Type getVariadicType() {
-		return null;
 	}
 	
 	@Override

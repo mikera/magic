@@ -154,4 +154,8 @@ public abstract class Type {
 	public boolean intersects(Type type) {
 		return !intersection(type).equals(Types.NONE);
 	}
+
+	public Type getVariadicType() {
+		return null;
+	}
 }

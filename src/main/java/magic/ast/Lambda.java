@@ -168,6 +168,12 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 		public int arity() {
 			return arity;
 		}
+
+		@Override
+		public Type getType() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 	
 	@SuppressWarnings("unchecked")

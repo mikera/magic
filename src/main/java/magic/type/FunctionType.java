@@ -33,6 +33,12 @@ public class FunctionType extends AFunctionType {
 		this.minArity=paramTypes.length;
 	}
 	
+	/**
+	 * Creates a FunctionType with the given return type and the specified parameter types
+	 * @param returnType
+	 * @param types
+	 * @return
+	 */
 	public static FunctionType create(Type returnType, Type... types) {
 		return create(returnType,types,null);
 	}
@@ -159,6 +165,7 @@ public class FunctionType extends AFunctionType {
 	 * Returns the type of a variadic parameters, or null if this function type is not variadic
 	 * @return
 	 */
+	@Override
 	public Type getVariadicType() {
 		return variadicType;
 	}

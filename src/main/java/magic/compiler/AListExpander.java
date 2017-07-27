@@ -1,5 +1,7 @@
 package magic.compiler;
 
+import magic.Type;
+import magic.Types;
 import magic.ast.ListForm;
 import magic.ast.Node;
 import magic.lang.Context;
@@ -21,5 +23,10 @@ public abstract class AListExpander extends AExpander {
 	 * @return
 	 */
 	public abstract Node<?> expand(Context c, ListForm form, AExpander ex);
+	
+	@Override
+	public Type getType() {
+		return Types.EXPANDER;
+	}
 
 }

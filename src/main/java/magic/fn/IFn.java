@@ -4,6 +4,7 @@ import java.util.List;
 
 import magic.Type;
 import magic.Types;
+import magic.type.FunctionType;
 
 /**
  * General magic function interface
@@ -146,7 +147,7 @@ public interface IFn<R> {
 	 * @return
 	 */
 	public default Type getVariadicType() {
-		return Types.ANY;
+		return getType().getVariadicType();
 	}
 	
 	/**
@@ -155,8 +156,12 @@ public interface IFn<R> {
 	 */
 	public int arity();
 	
+	public default Type getType() {
+		return FunctionType.createMultiArity(Types.ANY);
+	}
+	
 	public default Type getReturnType() {
-		return Types.ANY;
+		return getType().getReturnType();
 	}
 	
 	public default Type getParamType(int i) {
