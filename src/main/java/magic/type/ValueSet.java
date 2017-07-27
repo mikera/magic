@@ -4,12 +4,11 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import magic.Type;
+import magic.data.APersistentSet;
 import magic.data.PersistentHashSet;
 
 /**
  * The type of a set of 2 or more values. Values may include null.
- * 
- * 
  * 
  * @author Mike
  *
@@ -38,6 +37,13 @@ public class ValueSet<T> extends Type {
 		if (n==0) return Nothing.INSTANCE;
 		if (n==1) return Value.create(values[0]);
 		return new ValueSet<T>((PersistentHashSet<T>) PersistentHashSet.create(values));
+	}
+	
+	public static <T> Type create(APersistentSet<? extends T> values) {
+		int n=values.size();
+		if (n==0) return Nothing.INSTANCE;
+		if (n==1) return Value.create(values.seq().first());
+		return new ValueSet<T>(PersistentHashSet.coerce(values));
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -143,11 +149,16 @@ public class ValueSet<T> extends Type {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean equals(Object t) {
+	public boolean equals(Type t) {
 		if (t instanceof ValueSet) {
 			return values.equals(((ValueSet<T>)t).values);
 		}
-		return super.equals(t);
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return values.hashCode();
 	}
 	
 	@Override

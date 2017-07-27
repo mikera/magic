@@ -92,13 +92,20 @@ public abstract class Type {
 	 * 
 	 */
 	@Override
-	public boolean equals(Object o) {
+	public final boolean equals(Object o) {
 		if (o==this) return true;
 		if (!(o instanceof Type)) return false;
 		return equals((Type)o);
 	}
 	
 	public boolean equals(Type t) {
+		return t.contains(this)&&this.contains(t);
+	}
+	
+	public boolean equiv(Type t) {
+		// performance: check for immediate equality first
+		if (t.equals(this)) return true;
+		
 		return t.contains(this)&&this.contains(t);
 	}
 

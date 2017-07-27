@@ -913,7 +913,8 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 		return Tools.seq(this.iterator());
 	}
 
-	public static <T> PersistentHashSet<T> coerce(Set<T> values) {
+	@SuppressWarnings("unchecked")
+	public static <T> PersistentHashSet<T> coerce(Set<? extends T> values) {
 		if (values instanceof PersistentHashSet<?>) {
 			return (PersistentHashSet<T>)values;
 		}

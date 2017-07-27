@@ -87,6 +87,19 @@ public class JavaType<T> extends Type {
 		}
 		return t.intersection(this);
 	}
+	
+	@Override 
+	public boolean equals(Type t) {
+		if (t instanceof JavaType) {
+			return klass==((JavaType<?>)t).klass;
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return klass.hashCode();
+	}
 
 	@Override
 	public boolean canBeNull() {
