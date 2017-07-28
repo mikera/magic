@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import magic.RT;
-import magic.data.impl.EmptyVector;
 import magic.data.impl.NullSet;
 import magic.data.impl.RepeatVector;
 import magic.data.impl.SingletonSet;
@@ -25,7 +24,7 @@ public class TestPersistent {
 		
 		testPersistentVector(pl);
 		testPersistentVector(pl.subList(1, 4));
-		testPersistentVector(EmptyVector.INSTANCE);
+		testPersistentVector(Vectors.emptyVector());
 		testPersistentVector(Tuple.of(1,2,3,4,5));
 		testPersistentVector(RepeatVector.create("Hello persistent lists!",1));
 		testPersistentVector(RepeatVector.create("Hello", 40));
@@ -405,9 +404,9 @@ public class TestPersistent {
 			}
 		}
 		
-		assertTrue(a==a.subList(0,n));
+		assertTrue("Empty sublist for: "+RT.className(a),a==a.subList(0,n));
 		int rp=Rand.r(n);
-		assertEquals(EmptyVector.INSTANCE,a.subList(rp,rp));
+		assertEquals(Tuple.EMPTY,a.subList(rp,rp));
 		
 		// zero length copyFrom
 		assertEquals(a,a.copyFrom(Rand.r(n), a, Rand.r(n), 0));

@@ -319,9 +319,7 @@ public abstract class APersistentVector<T> extends APersistentSequence<T> implem
 	}
 	
 	@Override
-	public APersistentVector<T> empty() {
-		return Vectors.emptyVector();
-	}
+	public abstract APersistentVector<T> empty();
 	
 	@Override
 	@SuppressWarnings("unchecked")
@@ -374,12 +372,6 @@ public abstract class APersistentVector<T> extends APersistentSequence<T> implem
 		if (length<0) throw new IllegalArgumentException(Errors.negativeRange());
 		if (length==0) return this;
 		return subList(0,dstIndex).concat(values.subList(srcIndex, srcIndex+length)).concat(subList(dstIndex+length,size));
-	}
-
-	@SuppressWarnings("unchecked")
-	public static <T> APersistentVector<T> coerce(List<? extends T> a) {
-		if (a instanceof APersistentVector<?>) return (APersistentVector<T>) a;
-		return Vectors.createFromList(a);
 	}
 	
 	public int compareTo(APersistentVector<T> o) {

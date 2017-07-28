@@ -123,4 +123,9 @@ public final class SubVector<T> extends APersistentVector<T>   {
 		}
 		return data.include(value).subList(offset, newIndex+1);
 	}
+
+	@Override
+	public APersistentVector<T> empty() {
+		return Vectors.emptyVector();
+	}
 }

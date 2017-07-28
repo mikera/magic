@@ -100,6 +100,8 @@ public final class MapEntry<K,V> extends APersistentVector<Object> implements Ma
 		return 2;
 	}
 
-
-
+	@Override
+	public APersistentVector<Object> empty() {
+		return Vectors.emptyVector();
+	}
 }

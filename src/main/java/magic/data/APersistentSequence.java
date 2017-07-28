@@ -47,6 +47,7 @@ public abstract class APersistentSequence<T> extends APersistentCollection<T> im
 		return false;
 	}
 	
+	@Override
 	public abstract <R> APersistentSequence<R> map(IFn1<? super T, ? extends R> f);
 	
 	@Override

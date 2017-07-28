@@ -40,11 +40,15 @@ public final class PersistentVector<T> extends APersistentVector<T> {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static final PersistentVector<?> EMPTY_BLOCKLIST=new PersistentVector(Vectors.NULL_PERSISTENT_LIST_ARRAY,DEFAULT_SHIFT,0,0);
-
-
 	
 	public static <T> PersistentVector<T> create(List<T> list) {
 		return create(list,0,list.size());
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public PersistentVector<T> empty() {
+		return (PersistentVector<T>) EMPTY_BLOCKLIST;
 	}
 	
 	/**
@@ -245,11 +249,11 @@ public final class PersistentVector<T> extends APersistentVector<T> {
 		if ((fromIndex<0)||(toIndex>size)) {
 			throw new IndexOutOfBoundsException("from: "+fromIndex+" to: " +toIndex+ " with size: "+size+" offset: "+offset+" shift: "+shift);
 		}
+		if ((fromIndex==0)&&(toIndex==size)) return this;
 		if (toIndex==fromIndex) return Vectors.emptyVector();
 		if ((fromIndex>toIndex)) {
 			throw new IllegalArgumentException("Negative sized subList from: "+fromIndex+" to: " +toIndex);
 		}
-		if ((fromIndex==0)&&(toIndex==size)) return this;
 		
 		// see if we can take a subset of a single block
 		int fromBlock=blockFor(fromIndex+offset);

@@ -109,6 +109,7 @@ public class Compiler {
 	public static EvalResult<?> eval(Context c, String string) {
 		ListForm forms=Reader.readAll(string);
 		int n=forms.size();
+		if (n==0) return EvalResult.create(c, null);
 		
 		EvalResult<?> r=null;
 		for (int i=0; i<n; i++) {

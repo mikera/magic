@@ -3,7 +3,7 @@ package magic.data.impl;
 import magic.Errors;
 import magic.RT;
 import magic.data.APersistentVector;
-import magic.data.PersistentVector;
+import magic.data.Tuple;
 import magic.data.Vectors;
 
 /**
@@ -15,6 +15,8 @@ import magic.data.Vectors;
  */
 public class RepeatVector<T> extends APersistentVector<T> {
 	private static final long serialVersionUID = -4991558599811750311L;
+
+	private static final RepeatVector<?> EMPTY = new RepeatVector<Object>(null,0);
 
 	private final T value;
 	private final int size;
@@ -29,6 +31,12 @@ public class RepeatVector<T> extends APersistentVector<T> {
 	}
 	
 	@Override
+	@SuppressWarnings("unchecked")
+	public RepeatVector<T> empty() {
+		return (RepeatVector<T>) EMPTY;
+	}
+	
+	@Override
 	public int size() {
 		return size;
 	}
@@ -40,9 +48,9 @@ public class RepeatVector<T> extends APersistentVector<T> {
 	}
 	
 	@Override
-	public APersistentVector<T> subList(int start, int end) {
+	public RepeatVector<T> subList(int start, int end) {
 		if ((start<0)||(end>size)) throw new IndexOutOfBoundsException(Errors.rangeOutOfBounds(start,end));
-		if (start==end) return Vectors.emptyVector();
+		if (start==end) return empty();
 		int num=end-start;
 		if (num<0) {
 			throw new IllegalArgumentException(Errors.negativeRange());
@@ -52,14 +60,14 @@ public class RepeatVector<T> extends APersistentVector<T> {
 	}
 	
 	@Override
-	public APersistentVector<T> deleteRange(int start, int end) {
+	public RepeatVector<T> deleteRange(int start, int end) {
 		if ((start<0)||(end>size)) throw new IndexOutOfBoundsException(Errors.rangeOutOfBounds(start,end));
 		if (start==end) return this;
 		int numDeleted=end-start;
 		if (numDeleted<0) {
 			throw new IllegalArgumentException(Errors.negativeRange());
 		}
-		if (numDeleted==size) return Vectors.emptyVector();
+		if (numDeleted==size) return empty();
 		if (numDeleted==0) return this;
 		return create(value,size-numDeleted);
 	}
@@ -81,7 +89,7 @@ public class RepeatVector<T> extends APersistentVector<T> {
 		if ((size==0)||(value==this.value)) {
 			return create(value,size+1);
 		}
-		return PersistentVector.coerce(this).include(value);
+		return Tuple.coerce(this).include(value);
 	}
 	
 	@Override
