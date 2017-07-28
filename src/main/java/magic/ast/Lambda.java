@@ -134,8 +134,10 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 			}
 			if (variadic) {
 				Symbol varParam=params.get(arity+1); // symbol after ampersand
-				Tuple<?> vs=Tuple.wrap(a, arity, alength-arity); // construct arg tuple
-				bnds=bnds.assoc(varParam, vs);
+				if (varParam!=Symbols.UNDERSCORE) {
+					Tuple<?> vs=Tuple.wrap(a, arity, alength-arity); // construct arg tuple
+					bnds=bnds.assoc(varParam, vs);
+				}
 			}
 			EvalResult<T> r=(EvalResult<T>) body.eval(null,bnds); // TODO: shouldn't do any context lookup?
 			return r.getValue(); 
