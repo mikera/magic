@@ -41,16 +41,20 @@ public class If<T> extends BaseForm<T> {
 
 	@SuppressWarnings("unchecked")
 	public static <T> If<T> createIf(Node<?> test, Node<? extends T> trueExp) {
-		return createIf(test,trueExp, (Node<T>)Constant.NULL,null);
+		return createIf(test,trueExp, (Node<T>)Constant.NULL,Maps.empty());
 	}
 	
 	public static <T> If<T> createIf(Node<?> test, Node<? extends T> trueExp, Node<? extends T> falseExp) {
-		return createIf(test,trueExp,falseExp,null);
+		return createIf(test,trueExp,falseExp,Maps.empty());
+	}
+	
+	public static <T> If<T> createIf(Node<?> test, Node<? extends T> trueExp, Node<? extends T> falseExp, APersistentMap<Keyword,Object> meta) {
+		return new If<T>(test,trueExp,falseExp,meta);
 	}
 	
 	public static <T> If<T> createIf(Node<?> test, Node<? extends T> trueExp, Node<? extends T> falseExp, SourceInfo source) {
 		APersistentMap<Keyword,Object> meta=Maps.create(Keywords.SOURCE,source);
-		return new If<T>(test,trueExp,falseExp,meta);
+		return createIf(test,trueExp,falseExp,meta);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -101,6 +105,6 @@ public class If<T> extends BaseForm<T> {
 		Node<Object> newTest=(Node<Object>) fn.apply(test);
 		Node<? extends T> newTrue=(Node<? extends T>) fn.apply(trueExp);
 		Node<? extends T> newFalse=(Node<? extends T>) fn.apply(falseExp);
-		return ((newTest==test)&&(newTrue==trueExp)&&(newFalse==falseExp))?this:createIf(newTest,newTrue,newFalse,getSourceInfo());
+		return ((newTest==test)&&(newTrue==trueExp)&&(newFalse==falseExp))?this:createIf(newTest,newTrue,newFalse,meta());
 	}
 }
