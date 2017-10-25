@@ -30,7 +30,7 @@ public class Main {
 			System.out.println("where <args> are one of:");
 			System.out.println("   help          => Display this help message");
 			System.out.println("   <filename>    => Execute a magic .mag script with the gievn filename");
-			System.out.println("   repl          => Launch a standard Magic REPL (TODO)");
+			System.out.println("   repl          => Launch a standard Magic REPL");
 			System.exit(0);
 		}
 		
