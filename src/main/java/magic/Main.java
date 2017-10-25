@@ -26,7 +26,7 @@ public class Main {
 		
 		if (args.length==0||(args[0].equals("help"))) {
 			System.out.println("Magic! 0.0.1");
-			System.out.println("usage: java -jat magic.jar <args>");
+			System.out.println("usage: java -jar magic.jar <args>");
 			System.out.println("where <args> are one of:");
 			System.out.println("   help          => Display this help message");
 			System.out.println("   <filename>    => Execute a magic .mag script with the gievn filename");
