@@ -10,8 +10,14 @@ import magic.lang.Context;
 
 public class Core {
 
-	public static final Context BOOTSTRAP_CONTEXT = createBootstrapContext();
-	public static final Context INITIAL_CONTEXT = createInitialContext();
+	public static final Context BOOTSTRAP_CONTEXT;
+	public static final Context INITIAL_CONTEXT;
+	
+	static {
+		BOOTSTRAP_CONTEXT = createBootstrapContext();
+		INITIAL_CONTEXT = createInitialContext();
+	}
+	
 	/**
 	 * Sets up the initial Magic context for language bootstrap
 	 * This is what is required to load magic.core

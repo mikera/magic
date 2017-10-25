@@ -26,6 +26,7 @@ public class Lists {
 
 	
 	public static <T> APersistentList<T> create(List<? extends T> a) {
+		if (a==null) throw new Error("null passed to create!");
 		return PersistentList.create(Vectors.coerce(a));
 	}
 
