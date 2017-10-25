@@ -92,18 +92,20 @@ public class Core {
 		}
 		return r.getContext();
 	}
+	
 	/**
 	 * Compiles and evaluates code in the initial context
 	 * @param code
-	 * @return an EvalResult containing the resulting value and a (possibly) updated context
+	 * @return an EvalResult containing the resulting value and an updated context
 	 */
 	public static EvalResult<?> eval(String code) {
 		return eval(INITIAL_CONTEXT,code);
 	}
+	
 	/**
-	 * Compiles and evaluates code in the initial context
+	 * Compiles and evaluates code in the given context
 	 * @param code
-	 * @return an EvalResult containing the resulting value and a (possibly) updated context
+	 * @return an EvalResult containing the resulting value and an updated context
 	 */
 	public static EvalResult<?> eval(Context c,String code) {
 		return magic.compiler.Compiler.eval(c, code);
