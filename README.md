@@ -24,6 +24,14 @@ Magic is an experimental language, strongly influenced by Clojure.
 (println a)
 ;; result: [1 2]
 
+;; The environment is an immutable "context" which can be saved and restored
+(def initial-ctx *context*) ;; save the current context 
+(def mistake "Whoops")      ;; define something 
+mitake
+;; => "Whoops"
+(context initial-context)   ;; revert back to the initial context
+mistake
+;; => ERROR: unable to resolve symbol 'mistake'
 
 ```
 
