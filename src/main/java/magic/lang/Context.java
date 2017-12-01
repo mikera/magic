@@ -183,7 +183,9 @@ public class Context {
 	 * @return
 	 */
 	public APersistentSet<Symbol> getDependencies(Symbol sym) {
-		return RT.resolveSlot(this,sym).getDependencies();
+		Slot<?> slot  =  RT.resolveSlot(this,sym);
+		if (slot ==null) throw new Error ("Can't get dependencies for undefined symbol: "+sym);
+		return slot.getDependencies();
 	}
 	
 	/**
