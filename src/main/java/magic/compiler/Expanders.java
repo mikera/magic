@@ -529,7 +529,7 @@ public class Expanders {
 						public EvalResult eval(Context context, APersistentMap bindings,Object[] args) {
 							Object newContext=args[0];
 							if (!(newContext instanceof Context)) {
-								throw new Error("Error setting context: expexted a context but got: "+RT.toString(newContext));
+								throw new Error("Error setting context: expected a context but got: "+RT.toString(newContext));
 							}
 							return EvalResult.create((Context)newContext, null);
 						}

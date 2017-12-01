@@ -66,7 +66,6 @@ public class Core {
 			// TODO: figure out if this needs a definition or not?
 			c=c.define(Symbols._CONTEXT_, Constant.create(null)); 
 
-
 		} catch (Throwable t) {
 			t.printStackTrace(System.err);
 		}
