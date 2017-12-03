@@ -27,6 +27,8 @@ import magic.lang.Context;
  */
 public class Vector<T> extends BaseDataStructure<APersistentVector<? extends T>> {
 
+	public static final Node<?> EMPTY = Vector.create(Vectors.emptyVector());
+
 	private Vector(APersistentVector<Node<?>> exps, APersistentMap<Keyword, Object> meta) {
 		super((APersistentVector<Node<?>>)exps,meta); 
 	}

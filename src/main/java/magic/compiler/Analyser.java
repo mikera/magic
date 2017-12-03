@@ -69,7 +69,8 @@ public class Analyser {
 	@SuppressWarnings("unchecked")
 	private static <T> Node<T> analyseVector(APersistentVector<? extends Object> form) {
 		int n=form.size();
-		if (n==0) return (Node<T>) Constant.create(Lists.EMPTY);
+		//if (n==0) return (Node<T>) Constant.create(Lists.EMPTY);
+		if (n==0) return (Node<T>) Vector.EMPTY;
 		
 		return (Node<T>) Vector.create(analyseAll(form));
 	}

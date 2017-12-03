@@ -136,14 +136,9 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 			@SuppressWarnings("unchecked")
 			@Override
 			public boolean run(Context<Object> context) {
-				try {
-					Node<Object> o=(Node<Object>) pop();
-					if (o==null) throw new Error ("Null object popped????");
-					expVar.get().add(o);
-				} catch (Throwable t) {
-					t.printStackTrace(System.err);
-				}
-				// System.out.println(o);
+				Node<Object> o=(Node<Object>) pop();
+				if (o==null) throw new Error ("Null object popped????");
+				expVar.get().add(o);
 				return true;
 			}
 		};
