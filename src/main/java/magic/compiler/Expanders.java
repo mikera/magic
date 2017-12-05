@@ -87,7 +87,7 @@ public class Expanders {
 			return form;
 		}
 
-		private Node<?> vectorExpand(Context c, Vector<?> form, AExpander ex) {
+		private Vector<?> vectorExpand(Context c, Vector<?> form, AExpander ex) {
 			int n = form.size();
 			Node<?>[] forms = new Node[n];
 			for (int i = 0; i < n; i++) {
@@ -304,9 +304,13 @@ public class Expanders {
 			if (n < 2)
 				throw new ExpansionException("Can't expand fn, requires at least an arg vector", form);
 
-			Node<?> argObj = ex.expand(c, form.get(1), ex);
+			Node<?> argForm = form.get(1);
+			Node<?> argObj = ex.expand(c, argForm, ex);
 			if (!(argObj instanceof Vector)) {
-				throw new AnalyserException("Can't expand fn: requires a vector of arguments but got " + argObj + " of type "+argObj.getClass(), form);
+				throw new AnalyserException("Can't expand fn: requires a vector of arguments but got " + argObj 
+						+ " of type "+argObj.getClass()
+						// + " after expanding a node of type "+argForm.getClass()
+						, form);
 			}
 
 			// expand the body

@@ -80,8 +80,10 @@ public class Define<T> extends BaseForm<T> {
 
 	@Override
 	public Node<? extends T> optimise() {
-		Node<? extends T> newExp=exp.optimise();
-		return (exp==newExp)?this:create(sym,newExp);
+		// probably shouldn't optimise the expression speculatively? Will happen later obn first evaluation?
+		//Node<? extends T> newExp=exp.optimise();
+		//return (exp==newExp)?this:create(sym,newExp);
+		return this;
 	}
 
 	@SuppressWarnings("unchecked")

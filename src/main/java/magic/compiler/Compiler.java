@@ -27,7 +27,8 @@ public class Compiler {
 	}
 	
 	/**
-	 * Analyses an expanded node in the given context. Performs type checking etc.
+	 * Analyses an expanded node in the given context. 
+	 * Performs type checking etc.
 	 * @param context
 	 * @param node
 	 * @return

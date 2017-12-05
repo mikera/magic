@@ -247,7 +247,10 @@ public abstract class Node<T> extends RootNode {
 	public abstract Node<? extends T> specialiseValues(APersistentMap<Symbol, Object> bindings);
 	
 	/** 
-	 * Performs local optimisations on the node. 
+	 * Performs local optimisations on the node prior to execution / compilation.
+	 * 
+	 * Should be run after expansion to runnable code only.
+	 *  
 	 * Returns a new node if any optimisation succeeded, the same node otherwise.
 	 * 
 	 * @param bindings

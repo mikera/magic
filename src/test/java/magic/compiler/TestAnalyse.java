@@ -46,6 +46,13 @@ public class TestAnalyse {
 		assertEquals(Symbol.create("x"),c2.getValue("sym"));
 	}
 	
+	@Test public void testZeroArgFn() {
+		EvalResult<?> r=Core.eval("(defn f [] 1) (def x (f))");
+		Context c2=r.getContext();
+		assertEquals(Long.valueOf(1),c2.getValue("x"));
+	}
+	
+	
 	@Test public void testUnexpanded() {
 		EvalResult<?> r=Core.eval("(def x a)");
 		Context c2=r.getContext();

@@ -3,6 +3,7 @@ package magic.ast;
 import magic.Keywords;
 import magic.RT;
 import magic.Symbols;
+import magic.compiler.AnalysisContext;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
@@ -81,11 +82,16 @@ public class ListForm extends BaseForm<Object> {
 		return mapChildren(NodeFunctions.specialiseValues(bindings));
 	}
 	
+	@Override
+	public Node<?> analyse(AnalysisContext context) {
+		if (size()==0) return Constant.create(Lists.EMPTY);
+		return mapChildren(NodeFunctions.analyse(context));
+	}
 
 	@Override
 	public Node<Object> optimise() {
-		if (size()==0) return Constant.create(Lists.EMPTY);
-		return mapChildren(NodeFunctions.optimise());
+		throw new UnsupportedOperationException("Shouldn't be try to optimsie an un-analysed ListFrom: "+this);
+		//return mapChildren(NodeFunctions.optimise());
 	}
 	
 	@Override
