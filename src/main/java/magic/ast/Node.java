@@ -208,9 +208,13 @@ public abstract class Node<T> extends RootNode {
 	}
 	
 	/**
-	 * Gets the Magic Type for this expression
+	 * Gets the Magic Type for this expression node.
+	 * 
+	 * Returns the type as defined in the metadata, or Types.ANY if not defined.
 	 */
 	public Type getType() {
+		Type t=(Type)meta.get(Keywords.TYPE);
+		if (t!=null) return t;
 		return Types.ANY;
 	}
 	
