@@ -101,7 +101,7 @@ public class Apply<T> extends BaseForm<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Node<T> optimise() {	
-		// optimise constant functions, i.e. function is known at compile time
+		// optimise constant functions, i.e. function definition is known at compile time
 		if (function.isConstant()) {
 			IFn<? extends T> f=function.getValue();
 			if (arity==0) return Constant.create(f.apply());

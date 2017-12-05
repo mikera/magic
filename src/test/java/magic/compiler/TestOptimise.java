@@ -1,7 +1,6 @@
 package magic.compiler;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -32,6 +31,13 @@ public class TestOptimise {
 		assertTrue(compile(":foo").isConstant());
 		// assertTrue(compile("'foo").isConstant()); // TODO sanity check this
 	}
+	
+	@Test public void TestNonConstants() {
+		assertFalse(compile("a").isConstant());
+		assertFalse(compile("(f a)").isConstant());
+		assertFalse(compile("[1 a 3]").isConstant());
+	}
+
 	
 	@Test public void TestConstantFolding() {
 		assertEquals(1L,compile("(if true 1 2)").getValue());

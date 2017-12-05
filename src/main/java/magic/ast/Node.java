@@ -288,6 +288,13 @@ public abstract class Node<T> extends RootNode {
 
 	/**
 	 * Analyses a node in the given context.
+	 * 
+	 * Analysis basically operates as follows:
+	 * 1. Analyse children (if any)
+	 * 2. Compute updated metadata (if needed)
+	 * 
+	 * Returns a fully analysed node, ready for compilation or execution.
+	 * 
 	 * @param context
 	 * @return
 	 */
