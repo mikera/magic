@@ -13,7 +13,7 @@ import magic.data.Symbol;
  * Represents a "slot" in a magic Context.
  * 
  * A slot features:
- * - An expression stored as a Node
+ * - An definition stored as a Node
  * - A lazily computed value
  * 
  * @author Mike
@@ -38,7 +38,9 @@ public class Slot<T> {
     /**
      * Gets the value associated with this Slot. 
      * 
-     * Forces computation of the value if it has not already been computed
+     * Forces computation of the value if it has not already been computed.
+     * Computation occurs in the context in which the slot was defined. As contexts are 
+     * immutable, this is guaranteed to be stable.
      * 
      * @return
      */
@@ -69,7 +71,8 @@ public class Slot<T> {
 	}
 	
 	/**
-	 * Gets the compiled Node associated with this Slot.
+	 * Gets the compiled Node associated with this Slot. Will compile the node if not already compiled.
+	 * 
 	 * Note that this Node may have unresolved dependencies.
 	 * @return
 	 */

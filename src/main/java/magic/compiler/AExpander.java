@@ -37,7 +37,7 @@ public abstract class AExpander extends AFn<Node<?>> implements IFn3<Node<?>> {
 	 * 
 	 * @param c The context in which to expand
 	 * @param form The node to be expanded.
-	 * @param ex The continuation expander. Should normally be used to expand resulting nodes from this expander, unless special sematrics are required.
+	 * @param ex The continuation expander. Should normally be used to expand resulting nodes from this expander, unless special semantics are required.
 	 * @return
 	 */	
 	public abstract Node<?> expand(Context c, Node<?> form, AExpander ex);
