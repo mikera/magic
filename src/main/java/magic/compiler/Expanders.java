@@ -16,6 +16,7 @@ import magic.ast.InstanceOf;
 import magic.ast.InvokeReflective;
 import magic.ast.InvokeStaticReflective;
 import magic.ast.Lambda;
+import magic.ast.Lambdas;
 import magic.ast.Let;
 import magic.ast.List;
 import magic.ast.ListForm;
@@ -299,26 +300,40 @@ public class Expanders {
 	private static final class FnExpander extends AListExpander {
 		@SuppressWarnings("unchecked")
 		@Override
-		public Lambda<?> expand(Context c, ListForm form, AExpander ex) {
-			int n = form.size();
-			if (n < 2)
-				throw new ExpansionException("Can't expand fn, requires at least an arg vector", form);
+		public Node<?> expand(Context c, ListForm form, AExpander ex) {
+//			if (form.size() < 2)
+//				throw new ExpansionException("Can't expand fn, requires at least an arg vector", form);
 
-			Node<?> argForm = form.get(1);
-			Node<?> argObj = ex.expand(c, argForm, ex);
-			if (!(argObj instanceof Vector)) {
-				throw new AnalyserException("Can't expand fn: requires a vector of arguments but got " + argObj 
-						+ " of type "+argObj.getClass()
+			// skip initial 'fn' if present 
+			Node<?> first=form.get(0);
+			if (first.isSymbol()) {
+				form=form.subList(1);
+			}
+			
+			Node<?> argForm = form.get(0);
+			APersistentMap<Keyword,Object> meta=form.meta();
+
+			// handle case of multiple function bodies
+			if (argForm instanceof ListForm) {
+				APersistentList<Node<?>> fnDefs=form.getNodes().subList(0);
+				// recursively expand function definitions with this function expander
+				APersistentList<Node<?>> fns=(APersistentList<Node<?>>) Lists.coerce(expandAll(c,fnDefs,ex));
+				return Lambdas.create(fns,meta);
+			}
+
+			Node<?> argNode = ex.expand(c, argForm, ex);			
+			
+			if (!(argNode instanceof Vector)) {
+				throw new AnalyserException("Can't expand fn: requires a vector of arguments but got " + argNode 
+						+ " of type "+argNode.getClass()
 						// + " after expanding a node of type "+argForm.getClass()
 						, form);
 			}
 
 			// expand the body
-			APersistentList<Node<?>> body = (APersistentList<Node<?>>) ex.expandAll(c, form.getNodes().subList(2, n),
-					ex);
+			APersistentList<Node<?>> body = (APersistentList<Node<?>>) ex.expandAll(c, form.getNodes().subList(1),ex);
 
-			APersistentMap<Keyword,Object> meta=form.meta();
-			return Lambda.create((Vector<Symbol>) argObj, body, meta);
+			return Lambda.create((Vector<Symbol>) argNode, body, meta);
 		}
 	}
 	

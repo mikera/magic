@@ -20,7 +20,7 @@ public abstract class BaseForm<T> extends Node<T> {
 
 	protected APersistentList<Node<?>> nodes;
 
-	protected BaseForm(APersistentList<Node<? extends Object>> nodes, APersistentMap<Keyword,Object> meta) {
+	protected BaseForm(APersistentList<Node<?>> nodes, APersistentMap<Keyword,Object> meta) {
 		super(meta);
 		this.nodes=nodes;
 	}

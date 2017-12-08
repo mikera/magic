@@ -17,6 +17,7 @@ import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
+import magic.data.APersistentSequence;
 import magic.data.APersistentSet;
 import magic.data.APersistentVector;
 import magic.data.Keyword;
@@ -123,6 +124,10 @@ public abstract class Node<T> extends RootNode {
 	 */
 	public T getValue() {
 		throw new UnsupportedOperationException("Cannot use getValue() on a non-constant expression");
+	}
+	
+	public APersistentSequence<Node<?>> getNodes() {
+		throw new UnsupportedOperationException("getNodes not supported on node of type "+this.getClass());
 	}
 	
 	/**

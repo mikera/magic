@@ -13,6 +13,7 @@ public class Symbols {
 	// special form symbols
 	public static final Symbol DEF=Symbol.createCore("def");
 	public static final Symbol FN = Symbol.createCore("fn");
+	public static final Symbol FNS = Symbol.createCore("fns");
 	public static final Symbol DO = Symbol.createCore("do");
 	public static final Symbol IF =  Symbol.createCore("if");
 	public static final Symbol LET = Symbol.createCore("let");
@@ -63,6 +64,8 @@ public class Symbols {
 	public static final Symbol CONTEXT = Symbol.createCore("context");
 	public static final Symbol NS = Symbol.createCore("ns");
 	public static final Symbol IN_NS = Symbol.createCore("in-ns");
+	public static final Symbol SYMBOL = Symbol.createCore("symbol");
+
 
 
 	

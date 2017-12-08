@@ -1,12 +1,19 @@
 package magic.core;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
 import magic.Core;
 import magic.RT;
+import magic.Symbols;
+import magic.data.Symbol;
 import magic.data.Tuple;
+import magic.fn.AFn;
 
 public class TestCoreFns {
 
@@ -176,6 +183,15 @@ public class TestCoreFns {
 		assertTrue(RT.bool(exec("(not false)")));
 		Object o2=exec("(not 1)");
 		assertFalse(RT.bool(o2));
+	}
+	
+	@Test public void testSymbol() {
+		AFn<?> fn=(AFn<?>)Core.INITIAL_CONTEXT.getValue(Symbols.SYMBOL);
+		System.out.println(fn);
+		assertTrue(fn.hasArity(2));
+		assertEquals(Symbol.create("foo","bar"),exec("(symbol 'foo 'bar)"));
+		assertEquals(Symbol.create("foo","bar"),exec("(symbol \"foo\" \"bar\")"));
+		assertEquals(Symbol.create("bar"),exec("(symbol nil, 'bar)"));
 	}
 	
 	@Test public void testNilQ() {

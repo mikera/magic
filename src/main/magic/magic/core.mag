@@ -14,6 +14,15 @@
 (defmacro when [a b] 
   `(if ~a ~b nil))
 
+;; =============================================================
+;; Namespaces and symbols
+
+(defn symbol 
+  ([name]
+    (. magic.RT symbol name)) 
+  ([ns name]
+    (. magic.RT symbol ns name)))
+
 ;; =========================================
 ;; Basic sequence functions
 ;;
@@ -41,9 +50,6 @@
 
 ;; ============================================================
 ;; Data handling
-
-(defn symbol [^String a]
-  (. magic.data.Symbol create a))
 
 ;; ===========================================================
 ;; Boolean functions and basic logic

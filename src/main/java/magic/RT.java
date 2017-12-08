@@ -130,6 +130,24 @@ public class RT {
 	}
 	
 	/**
+	 * Returns a symbol with the given name
+	 * @param name
+	 * @return
+	 */
+	public static Symbol symbol(Object name) {
+		return symbol(null,name);
+	}
+	
+	/**
+	 * Returns a symbol with the given namespace and name
+	 * @param name
+	 * @return
+	 */
+	public static Symbol symbol(Object namespace, Object name) {
+		return Symbol.create((namespace==null)?null:namespace.toString(), name.toString());
+	}
+	
+	/**
 	 * Gets the item from an indexed collection at the given index
 	 * 
 	 * @param a
@@ -347,17 +365,22 @@ public class RT {
 		return sb.toString();
 	}
 	
-	public static String arrayToString(Object o) {
+	public static String arrayToString(Object o, String separator) {
 		StringBuilder sb=new StringBuilder("[");
 		int n=Array.getLength(o);
 		for (int i=0; i<n; i++) {
 			Object item=Array.get(o, i);
 			sb.append(RT.className(item));
-			if (i<(n-1)) sb.append(", ");
+			if (i<(n-1)) sb.append(separator);
 		}
 		sb.append(']');
 		return sb.toString();
 	}
+	
+	public static String arrayToString(Object o) {
+		return arrayToString(o,", ");
+	}
+
 	
 	public static URL getResourceURL(String filename) {
 		return Thread.currentThread().getContextClassLoader().getResource(filename);
@@ -657,6 +680,7 @@ public class RT {
 		};
 		throw new TypeError("Can't cast value of type "+a.getClass()+" to int");
 	}
+
 
 
 

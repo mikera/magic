@@ -32,7 +32,7 @@ import magic.type.FunctionType;
  */
 public class Lambda<T> extends BaseForm<AFn<T>> {
 
-	private final APersistentVector<Symbol> params;
+	private final APersistentVector<Symbol> paramSymbols;
 	private final Node<T> body;
 	private final int arity; // minimum arity (excludes trailing varargs)
 	private final boolean variadic;
@@ -40,7 +40,7 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 	@SuppressWarnings("unchecked")
 	private Lambda(APersistentVector<Symbol> params, Node<T> body,boolean variadic,APersistentMap<Keyword, Object> meta) {
 		super((APersistentList<Node<?>>)(APersistentList<?>)Lists.of(Lookup.create(Symbols.FN),Constant.create(params),body),meta);
-		this.params=params;
+		this.paramSymbols=params;
 		this.arity=params.size()-(variadic?2:0); // ignore ampersand and vararg parameter
 		this.body=body;
 		this.variadic=variadic;
@@ -48,7 +48,7 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 
 	@Override
 	public Lambda<T> withMeta(APersistentMap<Keyword, Object> meta) {
-		return new Lambda<T>(params,body,variadic,meta);
+		return new Lambda<T>(paramSymbols,body,variadic,meta);
 	}
 	
 	public static <T> Lambda<T> create(APersistentVector<Symbol> params, Node<T> body) {
@@ -100,7 +100,22 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 		Node<? extends T> body=this.body.specialiseValues(capturedBindings);
 		
 		// System.out.println(body);
-		AFn<T> fn=new LambdaFn(body,capturedBindings);
+		FunctionType type;
+		Type[] paramTypes=new Type[arity];
+		// APersistentSequence<Node<?>> paramNodes=nodes.get(1).getNodes();
+		for (int i=0; i<arity; i++) {
+			// paramTypes[i]=paramNodes.get(i).getType();
+			// TODO: get parameters types
+			paramTypes[i]=Types.ANY;
+		}
+		if (variadic) {
+			// TODO: extract variadic type
+			type=FunctionType.create(body.getType(), paramTypes,Types.ANY);		
+		} else {
+			type=FunctionType.create(body.getType(), paramTypes);
+		}
+		
+		AFn<T> fn=new LambdaFn(body,capturedBindings,type);
 		return new EvalResult<AFn<T>>(context,fn);
 	}
 	
@@ -108,11 +123,13 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 		private static final long serialVersionUID = 4368281324742419123L;
 		
 		private final APersistentMap<Symbol, Object> capturedBindings;
-		private Node<? extends T> body;
+		private final Node<? extends T> body;
+		private final FunctionType type;
 
-		private LambdaFn(Node<? extends T> body,APersistentMap<Symbol, Object> capturedBindings) {
+		private LambdaFn(Node<? extends T> body,APersistentMap<Symbol, Object> capturedBindings,FunctionType type) {
 			this.capturedBindings = capturedBindings;
 			this.body=body;
+			this.type=type;
 		}
 
 		@SuppressWarnings("unchecked")
@@ -128,12 +145,12 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 			APersistentMap<Symbol, Object> bnds=capturedBindings;
 			// add function arguments to the lexical bindings
 			for (int i=0; i<arity; i++) {
-				Symbol param=params.get(i);
+				Symbol param=paramSymbols.get(i);
 				if (param==Symbols.UNDERSCORE) continue; // ignore bindings on underscore
 				bnds=bnds.assoc(param, a[i]);
 			}
 			if (variadic) {
-				Symbol varParam=params.get(arity+1); // symbol after ampersand
+				Symbol varParam=paramSymbols.get(arity+1); // symbol after ampersand
 				if (varParam!=Symbols.UNDERSCORE) {
 					Tuple<?> vs=Tuple.wrap(a, arity, alength-arity); // construct arg tuple
 					bnds=bnds.assoc(varParam, vs);
@@ -159,7 +176,7 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 		}
 
 		public APersistentVector<Symbol> getParams() {
-			return params;
+			return paramSymbols;
 		}
 
 		public Node<? extends T> getBody() {
@@ -173,8 +190,7 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 
 		@Override
 		public Type getType() {
-			// TODO Auto-generated method stub
-			return null;
+			return type;
 		}
 	}
 	
@@ -182,20 +198,20 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 	@Override
 	public Lambda<T> analyse(AnalysisContext context) {
 		for (int i=0; i<arity; i++) {
-			context=context.bind(params.get(i), Constant.create(null));
+			context=context.bind(paramSymbols.get(i), Constant.create(null));
 		}
 		if (variadic) {
 			// skip the & character, get the last symbol
-			context=context.bind(params.get(arity+1), Constant.create(null));
+			context=context.bind(paramSymbols.get(arity+1), Constant.create(null));
 		}
 		Node<? extends T> newBody=(Node<? extends T>) body.analyse(context);
 		
-		return (body==newBody)?this:(Lambda<T>) create(params,newBody,meta());
+		return (body==newBody)?this:(Lambda<T>) create(paramSymbols,newBody,meta());
 	}
 	
 	@Override
 	public Node<? extends AFn<T>> specialiseValues(APersistentMap<Symbol, Object> bindings) {
-		bindings=bindings.delete(params); // hidden by argument bindings
+		bindings=bindings.delete(paramSymbols); // hidden by argument bindings
 		return mapChildren(NodeFunctions.specialiseValues(bindings));
 	}
 	
@@ -209,7 +225,7 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 	@Override
 	public Lambda<T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
 		Node<? extends T> newBody=(Node<? extends T>) fn.apply(body);
-		return (body==newBody)?this:(Lambda<T>) create(params,newBody,meta());
+		return (body==newBody)?this:(Lambda<T>) create(paramSymbols,newBody,meta());
 	}
 	
 	/**

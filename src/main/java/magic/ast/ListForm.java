@@ -136,12 +136,17 @@ public class ListForm extends BaseForm<Object> {
 		return (Node<Object>) nodes.get(i);
 	}
 
+	@Override
 	public APersistentList<Node<? extends Object>> getNodes() {
 		return nodes;
 	}
 
 	public ListForm subList(int start, int end) {
 		return ListForm.create(nodes.subList(start, end),Maps.empty());
+	}
+
+	public ListForm subList(int start) {
+		return subList(start,size());
 	}
 
 }

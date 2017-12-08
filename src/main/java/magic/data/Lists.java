@@ -40,6 +40,15 @@ public class Lists {
 		if (a instanceof APersistentList<?>) return (APersistentList<T>)a;
 		return create(Vectors.coerce(a));
 	}
+	
+
+	public static <T> APersistentList<T> coerce(Iterable<? extends T> it) {
+		APersistentVector<T> vs=Vectors.emptyVector();
+		for (T v : vs) {
+			vs=vs.include(v);
+		}
+		return Lists.coerce(vs);
+	}
 
 	@SuppressWarnings("unchecked")
 	public static <T> APersistentList<T> cons(T value, APersistentList<? extends T> rest) {
@@ -67,5 +76,6 @@ public class Lists {
 		if (vals.length==0) return (APersistentList<T>) PersistentList.EMPTY;
 		return PersistentList.wrap(vals);
 	}
+
 
 }

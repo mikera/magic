@@ -1,7 +1,10 @@
 package magic.fn;
 
+import java.util.Arrays;
+
 import magic.RT;
 import magic.Type;
+import magic.data.Lists;
 
 /**
  * Function implementation supporting dynamic dispatch across multiple functions
@@ -50,7 +53,7 @@ public class MultiFn<T> extends AArrayFn<T> {
 	public boolean hasArity(int arity) {
 		if (arity<minArity) return false;
 		for (int i=0; i<n; i++) {
-			if (fns[i].hasArity(i)) return true;
+			if (fns[i].hasArity(arity)) return true;
 		}
 		return false;
 	}
@@ -67,4 +70,8 @@ public class MultiFn<T> extends AArrayFn<T> {
 		throw new Error("Function not applicable for objects of types " +RT.printTypes(a));
 	}
 
+	@Override
+	public String toString() {
+		return super.toString()+"\n("+RT.toString(Lists.coerce(Arrays.asList(fns)), " \n")+")";
+	}
 }

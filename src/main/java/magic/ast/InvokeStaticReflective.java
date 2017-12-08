@@ -3,6 +3,7 @@ package magic.ast;
 import java.lang.reflect.Method;
 
 import magic.Keywords;
+import magic.RT;
 import magic.Reflector;
 import magic.Symbols;
 import magic.compiler.EvalResult;
@@ -79,13 +80,17 @@ public class InvokeStaticReflective<T> extends BaseForm<T> {
 			argVals[i]=arg;
 			argClasses[i]=(arg==null)?Object.class:arg.getClass();
 		}
-		Method m = Reflector.getDeclaredMethod(klass,method.getName(), argClasses);
+		String methodName=method.getName();
+		Method m = Reflector.getDeclaredMethod(klass,methodName, argClasses);
+		if (m==null) {
+			throw new Error ("Method "+methodName+" not found on class"+klass+" with argument types "+RT.arrayToString(argClasses," "));
+		}
 		
 		try {
 			Object result=m.invoke(null, argVals);
 			return new EvalResult<T>(c,(T)result );
 		} catch (Throwable t) {
-			throw new Error("Reflected method invocation failed",t);
+			throw new Error("Reflected method invocation failed on "+klass+"/"+methodName+" with arguments "+RT.arrayToString(argVals," "),t);
 		}
 	}
 
