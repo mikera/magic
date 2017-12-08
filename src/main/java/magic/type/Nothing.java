@@ -5,6 +5,8 @@ import magic.Type;
 /**
  * A singleton "bottom" type that has no possible instances, and is a subclass of any type
  * 
+ * Nothing is effectively the "Empty Set" of possible values.
+ * 
  * @author Mike
  *
  */
