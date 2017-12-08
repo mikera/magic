@@ -70,6 +70,17 @@ public class Context {
 		return define(s,exp);
 	}
 	
+	/**
+	 * Creates an alias for a symbol in the current context
+	 * @param sym String containing the symbol to define
+	 * @param src A Node definition
+	 * @return
+	 */
+	public <T> Context alias(Symbol sym, Symbol src) {
+		// idea is to re-use the underlying slot, just need to keep the dependencies updated properly....
+		throw new UnsupportedOperationException("Alias noy yet supported");
+	}
+	
 	@SuppressWarnings("unchecked")
 	public <T> Context define(Symbol sym, Node<T> exp) {
 		return define(sym,exp,(APersistentMap<Symbol, Object>)Maps.EMPTY);
