@@ -131,17 +131,25 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 				);
 	}
 
+	public class AddAction implements Action<Object> {
+		private Var<ArrayList<Node<Object>>> expVar;
+
+		public AddAction(Var<ArrayList<Node<Object>>> expVar) {
+			this.expVar=expVar;
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public boolean run(Context<Object> context) {
+			Node<Object> o=(Node<Object>) pop();
+			if (o==null) throw new Error ("Null object popped????");
+			expVar.get().add(o);
+			return true;
+		}
+	}
+	
 	Action<Object> ListAddAction(Var<ArrayList<Node<Object>>> expVar) {
-		return new Action<Object>() {
-			@SuppressWarnings("unchecked")
-			@Override
-			public boolean run(Context<Object> context) {
-				Node<Object> o=(Node<Object>) pop();
-				if (o==null) throw new Error ("Null object popped????");
-				expVar.get().add(o);
-				return true;
-			}
-		};
+		return new AddAction(expVar);
 	}
 	
 	/**

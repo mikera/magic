@@ -27,7 +27,7 @@
 ;; Basic sequence functions
 ;;
 
-(defn vec [a] 
+(defn vec [a]
   (. magic.RT vec a))
 
 (defn nth [a index]
@@ -45,8 +45,13 @@
 (defn str [a] 
   (. magic.RT toString a))
 
-(defn concat [a b]
-  (. magic.RT concat a b))
+(defn concat 
+  ([]
+   [])
+  ([a]
+    a)
+  ([a b]
+    (. magic.RT concat a b)))
 
 ;; ============================================================
 ;; Data handling
@@ -139,8 +144,11 @@
 ;; ================================================================
 ;; Utility functions
 
-(defn pst [^java.lang.Throwable e]
-  (.printStackTrace e))
+(defn pst 
+  ([]
+    (pst *e))
+  ([^java.lang.Throwable e]
+    (.printStackTrace e)))
 
 ;; ================================================================
 ;; Host interop
