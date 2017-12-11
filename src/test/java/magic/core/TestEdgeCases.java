@@ -38,6 +38,14 @@ public class TestEdgeCases {
 				+ "[a]"));
 	}
 	
+	@Test public void testCapture() {
+		Context c=Core.eval("(defn adder [x] (fn [a] (+ a x)))"+
+							"(def add2 (adder 2))"+
+							"(def add3 (adder 3))").getContext();
+		assertEquals(9L,Core.eval(c,"(add2 7)").getValue());
+		assertEquals(10L,Core.eval(c,"(add3 7)").getValue());
+	}
+	
 	@Test public void testRecursiveFunction() {
 		Context c=Core.eval("(defn fact [a] "
 				+ "  (if (<= a 1) 1 (* a (fact (dec a)))))").getContext();
