@@ -7,6 +7,7 @@ import magic.compiler.EvalResult;
 import magic.compiler.Reader;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
+import magic.data.APersistentSet;
 import magic.data.Keyword;
 import magic.data.Maps;
 import magic.data.Symbol;
@@ -28,6 +29,11 @@ public class Lookup<T> extends Node<T> {
 		this.sym=sym;
 	}
 	
+	@Override
+	protected APersistentSet<Symbol> includeDependencies(APersistentSet<Symbol> deps) {
+		return deps.include(sym);
+	}
+
 	@Override
 	public Lookup<T> withMeta(APersistentMap<Keyword, Object> meta) {
 		return new Lookup<T>(sym,meta);
@@ -57,7 +63,7 @@ public class Lookup<T> extends Node<T> {
 	}
 
 	public static <T> Lookup<T> create(String sym) {
-		return create(Reader.readSymbol(sym));
+		return create(Symbol.create(sym));
 	}
 	
 	@Override

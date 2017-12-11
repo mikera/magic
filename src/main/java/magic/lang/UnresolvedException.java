@@ -9,7 +9,7 @@ public class UnresolvedException extends Error {
 	private Symbol sym;
 
 	public UnresolvedException(Symbol sym) {
-		super("Unable to resolve symbol '"+sym+"'");
+		super("Unable to resolve "+(sym.isQualified()?"":"unqualified ")+"symbol '"+sym+"'");
 		this.sym=sym;
 	}
 	

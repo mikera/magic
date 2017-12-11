@@ -30,6 +30,7 @@ import magic.ast.Set;
 import magic.ast.Vector;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
+import magic.data.APersistentSequence;
 import magic.data.APersistentVector;
 import magic.data.Keyword;
 import magic.data.Lists;
@@ -463,7 +464,6 @@ public class Expanders {
 	public static final AExpander LOOP = new LoopExpander();
 
 	private static final class LoopExpander extends AListExpander {
-		@SuppressWarnings("unchecked")
 		@Override
 		public Node<?> expand(Context c, ListForm form, AExpander ex) {
 			int n = form.size();
@@ -476,12 +476,15 @@ public class Expanders {
 			if (!(argObj instanceof Vector)) {
 				throw new AnalyserException("Can't expand loop: requires a vector of bindings but got " + argObj, form);
 			}
+			
+			// expand argument object
+			APersistentSequence<Node<?>> foo = ex.expandAll(c,argObj.getNodes(),ex);
 
 			// expand the body
 			APersistentList<Node<?>> body = (APersistentList<Node<?>>) ex.expandAll(c, form.getNodes().subList(2, n),
 					ex);
 
-			return Loop.create((Vector<Object>) argObj, body, si);
+			return Loop.create(Vector.create(Vectors.coerce(foo)), body, si);
 		}
 	}
 

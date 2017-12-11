@@ -53,7 +53,7 @@ public class Vector<T> extends BaseDataStructure<APersistentVector<? extends T>>
 		return (Vector<T>) create(list.getNodes(),sourceInfo);
 	}
 
-	public static <T> Vector<T> create(APersistentVector<Node<? extends T>> exps) {
+	public static <T> Vector<T> create(APersistentVector<Node<?>> exps) {
 		return create(exps,null);
 	}
 	

@@ -3,6 +3,7 @@ package magic.ast;
 import magic.RT;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
+import magic.data.APersistentSet;
 import magic.data.Keyword;
 import magic.data.PersistentHashMap;
 import magic.data.PersistentList;
@@ -20,6 +21,11 @@ public abstract class BaseForm<T> extends Node<T> {
 
 	protected APersistentList<Node<?>> nodes;
 
+	/**
+	 * Creates a Baseform with the given nodes. Includes dependencies from all source nodes by default
+	 * @param nodes
+	 * @param meta
+	 */
 	protected BaseForm(APersistentList<Node<?>> nodes, APersistentMap<Keyword,Object> meta) {
 		super(meta);
 		this.nodes=nodes;
@@ -27,6 +33,14 @@ public abstract class BaseForm<T> extends Node<T> {
 	
 	protected BaseForm(APersistentList<Node<? extends Object>> nodes) {
 		this (nodes,PersistentHashMap.empty());
+	}
+	
+	@Override
+	protected APersistentSet<Symbol> includeDependencies(APersistentSet<Symbol> deps) {
+		for (Node<?> n: nodes) {
+			deps=deps.includeAll(n.getDependencies());
+		}
+		return deps;
 	}
 
 	@Override

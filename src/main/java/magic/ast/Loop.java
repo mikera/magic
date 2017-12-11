@@ -201,7 +201,7 @@ public class Loop<T> extends BaseForm<T> {
 		}
 		
 		Node<? extends AExpander> newBody=(Node<? extends AExpander>) fn.apply(body);
-		return ((body==newBody)&&(lets==newLets))?this:(Loop<T>) create(syms,lets,newBody,getSourceInfo());
+		return ((body==newBody)&&(lets==newLets))?this:(Loop<T>) create(syms,newLets,newBody,getSourceInfo());
 	}
 	
 	/**
@@ -214,7 +214,7 @@ public class Loop<T> extends BaseForm<T> {
 	
 	@Override
 	public String toString() {
-		StringBuilder sb= new StringBuilder("(let [");
+		StringBuilder sb= new StringBuilder("(loop [");
 		for (int i=0; i<nLets; i++) {
 			if (i>0) sb.append(' ');
 			sb.append(syms[i]);

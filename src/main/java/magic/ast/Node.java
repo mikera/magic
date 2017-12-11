@@ -59,6 +59,25 @@ public abstract class Node<T> extends RootNode {
 		this.meta=meta;
 	}
 	
+
+	private Node<?> updateMeta() {
+		APersistentMap<Keyword, Object> depMeta=includeMetaDependencies(meta);
+		if (depMeta!=meta) return withMeta(depMeta);
+		return this;
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected final APersistentMap<Keyword, Object> includeMetaDependencies(APersistentMap<Keyword, Object> meta) {
+		APersistentSet<Symbol> deps=(APersistentSet<Symbol>) meta.get(Keywords.DEPS);
+		if (deps==null) deps=Sets.emptySet();
+		deps=this.includeDependencies(deps);
+		if (deps==null) throw new Error("Null deps generated in: "+this +" with class "+this.getClass());
+		if (deps.isEmpty()) return meta;
+		return meta.assoc(Keywords.DEPS,deps);
+	}
+
+	protected abstract APersistentSet<Symbol> includeDependencies(APersistentSet<Symbol> deps);
+
 	/**
 	 * Creates a raw AST node tree from the given form
 	 * @param form
@@ -308,8 +327,10 @@ public abstract class Node<T> extends RootNode {
 	 * @return
 	 */
 	public Node<?> analyse(AnalysisContext context) {
-		return mapChildren(NodeFunctions.analyse(context));
+		Node<?> newNode=mapChildren(NodeFunctions.analyse(context));
+		return newNode.updateMeta();
 	}
+
 
 	/**
 	 * Updates this node, including the specified symbolic dependency

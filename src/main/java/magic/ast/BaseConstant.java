@@ -3,6 +3,7 @@ package magic.ast;
 import magic.Type;
 import magic.compiler.EvalResult;
 import magic.data.APersistentMap;
+import magic.data.APersistentSet;
 import magic.data.Keyword;
 import magic.data.Symbol;
 import magic.fn.IFn1;
@@ -40,6 +41,12 @@ public abstract class BaseConstant<T> extends Node<T> {
 	public Node<T> optimise() {
 		return this;
 	}
+	
+	@Override
+	protected APersistentSet<Symbol> includeDependencies(APersistentSet<Symbol> deps) {
+		return deps;
+	}
+
 	
 	@Override
 	public Node<T> specialiseValues(APersistentMap<Symbol, Object> bindings) {

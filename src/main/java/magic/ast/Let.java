@@ -187,7 +187,7 @@ public class Let<T> extends BaseForm<T> {
 		}
 		
 		Node<? extends AExpander> newBody=(Node<? extends AExpander>) fn.apply(body);
-		return ((body==newBody)&&(lets==newLets))?this:(Let<T>) create(syms,lets,newBody,getSourceInfo());
+		return ((body==newBody)&&(lets==newLets))?this:(Let<T>) create(syms,newLets,newBody,getSourceInfo());
 	}
 	
 	/**

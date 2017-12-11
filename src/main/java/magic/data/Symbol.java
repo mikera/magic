@@ -6,7 +6,6 @@ import java.util.WeakHashMap;
 
 import magic.RT;
 import magic.Type;
-import magic.compiler.Reader;
 
 /**
  * Class to represent a Magic symbol with optional namespace
@@ -74,7 +73,18 @@ public class Symbol extends APersistentObject {
 	}
 	
 	public static Symbol create(String name) {
-		return Reader.readSymbol(name);
+		if (name.contains("/")) {
+			if (name.equals("/")) return create(null,"/");
+			String[] ss=name.split("/");
+			// TODO: fix this hack for / etc.
+			if (ss.length==2) {
+				return create(ss[0],ss[1]);
+			} else {
+				throw new Error("Problem handling qualified symbol ["+name+"]");
+			}
+		} else {
+			return create(null,name);
+		}
 	}
 	
 	private Object readResolve() throws ObjectStreamException {

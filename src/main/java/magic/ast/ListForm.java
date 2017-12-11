@@ -8,6 +8,7 @@ import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
+import magic.data.APersistentSet;
 import magic.data.Keyword;
 import magic.data.Lists;
 import magic.data.Maps;
@@ -38,6 +39,11 @@ public class ListForm extends BaseForm<Object> {
 	@Override
 	public Node<Object> withMeta(APersistentMap<Keyword, Object> meta) {
 		return new ListForm(nodes,meta);
+	}
+	
+	@Override
+	protected APersistentSet<Symbol> includeDependencies(APersistentSet<Symbol> deps) {
+		return deps;
 	}
 
 	public static ListForm create(Node<?>[] nodes, SourceInfo sourceInfo) {

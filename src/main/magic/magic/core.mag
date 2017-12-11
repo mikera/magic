@@ -50,7 +50,14 @@
   ([a]
     a)
   ([a b]
-    (. magic.RT concat a b)))
+    (. magic.RT concat a b))
+  ([a b & more]
+    (loop [result (concat a b)
+           more (seq more)]
+     (if (nil? more)
+       result
+       (recur (concat result (first more)) (next more)))))
+  )
 
 ;; ============================================================
 ;; Data handling

@@ -140,9 +140,14 @@ public class Slot<T> {
 		return computed;
 	}
 
+	/**
+	 * Gets the symbolic dependencies for this slot.
+	 * Requires the ndoe to be analysed.
+	 * @return
+	 */
 	public APersistentSet<Symbol> getDependencies() {
-		APersistentSet<Symbol> rawDeps= getCompiledNode().getDependencies();
-		return rawDeps;
+		APersistentSet<Symbol> deps= getCompiledNode().getDependencies();
+		return deps;
 	}
 
 	/**

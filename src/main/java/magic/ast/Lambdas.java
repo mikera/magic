@@ -1,5 +1,6 @@
 package magic.ast;
 
+import magic.Keywords;
 import magic.compiler.EvalResult;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
@@ -31,6 +32,7 @@ public class Lambdas<T> extends BaseForm<AFn<T>> {
 	}
 	
 	public static <T> Lambdas<T> create(APersistentList<Node<?>> fns, APersistentMap<Keyword,Object> meta) {
+		meta=meta.assoc(Keywords.DEPS, calcDependencies(fns));
 		return new Lambdas<T>(fns,meta);
 	}
 	

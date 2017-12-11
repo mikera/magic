@@ -1,8 +1,10 @@
 package magic.ast;
 
 import magic.data.APersistentMap;
+import magic.data.APersistentSet;
 import magic.data.APersistentVector;
 import magic.data.Keyword;
+import magic.data.Symbol;
 
 /**
  * Abstract base class for data structure construction nodes (lists, sets, vectors etc.)
@@ -20,6 +22,14 @@ public abstract class BaseDataStructure<T> extends Node<T> {
 	public BaseDataStructure(APersistentVector<Node<?>> exps, APersistentMap<Keyword,Object> meta) {
 		super(meta);
 		this.exps=exps;
+	}
+	
+	@Override
+	protected APersistentSet<Symbol> includeDependencies(APersistentSet<Symbol> deps) {
+		for (Node<?> n: exps) {
+			deps=deps.includeAll(n.getDependencies());
+		}
+		return deps;
 	}
 	
 	@Override

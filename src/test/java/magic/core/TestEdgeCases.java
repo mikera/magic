@@ -1,10 +1,11 @@
 package magic.core;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
 import magic.Core;
+import magic.compiler.EvalResult;
 import magic.data.Symbol;
 import magic.data.Tuple;
 import magic.lang.Context;
@@ -13,7 +14,8 @@ import magic.lang.Slot;
 public class TestEdgeCases {
 	@SuppressWarnings("unchecked")
 	private <T> T exec(String code) {
-		return (T) Core.eval(code).getValue();
+		EvalResult<?> r= Core.eval(code);
+		return (T) r.getValue();
 	}
 	
 	@Test public void testDefUnquote() {
@@ -36,6 +38,17 @@ public class TestEdgeCases {
 				+ "(def a 2)"
 				+ "(context ctx)"
 				+ "[a]"));
+	}
+	
+	@Test public void testVariadicRecursiveFunction() {
+		Slot<?> cSlot=Core.INITIAL_CONTEXT.getSlot("magic.core/concat");
+		System.out.println(cSlot.getDependencies());
+		assertTrue(Core.INITIAL_CONTEXT.getDependencies("magic.core/concat").contains(Symbol.create("magic.core/nil?")));
+		
+		assertEquals(Tuple.of(1L,2L,3L),exec(
+				  "(concat [1] [2 3])"));
+		assertEquals(Tuple.of(1L,2L,3L,4L,5L,6L,7L,8L,9L,10L),exec(
+				  "(concat [1] [2 3] [4 5 6] [7 8 9 10])"));
 	}
 	
 	@Test public void testCapture() {

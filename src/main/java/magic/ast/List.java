@@ -148,6 +148,4 @@ public class List<T> extends BaseDataStructure<APersistentList<? extends T>> {
 		return Lists.cons(Symbols.LIST, Lists.coerce(exps.map(NodeFunctions.TO_FORM)));
 	}
 
-
-
 }

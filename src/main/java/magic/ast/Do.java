@@ -9,6 +9,7 @@ import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
+import magic.data.APersistentSet;
 import magic.data.Keyword;
 import magic.data.Lists;
 import magic.data.Maps;
@@ -118,6 +119,8 @@ public class Do<T> extends BaseForm<T> {
 	public APersistentList<Object> toForm() {
 		return Lists.cons(Symbols.DO, body.map(NodeFunctions.TO_FORM));
 	}
+
+
 
 	
 
