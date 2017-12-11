@@ -7,7 +7,6 @@
 
 (defmacro comment [& _] nil)
 
-
 ;; =============================================================
 ;; Conditionals and control flow
 
@@ -129,8 +128,14 @@
 (defn < [a b]
   (. magic.Maths lt a b))
 
+(defn <= [a b]
+  (. magic.Maths le a b))
+
 (defn > [a b]
   (. magic.Maths gt a b))
+
+(defn >= [a b]
+  (. magic.Maths ge a b))
 
 (defn != [a b]
   (not (. magic.Maths eq a b)))

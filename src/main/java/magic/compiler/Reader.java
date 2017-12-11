@@ -351,7 +351,11 @@ public class Reader extends BaseParser<Node<? extends Object>> {
     			push(magic.ast.Constant.create(magic.data.Keyword.create(popSymbol()),getSourceInfo())));
     }    
     
-    public Rule QualifiedSymbol() {
+    /**
+     * Rule for parsing a qualified symbol with a namespace
+     * @return
+     */
+   public Rule QualifiedSymbol() {
 		return Sequence(
 				UnqualifiedSymbol(),
 				'/',
@@ -362,6 +366,10 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 				);
 	}
 
+    /**
+     * Rule for parsing an unqualified symbol, uses "null" as the namespace
+     * @return
+     */
     public Rule UnqualifiedSymbol() {
 		return Sequence(
 				FirstOf(
@@ -373,7 +381,7 @@ public class Reader extends BaseParser<Node<? extends Object>> {
 						'/', // allowed on its own as a symbol
 						'.' // dot special form
 				        ),
-				push(magic.ast.Lookup.create(Symbol.create(match()),getSourceInfo())));
+				push(magic.ast.Lookup.create(Symbol.create(null,match()),getSourceInfo())));
 	}
 
 	public Rule InitialSymbolCharacter() {

@@ -187,7 +187,7 @@ public class TestCoreFns {
 	
 	@Test public void testSymbol() {
 		AFn<?> fn=(AFn<?>)Core.INITIAL_CONTEXT.getValue(Symbols.SYMBOL);
-		System.out.println(fn);
+		// System.out.println(fn);
 		assertTrue(fn.hasArity(2));
 		assertEquals(Symbol.create("foo","bar"),exec("(symbol 'foo 'bar)"));
 		assertEquals(Symbol.create("foo","bar"),exec("(symbol \"foo\" \"bar\")"));

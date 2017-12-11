@@ -599,7 +599,8 @@ public class RT {
 		sym=RT.resolveSym(c, sym);
 
 		// TODO: remove this check once everything is working
-		if (c==null) throw new Error("Null context when trying to resove slot: " +sym);
+		if (c==null) throw new Error("Null context when trying to resove slot: " +sym+ "\n"
+				+ "Possibly caused by Lookup not being analysed before evaluation?");
 
 		Slot<T> slot=c.getSlot(sym);
 		return slot;
@@ -617,7 +618,7 @@ public class RT {
 		Slot<?> slot=RT.resolveSlot(c, sym);
 		if (slot==null) return null;
 		
-		return  slot.getNode();
+		return  slot.getCompiledNode();
 	}
 	
 	public static Object applyWith(Object f, Object args) {

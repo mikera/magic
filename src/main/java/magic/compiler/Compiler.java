@@ -1,5 +1,6 @@
 package magic.compiler;
 
+import magic.Errors;
 import magic.ast.ListForm;
 import magic.ast.Node;
 import magic.data.APersistentMap;
@@ -23,7 +24,8 @@ public class Compiler {
 	@SuppressWarnings("unchecked")
 	public static <T> Node<T> expand(Context context, Node<?> form) {
 		AExpander ex=Expanders.INITAL_EXPANDER;
-		return (Node<T>) ex.expand(context, form, ex);
+		Node<T> expandedNode= (Node<T>) ex.expand(context, form, ex);
+		return expandedNode;
 	}
 	
 	/**
@@ -34,6 +36,7 @@ public class Compiler {
 	 * @return
 	 */
 	private static Node<?> analyse(AnalysisContext context, Node<?> node) {
+		node=Compiler.expand(context.getContext(), node);
 		try {
 			return node.analyse(context);
 		} catch (Throwable t) {
@@ -41,6 +44,16 @@ public class Compiler {
 		              "while analysing: " + node,t); 
 		}
 	}
+	
+	public static Node<?> analyse(Context context, APersistentMap<Symbol, Object> bindings, Node<?> node) {
+		return analyse(AnalysisContext.create(context,bindings),node);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static Node<?> analyse(Context context, Node<?> node) {
+		return analyse(context,(APersistentMap<Symbol, Object>) Maps.EMPTY,node);
+	}
+
 
 	/**
 	 * Expands, compiles and optimises a node in the given context
@@ -50,11 +63,7 @@ public class Compiler {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> Node<T> compileNode(Context context, Node<?> node) {
-		node=Compiler.expand(context, node);
-		node=Compiler.analyse(AnalysisContext.create(context),node);
-		node=node.optimise();
-		// TODO: should specialise to context here?
-		return (Node<T>)node;
+		return compileNode(context,(APersistentMap<Symbol, Object>) Maps.EMPTY,node);
 	}
 	
 	/**
@@ -65,8 +74,7 @@ public class Compiler {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> Node<T> compileNode(Context context, APersistentMap<Symbol, Object> bindings, Node<?> node) {
-		node=Compiler.expand(context, node);
-		node=Compiler.analyse(AnalysisContext.create(context,bindings),node);
+		node=Compiler.analyse(context,bindings,node);
 		node=node.optimise();
 		// TODO: should specialise to context here?
 		return (Node<T>)node;
@@ -94,7 +102,7 @@ public class Compiler {
 		try {
 			result=(EvalResult<T>) compiledNode.eval(context,bindings);
 		} catch (Throwable t) {
-			throw new magic.Error(t.getMessage()+"\n"+
+			throw new magic.Error(Errors.getDetail(t)+"\n"+
 		              "while evaluating code: " + node,t); 
 		}
 

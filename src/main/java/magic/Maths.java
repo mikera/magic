@@ -68,7 +68,7 @@ public class Maths {
 	
 	public static Boolean lt(Object a, Object b) {
 		if ((a instanceof Long)&&(b instanceof Long)) {
-			return eq((Long)a,(Long)b);
+			return lt((Long)a,(Long)b);
 		}
 		return RT.boolObject(((Number)a).doubleValue()<((Number)b).doubleValue());
 	}
@@ -79,13 +79,35 @@ public class Maths {
 	
 	public static Boolean gt(Object a, Object b) {
 		if ((a instanceof Long)&&(b instanceof Long)) {
-			return eq((Long)a,(Long)b);
+			return gt((Long)a,(Long)b);
 		}
 		return RT.boolObject(((Number)a).doubleValue()>((Number)b).doubleValue());
 	}
 	
 	public static Boolean gt(Long a, Long b) {
 		return RT.boolObject(a>b);
+	}
+	
+	public static Boolean le(Object a, Object b) {
+		if ((a instanceof Long)&&(b instanceof Long)) {
+			return le((Long)a,(Long)b);
+		}
+		return RT.boolObject(((Number)a).doubleValue()<=((Number)b).doubleValue());
+	}
+	
+	public static Boolean le(Long a, Long b) {
+		return RT.boolObject(a<=b);
+	}
+	
+	public static Boolean ge(Object a, Object b) {
+		if ((a instanceof Long)&&(b instanceof Long)) {
+			return ge((Long)a,(Long)b);
+		}
+		return RT.boolObject(((Number)a).doubleValue()>=((Number)b).doubleValue());
+	}
+	
+	public static Boolean ge(Long a, Long b) {
+		return RT.boolObject(a>=b);
 	}
 
 }

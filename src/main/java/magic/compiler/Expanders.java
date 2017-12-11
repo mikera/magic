@@ -76,7 +76,8 @@ public class Expanders {
 			
 			// note the things we can leave unchanged:
 			// - Maps and sets are read in as HashMap and Set nodes
-			// - constant literals and keywords are already Constant nodes		
+			// - constant literals and keywords are already Constant nodes	
+			// - already analysed nodes
 			return form;
 		}
 

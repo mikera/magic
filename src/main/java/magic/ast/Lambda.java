@@ -82,22 +82,21 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 	 * Specialises the body expression according to the provided context and bindings
 	 * 
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public EvalResult<AFn<T>> eval(Context context,APersistentMap<Symbol, Object> bindings) {
-		APersistentSet<Symbol> deps=getDependencies(); // free deps
-		APersistentMap<Symbol, Object> depVals=(APersistentMap<Symbol, Object>) Maps.EMPTY;
-		for (Symbol dep: deps) {
-			if (bindings.containsKey(dep)) {
-				depVals=depVals.assoc(dep, bindings.get(dep));
-			} else {
-				depVals=depVals.assoc(dep, context.getValue(dep));
-			}
-		}
-		
-		final APersistentMap<Symbol, Object> capturedBindings=depVals;
+//		APersistentSet<Symbol> deps=getDependencies(); // free deps
+//		APersistentMap<Symbol, Object> depVals=(APersistentMap<Symbol, Object>) Maps.EMPTY;
+//		for (Symbol dep: deps) {
+//			if (bindings.containsKey(dep)) {
+//				depVals=depVals.assoc(dep, bindings.get(dep));
+//			} else {
+//				depVals=depVals.assoc(dep, context.getValue(dep));
+//			}
+//		}
+//		
+//		final APersistentMap<Symbol, Object> capturedBindings=depVals;
 		// capture variables defined in the current scope
-		Node<? extends T> body=this.body.specialiseValues(capturedBindings);
+//		Node<? extends T> body=this.body.specialiseValues(capturedBindings);
 		
 		// System.out.println(body);
 		FunctionType type;
@@ -115,7 +114,7 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 			type=FunctionType.create(body.getType(), paramTypes);
 		}
 		
-		AFn<T> fn=new LambdaFn(body,capturedBindings,type);
+		AFn<T> fn=new LambdaFn(body,context,bindings,type);
 		return new EvalResult<AFn<T>>(context,fn);
 	}
 	
@@ -125,11 +124,13 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 		private final APersistentMap<Symbol, Object> capturedBindings;
 		private final Node<? extends T> body;
 		private final FunctionType type;
+		private final Context context;
 
-		private LambdaFn(Node<? extends T> body,APersistentMap<Symbol, Object> capturedBindings,FunctionType type) {
+		private LambdaFn(Node<? extends T> body,Context context, APersistentMap<Symbol, Object> capturedBindings,FunctionType type) {
 			this.capturedBindings = capturedBindings;
 			this.body=body;
 			this.type=type;
+			this.context=context;
 		}
 
 		@SuppressWarnings("unchecked")
@@ -156,7 +157,8 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 					bnds=bnds.assoc(varParam, vs);
 				}
 			}
-			EvalResult<T> r=(EvalResult<T>) body.eval(null,bnds); // TODO: shouldn't do any context lookup?
+			// EvalResult<T> r=(EvalResult<T>) body.eval(null,bnds); // old approach without context.
+			EvalResult<T> r=(EvalResult<T>) body.eval(context,bnds); 
 			return r.getValue(); 
 		}
 

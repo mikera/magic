@@ -27,4 +27,10 @@ public class Errors {
 		return "Metadata is not supported on objects of class: "+RT.className(o);
 	}
 
+	public static String getDetail(Throwable t) {
+		String s=t.getMessage();
+		if (s==null) s=t.getClass().getName();
+		return s;
+	}
+
 }

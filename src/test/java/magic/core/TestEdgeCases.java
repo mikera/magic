@@ -1,11 +1,14 @@
 package magic.core;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
 import magic.Core;
+import magic.data.Symbol;
 import magic.data.Tuple;
+import magic.lang.Context;
+import magic.lang.Slot;
 
 public class TestEdgeCases {
 	@SuppressWarnings("unchecked")
@@ -33,6 +36,14 @@ public class TestEdgeCases {
 				+ "(def a 2)"
 				+ "(context ctx)"
 				+ "[a]"));
+	}
+	
+	@Test public void testRecursiveFunction() {
+		Context c=Core.eval("(defn fact [a] "
+				+ "  (if (<= a 1) 1 (* a (fact (dec a)))))").getContext();
+		Slot<?> s=c.getSlot("fact");
+		assertEquals(Symbol.createSet("magic.core/fact","magic.core/fn","magic.core/<=","magic.core/if","magic.core/*","magic.core/dec"),s.getDependencies());
+		assertEquals(Tuple.of(24L),Core.eval(c,"[(fact 4)]").getValue());
 	}
 	
 	@Test public void testNS() {

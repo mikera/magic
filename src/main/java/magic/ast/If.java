@@ -48,7 +48,8 @@ public class If<T> extends BaseForm<T> {
 		return createIf(test,trueExp,falseExp,Maps.empty());
 	}
 	
-	public static <T> If<T> createIf(Node<?> test, Node<? extends T> trueExp, Node<? extends T> falseExp, APersistentMap<Keyword,Object> meta) {
+	public static <T> If<T> createIf(Node<?> test, Node<? extends T> trueExp, Node<? extends T> falseExp, APersistentMap<Keyword,Object> meta) { 
+		meta=meta.assoc(Keywords.DEPS, calcDependencies(test,trueExp,falseExp));
 		return new If<T>(test,trueExp,falseExp,meta);
 	}
 	

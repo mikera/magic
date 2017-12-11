@@ -21,13 +21,16 @@ import magic.data.Symbol;
  * @param T the Java type of the expression
  */
 public class Slot<T> {
-	private final Node<T> rawExpression;
 	private final APersistentMap<Symbol, Object> bindings;
-	private final Context context;
+	private Context context;
 	
 	private T value=null;
 	private volatile boolean computed=false;
+
+	private final Node<T> rawExpression;
+	private Node<T> expandedExpression=null;
 	private Node<T> compiledExpression=null;
+	private int expansionCount; // for detecting recursive expansion
 	
 	private Slot(Node<T> e, Context context, APersistentMap<Symbol, Object> bindings) {
 		this.rawExpression=e;
@@ -64,7 +67,7 @@ public class Slot<T> {
 //				if (c.getSlot(s)==null) throw new UnresolvedException(s);
 //			}
 //		}
-		EvalResult<T> result=getNode().eval(context,bindings);
+		EvalResult<T> result=getCompiledNode().eval(context,bindings);
 		value=result.getValue();
 		computed=true;
 		return value;
@@ -77,13 +80,35 @@ public class Slot<T> {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public Node<T> getNode() {
+	public Node<T> getCompiledNode() {
 		if (compiledExpression==null) {
-			compiledExpression=(Node<T>) magic.compiler.Compiler.compileNode(context,bindings,rawExpression);
+			compiledExpression=(Node<T>) magic.compiler.Compiler.compileNode(context,bindings,getExpandedNode());
 		}
 		return compiledExpression;
 	}
 
+	/**
+	 * Gets the expanded Node associated with this Slot. 
+	 * 
+	 * Note that this Node may have unresolved dependencies.
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private synchronized Node<T> getExpandedNode() {
+		if (expansionCount>0) throw new Error("Recursive expansion while expanding slot definition: " + rawExpression);
+		if (expandedExpression==null) {
+			// analysedExpression=rawExpression;
+			try {
+				expansionCount+=1;
+				expandedExpression=(Node<T>) magic.compiler.Compiler.expand(context,rawExpression);
+			} catch (StackOverflowError t) {
+				throw new Error("Infinite expansion while expanding slot definition: " + rawExpression,t); 			
+			} finally {
+				expansionCount-=1;
+			}
+		}
+		return expandedExpression;
+	}
 
 	@SuppressWarnings("unchecked")
 	public static <T> Slot<T> create(Node<T> exp,Context context) {
@@ -95,11 +120,20 @@ public class Slot<T> {
 	}
 
 	public boolean isExpander() {
+		// TODO: better identification of expanders?
+		if (expansionCount>0) return false;
 		return Types.EXPANDER.contains(getType());
 	}
 	
 	public Type getType() {
-		return getNode().getType();
+		// TODO: figure out how to avoid recursive compilation
+		//if (expansionCount>0) return rawExpression.getType();
+
+		if (compiledExpression==null) {
+			return getExpandedNode().getType();
+		} else {
+			return compiledExpression.getType();
+		}
 	}
 	
 	public boolean isComputed() {
@@ -107,7 +141,7 @@ public class Slot<T> {
 	}
 
 	public APersistentSet<Symbol> getDependencies() {
-		APersistentSet<Symbol> rawDeps= getNode().getDependencies();
+		APersistentSet<Symbol> rawDeps= getCompiledNode().getDependencies();
 		return rawDeps;
 	}
 
@@ -120,13 +154,20 @@ public class Slot<T> {
 	 * @return
 	 */
 	public Slot<T> invalidate(Context c) {
-		if ((!computed)&&(c==context)) return this;
 		return create(rawExpression,c,bindings);
 	}
 	
 	@Override 
 	public String toString() {
 		return "<Slot exp="+rawExpression+(computed?(" val="+value):"")+">";
+	}
+
+	/** 
+	 * Change the context to allow for circular references to this slot. Internal use only!
+	 * @param c
+	 */
+	void hackContext(Context c) {
+		context =c;
 	}
 
 }

@@ -63,12 +63,12 @@ public class Lookup<T> extends Node<T> {
 	@Override
 	public Node<?> analyse(AnalysisContext context) {
 		Symbol rSym=context.resolveSym(sym);
-		Node<?> node=context.getNode(rSym);
-		if (node==null) {
-			// TODO: what about unresolved dependencies?
-			// TODO: what about class names?
-			// throw new Error("Analysis error: Symbol "+sym+" cannot be resolved");
-		} 
+//		Node<?> node=context.getNode(rSym);
+//		if (node==null) {
+//			// TODO: what about unresolved dependencies?
+//			// TODO: what about class names?
+//			// throw new Error("Analysis error: Symbol "+sym+" cannot be resolved");
+//		} 
 		if (sym==rSym) {
 			// just need to update the dependency
 			return this.withDependency(rSym);

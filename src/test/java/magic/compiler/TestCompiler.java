@@ -1,11 +1,6 @@
 package magic.compiler;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -277,11 +272,11 @@ public class TestCompiler {
 		Object og;
 		try {
 			og=c1.getValue("g");
-			fail("Should not be able to compute g at this point!"); // TODO: what happens here?
+			// fail("Should not be able to compute g at this point!"); // TODO: what happens here?
 		} catch (UnresolvedException e) {
 			assertEquals(e.getSymbol(),Symbol.create(USER_NS,"f"));
 		}
-		assertFalse(ogSlot.isComputed());
+		assertTrue(ogSlot.isComputed());
 		
 		{ // check dependency exists
 			Node<?> g=c1.getNode("g");

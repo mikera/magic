@@ -90,6 +90,7 @@ public class Context {
 	 * Defines a symbol in this context.
 	 * 
 	 * Causes an update to all dependencies as necessary, but does *not* evaluate dependencies.
+	 * This requires definitions to be expanded and analysed, but not compiled
 	 * This enables contexts to be incrementally constructed without all dependencies yet available.
 	 * 
 	 * @param sym Symbol to define
@@ -134,7 +135,7 @@ public class Context {
 		
 		// construct new Context with consistent dependencies
 		PersistentHashMap<Symbol, Slot<?>> newMappings=mappings.assoc(sym,newSlot);
-		Context c=new Context(newMappings,newDependants);
+		final Context c=new Context(newMappings,newDependants);
 		
 		// invalidate slots for transitive dependants if they exist
 		// note we need to mutate mappings in place because circular reference is required
@@ -146,6 +147,8 @@ public class Context {
 				c.mappings=c.mappings.assoc(s, slot.invalidate(c));
 			}
 		}
+		// invalidate to allow for recursive definition
+		c.mappings=c.mappings.assoc(sym, newSlot.invalidate(c));			
 		
 		return c;
 	}
@@ -256,7 +259,7 @@ public class Context {
 		Slot<T> slot=getSlot(sym); 
 		//if (slot==null) throw new IllegalArgumentException("Symbol not defined: "+sym);
 		if (slot==null) return null;
-		return slot.getNode();
+		return slot.getCompiledNode();
 	}
 	
 

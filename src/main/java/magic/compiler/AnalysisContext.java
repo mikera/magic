@@ -83,6 +83,10 @@ public class AnalysisContext {
 		return null;
 	}
 
+	public Context getContext() {
+		return context;
+	}
+
 
 
 }

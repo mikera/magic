@@ -6,6 +6,7 @@ import java.util.WeakHashMap;
 
 import magic.RT;
 import magic.Type;
+import magic.compiler.Reader;
 
 /**
  * Class to represent a Magic symbol with optional namespace
@@ -73,7 +74,7 @@ public class Symbol extends APersistentObject {
 	}
 	
 	public static Symbol create(String name) {
-		return create(null,name);
+		return Reader.readSymbol(name);
 	}
 	
 	private Object readResolve() throws ObjectStreamException {
@@ -132,6 +133,14 @@ public class Symbol extends APersistentObject {
 
 	public boolean isQualified() {
 		return ns!=null;
+	}
+
+	public static APersistentSet<Symbol> createSet(String...  strings) {
+		APersistentSet<Symbol> ss=Sets.emptySet();
+		for (String s: strings) {
+			ss=ss.include(Symbol.create(s));
+		}
+		return ss;
 	}
 
 
