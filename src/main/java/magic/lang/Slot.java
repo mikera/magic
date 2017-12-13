@@ -164,7 +164,7 @@ public class Slot<T> {
 	
 	@Override 
 	public String toString() {
-		return "<Slot exp="+rawExpression+(computed?(" val="+value):"")+">";
+		return "<Slot raw="+rawExpression+(computed?("\n      val="+value):"")+">";
 	}
 
 	/** 
