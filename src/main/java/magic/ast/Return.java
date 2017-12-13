@@ -53,4 +53,9 @@ public class Return<T> extends BaseForm<T> {
 		if (r.isEscaping()) throw new Error("Can't return from within a return in form: "+this);
 		return EvalResult.returnValue(r.getContext(),r.getValue());
 	}
+	
+	@Override
+	public String toString() {
+		return "(RETURN "+exp+")";
+	}
 }

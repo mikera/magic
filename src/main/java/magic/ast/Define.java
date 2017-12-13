@@ -59,7 +59,7 @@ public class Define<T> extends BaseForm<T> {
 		Symbol sym=this.sym;
 		if (!sym.isQualified()) {
 			// add current namespace to symbol
-			sym=Symbol.create(context.getCurrentNamespace(),sym.getName());
+			sym=Symbol.create(context.getNamespace(),sym.getName());
 		}
 		context=context.define(sym, theExp, bindings); 
 		return new EvalResult<T>(context,null); // TODO: what should def return??
@@ -91,6 +91,11 @@ public class Define<T> extends BaseForm<T> {
 	public Define<T> mapChildren(IFn1<Node<?>, Node<?>> fn) {
 		Node<? extends T> newExp=(Node<? extends T>) fn.apply(exp);
 		return (exp==newExp)?this:(Define<T>) create(sym,newExp);
+	}
+	
+	@Override
+	public String toString() {
+		return "(DEF "+sym+" "+exp+")";
 	}
 
 	

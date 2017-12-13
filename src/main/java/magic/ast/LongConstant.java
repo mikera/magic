@@ -50,7 +50,7 @@ public class LongConstant extends BaseConstant<Long> {
 	
 	@Override
 	public String toString() {
-		return "(LongConstant "+RT.print(value)+")";
+		return "(LONGCONSTANT "+RT.print(value)+")";
 	}
 
 	@Override

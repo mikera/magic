@@ -42,25 +42,14 @@ public abstract class Node<T> extends RootNode {
 	public static final Node<?>[] EMPTY_ARRAY = new Node[0];
 	
 	private final APersistentMap<Keyword,Object> meta;
-	
-	@SuppressWarnings("deprecation")
-	protected Node(APersistentSet<Symbol> deps, SourceInfo source) {
-		super(MagicLanguage.class, null,null);
-		APersistentMap<Keyword,Object> m=PersistentHashMap.empty();
-		m=m.assoc(Keywords.DEPS,deps);
-		m=m.assoc(Keywords.SOURCE,source);
-		this.meta=m;
-		if (deps==null) throw new Error("Null deps!!");
-	}
-	
+		
 	@SuppressWarnings("deprecation")
 	public Node(APersistentMap<Keyword, Object> meta) {
 		super(MagicLanguage.class, null,null);
 		this.meta=meta;
 	}
-	
 
-	private Node<?> updateMeta() {
+	protected Node<?> updateMeta() {
 		APersistentMap<Keyword, Object> depMeta=includeMetaDependencies(meta);
 		if (depMeta!=meta) return withMeta(depMeta);
 		return this;
@@ -76,6 +65,13 @@ public abstract class Node<T> extends RootNode {
 		return meta.assoc(Keywords.DEPS,deps);
 	}
 
+	/**
+	 * Augments the set of dependencies with dependencies from this node.
+	 * If called at the end of analysis to perform dependency updates if necessary.
+	 * Function intended to be overriden. 
+	 * @param deps
+	 * @return
+	 */
 	protected abstract APersistentSet<Symbol> includeDependencies(APersistentSet<Symbol> deps);
 
 	/**
@@ -277,7 +273,7 @@ public abstract class Node<T> extends RootNode {
 	/** 
 	 * Performs local optimisations on the node prior to execution / compilation.
 	 * 
-	 * Should be run after expansion to runnable code only.
+	 * Should be run after analysis on runnable code only.
 	 *  
 	 * Returns a new node if any optimisation succeeded, the same node otherwise.
 	 * 

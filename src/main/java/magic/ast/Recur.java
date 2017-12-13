@@ -1,5 +1,6 @@
 package magic.ast;
 
+import magic.RT;
 import magic.Symbols;
 import magic.Type;
 import magic.Types;
@@ -47,6 +48,11 @@ public class Recur<T> extends BaseForm<T> {
 		APersistentVector<Node<?>> newExps=NodeFunctions.mapAll(exps, fn);
 		if (newExps==exps) return this;
 		return create(newExps,meta());
+	}
+	
+	@Override
+	public String toString() {
+		return "(RECUR "+RT.toString(exps)+")";
 	}
 
 	@Override

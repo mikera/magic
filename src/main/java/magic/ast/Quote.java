@@ -100,7 +100,7 @@ public class Quote extends BaseForm<Object> {
 	
 	@Override
 	public String toString() {
-		return (syntaxQuote?"(syntax-quote ":"(quote ")+RT.toString(form)+")";
+		return (syntaxQuote?"(SYNTAX-QUOTE ":"(QUOTE ")+RT.toString(form)+")";
 	}
 
 	

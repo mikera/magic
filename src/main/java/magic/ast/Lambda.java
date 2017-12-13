@@ -243,4 +243,9 @@ public class Lambda<T> extends BaseForm<AFn<T>> {
 		}
 		return FunctionType.create(body.getType(),argTypes);
 	}
+	
+	@Override
+	public String toString() {
+		return "(FN "+paramSymbols+" "+body+")";
+	}
 }

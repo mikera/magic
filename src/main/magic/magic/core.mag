@@ -162,6 +162,9 @@
   ([^java.lang.Throwable e]
     (.printStackTrace e)))
 
+;(defmacro ns [name]
+;  `(def *ns* ~(str name)))
+
 ;; ================================================================
 ;; Host interop
 

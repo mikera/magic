@@ -78,7 +78,7 @@ public class Constant<T> extends BaseConstant<T> {
 	
 	@Override
 	public String toString() {
-		return RT.print(value);
+		return "(CONST "+RT.print(value)+")";
 	}
 	
 	/**

@@ -54,6 +54,9 @@ public class ContextAction<T> extends BaseForm<T> {
 		return new ContextAction<T>(nodes,action,meta);
 	}
 
-
+	@Override
+	public String toString() {
+		return "(CONTEXT-ACTION!!)";
+	}
 	
 }

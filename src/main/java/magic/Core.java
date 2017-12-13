@@ -89,7 +89,10 @@ public class Core {
 			t.printStackTrace(System.err);
 			throw new magic.Error("Failed to initialise Magic environment",t);
 		}
-		return r.getContext();
+		c=r.getContext();
+		// TODO: switch to user namespace?
+		// c=magic.compiler.Compiler.eval(c, "(ns user)").getContext();
+		return c;
 	}
 	
 	/**

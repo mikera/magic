@@ -33,7 +33,11 @@ public abstract class AExpander extends AFn<Node<?>> implements IFn3<Node<?>> {
 	}
 	
 	/**
-	 * Expands a Node
+	 * Expands a Node.
+	 * 
+	 * General rules:
+	 * - The node to expand should be an unexpanded form
+	 * - Expanders are expected to expand subforms recursively as required, using the continuation expander
 	 * 
 	 * @param c The context in which to expand
 	 * @param form The node to be expanded.

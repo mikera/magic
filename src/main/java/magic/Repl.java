@@ -20,7 +20,7 @@ public class Repl {
 		Context c=Main.MAIN_CONTEXT;
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		while (true) {
-			String namespace=c.getCurrentNamespace();
+			String namespace=c.getNamespace();
 			try {
 				System.out.print(namespace+"=>");
 				String line = reader.readLine();

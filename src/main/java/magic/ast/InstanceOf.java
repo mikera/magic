@@ -95,7 +95,7 @@ public class InstanceOf extends BaseForm<Boolean> {
 
 	@Override
 	public String toString() {
-		return "(instance? "+RT.toString(typeExpr)+" "+RT.toString(exp)+ ")";
+		return "(INSTANCE? "+RT.toString(typeExpr)+" "+RT.toString(exp)+ ")";
 	}
 
 

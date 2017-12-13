@@ -128,7 +128,7 @@ public class List<T> extends BaseDataStructure<APersistentList<? extends T>> {
 	
 	@Override
 	public String toString() {
-		StringBuilder sb=new StringBuilder("(list ");
+		StringBuilder sb=new StringBuilder("(LIST ");
 		sb.append(RT.toString(exps, " "));
 		sb.append(')');
 		return sb.toString();

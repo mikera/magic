@@ -7,6 +7,7 @@ import magic.Type;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
+import magic.data.APersistentSet;
 import magic.data.Keyword;
 import magic.data.Lists;
 import magic.data.Maps;
@@ -43,6 +44,16 @@ public class If<T> extends BaseForm<T> {
 	public static <T> If<T> createIf(Node<?> test, Node<? extends T> trueExp) {
 		return createIf(test,trueExp, (Node<T>)Constant.NULL,Maps.empty());
 	}
+	
+	@Override
+	protected APersistentSet<Symbol> includeDependencies(APersistentSet<Symbol> deps) {
+		deps=deps.include(Symbols.IF); // TODO: should be supplied by expander?
+		deps=deps.includeAll(test.getDependencies());
+		deps=deps.includeAll(trueExp.getDependencies());
+		deps=deps.includeAll(falseExp.getDependencies());
+		return deps;
+	}
+
 	
 	public static <T> If<T> createIf(Node<?> test, Node<? extends T> trueExp, Node<? extends T> falseExp) {
 		return createIf(test,trueExp,falseExp,Maps.empty());
@@ -107,5 +118,10 @@ public class If<T> extends BaseForm<T> {
 		Node<? extends T> newTrue=(Node<? extends T>) fn.apply(trueExp);
 		Node<? extends T> newFalse=(Node<? extends T>) fn.apply(falseExp);
 		return ((newTest==test)&&(newTrue==trueExp)&&(newFalse==falseExp))?this:createIf(newTest,newTrue,newFalse,meta());
+	}
+	
+	@Override
+	public String toString() {
+		return "(IF "+test+" "+trueExp+" "+falseExp+")";
 	}
 }

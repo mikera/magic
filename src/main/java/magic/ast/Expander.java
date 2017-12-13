@@ -125,7 +125,7 @@ public class Expander extends BaseForm<AExpander> {
 	
 	@Override
 	public String toString() {
-		return "(expander "+args+" "+body+")";
+		return "(EXPANDER "+args+" "+body+")";
 	}
 
 }

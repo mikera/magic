@@ -122,7 +122,7 @@ public class Apply<T> extends BaseForm<T> {
 
 	@Override
 	public String toString() {
-		StringBuilder sb= new StringBuilder("("); // TODO: OK to omit the apply symbol?
+		StringBuilder sb= new StringBuilder("(CALL "); 
 		sb.append(function);
 		for (int i=0; i<arity; i++) {
 			sb.append(' ');

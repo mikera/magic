@@ -200,7 +200,7 @@ public class Let<T> extends BaseForm<T> {
 	
 	@Override
 	public String toString() {
-		StringBuilder sb= new StringBuilder("(let [");
+		StringBuilder sb= new StringBuilder("(LET [");
 		for (int i=0; i<nLets; i++) {
 			if (i>0) sb.append(' ');
 			sb.append(syms[i]);

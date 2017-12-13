@@ -263,10 +263,14 @@ public class Context {
 	}
 	
 
-	public String getCurrentNamespace() {
+	public String getNamespace() {
 		Slot<String> s=getSlot(Symbols._NS_);
 		if (s==null) return null;
 		return (String) s.getValue();
+	}
+	
+	public Context setNamespace(String ns) {
+		return this.define(Symbols._NS_, Constant.create(ns));
 	}
 
 	/**
@@ -278,6 +282,7 @@ public class Context {
 	public Context put(Symbol sym, Object o) {
 		return define(sym,Constant.create(o));
 	}
+
 
 
 

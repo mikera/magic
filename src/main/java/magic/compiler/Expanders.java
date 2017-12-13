@@ -112,7 +112,8 @@ public class Expanders {
 				// handle nested expander
 				if ((slot != null) && slot.isExpander()) {
 					AExpander e = (AExpander) slot.getValue(); 
-					return e.expand(c, form, ex).withDependency(rSym);
+					Node<?> expandedNode=e.expand(c, form, ex);
+					return expandedNode.withDependency(rSym); // include the dependency on the expander symbol used
 				}
 
 				// handle .someMethod forms

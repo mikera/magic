@@ -61,4 +61,9 @@ public class Cast<T> extends BaseForm<T> {
 			throw new magic.Error("Cannot cast object of class "+result.getClass()+" to type "+type);
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "(CAST "+type+" "+exp+")";
+	}
 }

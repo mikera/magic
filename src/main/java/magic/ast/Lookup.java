@@ -4,7 +4,6 @@ import magic.Keywords;
 import magic.RT;
 import magic.compiler.AnalysisContext;
 import magic.compiler.EvalResult;
-import magic.compiler.Reader;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;

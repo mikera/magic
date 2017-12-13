@@ -3,6 +3,7 @@ package magic.ast;
 import java.lang.invoke.MethodHandle;
 
 import magic.Keywords;
+import magic.RT;
 import magic.Reflector;
 import magic.Symbols;
 import magic.compiler.EvalResult;
@@ -109,6 +110,11 @@ public class InvokeStatic<T> extends BaseForm<T> {
 		Node<?>[] newNodes=NodeFunctions.mapAll(args,fn);
 		if (newNodes==args) return this;
 		return create(getDependencies(),method,newNodes,getSourceInfo());
+	}
+	
+	@Override
+	public String toString() {
+		return "(INVOKESTATIC "+method+" "+RT.toString(args, " ")+")";
 	}
 
 }

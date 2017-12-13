@@ -74,7 +74,7 @@ public class DeferredConstant<T> extends BaseConstant<T> {
 	
 	@Override
 	public String toString() {
-		return RT.print(getValue());
+		return "(DEFERRED-CONST "+RT.print(fn)+(computed?" = "+RT.print(value):"")+")";
 	}
 	
 	/**

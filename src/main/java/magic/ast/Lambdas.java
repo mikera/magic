@@ -1,6 +1,7 @@
 package magic.ast;
 
 import magic.Keywords;
+import magic.RT;
 import magic.compiler.EvalResult;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
@@ -60,6 +61,11 @@ public class Lambdas<T> extends BaseForm<AFn<T>> {
 		// System.out.println(body);
 		AFn<T> fn=new MultiFn<T>(fns);
 		return new EvalResult<AFn<T>>(context,fn);
+	}
+	
+	@Override
+	public String toString() {
+		return "(FNS "+RT.toString(nodes.subList(1)," ")+")";
 	}
 	
 }

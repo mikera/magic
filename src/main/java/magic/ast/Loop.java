@@ -169,7 +169,19 @@ public class Loop<T> extends BaseForm<T> {
 			context=context.bind(syms[i], an);
 		}
 		Node<?> newBody=(Node<?>) body.analyse(context);
-		return ((body==newBody)&&(lets==newLets))?this:(Loop<T>) create(syms,newLets,newBody);
+		Loop<?> newLoop= ((body==newBody)&&(lets==newLets))?this:(Loop<T>) create(syms,newLets,newBody);
+		return (Loop<T>) newLoop.updateMeta();
+	}
+	
+	@Override
+	protected APersistentSet<Symbol> includeDependencies(APersistentSet<Symbol> deps) {
+		deps=deps.includeAll(body.getDependencies());
+		for (int i=nLets-1; i>=0; i--) {
+			Node<?> n=lets[i];
+			deps=deps.exclude(syms[i]);
+			deps=deps.includeAll(n.getDependencies());
+		}		
+		return deps;
 	}
 	
 	@Override
@@ -214,7 +226,7 @@ public class Loop<T> extends BaseForm<T> {
 	
 	@Override
 	public String toString() {
-		StringBuilder sb= new StringBuilder("(loop [");
+		StringBuilder sb= new StringBuilder("(LOOP [");
 		for (int i=0; i<nLets; i++) {
 			if (i>0) sb.append(' ');
 			sb.append(syms[i]);

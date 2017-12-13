@@ -9,7 +9,6 @@ import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
-import magic.data.APersistentSet;
 import magic.data.Keyword;
 import magic.data.Lists;
 import magic.data.Maps;
@@ -106,7 +105,7 @@ public class Do<T> extends BaseForm<T> {
 	
 	@Override
 	public String toString() {
-		StringBuilder sb= new StringBuilder("(do ");
+		StringBuilder sb= new StringBuilder("(DO ");
 		for (int i=0; i<nBody; i++) {
 			if (i>0) sb.append(' ');
 			sb.append(RT.toString(body.get(i)));

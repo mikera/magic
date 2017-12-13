@@ -551,7 +551,7 @@ public class RT {
 		// TODO: remove this check once everything is working
 		if (c==null) throw new Error("Null context when trying to resove symbol: " +symbol);
 			
-		String ns=c.getCurrentNamespace();
+		String ns=c.getNamespace();
 		if (ns!=null) {
 			symbol=Symbol.create(ns,symbol.getName());
 		}
