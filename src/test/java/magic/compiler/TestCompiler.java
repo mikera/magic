@@ -258,7 +258,6 @@ public class TestCompiler {
 	@SuppressWarnings("unused")
 	@Test public void testDependencyUpdate() {
 		Context c=INITIAL;
-		String USER_NS="magic.core";
 		
 		Context c1=Compiler.eval(c, 
 				  "(defn g [c] (f c))"  
@@ -268,21 +267,21 @@ public class TestCompiler {
 		assertFalse(ogSlot.isComputed());
 		
 		// should force analysis, needs to resolve to fully qualified symbol for dependency update to be correct
-		assertTrue(ogSlot.getDependencies().contains(Symbol.create(USER_NS,"f")));
+		assertTrue(ogSlot.getDependencies().contains(Symbol.create(Core.USER_NS,"f")));
 		Object og;
 		try {
 			og=c1.getValue("g");
 			// fail("Should not be able to compute g at this point!"); // TODO: what happens here?
 		} catch (UnresolvedException e) {
-			assertEquals(e.getSymbol(),Symbol.create(USER_NS,"f"));
+			assertEquals(e.getSymbol(),Symbol.create(Core.USER_NS,"f"));
 		}
 		assertTrue(ogSlot.isComputed());
 		
 		{ // check dependency exists
 			Node<?> g=c1.getNode("g");
-			assertTrue(g.getDependencies().contains(Symbol.create(USER_NS,"f")));
-			assertEquals(Sets.of(Symbol.create(USER_NS,"f"),Symbols.FN),c1.getDependencies(Symbol.create("g")));
-			assertEquals(Sets.of(Symbol.create(USER_NS,"g")),c1.getDependants(Symbol.create("f")));
+			assertTrue(g.getDependencies().contains(Symbol.create(Core.USER_NS,"f")));
+			assertEquals(Sets.of(Symbol.create(Core.USER_NS,"f"),Symbols.FN),c1.getDependencies(Symbol.create("g")));
+			assertEquals(Sets.of(Symbol.create(Core.USER_NS,"g")),c1.getDependants(Symbol.create("f")));
 		}
 
 		EvalResult<?> r=Compiler.eval(c1, 
@@ -298,12 +297,12 @@ public class TestCompiler {
 		Slot<?> gSlot=c2.getSlot("g");
 		
 		Node<?> g=c2.getNode("g");
-		assertTrue(g.getDependencies().contains(Symbol.create(USER_NS,"f")));
+		assertTrue(g.getDependencies().contains(Symbol.create(Core.USER_NS,"f")));
 		Node<?> f=c2.getNode("f");
-		assertTrue(f.getDependencies().contains(Symbol.create(USER_NS,"a")));
-		assertTrue(c2.getDependants("a").contains(Symbol.create(USER_NS,"f")));
-		APersistentSet<Symbol> c2depsA=c2.calcDependants(Symbol.create(USER_NS,"a"));
-		assertTrue(c2depsA.contains(Symbol.create(USER_NS,"f")));
+		assertTrue(f.getDependencies().contains(Symbol.create(Core.USER_NS,"a")));
+		assertTrue(c2.getDependants("a").contains(Symbol.create(Core.USER_NS,"f")));
+		APersistentSet<Symbol> c2depsA=c2.calcDependants(Symbol.create(Core.USER_NS,"a"));
+		assertTrue(c2depsA.contains(Symbol.create(Core.USER_NS,"f")));
 		assertEquals(fSlot.getDependencies(),f.getDependencies());
 		
 		// compute b, should transitively compute g and f

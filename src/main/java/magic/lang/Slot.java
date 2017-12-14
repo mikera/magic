@@ -142,7 +142,9 @@ public class Slot<T> {
 
 	/**
 	 * Gets the symbolic dependencies for this slot.
-	 * Requires the ndoe to be analysed.
+	 * 
+	 * Requires the node to be analysed, forces analysis if not yet done. Dependencies may not yet exist.
+	 * 
 	 * @return
 	 */
 	public APersistentSet<Symbol> getDependencies() {

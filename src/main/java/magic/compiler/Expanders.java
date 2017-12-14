@@ -1,5 +1,6 @@
 package magic.compiler;
 
+import magic.Keywords;
 import magic.RT;
 import magic.Symbols;
 import magic.Type;
@@ -471,7 +472,9 @@ public class Expanders {
 			if (n < 2)
 				throw new ExpansionException("Can't expand loop, requires at least a binding vector", form);
 
+			APersistentMap<Keyword,Object> meta=form.get(0).meta();
 			SourceInfo si = form.getSourceInfo();
+			meta=meta.assoc(Keywords.SOURCE, si);
 
 			Node<?> argObj = form.get(1);
 			if (!(argObj instanceof Vector)) {
@@ -485,7 +488,7 @@ public class Expanders {
 			APersistentList<Node<?>> body = (APersistentList<Node<?>>) ex.expandAll(c, form.getNodes().subList(2, n),
 					ex);
 
-			return Loop.create(Vector.create(Vectors.coerce(foo)), body, si);
+			return Loop.create(Vector.create(Vectors.coerce(foo)), body, meta);
 		}
 	}
 

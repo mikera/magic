@@ -18,11 +18,16 @@ import java.util.regex.Pattern;
 import magic.ast.Node;
 import magic.data.APersistentCollection;
 import magic.data.APersistentList;
+import magic.data.APersistentMap;
 import magic.data.APersistentSequence;
+import magic.data.APersistentSet;
 import magic.data.APersistentVector;
 import magic.data.IPersistentObject;
 import magic.data.ISeq;
+import magic.data.Keyword;
+import magic.data.PersistentHashMap;
 import magic.data.PersistentList;
+import magic.data.Sets;
 import magic.data.Symbol;
 import magic.data.Vectors;
 import magic.fn.IFn;
@@ -681,6 +686,34 @@ public class RT {
 		};
 		throw new TypeError("Can't cast value of type "+a.getClass()+" to int");
 	}
+
+	@SuppressWarnings("unchecked")
+		public static APersistentMap<Keyword, Object> addMetaDependency(APersistentMap<Keyword, Object> meta, Symbol sym) {
+		if (meta==null) return PersistentHashMap.create(Keywords.DEPS, Sets.of(sym));
+		APersistentSet<Symbol> deps=(APersistentSet<Symbol>) meta.get(Keywords.DEPS);
+		if (deps==null) {
+			return meta.assoc(Keywords.DEPS, Sets.of(sym));
+		} else {
+			APersistentSet<Symbol> newDeps=deps.include(sym);
+			// shortcut if dependency already present
+			if (deps==newDeps) return meta;
+			return meta.assoc(Keywords.DEPS, newDeps);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static APersistentMap<Keyword, Object> removeMetaDependency(APersistentMap<Keyword, Object> meta, Symbol sym) {
+	if (meta==null) return null;
+	APersistentSet<Symbol> deps=(APersistentSet<Symbol>) meta.get(Keywords.DEPS);
+	if (deps==null) {
+		return meta;
+	} else {
+		APersistentSet<Symbol> newDeps=deps.exclude(sym);
+		// shortcut if dependency already present
+		if (deps==newDeps) return meta;
+		return meta.assoc(Keywords.DEPS, newDeps);
+	}
+}
 
 
 

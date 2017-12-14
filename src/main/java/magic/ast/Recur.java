@@ -52,7 +52,7 @@ public class Recur<T> extends BaseForm<T> {
 	
 	@Override
 	public String toString() {
-		return "(RECUR "+RT.toString(exps)+")";
+		return "(RECUR "+RT.toString(exps," ")+")";
 	}
 
 	@Override

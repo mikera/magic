@@ -22,6 +22,12 @@ public class TestSets {
 		assertEquals("Removing from: "+s1.toString(),t,r);
 	}
 	
+	@Test public void testIncludeAll() {
+		assertEquals(Sets.of(1,2,3,4),Sets.of(1,2,3).includeAll(Sets.of(2,3,4)));
+		assertEquals(Sets.of(1,2,3,4),Sets.of(1,2,3,4).includeAll(Sets.emptySet()));
+
+	}
+	
 	@Test public void testIncludeIdentity() {
 		String a="a";
 		String b="b";

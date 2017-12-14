@@ -42,16 +42,14 @@ public class Lookup<T> extends Node<T> {
 		return create(sym,Maps.empty());
 	}
 	
-	public static <T> Lookup<T> create(Symbol sym, SourceInfo source) {
-		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.SOURCE,source);
-		//meta=meta.assoc(Keywords.DEPS, sym.symbolSet());
-		return create(sym,meta);
+	public static <T> Lookup<T> create(Symbol sym, APersistentMap<Keyword, Object> meta) {
+		meta=RT.addMetaDependency(meta,sym);
+		Lookup<T> lookup= new Lookup<T>(sym,meta);
+		return lookup;
 	}
 	
-	public static <T> Lookup<T> create(Symbol sym, APersistentMap<Keyword, Object> meta) {
-		Lookup<T> lookup= new Lookup<T>(sym,meta);
-		//lookup=(Lookup<T>)lookup.withDependency(sym);
-		return lookup;
+	public static <T> Lookup<T> create(Symbol sym, SourceInfo si) {
+		return create(sym,Maps.create(Keywords.SOURCE, si));
 	}
 
 	@SuppressWarnings("unchecked")

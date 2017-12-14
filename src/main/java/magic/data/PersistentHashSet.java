@@ -384,6 +384,7 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 		
 		@SuppressWarnings("unchecked")
 		protected PHSNode<T> replace(int i, PHSNode<T> node) {
+			if (data[i]==node) return this;
 			PHSNode<T>[] newData=new PHSNode[data.length];
 			System.arraycopy(data, 0, newData, 0, data.length);
 			newData[i]=node;

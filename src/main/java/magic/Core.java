@@ -113,4 +113,6 @@ public class Core {
 		return magic.compiler.Compiler.eval(c, code);
 	}
 
+	public static String USER_NS="magic.core";
+
 }

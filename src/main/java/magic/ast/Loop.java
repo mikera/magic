@@ -6,7 +6,6 @@ import magic.Type;
 import magic.compiler.AExpander;
 import magic.compiler.AnalysisContext;
 import magic.compiler.EvalResult;
-import magic.compiler.SourceInfo;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
@@ -58,7 +57,7 @@ public class Loop<T> extends BaseForm<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> Loop<T> create(Vector<? extends Object> bindings, APersistentList<Node<?>> body, SourceInfo si) {
+	public static <T> Loop<T> create(Vector<? extends Object> bindings, APersistentList<Node<?>> body, APersistentMap<Keyword, Object> meta) {
 		int nb=bindings.size();
 		if ((nb&1)!=0) throw new Error("Loop requires an even number of forms in binding vector");
 		int n=nb/2;
@@ -70,19 +69,18 @@ public class Loop<T> extends BaseForm<T> {
 			lets[i]=bindings.get(i*2+1);
 		}
 		Node<Object> bodyExpr=(body.size()==1)?(Node<Object>)body.get(0):Do.create(body);
-		return (Loop<T>) create(syms,lets,bodyExpr,si);
+		return (Loop<T>) create(syms,lets,bodyExpr,meta);
 	}
 	
 	public static <T> Node<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<?>[] bodyExprs) {
 		return create(syms,lets,Do.create(bodyExprs));
 	}
 	
-	public static <T> Loop<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<?>[] bodyExprs,SourceInfo source) {
-		return create(syms,lets,Do.create(bodyExprs),source);
+	public static <T> Loop<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<?>[] bodyExprs,APersistentMap<Keyword, Object> meta) {
+		return create(syms,lets,Do.create(bodyExprs),meta);
 	}
 	
-	public static <T> Loop<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<T> body,SourceInfo source) {
-		APersistentMap<Keyword, Object> meta=Maps.create(Keywords.SOURCE,source);
+	public static <T> Loop<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<T> body,APersistentMap<Keyword, Object> meta) {
 		APersistentSet<Symbol> deps=body.getDependencies();
 		int n=lets.length;
 		if (n!=syms.length) throw new IllegalArgumentException("Incorrect number of bindings forms for loop");
@@ -97,7 +95,7 @@ public class Loop<T> extends BaseForm<T> {
 	}
 	
 	public static <T> Loop<T> create(Symbol[] syms,Node<? extends Object>[] lets,Node<T> bodyExpr) {
-		return create(syms,lets,bodyExpr,null);
+		return create(syms,lets,bodyExpr,Maps.empty());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -213,7 +211,7 @@ public class Loop<T> extends BaseForm<T> {
 		}
 		
 		Node<? extends AExpander> newBody=(Node<? extends AExpander>) fn.apply(body);
-		return ((body==newBody)&&(lets==newLets))?this:(Loop<T>) create(syms,newLets,newBody,getSourceInfo());
+		return ((body==newBody)&&(lets==newLets))?this:(Loop<T>) create(syms,newLets,newBody,meta());
 	}
 	
 	/**

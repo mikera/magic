@@ -22,12 +22,12 @@ import magic.fn.IFn1;
 import magic.lang.Context;
 
 /**
- * AST node class representing a hashmap construction literal.
+ * AST node class representing a map construction literal.
  * 
  * @author Mike
  *
- * @param <K> the type of all keys in the hashmap
- * @param <V> the type of all values in the hashmap
+ * @param <K> the type of all keys in the map
+ * @param <V> the type of all values in the map
  */
 public class HashMap<K,V> extends BaseDataStructure<APersistentMap<? extends K,? extends V>> {
 

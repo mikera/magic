@@ -44,8 +44,8 @@ public class TestEdgeCases {
 	
 	@Test public void testVariadicConcat() {
 		Slot<?> cSlot=Core.INITIAL_CONTEXT.getSlot("magic.core/concat");
-		System.out.println(cSlot.getDependencies());
-		System.out.println(cSlot);
+		//System.out.println(cSlot.getDependencies());
+		//System.out.println(cSlot);
 		assertTrue(Core.INITIAL_CONTEXT.getDependencies("magic.core/concat").contains(Symbol.create("magic.core/nil?")));
 		
 		assertEquals(Tuple.of(1L,2L,3L),exec(

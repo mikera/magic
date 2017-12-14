@@ -67,6 +67,10 @@ public class Sets {
 		return PersistentHashSet.createFromSet((APersistentSet<T>)a).include(value);
 	}
 
+	public static <T> APersistentSet<T> of(T value) {
+		return PersistentHashSet.createSingleValueSet(value);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static <T> APersistentSet<T> of(T... values) {
 		return createFrom(values);
