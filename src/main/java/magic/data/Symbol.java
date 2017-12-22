@@ -5,6 +5,7 @@ import java.lang.ref.WeakReference;
 import java.util.WeakHashMap;
 
 import magic.RT;
+import magic.Symbols;
 import magic.Type;
 
 /**
@@ -72,19 +73,40 @@ public class Symbol extends APersistentObject {
 		return s;
 	}
 	
-	public static Symbol create(String name) {
-		if (name.contains("/")) {
-			if (name.equals("/")) return create(null,"/");
-			String[] ss=name.split("/");
-			// TODO: fix this hack for / etc.
-			if (ss.length==2) {
-				return create(ss[0],ss[1]);
-			} else {
-				throw new Error("Problem handling qualified symbol ["+name+"]");
+	/**
+	 * Creates a symbol from a String, parsed as follows:
+	 * 1. A qualified symbol like "foo/bar" is interpreted as symbol bar in the foo namespace
+	 * 2. An unqualified symbol like "bar" is interpreted as a symbol with null namepsace
+	 * 
+	 * @param s
+	 * @return
+	 */
+	public static Symbol create(String s) {
+		if (s.contains("/")) {
+			if (s.length()==1) return Symbols.SLASH; // single slash only
+			
+			String[] ss=s.split("/");
+			int n=ss.length;
+			if (n==1) {
+				// must be a trailing trailing '/' case, note that 
+				return create(ss[0],"/"); // namespaced slash
 			}
+			
+			if (ss.length==2) {
+				// must be two symbols separated with a slash
+				return create(ss[0],ss[1]);
+			} 
+			throw new Error("Problem handling qualified symbol ["+s+"], ambiguous namepsace?");
 		} else {
-			return create(null,name);
+			return create(null,s);
 		}
+	}
+	
+	/**
+	 * Creates a unqualified symbol from a String, with a null namespace
+	 */
+	public static Symbol createUnqualified(String name) {
+		return create(null,name);
 	}
 	
 	private Object readResolve() throws ObjectStreamException {

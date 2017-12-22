@@ -280,7 +280,7 @@ public class TestCompiler {
 		{ // check dependency exists
 			Node<?> g=c1.getNode("g");
 			assertTrue(g.getDependencies().contains(Symbol.create(Core.USER_NS,"f")));
-			assertEquals(Sets.of(Symbol.create(Core.USER_NS,"f"),Symbols.FN),c1.getDependencies(Symbol.create("g")));
+			assertEquals(Sets.of(Symbol.create("f"),Symbol.create(Core.USER_NS,"f"),Symbols.FN),c1.getDependencies(Symbol.create("g")));
 			assertEquals(Sets.of(Symbol.create(Core.USER_NS,"g")),c1.getDependants(Symbol.create("f")));
 		}
 
@@ -338,13 +338,13 @@ public class TestCompiler {
 		//Node<?> b=c2.getNode("b");
 		
 		// note def is never a dependency, it gets executed to install the definition
-		assertEquals(Sets.of(Symbol.create("magic.core","b"),Symbols.FN),f.getDependencies());
+		assertEquals(Sets.of(Symbol.create("b"),Symbol.create("magic.core","b"),Symbols.FN),f.getDependencies());
 		
 		assertEquals(Sets.of(),c2.getDependencies("magic.core/a"));
-		assertEquals(Sets.of(Symbol.create("magic.core","a")),c2.getDependencies("b"));
+		assertEquals(Sets.of(Symbol.create("a"),Symbol.create("magic.core","a")),c2.getDependencies("b"));
 		assertEquals(Sets.of(Symbol.create("magic.core","b")),c2.getDependants("magic.core/a"));
 		assertEquals(Sets.of(Symbol.create("magic.core","f")),c2.getDependants("b"));
-		assertEquals(Sets.of(Symbol.create("magic.core","b"),Symbols.FN),c2.getDependencies("f"));
+		assertEquals(Sets.of(Symbol.create("b"),Symbol.create("magic.core","b"),Symbols.FN),c2.getDependencies("f"));
 		assertEquals(Sets.of(),c2.getDependants("f"));
 	}
 }

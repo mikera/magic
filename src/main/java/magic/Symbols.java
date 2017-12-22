@@ -30,6 +30,7 @@ public class Symbols {
 	public static final Symbol UNDERSCORE = Symbol.create("_");
 	public static final Symbol AMPERSAND = Symbol.create("&");
 	public static final Symbol NIL = Symbol.create("nil");
+	public static final Symbol SLASH = Symbol.createUnqualified("/"); // needed to avoid stack overflow in this special case, as used in Symbol.create()
 
 	// macros and expanders
 	public static final Symbol DEFN = Symbol.createCore("defn");

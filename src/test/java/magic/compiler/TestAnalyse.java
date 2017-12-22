@@ -99,13 +99,13 @@ public class TestAnalyse {
 	
 	@Test
 	public void testDeps() {
-		Symbol foo=Symbol.create("magic.core","foo");
+		Symbol foo=Symbol.create("user","foo");
 		Symbol bar=Symbol.create("magic.core","bar");
 		Symbol fn=Symbols.FN;
-		assertEquals(Sets.of(foo),analyse("foo").getDependencies());
-		assertEquals(Sets.of(foo,bar),analyse("[foo bar]").getDependencies());
+		assertEquals(Sets.of(foo),analyse("user/foo").getDependencies());
+		assertEquals(Sets.of(foo,bar),analyse("[user/foo magic.core/bar]").getDependencies());
 		assertEquals(Sets.of(fn),analyse("(fn [bar] bar)").getDependencies());
-		assertEquals(Sets.of(foo,fn),analyse("(fn [bar] foo)").getDependencies());
+		assertEquals(Sets.of(foo,fn),analyse("(fn [bar] user/foo)").getDependencies());
 
 		assertEquals(Sets.of(Symbols.QUOTE),analyse("'(foo bar)").getDependencies());
 	}

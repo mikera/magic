@@ -16,7 +16,7 @@ public class TestDependencies {
 		Context c=r.getContext();
 		Slot<?> slot=c.getSlot("magic.core/a");
 		assertNotNull(slot);
-		assertEquals(Symbol.createSet("magic.core/if","magic.core/b","magic.core/c","magic.core/d"),slot.getDependencies());
+		assertEquals(Symbol.createSet("b","c","d","magic.core/if","magic.core/b","magic.core/c","magic.core/d"),slot.getDependencies());
 	}
 	
 	@Test public void testFnDependencies() {
@@ -54,6 +54,6 @@ public class TestDependencies {
 		System.out.println(slot);
 
 		assertNotNull(slot);
-		assertEquals(Symbol.createSet("magic.core/loop","magic.core/b"),slot.getDependencies());
+		assertEquals(Symbol.createSet("magic.core/loop","b","magic.core/b"),slot.getDependencies());
 	}
 }
