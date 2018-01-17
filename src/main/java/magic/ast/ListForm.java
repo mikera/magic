@@ -2,7 +2,6 @@ package magic.ast;
 
 import magic.Keywords;
 import magic.RT;
-import magic.Symbols;
 import magic.compiler.AnalysisContext;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
@@ -114,19 +113,9 @@ public class ListForm extends BaseForm<Object> {
 	}
 	
 	@Override
-	public Node<?> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings, boolean syntaxQuote) {
-		if ((size()==2)) {
-			Node<?> h=get(0);
-			if (h.isSymbol()&&(h.getSymbol().equals(Symbols.UNQUOTE))) {
-				Node<?> ex=get(1);
-				Object form=ex.compute(context, bindings);
-				return Node.toNode(form);
-			}
-		};
-		// TODO: shouldn't we be recursively evalQuoting?
-		return this;
+	public EvalResult<Object> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings, boolean syntaxQuote) {
+		return super.evalQuoted(context, bindings, syntaxQuote);
 	}
-
 
 	@Override
 	public String toString() {

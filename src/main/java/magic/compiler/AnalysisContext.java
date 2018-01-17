@@ -11,6 +11,14 @@ import magic.data.Symbol;
 import magic.lang.Context;
 import magic.type.JavaType;
 
+/**
+ * Analysis context contains
+ * - A context
+ * - Bindings from symbols to definitions as nodes
+ * 
+ * @author Mike
+ *
+ */
 public class AnalysisContext {
 
 	private final Context context;
@@ -87,6 +95,8 @@ public class AnalysisContext {
 		return context;
 	}
 
-
+	public APersistentMap<Symbol, Node<?>> getBindings() {
+		return bindings;
+	}
 
 }

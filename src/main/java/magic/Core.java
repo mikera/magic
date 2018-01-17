@@ -12,6 +12,8 @@ public class Core {
 
 	public static final Context BOOTSTRAP_CONTEXT;
 	public static final Context INITIAL_CONTEXT;
+	//public static final String USER_NS="user";
+	public static final String USER_NS="magic.core";
 	
 	static {
 		BOOTSTRAP_CONTEXT = createBootstrapContext();
@@ -90,8 +92,11 @@ public class Core {
 			throw new magic.Error("Failed to initialise Magic environment",t);
 		}
 		c=r.getContext();
-		// TODO: switch to user namespace?
-		// c=magic.compiler.Compiler.eval(c, "(ns user)").getContext();
+		
+		//TODO: best way to switch to user namespace?
+		//c=magic.compiler.Compiler.eval(c, "(def *ns* \""+USER_NS+"\")").getContext();
+		//c=magic.compiler.Compiler.eval(c, "(ns user)").getContext();
+		
 		return c;
 	}
 	
@@ -113,6 +118,5 @@ public class Core {
 		return magic.compiler.Compiler.eval(c, code);
 	}
 
-	public static String USER_NS="magic.core";
 
 }

@@ -645,7 +645,7 @@ public class Expanders {
 	}
 
 	/**
-	 * An expander that expands quoted forms
+	 * An expander that expands quoted forms. Result is a Quote Node that evaluates to a form.
 	 */
 	public static final AExpander QUOTE = new QuoteExpander();
 
@@ -669,7 +669,8 @@ public class Expanders {
 	}
 
 	/**
-	 * An expander that expands unquote forms
+	 * An expander that expands unquote forms.
+	 * This has the effect of evaluating the unquoted form in the expansion context
 	 */
 	public static final AExpander UNQUOTE = new UnquoteExpander();
 
@@ -681,15 +682,12 @@ public class Expanders {
 				throw new ExpansionException("Can't expand unquote, requires a form with one expression", form);
 
 			Node<?> unquotedNode = form.get(1);
-
-			// Execute the code to create a resulting form
+			unquotedNode=ex.expand(c, unquotedNode, ex);
 			
-			Object resultForm= Compiler.eval(c, unquotedNode).getValue();
-			Node<?> node=Node.toNode(resultForm);
-			
-			// return an expanded form
-			Node<?> expanded=ex.expand(c, node, ex);
-			return expanded;
+			//return Unquote.create(unquotedNode,form.get(0).meta());
+			Object resultForm= unquotedNode.eval(c, Maps.empty()).getValue();
+			Node<?> analysed=Analyser.analyse(resultForm); // get the node required to product to the resulting form
+			return ex.expand(c, analysed, ex);
 		}
 	}
 

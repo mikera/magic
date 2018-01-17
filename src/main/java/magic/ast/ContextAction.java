@@ -26,7 +26,6 @@ public class ContextAction<T> extends BaseForm<T> {
 		public abstract EvalResult<T> eval(Context context, APersistentMap<Symbol, Object> bindings,Object[] args);
 	}
 
-	
 	public ContextAction(APersistentList<Node<?>> nodes, Action<T> aFn, APersistentMap<Keyword,Object> meta) {
 		super(nodes,meta);
 		this.action=aFn;

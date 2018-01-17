@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import magic.ast.Lookup;
 import magic.ast.Node;
 import magic.data.APersistentCollection;
 import magic.data.APersistentList;
@@ -590,6 +591,23 @@ public class RT {
 		throw new UnresolvedException(sym);
 	}
 	
+	/**
+	 * Implements refer
+	 * @param c
+	 * @param sym
+	 * @param dest
+	 * @return
+	 */
+	public static Context refer(Context c, Symbol sym, Symbol dest) {
+		if (!dest.isQualified()) throw new Error("Can't refer to a unqualified symbol: "+dest);
+		
+		return RT.define(c,sym,Lookup.create(dest));
+	}
+	
+	public static <T> Context define(Context c, Symbol sym, Node<T> node) {
+		return c.define(sym, node);
+	}
+
 	/**
 	 * Gets the slot associated with a Symbol in the given context.
 	 * 

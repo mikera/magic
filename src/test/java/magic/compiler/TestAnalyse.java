@@ -17,11 +17,12 @@ import magic.data.Sets;
 import magic.data.Symbol;
 import magic.data.Tuple;
 import magic.lang.Context;
+import magic.lang.Slot;
 import magic.lang.UnresolvedException;
 
 public class TestAnalyse {
 
-	public <T> Node<T> analyse(String t) {
+	public <T> Node<T> compile(String t) {
 		Node<?> node= Reader.read(t);
 		return Compiler.compileNode(Core.INITIAL_CONTEXT,node);
 	}
@@ -29,7 +30,7 @@ public class TestAnalyse {
 	@Test 
 	public void testLookup() {
 		Context c=Context.createWith("test/foo",Constant.create(1));
-		Node<?> e=analyse("test/foo");
+		Node<?> e=compile("test/foo");
 		assertEquals(Integer.valueOf(1),e.compute(c));
 		
 		try {
@@ -73,6 +74,9 @@ public class TestAnalyse {
 	@Test public void testUnquote() {
 		EvalResult<?> r=Core.eval("(def a 1) (def v '[~a 2])");
 		Context c2=r.getContext();
+		Slot<?> s=c2.getSlot("v");
+		assertNotNull(s);
+		
 		Object v=c2.getValue("v");
 		assertNotNull(v);
 		assertEquals(Tuple.of(1L,2L),v);
@@ -81,7 +85,7 @@ public class TestAnalyse {
 	@Test 
 	public void testInfiniteRecursiveLookup() {
 		Context c=Context.createWith("foo",Lookup.create("foo"));
-		Node<?> e=analyse("foo");
+		Node<?> e=compile("foo");
 		
 		try {
 			e.compute(c);
@@ -93,7 +97,7 @@ public class TestAnalyse {
 	
 	@Test 
 	public void testConstant() {
-		Node<?> e=analyse("1");
+		Node<?> e=compile("1");
 		assertEquals(Long.valueOf(1),e.compute(Context.EMPTY));
 	}
 	
@@ -102,39 +106,39 @@ public class TestAnalyse {
 		Symbol foo=Symbol.create("user","foo");
 		Symbol bar=Symbol.create("magic.core","bar");
 		Symbol fn=Symbols.FN;
-		assertEquals(Sets.of(foo),analyse("user/foo").getDependencies());
-		assertEquals(Sets.of(foo,bar),analyse("[user/foo magic.core/bar]").getDependencies());
-		assertEquals(Sets.of(fn),analyse("(fn [bar] bar)").getDependencies());
-		assertEquals(Sets.of(foo,fn),analyse("(fn [bar] user/foo)").getDependencies());
+		assertEquals(Sets.of(foo),compile("user/foo").getDependencies());
+		assertEquals(Sets.of(foo,bar),compile("[user/foo magic.core/bar]").getDependencies());
+		assertEquals(Sets.of(fn),compile("(fn [bar] bar)").getDependencies());
+		assertEquals(Sets.of(foo,fn),compile("(fn [bar] user/foo)").getDependencies());
 
-		assertEquals(Sets.of(Symbols.QUOTE),analyse("'(foo bar)").getDependencies());
+		assertEquals(Sets.of(Symbols.QUOTE),compile("'(foo bar)").getDependencies());
 	}
 	
 	@Test 
 	public void testVector() {
 		Context c=Context.createWith("test/foo",Constant.create(2L));
-		Node<?> e=analyse("[1 test/foo]");
+		Node<?> e=compile("[1 test/foo]");
 		assertEquals(Tuple.of(1L,2L),e.compute(c));
 	}
 	
 	@Test 
 	public void testEmptyVector() {
-		Node<?> e=analyse("[]");
+		Node<?> e=compile("[]");
 		assertEquals(Tuple.EMPTY,e.compute(Context.EMPTY));
 	}
 	
 	@Test 
 	public void testEmptyList() {
-		Node<?> e=analyse("()");
+		Node<?> e=compile("()");
 		assertEquals(PersistentList.EMPTY,e.compute(Context.EMPTY));
 	}
 	
 	@Test 
 	public void testLambda() {
-		Node<?> e=analyse("(fn [a] a)");
+		Node<?> e=compile("(fn [a] a)");
 		assertEquals(Lambda.class,e.getClass());
 		Context c=Core.INITIAL_CONTEXT.define("identity",e);
-		Node<?> app=analyse("(identity 2)");
+		Node<?> app=compile("(identity 2)");
 		assertEquals(Long.valueOf(2),app.compute(c));
 
 	}

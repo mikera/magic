@@ -239,7 +239,11 @@ public class TestCompiler {
 				+ "(def b [1 ~a])");
 		Context c2=r.getContext();
 		
-		assertEquals(Tuple.of(1L,2L),c2.getValue("b"));
+		@SuppressWarnings("unused")
+		Slot<?> slot=c2.getSlot("b");
+		
+		Object b=c2.getValue("b");
+		assertEquals(Tuple.of(1L,2L),b);
 	}
 	
 // TODO: think about dependencies on special forms

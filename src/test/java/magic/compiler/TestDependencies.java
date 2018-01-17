@@ -35,25 +35,27 @@ public class TestDependencies {
 		assertEquals(Symbol.createSet("magic.core/nil?","magic.core/b"),slot.getDependencies());
 	}
 	
-	@Test public void testLoopDependencies() {
-		EvalResult<?> r=Core.eval("(def a (loop [acc 1 i b] (if (<= i 1) acc (recur (* acc i) (dec i)))))");
-		Context c=r.getContext();
-		Slot<?> slot=c.getSlot("magic.core/a");
-		System.out.println(slot.getDependencies());
-		System.out.println(slot);
-
-		assertNotNull(slot);
-		assertEquals(Symbol.createSet("magic.core/if","magic.core/b","magic.core/dec","magic.core/*","magic.core/<=","magic.core/loop","magic.core/recur"),slot.getDependencies());
-	}
 	
-	@Test public void testLoopDependencies2() {
+	@Test public void testLoopDependencies() {
 		EvalResult<?> r=Core.eval("(def a (loop [] b))");
 		Context c=r.getContext();
 		Slot<?> slot=c.getSlot("magic.core/a");
-		System.out.println(slot.getDependencies());
-		System.out.println(slot);
+		//System.out.println(slot.getDependencies());
+		//System.out.println(slot);
 
 		assertNotNull(slot);
 		assertEquals(Symbol.createSet("magic.core/loop","b","magic.core/b"),slot.getDependencies());
 	}
+	
+	@Test public void testLoopDependencies2() {
+		EvalResult<?> r=Core.eval("(def a (loop [acc 1 i b] (if (<= i 1) acc (recur (* acc i) (dec i)))))");
+		Context c=r.getContext();
+		Slot<?> slot=c.getSlot("magic.core/a");
+		//System.out.println(slot.getDependencies());
+		//System.out.println(slot);
+
+		assertNotNull(slot);
+		assertEquals(Symbol.createSet("magic.core/if","magic.core/b","magic.core/dec","magic.core/*","magic.core/<=","magic.core/loop","magic.core/recur"),slot.getDependencies());
+	}
+
 }

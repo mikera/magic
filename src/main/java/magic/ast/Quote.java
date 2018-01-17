@@ -7,13 +7,11 @@ import magic.Type;
 import magic.Types;
 import magic.compiler.EvalResult;
 import magic.compiler.SourceInfo;
-import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
 import magic.data.Keyword;
 import magic.data.Lists;
 import magic.data.Maps;
-import magic.data.PersistentList;
 import magic.data.Sets;
 import magic.data.Symbol;
 import magic.fn.IFn1;
@@ -70,18 +68,10 @@ public class Quote extends BaseForm<Object> {
 
 	@Override
 	public EvalResult<Object> eval(Context context, APersistentMap<Symbol, Object> bindings) {
-		// call evalQuoted on form
-		// expects a Node back, with unquotes expanded, so we need to translate this into a form Object 
-		return new EvalResult<Object>(context,form.evalQuoted(context,bindings,syntaxQuote).toForm());
+		// call evalQuoted on form, return the value
+		return new EvalResult<Object>(context,form.evalQuoted(context,bindings,syntaxQuote).getValue());
 	}
 	
-	@Override
-	public Node<?> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings,
-			boolean syntaxQuote) {
-		Symbol sym=(syntaxQuote)?Symbols.SYNTAX_QUOTE:Symbols.QUOTE;
-		APersistentList<Node<?>> r=PersistentList.of(Lookup.create(sym),form.evalQuoted(context, bindings, syntaxQuote));
-		return ListForm.create(r, getSourceInfo());
-	}
 
 	public boolean isSyntaxQuote() {
 		return syntaxQuote;

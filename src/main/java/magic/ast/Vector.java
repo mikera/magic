@@ -78,17 +78,12 @@ public class Vector<T> extends BaseDataStructure<APersistentVector<? extends T>>
 		return EvalResult.create(c, r);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public Node<?> evalQuoted(Context c, APersistentMap<Symbol, Object> bindings,
+	public EvalResult<Object> evalQuoted(Context c, APersistentMap<Symbol, Object> bindings,
 			boolean syntaxQuote) {
-		int n=exps.size();
-		if (n==0) return  Constant.create((APersistentVector<T>)Tuple.EMPTY,getSourceInfo());
-		Node<?>[] results=new Node[n];
-		for (int i=0; i<n; i++) {
-			results[i]=exps.get(i).evalQuoted(c,bindings,syntaxQuote);
-		}
-		return Vector.create(Vectors.wrap(results),getSourceInfo());
+		EvalResult<Object> listResult=super.evalQuoted(c,bindings,syntaxQuote);
+		// convert result to a vector form
+		return listResult.withValue(Vectors.coerce(listResult.getValue()));
 	}
 	
 	@Override

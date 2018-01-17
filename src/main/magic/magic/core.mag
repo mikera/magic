@@ -22,6 +22,11 @@
   ([ns name]
     (. magic.RT symbol ns name)))
 
+;; TODO: should be a macro with context update?
+(defn refer
+  ([symbol]
+    (. magic.RT refer *context*)))
+
 ;; =========================================
 ;; Basic sequence functions
 ;;
@@ -162,8 +167,9 @@
   ([^java.lang.Throwable e]
     (.printStackTrace e)))
 
-;(defmacro ns [name]
-;  `(def *ns* ~(str name)))
+(defmacro ns [name]
+  `(do 
+     (def *ns* ~(str name))))
 
 ;; ================================================================
 ;; Host interop

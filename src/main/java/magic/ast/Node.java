@@ -293,13 +293,13 @@ public abstract class Node<T> extends RootNode {
 	public abstract String toString();
 
 	/**
-	 * Evaluates this Node in a quoted context, returning a Node object
+	 * Evaluates this Node in a quoted context, returning a form object
 	 * 
 	 * @param context
 	 * @param bindings
 	 * @return
 	 */
-	public abstract Node<?> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings, boolean syntaxQuote);
+	public abstract EvalResult<Object> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings, boolean syntaxQuote);
 
 	/**
 	 * Validation function. Override to perform validation tests.

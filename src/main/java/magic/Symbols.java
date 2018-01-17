@@ -43,6 +43,7 @@ public class Symbols {
 	public static final Symbol PRINTLN = Symbol.createCore("println");
 	public static final Symbol SET = Symbol.createCore("set");
 	public static final Symbol HASHMAP = Symbol.createCore("hashmap");
+	public static final Symbol HASH_SET = Symbol.createCore("hash-set");
 	public static final Symbol VECTOR = Symbol.createCore("vector");
 	public static final Symbol LIST = Symbol.createCore("list");
 	public static final Symbol PLUS = Symbol.createCore("+");

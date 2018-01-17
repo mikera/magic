@@ -1,9 +1,11 @@
 package magic.ast;
 
+import magic.compiler.EvalResult;
 import magic.data.APersistentList;
 import magic.data.APersistentMap;
 import magic.data.APersistentSet;
 import magic.data.Keyword;
+import magic.data.Lists;
 import magic.data.PersistentHashMap;
 import magic.data.PersistentList;
 import magic.data.Symbol;
@@ -43,17 +45,19 @@ public abstract class BaseForm<T> extends Node<T> {
 	}
 
 	@Override
-	public Node<?> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings,
+	public EvalResult<Object> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings,
 			boolean syntaxQuote) {
 		int n=nodes.size();
-		if (n==0) return Constant.create(PersistentList.EMPTY);
+		if (n==0) return EvalResult.create(context, PersistentList.EMPTY);
 		
-		Node<?>[] rs=new Node[n];
+		Object[] rs=new Object[n];
 		for (int i=0; i<n; i++) {
-			rs[i]=nodes.get(i).evalQuoted(context, bindings, syntaxQuote);
+			EvalResult<?> r=nodes.get(i).evalQuoted(context, bindings, syntaxQuote);
+			rs[i]=r.getValue();
+			context=r.getContext();
 		}
-		ListForm listResult=ListForm.create(rs,getSourceInfo());
-		return listResult;
+		APersistentList<Object> listResult=Lists.create(rs);
+		return EvalResult.create(context, listResult);
 	}
 
 	@Override

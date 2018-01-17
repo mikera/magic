@@ -80,19 +80,11 @@ public class HashMap<K,V> extends BaseDataStructure<APersistentMap<? extends K,?
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Node<?> evalQuoted(Context c, APersistentMap<Symbol, Object> bindings,
+	public EvalResult<Object> evalQuoted(Context c, APersistentMap<Symbol, Object> bindings,
 			boolean syntaxQuote) {
-		int nExps=exps.size();
-		APersistentVector<Node<?>> newExps=exps;
-		for (int i=0; i<nExps; i++) {
-			Node<?> node=exps.get(i);
-			Node<?> newNode=node.evalQuoted(c,bindings,syntaxQuote);
-			if (node!=newNode) {
-				// System.out.println("Specialising "+node+ " to "+newNode);
-				newExps=newExps.assocAt(i, newNode);
-			} 
-		}
-		return (exps==newExps)?this:(HashMap<K,V>) create(newExps,getSourceInfo());
+		EvalResult<Object> listResult=super.evalQuoted(c,bindings,syntaxQuote);
+		// convert result to a vector form
+		return listResult.withValue(Lists.cons(Symbols.HASHMAP,(APersistentList<Object>)listResult.getValue()));
 	}
 	
 	@Override

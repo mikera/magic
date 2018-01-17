@@ -77,4 +77,9 @@ public final class EvalResult<T> {
 	public boolean isRecurring() {
 		return returnType==RECUR;
 	}
+
+	public EvalResult<T> withValue(T value) {
+		if (this.value==value) return this;
+		return create(context,value);
+	}
 }

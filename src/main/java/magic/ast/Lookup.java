@@ -122,9 +122,10 @@ public class Lookup<T> extends Node<T> {
 	}
 
 	@Override
-	public Node<?> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings,
+	public EvalResult<Object> evalQuoted(Context context, APersistentMap<Symbol, Object> bindings,
 			boolean syntaxQuote) {
-		return this;
+		// just return the symbol
+		return EvalResult.create(context, sym);
 	}
 
 

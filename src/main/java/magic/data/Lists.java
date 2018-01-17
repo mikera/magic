@@ -77,5 +77,9 @@ public class Lists {
 		return PersistentList.wrap(vals);
 	}
 
+	public static <T> APersistentList<T> create(T[] rs) {
+		return wrap(rs.clone());
+	}
+
 
 }
